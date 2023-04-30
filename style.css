@@ -1,29 +1,22 @@
-:root {
+:root, .dark {
     --nevysha-gradiant-1: #8777a1;
     --nevysha-gradiant-2: #00adb5;
     --nevysha-gradiant-3: #f98f69;
     --nevysha-gradiant-4: #ea638c;
 
-    --main-tabs-background-color: #c3c3c347;
-    --tab-nav-background-color: #1f2937;
-    --footer-text-color: #1f2937;
-    --btn-background-color: #549cdb;
-
-    /*svelte*/
-    --button-transition: none;
-    --shadow-drop: rgba(0,0,0,0.05) 0px 1px 2px 0px;
-    --button-shadow: var(--shadow-drop);
-    --input-border-width: 1px;
-    --button-border-width: var(--input-border-width);
-    --button-primary-border-color: var(--primary-500);
-    --button-primary-text-color: white;
-
-
-}
-
-.dark {
     --body-background-fill: rgba(255, 255, 255, 0) !important;
     --radius-lg: 2px !important;
+    --neutral-50: #f5f5f5;
+    --neutral-100: #ececec;
+    --neutral-200: #d9d9d9;
+    --neutral-300: #bfbfbf;
+    --neutral-400: #a6a6a6;
+    --neutral-500: #8c8c8c;
+    --neutral-600: #737373;
+    --neutral-700: #595959;
+    --neutral-800: #404040;
+    --neutral-900: #262626;
+    --neutral-950: #0f0f0f;
     --primary-50: #f2f6f9;
     --primary-100: #d3e4ed;
     --primary-200: #aac8de;
@@ -36,6 +29,45 @@
     --primary-900: #0a2c43;
     --primary-950: #082536;
     --button-primary-background-fill: linear-gradient(to bottom right, var(--primary-500), var(--primary-600));
+    --input-background-fill: #ffffffc4;
+    --input-background-fill-focus: var(--secondary-500);
+    --input-background-fill-hover: var(--input-background-fill);
+
+    --main-tabs-background-color: #c3c3c347;
+    --secondary-tabs-background-color: #ffffff75;
+    --tab-nav-background-color: #262626ad;
+    --footer-text-color: #262626;
+    --btn-background-color: #549cdb;
+
+    --block-title-text-color: #0a0a0a;
+    /*--neutral-800: #0a0a0a;*/
+    --body-text-color: #0a0a0a;
+    --border-color-primary: #5050505e;;
+
+    /*svelte*/
+    --button-transition: none;
+    --shadow-drop: rgba(0,0,0,0.05) 0px 1px 2px 0px;
+    --button-shadow: var(--shadow-drop);
+    --input-border-width: 1px;
+    --button-border-width: var(--input-border-width);
+    --button-primary-border-color: var(--primary-500);
+    --button-primary-text-color: white;
+    --secondary-text-color: #2c2c2c;
+    --input-border-color: #a1a1a1;
+
+    --button-secondary-background-fill: linear-gradient(to bottom right, #195b8c, #256ba5);
+    --button-secondary-background-fill-hover: linear-gradient(to bottom right, #195b8c, #195b8c);
+
+    --checkbox-background-color: #ffffffc4;
+}
+
+.gradio-accordion {
+    background-color: var(--secondary-tabs-background-color) !important;
+    border: none !important;
+    /*box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);*/
+    border-radius: 3px !important;
+    color: var(--secondary-text-color) !important;
+    margin: 4px 0 4px 0 !important;
 }
 
 #tabs > div.tab-nav {
@@ -46,6 +78,11 @@
     width: 175px;
     background-color: var(--tab-nav-background-color);
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+    border-bottom: none !important;
+}
+
+#tabs > div.tab-nav > button {
+    color: #ffffff;
 }
 
 #tabs > .nevysha.tabitem {
@@ -75,6 +112,8 @@
     padding: var(--button-large-padding);
     font-weight: var(--button-large-text-weight);
     font-size: var(--button-large-text-size);
+
+    --checkbox-background-color: var(--neutral-800);
 }
 
 .nevysha.btn.refresh {
@@ -89,6 +128,11 @@
 .nevysha.flex1 {
     flex: 1;
     max-width: none !important;;
+}
+
+.gradio-button.tool {
+    border-radius: 0 !important;
+    border: none !important;
 }
 
 #quicksettings {
