@@ -45,6 +45,10 @@ function wrapSettings() {
 
   // Loop through the children elements starting from the second one
   for (let child of settingsChildren) {
+
+    //add a selector to each child
+    child.classList.add('nevysha', 'settings-child');
+
     // Move each child into the new wrapper container
     wrapperSettings.appendChild(child);
   }
@@ -102,6 +106,8 @@ const onload = () => {
 
   wrapSettings();
   wrapDataGenerationInfo();
+
+  gradioApp().querySelectorAll(".block.padded:not(.gradio-accordion)").forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 10px !important;`))
 
   console.log("nevysha-ui.js: DOMContentLoaded")
 };
