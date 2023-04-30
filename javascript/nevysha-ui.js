@@ -57,6 +57,42 @@ function wrapSettings() {
   settingsContainer.appendChild(wrapperSettings);
 }
 
+const addDraggable = () => {
+  const settings = document.getElementById('txt2img_settings');
+
+  // Create a new vertical line element
+  const line = document.createElement('div');
+  line.classList.add('vertical-line');
+
+  // Insert the line element after the settings element
+  settings.insertAdjacentElement('afterend', line);
+
+  const container = settings.parentElement;
+  container.classList.add('nevysha', 'resizable-children-container');
+  const results = document.getElementById('txt2img_results');
+
+  let isDragging = false;
+
+  line.addEventListener('mousedown', () => {
+    isDragging = true;
+  });
+
+  document.addEventListener('mousemove', (event) => {
+    if (!isDragging) return;
+
+    const containerWidth = container.offsetWidth;
+    const mouseX = event.clientX;
+    const linePosition = ((mouseX - 240) / containerWidth) * 100;
+
+    settings.style.flexBasis = `${linePosition}%`;
+    results.style.flexBasis = `${100 - linePosition}%`;
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+  });
+}
+
 const onload = () => {
 
   let gradioApp = window.gradioApp;
@@ -106,7 +142,9 @@ const onload = () => {
 
   wrapSettings();
   wrapDataGenerationInfo();
+  addDraggable();
 
+  //style tweak to be MORE IMPORTANT than important
   gradioApp().querySelectorAll(".block.padded:not(.gradio-accordion)").forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 10px !important;`))
 
   console.log("nevysha-ui.js: DOMContentLoaded")

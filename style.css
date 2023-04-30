@@ -615,3 +615,36 @@ button.secondary, button.primary {
 #img2img_settings .tabs > :not(:first-child) {
     background-color: var(--nevysha-light-dark) !important;
 }
+
+
+/*draggable*/
+.nevysha.resizable-children-container {
+    flex-wrap: nowrap;
+    width: calc(100% - 33px) !important;
+    display: flex;
+    flex-direction: row;
+}
+
+
+#txt2img_settings,
+#txt2img_results {
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+#txt2img_settings {
+    flex-basis: 50%;
+}
+
+#txt2img_results {
+    flex-basis: 50%;
+}
+
+.vertical-line {
+    width: 3px !important;
+    max-width: 3px !important;
+    min-width: 3px !important;
+    height: 100%;
+    cursor: ew-resize;
+    background-color: #ccc;
+}
