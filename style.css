@@ -8,6 +8,17 @@
     --tab-nav-background-color: #1f2937;
     --footer-text-color: #1f2937;
     --btn-background-color: #549cdb;
+
+    /*svelte*/
+    --button-transition: none;
+    --shadow-drop: rgba(0,0,0,0.05) 0px 1px 2px 0px;
+    --button-shadow: var(--shadow-drop);
+    --input-border-width: 1px;
+    --button-border-width: var(--input-border-width);
+    --button-primary-border-color: var(--primary-500);
+    --button-primary-text-color: white;
+
+
 }
 
 .dark {
