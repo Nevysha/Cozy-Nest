@@ -67,11 +67,13 @@ function wrapSettings() {
   settingsContainer.insertBefore(generateBtn, settingsContainer.firstChild);
 }
 
+const SETTINGS_MIN_WIDTH = 420;
+const RESULT_MIN_WIDTH = 320;
 const addDraggable = () => {
   const settings = document.getElementById('txt2img_settings');
 
   //change min-width to min(420px, 100%)
-  settings.style.minWidth = 'min(420px, 100%)'
+  settings.style.minWidth = `min(${SETTINGS_MIN_WIDTH}px, 100%)`
 
   // Create a new vertical line element
   const lineWrapper = document.createElement('div');
@@ -86,6 +88,9 @@ const addDraggable = () => {
   const container = settings.parentElement;
   container.classList.add('nevysha', 'resizable-children-container');
   const results = document.getElementById('txt2img_results');
+
+  //change min-width to 320px
+  settings.style.minWidth = `min(${RESULT_MIN_WIDTH}px, 100%)`
 
   let isDragging = false;
 
@@ -109,6 +114,15 @@ const addDraggable = () => {
     const containerWidth = container.offsetWidth;
     const mouseX = event.clientX;
     const linePosition = ((mouseX - offsetX) / containerWidth) * 100;
+
+    //if settings width is min, return
+    if (linePosition <= SETTINGS_MIN_WIDTH / containerWidth * 100) {
+      return;
+    }
+    //if results width is min, return
+    if (linePosition >= (1 - RESULT_MIN_WIDTH / containerWidth) * 100) {
+      return;
+    }
 
     settings.style.flexBasis = `${linePosition}%`;
     results.style.flexBasis = `${100 - linePosition}%`;
