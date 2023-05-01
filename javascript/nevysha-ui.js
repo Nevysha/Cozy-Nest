@@ -102,7 +102,7 @@ const addDraggable = ({prefix}) => {
     if (!isDragging) return;
 
     //calc the offset of the tab
-    const tab = document.querySelector('#tab_txt2img');
+    const tab = document.querySelector(`#tab_${prefix}`);
     let offsetX = tab.offsetLeft;
     let parent = tab.offsetParent;
 
