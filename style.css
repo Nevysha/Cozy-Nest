@@ -577,6 +577,19 @@ button.secondary, button.primary {
     flex: 1;
     margin-top: 15px;
     overflow-y: scroll;
+    padding: 0 5px 15px 0;
+}
+.nevysha.settings-wrapper::-webkit-scrollbar {
+    width: 5px;
+}
+
+.nevysha.settings-wrapper::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.nevysha.settings-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--ae-primary-color);
+    border-radius: 20px;
 }
 
 .nevysha.txt2img_toprow-wrapper {

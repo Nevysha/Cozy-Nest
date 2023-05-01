@@ -70,6 +70,9 @@ function wrapSettings() {
 const addDraggable = () => {
   const settings = document.getElementById('txt2img_settings');
 
+  //change min-width to min(420px, 100%)
+  settings.style.minWidth = 'min(420px, 100%)'
+
   // Create a new vertical line element
   const lineWrapper = document.createElement('div');
   lineWrapper.classList.add('vertical-line-wrapper');
