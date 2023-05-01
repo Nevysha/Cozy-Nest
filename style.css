@@ -640,11 +640,23 @@ button.secondary, button.primary {
     flex-basis: 50%;
 }
 
+.vertical-line-wrapper {
+    width: 10px !important;
+    max-width: 10px !important;
+    min-width: 10px !important;
+    height: calc(100% - 30px);
+    cursor: ew-resize;
+    display: flex;
+    justify-content: center;
+    margin: 15px -10px 0 -10px;
+}
+
 .vertical-line {
-    width: 3px !important;
-    max-width: 3px !important;
-    min-width: 3px !important;
+    width: 2px !important;
+    max-width: 2px !important;
+    min-width: 2px !important;
     height: 100%;
     cursor: ew-resize;
-    background-color: #ccc;
+    background-image: linear-gradient(to bottom, #ffffff59 7px, transparent 0);
+    background-size: 100% 13px;
 }

@@ -61,11 +61,14 @@ const addDraggable = () => {
   const settings = document.getElementById('txt2img_settings');
 
   // Create a new vertical line element
+  const lineWrapper = document.createElement('div');
+  lineWrapper.classList.add('vertical-line-wrapper');
   const line = document.createElement('div');
   line.classList.add('vertical-line');
+  lineWrapper.appendChild(line)
 
   // Insert the line element after the settings element
-  settings.insertAdjacentElement('afterend', line);
+  settings.insertAdjacentElement('afterend', lineWrapper);
 
   const container = settings.parentElement;
   container.classList.add('nevysha', 'resizable-children-container');
@@ -73,16 +76,26 @@ const addDraggable = () => {
 
   let isDragging = false;
 
-  line.addEventListener('mousedown', () => {
+  lineWrapper.addEventListener('mousedown', () => {
     isDragging = true;
   });
 
   document.addEventListener('mousemove', (event) => {
     if (!isDragging) return;
 
+    //calc the offset of the tab
+    const tab = document.querySelector('#tab_txt2img');
+    let offsetX = tab.offsetLeft;
+    let parent = tab.offsetParent;
+
+    while (parent) {
+      offsetX += parent.offsetLeft;
+      parent = parent.offsetParent;
+    }
+
     const containerWidth = container.offsetWidth;
     const mouseX = event.clientX;
-    const linePosition = ((mouseX - 240) / containerWidth) * 100;
+    const linePosition = ((mouseX - offsetX) / containerWidth) * 100;
 
     settings.style.flexBasis = `${linePosition}%`;
     results.style.flexBasis = `${100 - linePosition}%`;
@@ -145,7 +158,7 @@ const onload = () => {
   addDraggable();
 
   //style tweak to be MORE IMPORTANT than important
-  gradioApp().querySelectorAll(".block.padded:not(.gradio-accordion)").forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 10px !important;`))
+  gradioApp().querySelectorAll(".block.padded:not(.gradio-accordion, .gradio-dropdown)").forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 10px !important;`))
 
   console.log("nevysha-ui.js: DOMContentLoaded")
 };
