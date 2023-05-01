@@ -564,7 +564,6 @@ button.secondary, button.primary {
 #txt2img_settings {
     flex: 1;
     height: 100%;
-    overflow-y: scroll;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -577,6 +576,7 @@ button.secondary, button.primary {
 .nevysha.settings-wrapper {
     flex: 1;
     margin-top: 15px;
+    overflow-y: scroll;
 }
 
 .nevysha.txt2img_toprow-wrapper {

@@ -59,7 +59,7 @@ function wrapSettings() {
 
   //move toprow
   const topRow = document.getElementById('txt2img_toprow');
-  settingsContainer.insertBefore(topRow, settingsContainer.firstChild);
+  wrapperSettings.insertBefore(topRow, wrapperSettings.firstChild);
 
   //move generate button to the top
   const generateBtn = document.getElementById('txt2img_generate');
