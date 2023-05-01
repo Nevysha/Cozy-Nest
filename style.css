@@ -285,6 +285,10 @@
     align-self: flex-start;
 }
 
+.gradio-container.app {
+    padding: 2px !important;
+}
+
 input[type=range] {
     overflow: hidden;
     width: 100%;
@@ -336,7 +340,7 @@ input[type=range]::-webkit-slider-thumb {
     background-color: var(--main-tabs-background-color);
     border: none;
     border-radius: 0;
-    height: calc(100vh - (16px + 16px + 100px + 20px));
+    height: calc(100vh - (16px + 16px + 85px + 20px));
     overflow-y: hidden;
 }
 
@@ -367,6 +371,7 @@ input[type=range]::-webkit-slider-thumb {
     vertical-align: middle;
     height: 50px;
     background-color: var(--nevysha-dark);
+    display: none;
 }
 
 .nevysha.flex1 {
@@ -395,6 +400,10 @@ input[type=range]::-webkit-slider-thumb {
     width: auto;
     align-items: end;
     gap: 20px;
+}
+
+#quicksettings > div.block {
+    padding: 0 !important;
 }
 
 #quicksettings > .gradio-button.tool {

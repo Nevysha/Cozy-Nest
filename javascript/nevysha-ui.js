@@ -245,14 +245,15 @@ const onload = () => {
     return
   }
 
-  //add refreshBtn to the top of the page, pulled right
-  const refreshBtn = "<button id='refreshBtn' class='nevysha lg primary gradio-button btn refresh'>Refresh UI</button>"
-  const flex1 = "<div class='nevysha flex1' />"
-  quicksettings.insertAdjacentHTML("beforeend", flex1)
-  quicksettings.insertAdjacentHTML("beforeend", refreshBtn)
-  document.getElementById("refreshBtn").addEventListener("click", () => {
-    gradioApp().querySelector("#extensions_installed_top > button.lg.primary").click()
-  })
+  //add flex1 after checkpoint reload button
+  // Select the target element
+  const refresh_sd_model_checkpoint = document.querySelector('#refresh_sd_model_checkpoint');
+
+  // Create a new div element
+  const flex1b = "<div class='nevysha flex1' />"
+
+  // Insert the new div after the target element
+  refresh_sd_model_checkpoint.insertAdjacentHTML('afterend', flex1b);
 
   //get body from DOM
   const body = document.querySelector("body")
@@ -283,7 +284,8 @@ const onload = () => {
   tweakButtonsIcons();
 
   //style tweak to be MORE IMPORTANT than important
-  gradioApp().querySelectorAll(".block.padded:not(.gradio-accordion, .gradio-dropdown)").forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 10px !important;`))
+  gradioApp().querySelector('.tabs').querySelectorAll(".block.padded:not(.gradio-accordion, .gradio-dropdown)").forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 10px !important;`))
+  gradioApp().querySelectorAll('#quicksettings > div.block').forEach(elem => elem.style.padding = "0 !important")
 
   //add expend to inpainting
   tweakInpainting();
