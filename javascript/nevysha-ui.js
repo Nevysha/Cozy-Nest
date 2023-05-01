@@ -41,6 +41,7 @@ function wrapSettings() {
 
   // Create the new container element and add a class for styling
   const wrapperSettings = document.createElement('div');
+  wrapperSettings.id = 'nevysha_wrapperSettings';
   wrapperSettings.classList.add('nevysha', 'settings-wrapper');
 
   // Loop through the children elements starting from the second one
@@ -55,6 +56,15 @@ function wrapSettings() {
 
   // Insert the wrapper container after the original container
   settingsContainer.appendChild(wrapperSettings);
+
+  //move toprow
+  const topRow = document.getElementById('txt2img_toprow');
+  settingsContainer.insertBefore(topRow, settingsContainer.firstChild);
+
+  //move generate button to the top
+  const generateBtn = document.getElementById('txt2img_generate');
+  generateBtn.classList.add('nevysha', 'generate-button')
+  settingsContainer.insertBefore(generateBtn, settingsContainer.firstChild);
 }
 
 const addDraggable = () => {
@@ -162,7 +172,6 @@ const onload = () => {
 
   //get body from DOM
   const body = document.querySelector("body")
-
   //remove default body style
   body.style = ""
 
@@ -171,18 +180,15 @@ const onload = () => {
   body.insertAdjacentHTML('beforeend', waves);
 
   const tabs = document.querySelectorAll('#tabs > .tabitem')
-  //add nevysha css class to each main tab
+  //add nevysha css class to each main tab for easier css
   tabs.forEach(tab => tab.setAttribute('class', `${tab.getAttribute('class')} nevysha`))
 
-  //manage text2img tab
-  //move toprow
-  const topRow = document.getElementById('txt2img_toprow');
-  const settingsContainer = document.getElementById('txt2img_settings');
-  settingsContainer.insertBefore(topRow, settingsContainer.firstChild);
 
+  //manage text2img tab
   wrapSettings();
   wrapDataGenerationInfo();
   addDraggable();
+
   tweakButtonsIcons();
 
   //style tweak to be MORE IMPORTANT than important

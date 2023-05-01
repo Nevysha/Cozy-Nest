@@ -374,12 +374,6 @@ input[type=range]::-webkit-slider-thumb {
     max-width: none !important;;
 }
 
-.nevysha.settings-wrapper {
-    overflow-y: scroll;
-    flex: 1;
-    margin-top: 15px;
-}
-
 .block.padded:not(.gradio-accordion) {
      padding: 10px !important;
 }
@@ -570,6 +564,24 @@ button.secondary, button.primary {
 #txt2img_settings {
     flex: 1;
     height: 100%;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.nevysha.generate-button {
+    margin: 0 0 10px 0;
+}
+
+.nevysha.settings-wrapper {
+    flex: 1;
+    margin-top: 15px;
+}
+
+.nevysha.txt2img_toprow-wrapper {
+    display: flex;
+    flex-direction: column;
 }
 
 #txt2img_toprow {
