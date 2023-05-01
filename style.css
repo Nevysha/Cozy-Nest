@@ -36,7 +36,7 @@
 
     --nevysha-dark: #1c1c1c;
     --nevysha-light-dark: #292a2e;
-    --nevysha-white: #ffffff;
+    --nevysha-white: #caccce;
     --nevysha-input-border-color: hsl(214deg 5% 30%);
 
     --nevysha-color2: #f0a6caff;
@@ -430,6 +430,16 @@ input[type=range]::-webkit-slider-thumb {
     display: flex;
     justify-content: center;
     width: 100%;
+}
+
+.nevysha.svg-icon {
+    height: 20px;
+    fill: var(--nevysha-white);
+    margin: 3px 0 3px 0;
+}
+
+.nevysha.svg-icon.rotate {
+    transform: rotate(315deg);
 }
 
 /*footer text*/
