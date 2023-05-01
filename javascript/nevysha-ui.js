@@ -94,8 +94,9 @@ const addDraggable = ({prefix}) => {
 
   let isDragging = false;
 
-  lineWrapper.addEventListener('mousedown', () => {
+  lineWrapper.addEventListener('mousedown', (e) => {
     isDragging = true;
+    e.preventDefault();
   });
 
   document.addEventListener('mousemove', (event) => {
