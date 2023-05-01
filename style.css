@@ -694,3 +694,26 @@ button.secondary, button.primary {
     background-image: linear-gradient(to bottom, #ffffff59 7px, transparent 0);
     background-size: 100% 13px;
 }
+
+.gradio-image {
+    padding: 0 !important;
+}
+
+#img2maskimg {
+
+}
+#expendBtn {
+    position: absolute;
+    bottom: 10px;
+    right: 35px;
+    z-index: 99999;
+}
+
+#img2maskimg > div:nth-child(3) > div > div {
+    display: flex;
+    justify-content: center;
+}
+
+canvas.nevysha {
+    inset: auto;
+}

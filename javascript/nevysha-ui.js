@@ -160,6 +160,72 @@ const tweakButtonsIcons = () => {
   });
 }
 
+function tweakInpainting() {
+
+  //expend button
+  const img2maskimg = document.getElementById("img2maskimg")
+  const expendBtn = document.createElement("button")
+  expendBtn.setAttribute("id", "expendBtn")
+  expendBtn.setAttribute("class", "nevysha lg primary gradio-button btn")
+  expendBtn.textContent = "Expand"
+  img2maskimg.insertAdjacentElement("beforeend", expendBtn)
+
+  const inpaintTab = document.getElementById("img2maskimg");
+  const defaultStyle = inpaintTab.style;
+  let nodesCanvasData = []
+  let expended = false;
+  expendBtn.addEventListener("click", () => {
+
+    if (!document.querySelectorAll("canvas")) {
+      return;
+    }
+
+
+    if (!expended) {
+      expendBtn.textContent = "Reduce"
+      expendBtn.style.position = "fixed";
+      inpaintTab.style.position = "fixed";
+      inpaintTab.style.zIndex = 999
+      inpaintTab.style.top = "5px";
+      inpaintTab.style.left = "5px";
+      inpaintTab.style.width = "calc(100vw - 10px)";
+      inpaintTab.style.height = "calc(100vh - 10px)";
+      inpaintTab.style.overflow = "";
+
+      //apply to canvas
+      const nodesCanvas = document.querySelectorAll("canvas")
+      nodesCanvasData = [];
+      nodesCanvas.forEach((canvas) => {
+        let canvasId = `nevysha-${canvas.getAttribute("key")}-canvas`;
+        canvas.setAttribute('id',canvasId)
+        canvas.classList.add("nevysha")
+        nodesCanvasData.push({
+          id: canvasId,
+          defaultStyle: canvas.getAttribute("style"),
+        })
+
+        canvas.style.maxWidth = "calc(100vw - 20px)";
+        canvas.style.width = "";
+        canvas.style.maxHeight = "calc(100vh - 20px)";
+        canvas.style.height = "";
+      })
+
+    } else {
+      expendBtn.textContent = "Expand"
+      expendBtn.style.position = "absolute";
+      inpaintTab.style = defaultStyle;
+
+      //revert canvas
+      nodesCanvasData.forEach((canvasData) => {
+        const canvas = document.getElementById(canvasData.id)
+        canvas.setAttribute("style", canvasData.defaultStyle);
+      })
+    }
+    expended = !expended;
+
+  })
+}
+
 const onload = () => {
 
   let gradioApp = window.gradioApp;
@@ -217,6 +283,9 @@ const onload = () => {
 
   //style tweak to be MORE IMPORTANT than important
   gradioApp().querySelectorAll(".block.padded:not(.gradio-accordion, .gradio-dropdown)").forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 10px !important;`))
+
+  //add expend to inpainting
+  tweakInpainting();
 
   console.log("nevysha-ui.js: DOMContentLoaded")
 };
