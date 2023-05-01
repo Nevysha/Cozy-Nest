@@ -1,8 +1,8 @@
 console.log("nevysha-ui.js")
 
-const wrapDataGenerationInfo = () => {
+const wrapDataGenerationInfo = ({prefix}) => {
   // Get the generation info container
-  const previewBlocks = document.querySelectorAll('#tab_txt2img div#txt2img_results > *:not(#txt2img_results)');
+  const previewBlocks = document.querySelectorAll(`#tab_${prefix} div#${prefix}_results > *:not(#${prefix}_results)`);
   const generationInfoContainer = previewBlocks[1].children[2];
 
   // Create the new container element and add a class for styling
@@ -32,16 +32,18 @@ const wrapDataGenerationInfo = () => {
   previewBlocks[1].style = "";
 }
 
-function wrapSettings() {
+function wrapSettings({prefix}) {
 
-  const settingsContainer = document.getElementById('txt2img_settings');
+  const settingsContainer = document.getElementById(`${prefix}_settings`);
+  settingsContainer.parentElement.classList.add('nevysha', 'settings-gradio-parent');
+  const topRow = document.getElementById(`${prefix}_toprow`);
+  const generateBtn = document.getElementById(`${prefix}_generate`);
 
   // Get its children elements
-  const settingsChildren = settingsContainer.querySelectorAll(':scope > :not(#txt2img_toprow)');
+  const settingsChildren = settingsContainer.querySelectorAll(`:scope > :not(#${prefix}_toprow)`);
 
   // Create the new container element and add a class for styling
   const wrapperSettings = document.createElement('div');
-  wrapperSettings.id = 'nevysha_wrapperSettings';
   wrapperSettings.classList.add('nevysha', 'settings-wrapper');
 
   // Loop through the children elements starting from the second one
@@ -58,19 +60,17 @@ function wrapSettings() {
   settingsContainer.appendChild(wrapperSettings);
 
   //move toprow
-  const topRow = document.getElementById('txt2img_toprow');
   wrapperSettings.insertBefore(topRow, wrapperSettings.firstChild);
 
   //move generate button to the top
-  const generateBtn = document.getElementById('txt2img_generate');
   generateBtn.classList.add('nevysha', 'generate-button')
   settingsContainer.insertBefore(generateBtn, settingsContainer.firstChild);
 }
 
 const SETTINGS_MIN_WIDTH = 420;
 const RESULT_MIN_WIDTH = 320;
-const addDraggable = () => {
-  const settings = document.getElementById('txt2img_settings');
+const addDraggable = ({prefix}) => {
+  const settings = document.getElementById(`${prefix}_settings`);
 
   //change min-width to min(420px, 100%)
   settings.style.minWidth = `min(${SETTINGS_MIN_WIDTH}px, 100%)`
@@ -87,7 +87,7 @@ const addDraggable = () => {
 
   const container = settings.parentElement;
   container.classList.add('nevysha', 'resizable-children-container');
-  const results = document.getElementById('txt2img_results');
+  const results = document.getElementById(`${prefix}_results`);
 
   //change min-width to 320px
   settings.style.minWidth = `min(${RESULT_MIN_WIDTH}px, 100%)`
@@ -202,10 +202,17 @@ const onload = () => {
 
 
   //manage text2img tab
-  wrapSettings();
-  wrapDataGenerationInfo();
-  addDraggable();
+  const nevysha_magic = (bundle) => {
+    wrapSettings(bundle);
+    wrapDataGenerationInfo(bundle);
+    addDraggable(bundle);
+  }
 
+  nevysha_magic({prefix: "txt2img"});
+  nevysha_magic({prefix: "img2img"});
+
+
+  //general
   tweakButtonsIcons();
 
   //style tweak to be MORE IMPORTANT than important
