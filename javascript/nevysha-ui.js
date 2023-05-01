@@ -279,6 +279,8 @@ const onload = () => {
   nevysha_magic({prefix: "txt2img"});
   nevysha_magic({prefix: "img2img"});
 
+  //TODO y-scrollbar for other tab seems buggy
+
 
   //general
   tweakButtonsIcons();
