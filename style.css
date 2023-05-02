@@ -321,7 +321,7 @@ input[type=range]::-webkit-slider-thumb {
 
 
 
-#tabs > div.tab-nav {
+.nevysha.nevysha-tabnav {
     display: flex;
     position: fixed;
     z-index: 2;
@@ -331,12 +331,12 @@ input[type=range]::-webkit-slider-thumb {
     border-bottom: none !important;
 }
 
-#tabs > div.tab-nav > button {
+.nevysha.nevysha-tabnav > button {
     color: #ffffff;
 }
 
 #tabs > .nevysha.tabitem {
-    margin-left: 185px;
+    margin-left: calc(var(--nevysha-margin-left) + 10px);
     background-color: var(--main-tabs-background-color);
     border: none;
     border-radius: 0;
@@ -782,4 +782,20 @@ canvas.nevysha {
 .nevysha.settings-nevyui-bottom > p {
     font-size: 0.8em;
     color: var(--body-text-color);
+}
+
+
+/*fix menu to top*/
+.nevysha.nevysha-tabnav.menu-fix-top{
+    position: fixed;
+    flex-direction: row;
+    width: 100%;
+    top: 0;
+}
+.gradio-container.app.menu-fix-top {
+    padding-top: 25px !important;
+}
+:root, .dark {
+    --nevysha-margin-left: 175px;
+    --nevysha-menu-fix-top-height-less: 0;
 }

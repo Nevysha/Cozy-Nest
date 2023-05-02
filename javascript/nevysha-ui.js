@@ -264,6 +264,30 @@ function loadSettings() {
   setGradientColor()
   document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").addEventListener("change", setGradientColor)
 
+  //check if menu is in left or top mode
+  const menuPosition = () => {
+    const isLeftChecked = document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=left]").checked;
+
+    //top mode
+    if (!isLeftChecked) {
+      document.querySelector(".nevysha.nevysha-tabnav").classList.add("menu-fix-top")
+      document.querySelector(".gradio-container.app").classList.add("menu-fix-top")
+      cssVarArray.forEach(root => root.style.setProperty('--nevysha-margin-left', `0`));
+      cssVarArray.forEach(root => root.style.setProperty('--nevysha-menu-fix-top-height-less', `25px`));
+    }
+    //left mode
+    else {
+      document.querySelector(".nevysha.nevysha-tabnav").classList.remove("menu-fix-top")
+      document.querySelector(".gradio-container.app").classList.remove("menu-fix-top")
+      cssVarArray.forEach(root => root.style.setProperty('--nevysha-margin-left', `175px`));
+      cssVarArray.forEach(root => root.style.setProperty('--nevysha-menu-fix-top-height-less', `0`));
+    }
+  }
+  menuPosition()
+  document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=left]").addEventListener("change", menuPosition)
+  document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top]").addEventListener("change", menuPosition)
+
+
 }
 
 const onload = () => {
@@ -306,6 +330,8 @@ const onload = () => {
   const tabs = document.querySelectorAll('#tabs > .tabitem')
   //add nevysha css class to each main tab for easier css
   tabs.forEach(tab => tab.setAttribute('class', `${tab.getAttribute('class')} nevysha`))
+  //add nevysha css class to tabnav
+  document.querySelectorAll('#tabs > div.tab-nav').forEach(tabnav => tabnav.setAttribute('class', `${tabnav.getAttribute('class')} nevysha nevysha-tabnav`))
 
 
   //manage text2img tab
