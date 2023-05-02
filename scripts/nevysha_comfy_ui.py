@@ -4,6 +4,20 @@ import os
 
 from modules import scripts, script_callbacks, shared, sd_hijack
 
+
+def rgb_to_hex(r, g, b):
+    return '#{:02x}{:02x}{:02x}'.format(r, g, b)
+
+
+def hex_to_rgb(hex):
+    rgb = []
+    for i in (0, 2, 4):
+        decimal = int(hex[i:i+2], 16)
+        rgb.append(decimal)
+
+    return tuple(rgb)
+
+
 def on_ui_settings():
 
     section = ('nevyui', "Nevysha Comfy UI")
@@ -17,32 +31,18 @@ def on_ui_settings():
                                component_args={"choices": ['left', 'top']},
                                section=section))
 
-    shared.opts.add_option("nevyui_enableWaves",
-                           shared.OptionInfo(
-                               default=True,
-                               label="Enable waves",
-                               component=gr.Checkbox,
-                               section=section))
-
     shared.opts.add_option("nevyui_waveColor",
                            shared.OptionInfo(
-                               default='rgb(94 26 145 / 16%)',
+                               default=rgb_to_hex(94, 26, 145),
                                label="Waves color",
-                               component=gr.Textbox,
-                               section=section))
-
-    shared.opts.add_option("nevyui_enableBgGradiant",
-                           shared.OptionInfo(
-                               default=True,
-                               label="Enable background gradiant",
-                               component=gr.Checkbox,
+                               component=gr.ColorPicker,
                                section=section))
 
     shared.opts.add_option("nevyui_bgGradiantColor",
                            shared.OptionInfo(
-                               default='rgba(101,0,94,1)',
+                               default=rgb_to_hex(101, 0, 94),
                                label="Background gradiant color",
-                               component=gr.Textbox,
+                               component=gr.ColorPicker,
                                section=section))
 
 

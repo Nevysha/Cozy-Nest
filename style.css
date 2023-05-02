@@ -762,3 +762,24 @@ canvas.nevysha {
 .block.gradio-checkbox {
     margin: 0 !important;
 }
+
+.nevysha.settings-nevyui-top > h2 {
+    font-size: 1.4em;
+    color: var(--body-text-color);
+}
+.nevysha.settings-nevyui-top > .info {
+    color: var(--body-text-color);
+}
+.nevysha.settings-nevyui-top > .warning {
+    font-size: 1.1em;
+    margin-top: 5px;
+    color: #000000;
+    font-weight: bold;
+    background-color: #e3cf7e;
+    padding: 8px;
+    border-radius: 2px;
+}
+.nevysha.settings-nevyui-bottom > p {
+    font-size: 0.8em;
+    color: var(--body-text-color);
+}

@@ -1,5 +1,14 @@
 console.log("nevysha-ui.js")
 
+const hexToRgb = (hex) => {
+  const bigint = parseInt(hex.replace('#', ''), 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+
+  return `${r} ${g} ${b}`;
+}
+
 const wrapDataGenerationInfo = ({prefix}) => {
   // Get the generation info container
   const previewBlocks = document.querySelectorAll(`#tab_${prefix} div#${prefix}_results > *:not(#${prefix}_results)`);
@@ -231,6 +240,32 @@ function addScrollable(bundle) {
   document.getElementById(`${bundle.prefix}_gallery_container`).classList.add("nevysha","nevysha-scrollable")
 }
 
+function loadSettings() {
+
+  cssVarArray = [document.querySelector('.dark'), document.querySelector(':root')];
+
+  //waves
+  const setWaveColor = () => {
+    const hexColor = document.querySelector("#setting_nevyui_waveColor").querySelector("input").value;
+    const rgbColor = hexToRgb(hexColor);
+    document.querySelectorAll(".wave").forEach((wave) => {
+      wave.setAttribute("style", `background: rgb(${rgbColor} / 16%)`);
+    })
+  }
+  setWaveColor()
+  document.querySelector("#setting_nevyui_waveColor").querySelector("input").addEventListener("change", setWaveColor)
+
+  //background gradient
+  const setGradientColor = () => {
+    const hexColor = document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").value;
+    const rgbColor = hexToRgb(hexColor);
+    cssVarArray.forEach(root => root.style.setProperty('--nevysha-gradiant-1', `rgb(${rgbColor})`));
+  }
+  setGradientColor()
+  document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").addEventListener("change", setGradientColor)
+
+}
+
 const onload = () => {
 
   let gradioApp = window.gradioApp;
@@ -294,6 +329,27 @@ const onload = () => {
 
   //add expend to inpainting
   tweakInpainting();
+
+  //load settings
+  loadSettings();
+
+  //tweak webui setting page for nevysha comfy ui directly with JS because... gradio blblblbl
+  const settings_nevyui = document.querySelector("#settings_nevyui")
+  //add a div at the top
+  const settings_nevyui_top = document.createElement("div")
+  settings_nevyui_top.setAttribute("class", "nevysha settings-nevyui-top")
+  settings_nevyui_top.innerHTML =
+    "<h2>Nevysha Comfy UI</h2>" +
+    "<p class='info'>A collection of tweaks to make Auto1111 webui more comfy to use</p>" +
+    "<p class='warning'>WARNING : Settings are immediately applied but will not be saved until you click \"Apply Settings\"</p>"
+  settings_nevyui.insertAdjacentElement("afterbegin", settings_nevyui_top)
+
+  //add a div at the bottom
+  const settings_nevyui_bottom = document.createElement("div")
+  settings_nevyui_bottom.setAttribute("class", "nevysha settings-nevyui-bottom")
+  settings_nevyui_bottom.innerHTML =
+    "<p class='info'>Made by Nevysha with luv</p>";
+  settings_nevyui.insertAdjacentElement("beforeend", settings_nevyui_bottom)
 
   console.log("nevysha-ui.js: DOMContentLoaded")
 };
