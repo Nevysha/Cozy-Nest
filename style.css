@@ -639,7 +639,26 @@ button.secondary, button.primary {
 }
 #txt2img_gallery_container, #img2img_gallery_container {
     flex: 1;
+    max-height: 100%;
+    overflow-y: auto;
 }
+.nevysha.nevysha-scrollable::-webkit-scrollbar {
+    width: 5px;
+}
+
+.nevysha.nevysha-scrollable::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.nevysha.nevysha-scrollable::-webkit-scrollbar-thumb {
+    background-color: var(--ae-primary-color);
+    border-radius: 20px;
+}
+
+.nevysha.nevysha-scrollable > div > div:nth-child(2) {
+    overflow-y: visible;
+}
+
 #txt2img_gallery, #img2img_gallery {
     height: 100%;
     display: flex;

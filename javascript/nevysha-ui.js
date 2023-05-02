@@ -227,6 +227,10 @@ function tweakInpainting() {
   })
 }
 
+function addScrollable(bundle) {
+  document.getElementById(`${bundle.prefix}_gallery_container`).classList.add("nevysha","nevysha-scrollable")
+}
+
 const onload = () => {
 
   let gradioApp = window.gradioApp;
@@ -274,12 +278,11 @@ const onload = () => {
     wrapSettings(bundle);
     wrapDataGenerationInfo(bundle);
     addDraggable(bundle);
+    addScrollable(bundle);
   }
 
   nevysha_magic({prefix: "txt2img"});
   nevysha_magic({prefix: "img2img"});
-
-  //TODO y-scrollbar for other tab seems buggy
 
 
   //general
