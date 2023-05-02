@@ -25,7 +25,7 @@ def on_ui_settings():
 
     shared.opts.add_option("nevyui_menuPosition",
                            shared.OptionInfo(
-                               default='left',
+                               default='top',
                                label="Main menu position",
                                component=gr.Radio,
                                component_args={"choices": ['left', 'top']},
