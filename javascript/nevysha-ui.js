@@ -280,7 +280,7 @@ function loadSettings() {
       document.querySelector(".nevysha.nevysha-tabnav").classList.remove("menu-fix-top")
       document.querySelector(".gradio-container.app").classList.remove("menu-fix-top")
       cssVarArray.forEach(root => root.style.setProperty('--nevysha-margin-left', `175px`));
-      cssVarArray.forEach(root => root.style.setProperty('--nevysha-menu-fix-top-height-less', `0`));
+      cssVarArray.forEach(root => root.style.setProperty('--nevysha-menu-fix-top-height-less', `1px`));
     }
   }
   menuPosition()

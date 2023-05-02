@@ -797,5 +797,5 @@ canvas.nevysha {
 }
 :root, .dark {
     --nevysha-margin-left: 175px;
-    --nevysha-menu-fix-top-height-less: 0;
+    --nevysha-menu-fix-top-height-less: 1px;
 }
