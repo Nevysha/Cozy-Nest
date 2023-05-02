@@ -736,3 +736,10 @@ button.secondary, button.primary {
 canvas.nevysha {
     inset: auto;
 }
+
+.brush > input[type="range"] {
+    min-width: 200px;
+}
+.block.gradio-checkbox {
+    margin: 0 !important;
+}
