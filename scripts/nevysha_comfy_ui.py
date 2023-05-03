@@ -92,6 +92,9 @@ def on_ui_tabs():
                 bg_gradiant_color = gr.ColorPicker(value=config.get('bg_gradiant_color'), label="Background gradiant color", elem_id="setting_nevyui_bgGradiantColor", interactive=True)
                 accent_color = gr.ColorPicker(value=config.get('accent_color'), label="Accent color", elem_id="setting_nevyui_accentColor", interactive=True)
 
+            with gr.Row(elem_id='nevysha-saved-feedback-wrapper'):
+                gr.HTML(value="<div id='nevysha-saved-feedback' class='nevysha nevysha-saved-feedback' style='display:none;'>Saved !</div>")
+
             btn = gr.Button(value="Save", elem_id="nevyui_sh_options_submit", elem_classes="nevyui_apply_settings")
             btn.click(save_settings, inputs=[
                 main_menu_position,

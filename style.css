@@ -966,3 +966,13 @@ canvas.nevysha {
     fill: var(--ae-primary-color);
     width: 20px;
 }
+#nevysha-saved-feedback-wrapper {
+    height: 1px;
+}
+#nevysha-saved-feedback {
+    margin: auto;
+    width: 100%;
+    text-align: center;
+    margin-top: -15px !important;
+    color: var(--ae-primary-color);
+}
