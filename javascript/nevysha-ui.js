@@ -1,5 +1,13 @@
 console.log("nevysha-ui.js")
 
+const getTheme = () => {
+  const gradioURL = window.location.href
+  if (!gradioURL.includes('?__theme=')) {
+    return 'dark'
+  }
+  return gradioURL.split('?__theme=')[1];
+}
+
 const hexToRgb = (hex) => {
   const bigint = parseInt(hex.replace('#', ''), 16);
   const r = (bigint >> 16) & 255;
@@ -242,8 +250,6 @@ function addScrollable(bundle) {
 
 function loadSettings() {
 
-  cssVarArray = [document.querySelector('.dark'), document.querySelector(':root')];
-
   //waves
   const setWaveColor = () => {
     const hexColor = document.querySelector("#setting_nevyui_waveColor").querySelector("input").value;
@@ -259,7 +265,7 @@ function loadSettings() {
   const setGradientColor = () => {
     const hexColor = document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").value;
     const rgbColor = hexToRgb(hexColor);
-    cssVarArray.forEach(root => root.style.setProperty('--nevysha-gradiant-1', `rgb(${rgbColor})`));
+    document.querySelector(':root').style.setProperty('--nevysha-gradiant-1', `rgb(${rgbColor})`);
   }
   setGradientColor()
   document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").addEventListener("change", setGradientColor)
@@ -272,15 +278,15 @@ function loadSettings() {
     if (!isLeftChecked) {
       document.querySelector(".nevysha.nevysha-tabnav").classList.add("menu-fix-top")
       document.querySelector(".gradio-container.app").classList.add("menu-fix-top")
-      cssVarArray.forEach(root => root.style.setProperty('--nevysha-margin-left', `0`));
-      cssVarArray.forEach(root => root.style.setProperty('--nevysha-menu-fix-top-height-less', `25px`));
+      document.querySelector(':root').style.setProperty('--nevysha-margin-left', `0`);
+      document.querySelector(':root').style.setProperty('--nevysha-menu-fix-top-height-less', `25px`);
     }
     //left mode
     else {
       document.querySelector(".nevysha.nevysha-tabnav").classList.remove("menu-fix-top")
       document.querySelector(".gradio-container.app").classList.remove("menu-fix-top")
-      cssVarArray.forEach(root => root.style.setProperty('--nevysha-margin-left', `175px`));
-      cssVarArray.forEach(root => root.style.setProperty('--nevysha-menu-fix-top-height-less', `1px`));
+      document.querySelector(':root').style.setProperty('--nevysha-margin-left', `175px`);
+      document.querySelector(':root').style.setProperty('--nevysha-menu-fix-top-height-less', `1px`);
     }
   }
   menuPosition()
@@ -358,6 +364,15 @@ const onload = () => {
 
   //load settings
   loadSettings();
+
+  //apply theme
+  if (getTheme() === "light") {
+    document.querySelector("body").classList.add("nevysha-light")
+    document.querySelectorAll('.gradio-accordion').forEach(elem => elem.style.setProperty('box-shadow', '1px 1px 3px rgba(0, 0, 0, 0.3)'))
+  }
+  else {
+    document.querySelector("body").classList.remove("nevysha-light")
+  }
 
   //tweak webui setting page for nevysha comfy ui directly with JS because... gradio blblblbl
   const settings_nevyui = document.querySelector("#settings_nevyui")
