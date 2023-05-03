@@ -466,7 +466,7 @@ input[type=range]::-webkit-slider-thumb {
     background-color: var(--main-tabs-background-color);
     border: none;
     border-radius: 0;
-    height: calc(100vh - (16px + 16px + 85px + 20px + var(--nevysha-menu-fix-top-height-less)));
+    height: calc(100vh - (100px + var(--nevysha-menu-fix-top-height-less)));
     overflow-y: auto;
 }
 #tabs > .nevysha.tabitem::-webkit-scrollbar {
@@ -555,6 +555,22 @@ input[type=range]::-webkit-slider-thumb {
     display: flex;
     justify-content: center;
     width: 100%;
+}
+
+#footer > div {
+    display: flex;
+    position: fixed;
+    left: 10px;
+    bottom: 2px;
+}
+#footer .versions {
+    font-size: 85% !important;
+    opacity: 0.85 !important;
+    /* margin-left: auto; */
+    position: fixed !important;
+    right: 10px !important;
+    left: auto !important;
+    bottom: 2px;
 }
 
 .nevysha.svg-icon {
