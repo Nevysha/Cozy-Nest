@@ -389,6 +389,23 @@ function tweakNevyUiSettings() {
   document.querySelector("#tabs").insertAdjacentHTML('beforeend', nevySettingstab);
   //put tab_nevyui inside the panel
   document.querySelector("#nevyui_sh_options_panel").appendChild(document.querySelector("#tab_nevyui"));
+
+  // //add a submit button and insert it before the last div of #nevyui-ui-block
+  // const nevySettingstabSubmit = document.createElement('button');
+  // nevySettingstabSubmit.id = "nevyui_sh_options_submit";
+  // nevySettingstabSubmit.className = "nevysha nevysha-button lg primary gradio-button";
+  // nevySettingstabSubmit.textContent = "Save";
+  //
+  // // get a reference to the last child div element in #nevyui-ui-block
+  // const lastDiv = document.querySelector('#nevyui-ui-block > div:last-child');
+  // // insert the new button element before the last child div element
+  // lastDiv.parentNode.insertBefore(nevySettingstabSubmit, lastDiv);
+  // //when submit is clicked, trigger click on the original button #settings_submit
+  // document.querySelector("#nevyui_sh_options_submit").addEventListener("click", () => {
+  //     document.querySelector("#settings_submit").click();
+  // });
+
+
   //show tab_nevyui by default to bypass gradio
   document.querySelector("#tab_nevyui").style.display = "block";
 

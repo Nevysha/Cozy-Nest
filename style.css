@@ -957,14 +957,12 @@ canvas.nevysha {
     background-color: var(--block-background-fill);
 }
 #nevyui_sh_options {
-    margin: auto;
+    margin: 20px auto;
 }
 #nevyui_sh_options.menu-fix-top {
-    margin-left: auto;
-    margin-right: 35px;
+    margin: 0 35px 0 auto;
 }
 #nevyui_sh_options > svg {
     fill: var(--ae-primary-color);
     width: 20px;
-
 }
