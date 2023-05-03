@@ -902,7 +902,7 @@ canvas.nevysha {
 .nevysha.settings-nevyui-top > .reporting {
     color: var(--body-text-color);
     margin: 15px 0 15px 0;
-    border-left: 2px solid var(--ae-primary-color);
+    border-left: 4px solid var(--ae-primary-color);
     padding-left: 5px;
     font-size: 1.2em;
 }

@@ -32,77 +32,26 @@ def on_ui_tabs():
             gr.HTML(value="<div class='nevysha settings-nevyui-top'><h2>Nevysha Comfy UI</h2>"
                           "<p class='info'>A collection of tweaks to make Auto1111 webui more comfy to use</p>"
                           "<p class='reporting'>Found a bug or want to ask for a feature ? Please use "
-                            "<a href='https://www.reddit.com/r/NevyshaComfyUi/'>this subreddit</a>"
+                          "  <a href='https://www.reddit.com/r/NevyshaComfyUi/'>this subreddit</a>"
                           " or <a href='https://github.com/Nevysha/a1111-nevysha-comfy-ui'>github</a></p>"
                           "<p class='warning'>WARNING : Settings are immediately applied but will not be saved until you click \"Apply Settings\"</p></div>")
 
             # main menu
-            gr.Radio(value='top', label="Main menu position", choices=['left', 'top'], elem_id="nevyui_menuPosition", interactive=True)
-            gr.Checkbox(value=False, label="Accent Generate Button", elem_id="nevyui_accentGenerateButton")
-            gr.Slider(value=12, label="Font size", minimum=10, maximum=18, step=1, elem_id="nevyui_fontSize")
+            gr.Radio(value='top', label="Main menu position", choices=['left', 'top'], elem_id="setting_nevyui_menuPosition", interactive=True)
+            gr.Checkbox(value=False, label="Accent Generate Button", elem_id="setting_nevyui_accentGenerateButton", interactive=True)
+            gr.Slider(value=12, label="Font size", minimum=10, maximum=18, step=1, elem_id="setting_nevyui_fontSize", interactive=True)
 
             with gr.Row():
-                gr.ColorPicker(value=rgb_to_hex(94, 26, 145), label="Waves color", elem_id="nevyui_waveColor")
-                gr.ColorPicker(value=rgb_to_hex(101, 0, 94), label="Background gradiant color", elem_id="nevyui_bgGradiantColor")
-                gr.ColorPicker(value=rgb_to_hex(92, 175, 214), label="Accent color", elem_id="nevyui_accentColor")
+                gr.ColorPicker(value=rgb_to_hex(94, 26, 145), label="Waves color", elem_id="setting_nevyui_waveColor", interactive=True)
+                gr.ColorPicker(value=rgb_to_hex(101, 0, 94), label="Background gradiant color", elem_id="setting_nevyui_bgGradiantColor", interactive=True)
+                gr.ColorPicker(value=rgb_to_hex(92, 175, 214), label="Accent color", elem_id="setting_nevyui_accentColor", interactive=True)
 
             # footer
             gr.HTML(value="<div class='nevysha settings-nevyui-bottom'>"
-                          "<p class='info'>Made by Nevysha with luv</p>"
+                          "  <p class='info'>Made by Nevysha with luv</p>"
                           "</div>")
 
     return [(ui, "Nevysha Comfy UI", "nevyui")]
 
 
-def on_ui_settings():
-
-    section = ('nevyui', "Nevysha Comfy UI")
-
-
-    shared.opts.add_option("nevyui_menuPosition",
-                           shared.OptionInfo(
-                               default='top',
-                               label="Main menu position",
-                               component=gr.Radio,
-                               component_args={"choices": ['left', 'top']},
-                               section=section))
-
-    shared.opts.add_option("nevyui_waveColor",
-                           shared.OptionInfo(
-                               default=rgb_to_hex(94, 26, 145),
-                               label="Waves color",
-                               component=gr.ColorPicker,
-                               section=section))
-
-    shared.opts.add_option("nevyui_bgGradiantColor",
-                           shared.OptionInfo(
-                               default=rgb_to_hex(101, 0, 94),
-                               label="Background gradiant color",
-                               component=gr.ColorPicker,
-                               section=section))
-
-    shared.opts.add_option("nevyui_accentColor",
-                           shared.OptionInfo(
-                               default=rgb_to_hex(92, 175, 214),
-                               label="Accent color",
-                               component=gr.ColorPicker,
-                               section=section))
-
-    shared.opts.add_option("nevyui_accentGenerateButton",
-                           shared.OptionInfo(
-                               default=False,
-                               label="Accent Generate Button",
-                               component=gr.Checkbox,
-                               section=section))
-
-    shared.opts.add_option("nevyui_fontSize",
-                           shared.OptionInfo(
-                               default=12,
-                               label="Font size",
-                               component=gr.Slider,
-                               component_args={"maximum": 18, "minimum": 10, "step": 1},
-                               section=section))
-
-
-script_callbacks.on_ui_settings(on_ui_settings)
 script_callbacks.on_ui_tabs(on_ui_tabs)
