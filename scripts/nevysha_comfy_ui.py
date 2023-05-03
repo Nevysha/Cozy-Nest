@@ -48,14 +48,7 @@ def save_settings(main_menu_position,
 def get_dict_from_config():
     if not os.path.exists(CONFIG_FILENAME):
         # return default config
-        return {
-            'main_menu_position': 'top',
-            'accent_generate_button': False,
-            'font_size': 12,
-            'waves_color': rgb_to_hex(94, 26, 145),
-            'bg_gradiant_color': rgb_to_hex(101, 0, 94),
-            'accent_color': rgb_to_hex(92, 175, 214),
-        }
+        return get_default_settings()
 
     with open(CONFIG_FILENAME, 'r') as f:
         config = json.loads(f.read())
@@ -63,6 +56,32 @@ def get_dict_from_config():
         return config
 
 
+def get_default_settings():
+    return {
+        'main_menu_position': 'top',
+        'accent_generate_button': False,
+        'font_size': 12,
+        'waves_color': rgb_to_hex(94, 26, 145),
+        'bg_gradiant_color': rgb_to_hex(101, 0, 94),
+        'accent_color': rgb_to_hex(92, 175, 214),
+    }
+
+
+def reset_settings():
+    config = get_default_settings()
+    save_settings(
+        config.get('main_menu_position'),
+        config.get('accent_generate_button'),
+        config.get('font_size'),
+        config.get('waves_color'),
+        config.get('bg_gradiant_color'),
+        config.get('accent_color'),
+    )
+
+
+def request_restart():
+    shared.state.interrupt()
+    shared.state.need_restart = True
 
 
 def on_ui_tabs():
@@ -93,17 +112,32 @@ def on_ui_tabs():
                 accent_color = gr.ColorPicker(value=config.get('accent_color'), label="Accent color", elem_id="setting_nevyui_accentColor", interactive=True)
 
             with gr.Row(elem_id='nevysha-saved-feedback-wrapper'):
-                gr.HTML(value="<div id='nevysha-saved-feedback' class='nevysha nevysha-saved-feedback' style='display:none;'>Saved !</div>")
+                gr.HTML(value="<div id='nevysha-saved-feedback' class='nevysha nevysha-feedback' style='display:none;'>Saved !</div>")
+                gr.HTML(value="<div id='nevysha-reset-feedback' class='nevysha nevysha-feedback' style='display:none;'>Reset !</div>")
+                gr.HTML(value="<div id='nevysha-dummy-feedback' class='nevysha nevysha-feedback' style='display:none;' />")
 
-            btn = gr.Button(value="Save", elem_id="nevyui_sh_options_submit", elem_classes="nevyui_apply_settings")
-            btn.click(save_settings, inputs=[
-                main_menu_position,
-                accent_generate_button,
-                font_size,
-                waves_color,
-                bg_gradiant_color,
-                accent_color,
-            ], outputs=[])
+            with gr.Row():
+                btn_save = gr.Button(value="Save", elem_id="nevyui_sh_options_submit", elem_classes="nevyui_apply_settings")
+                btn_save.click(save_settings, inputs=[
+                    main_menu_position,
+                    accent_generate_button,
+                    font_size,
+                    waves_color,
+                    bg_gradiant_color,
+                    accent_color,
+                ], outputs=[])
+
+                btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)", elem_id="nevyui_sh_options_reset", elem_classes="nevyui_apply_settings")
+                # restore default settings
+                btn_reset.click(reset_settings)
+
+                btn_reload = gr.Button(value="Reload UI", elem_id="nevyui_sh_options_reset", elem_classes="nevyui_apply_settings")
+                # reload the page
+                btn_reload.click(
+                    fn=request_restart,
+                    _js='restart_reload',
+                    inputs=[],
+                    outputs=[],)
 
             # footer
             gr.HTML(value="<div class='nevysha settings-nevyui-bottom'>"

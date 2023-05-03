@@ -403,6 +403,19 @@ function tweakNevyUiSettings() {
       }, 1500);
   });
 
+  //add an event listener on #nevyui_sh_options_submit to briefly show a message when the user clicks on it
+  document.querySelector("#nevyui_sh_options_reset").addEventListener("click", (e) => {
+    //cancel event
+    e.preventDefault();
+    e.stopPropagation();
+    //show the message with a smooth animation using jquery
+    $("#nevysha-reset-feedback").fadeIn();
+    //hide the message after 1.5 second
+    setTimeout(() => {
+      $("#nevysha-reset-feedback").fadeOut();
+    }, 1500);
+  });
+
 
   //show tab_nevyui by default to bypass gradio
   document.querySelector("#tab_nevyui").style.display = "block";

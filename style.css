@@ -969,10 +969,10 @@ canvas.nevysha {
 #nevysha-saved-feedback-wrapper {
     height: 1px;
 }
-#nevysha-saved-feedback {
+.nevysha-feedback {
     margin: auto;
     width: 100%;
     text-align: center;
     margin-top: -15px !important;
-    color: var(--ae-primary-color);
+    color: var(--ae-primary-color) !important;
 }
