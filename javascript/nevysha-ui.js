@@ -300,9 +300,6 @@ function loadSettings() {
       root.style.setProperty('--nevysha-color-from-luminance', `white`);
     }
   }
-  setAccentColor()
-  document.querySelector("#setting_nevyui_accentColor").querySelector("input").addEventListener("change", setAccentColor)
-
   //accent generate button
   const setAccentForGenerate = () => {
     const checked = document.querySelector("#setting_nevyui_accentGenerateButton").querySelector("input").checked;
@@ -318,6 +315,12 @@ function loadSettings() {
       }
     })
   }
+
+  setAccentColor()
+  document.querySelector("#setting_nevyui_accentColor").querySelector("input").addEventListener("change", setAccentColor)
+  document.querySelector("#setting_nevyui_accentColor").querySelector("input").addEventListener("change", setAccentForGenerate)
+
+
   setAccentForGenerate()
   document.querySelector("#setting_nevyui_accentGenerateButton").querySelector("input").addEventListener("change", setAccentForGenerate);
 
