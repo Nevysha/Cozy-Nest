@@ -1,3 +1,8 @@
+:root {
+    /*override by code when applying settings*/
+    --nevysha-margin-left: 175px;
+    --nevysha-menu-fix-top-height-less: 1px;
+}
 :root, .dark {
     /*--nevysha-gradiant-1: #8777a1;*/
     /*--nevysha-gradiant-2: #00adb5;*/
@@ -16,6 +21,7 @@
 
     /*--secondary-tabs-background-color: #ffffff75;*/
     --tab-nav-background-color: #262626ad;
+    --tab-nav-background-color-selected: var(--input-background-fill);
     /*--footer-text-color: #262626;*/
     /*--btn-background-color: #549cdb;*/
 
@@ -30,9 +36,12 @@
     /*--secondary-text-color: #2c2c2c;*/
     /*--input-border-color: #a1a1a1;*/
 
+    --vertical-line-bg-color: #ffffff59;
+
     --checkbox-background-color: var(--nevysha-dark);
 
     --button-border-width: 0px;
+    --tabmenu-button-color: #ffffff;
 
     --nevysha-dark: #1c1c1c;
     --nevysha-light-dark: #292a2e;
@@ -45,6 +54,15 @@
 
     --main-tabs-background-color: #14141485;
     --background-fill-primary: var(--nevysha-light-dark);
+
+    --ae-slider-bg-overlay: repeating-linear-gradient( 90deg, transparent, transparent max(3px, calc(0.671141% - 2px)), var(--ae-input-border-color) max(3px, calc(0.671141% - 2px)), var(--ae-input-border-color) max(4px, calc(0.671141% + 0px)) );
+    --ae-subgroup-input-bg-color: hsl(225deg 6% 13%);
+    --ae-primary-color: hsl(199deg 60% 60%);
+
+    --ae-input-border-color: hsl(214deg 5% 30%);
+    --ae-panel-border-radius: 0px;
+    --ae-input-bg-color: hsl(225deg 6% 13%);
+    --ae-input-color: hsl(210deg 4% 80%);
 
     --primary-50: var(--nevysha-color4);
     --primary-100: var(--nevysha-color4);
@@ -267,6 +285,118 @@
     --button-transition: none;
 }
 
+.nevysha-light {
+    --nevysha-gradiant-1: rgba(101,0,94,1);
+    --nevysha-gradiant-2: #fefefe;
+
+    --nevysha-white: #000000;
+    --nevysha-dark: #fefefe;
+    --nevysha-light-dark: #efefef;
+    --neutral-50: var(--nevysha-white);
+    --neutral-100: var(--nevysha-white);
+    --neutral-200: var(--nevysha-white);
+    --neutral-400: var(--nevysha-white);
+    --neutral-600: var(--nevysha-light-dark);
+    --neutral-700: var(--nevysha-light-dark);
+    --neutral-800: var(--nevysha-light-dark);
+    --neutral-900: var(--nevysha-light-dark);
+    --neutral-950: var(--nevysha-light-dark);
+
+    --ae-slider-bg-overlay: repeating-linear-gradient( 90deg, transparent, transparent max(3px, calc(0.671141% - 2px)), var(--ae-input-border-color) max(3px, calc(0.671141% - 2px)), var(--ae-input-border-color) max(4px, calc(0.671141% + 0px)) );
+    --ae-subgroup-input-bg-color: hsl(225deg 6% 13%);
+    --ae-primary-color: hsl(199deg 60% 60%);
+    --ae-input-border-color: hsl(0deg 0% 84.25%);
+    --ae-input-color: hsl(0, 0%, 0%);
+    --ae-input-bg-color: hsl(0, 0%, 100%);
+    --button-secondary-background-fill: var(--nevysha-dark);
+    --block-label-background-fill: var(--background-fill-secondary);
+
+    --vertical-line-bg-color: #18181859;
+    --checkbox-background-color: var(--nevysha-dark);
+    --checkbox-background-color-focus: var(--checkbox-background-color);
+    --checkbox-label-background-fill: linear-gradient(to top, var(--neutral-900), var(--neutral-800));
+    --checkbox-label-background-fill-selected: var(--checkbox-label-background-fill);
+    --checkbox-label-text-color: var(--body-text-color);
+    --checkbox-label-text-color-selected: var(--checkbox-label-text-color);
+    --background-fill-secondary: var(--neutral-900);
+    --panel-background-fill: var(--background-fill-secondary);
+    --body-text-color-subdued: var(--neutral-400);
+    --block-label-text-color: var(--neutral-200);
+    --button-secondary-text-color: var(--nevysha-white);
+    --button-secondary-text-color-hover: var(--button-secondary-text-color);
+    --checkbox-border-color-hover: var(--ae-primary-color);
+    --checkbox-background-color-hover: var(--nevysha-dark);
+    --button-secondary-background-fill-hover: var(--ae-primary-color);
+
+    --body-background-fill: rgba(255, 255, 255, 0) !important;
+    --tab-nav-background-color: var(--nevysha-light-dark);
+    --tab-nav-background-color-selected: var(--nevysha-dark);
+    --border-color-primary: #7a7a7a;
+    --input-border-color: var(--border-color-primary);
+    --block-border-color: var(--border-color-primary);
+    --input-border-color-focus: var(--ae-primary-color);
+
+    --ae-panel-border-radius: 0px;
+    --tabnav-button-color: var(--nevysha-white);
+
+    --input-background-fill: var(--nevysha-dark);
+    --body-text-color: var(--neutral-100);
+    --tabmenu-button-color: var(--nevysha-white);
+    --background-fill-primary: var(--nevysha-light-dark);
+    /*--border-color-primary: var(--neutral-700);*/
+    --block-background-fill: var(--neutral-800);
+    --secondary-text-color: var(--nevysha-white);
+    --block-title-text-color: var(--neutral-100);
+    --main-tabs-background-color: #e5e5e585;
+}
+
+.gradio-button.secondary-down:hover {
+    background: var(--button-secondary-background-fill-hover);
+    color: var(--button-secondary-text-color-hover);
+}
+.gradio-dropdown ul.options li.item.selected {
+    background-color: var(--ae-primary-color) !important;
+}
+.progressDiv .progress{
+    background: var(--ae-primary-color) !important;;
+}
+/* Show the up/down arrows of number inputs */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+    position: relative;
+}
+
+/* Set up arrow */
+input[type="number"]::-webkit-inner-spin-button::before {
+    content: '\25b2';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 50%;
+    text-align: center;
+    color: red;
+    font-size: 10px;
+}
+
+/* Set down arrow */
+input[type="number"]::-webkit-inner-spin-button::after {
+    content: '\25bc';
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    color: red;
+    font-size: 10px;
+}
+
 .gradio-accordion {
     background-color: var(--nevysha-light-dark) !important;
     border: none !important;
@@ -275,12 +405,6 @@
     margin: 4px 0 4px 0 !important;
 }
 
-
-:root, .dark {
-    --ae-slider-bg-overlay: repeating-linear-gradient( 90deg, transparent, transparent max(3px, calc(0.671141% - 2px)), var(--ae-input-border-color) max(3px, calc(0.671141% - 2px)), var(--ae-input-border-color) max(4px, calc(0.671141% + 0px)) );
-    --ae-subgroup-input-bg-color: hsl(225deg 6% 13%);
-    --ae-primary-color: hsl(199deg 60% 60%);
-}
 .gradio-slider input[type=range] {
     align-self: flex-start;
 }
@@ -330,9 +454,12 @@ input[type=range]::-webkit-slider-thumb {
     background-color: var(--tab-nav-background-color);
     border-bottom: none !important;
 }
+.nevysha.nevysha-tabnav > .selected {
+    background-color: var(--tab-nav-background-color-selected) !important;
+}
 
 .nevysha.nevysha-tabnav > button {
-    color: #ffffff;
+    color: var(--tabmenu-button-color);
 }
 
 #tabs > .nevysha.tabitem {
@@ -552,12 +679,6 @@ body {
     margin-top: 10px !important;
 }
 
-:root, .dark {
-    --ae-input-border-color: hsl(214deg 5% 30%);
-    --ae-panel-border-radius: 0px;
-    --ae-input-bg-color: hsl(225deg 6% 13%);
-    --ae-input-color: hsl(210deg 4% 80%);
-}
 button.secondary, button.primary {
     border: 1px solid var(--ae-input-border-color) !important;
     border-radius: var(--ae-panel-border-radius) !important;
@@ -729,7 +850,7 @@ button.secondary, button.primary {
     min-width: 2px !important;
     height: 100%;
     cursor: ew-resize;
-    background-image: linear-gradient(to bottom, #ffffff59 7px, transparent 0);
+    background-image: linear-gradient(to bottom, var(--vertical-line-bg-color) 7px, transparent 0);
     background-size: 100% 13px;
 }
 
@@ -794,8 +915,4 @@ canvas.nevysha {
 }
 .gradio-container.app.menu-fix-top {
     padding-top: 25px !important;
-}
-:root, .dark {
-    --nevysha-margin-left: 175px;
-    --nevysha-menu-fix-top-height-less: 1px;
 }
