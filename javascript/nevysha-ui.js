@@ -438,6 +438,10 @@ function tweakNevyUiSettings() {
     //cancel event
     e.preventDefault();
     e.stopPropagation();
+
+    //show tab_nevyui by default to bypass gradio hidding tabs
+    document.querySelector("#tab_nevyui").style.display = "block";
+
     //toggle the panel with a slide animation using jquery
     if (shown) {
       $("#nevyui_sh_options_panel").slideUp();

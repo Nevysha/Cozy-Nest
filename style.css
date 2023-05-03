@@ -704,7 +704,7 @@ button.secondary, button.primary {
 /*txt2img tweaks*/
 
 .nevysha.generate-button, .nevysha.skip-interrupt-wrapper {
-    margin: 0 0 10px 0;
+    /*margin: 0 0 10px 0;*/
 }
 
 .nevysha.skip-interrupt-wrapper {
