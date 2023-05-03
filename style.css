@@ -940,3 +940,10 @@ canvas.nevysha {
 .gradio-container.app.menu-fix-top {
     padding-top: 25px !important;
 }
+
+#tab_nevyui > div {
+    height: 100%;
+}
+#nevyui-ui-wrapper {
+    background-color: var(--block-background-fill);
+}
