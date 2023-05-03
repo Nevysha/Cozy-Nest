@@ -45,5 +45,19 @@ def on_ui_settings():
                                component=gr.ColorPicker,
                                section=section))
 
+    shared.opts.add_option("nevyui_accentColor",
+                           shared.OptionInfo(
+                               default=rgb_to_hex(101, 0, 94),
+                               label="Accent color",
+                               component=gr.ColorPicker,
+                               section=section))
+
+    shared.opts.add_option("nevyui_accentGenerateButton",
+                           shared.OptionInfo(
+                               default=False,
+                               label="Accent Generate Button",
+                               component=gr.Checkbox,
+                               section=section))
+
 
 script_callbacks.on_ui_settings(on_ui_settings)

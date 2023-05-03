@@ -397,6 +397,7 @@ const onload = () => {
   settings_nevyui_top.innerHTML =
     "<h2>Nevysha Comfy UI</h2>" +
     "<p class='info'>A collection of tweaks to make Auto1111 webui more comfy to use</p>" +
+    "<p class='reporting'>Found a bug or want to ask for a feature ? Please use <a href='https://www.reddit.com/r/NevyshaComfyUi/'>this subreddit</a> or <a href='https://github.com/Nevysha/a1111-nevysha-comfy-ui'>github</a></p>" +
     "<p class='warning'>WARNING : Settings are immediately applied but will not be saved until you click \"Apply Settings\"</p>"
   settings_nevyui.insertAdjacentElement("afterbegin", settings_nevyui_top)
 
