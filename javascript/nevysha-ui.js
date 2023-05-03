@@ -266,6 +266,8 @@ function getHexColorForAccent() {
 
 function loadSettings() {
 
+  const root = document.querySelector(':root');
+
   //waves
   const setWaveColor = () => {
     const hexColor = document.querySelector("#setting_nevyui_waveColor").querySelector("input").value;
@@ -281,7 +283,7 @@ function loadSettings() {
   const setGradientColor = () => {
     const hexColor = document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").value;
     const rgbColor = hexToRgb(hexColor);
-    document.querySelector(':root').style.setProperty('--nevysha-gradiant-1', `rgb(${rgbColor})`);
+    root.style.setProperty('--nevysha-gradiant-1', `rgb(${rgbColor})`);
   }
   setGradientColor()
   document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").addEventListener("change", setGradientColor)
@@ -290,7 +292,13 @@ function loadSettings() {
   const setAccentColor = () => {
     const hexColor = getHexColorForAccent();
     const rgbColor = hexToRgb(hexColor);
-    document.querySelector(':root').style.setProperty('--ae-primary-color', `rgb(${rgbColor})`);
+    root.style.setProperty('--ae-primary-color', `rgb(${rgbColor})`);
+    if (getLuminance(getHexColorForAccent())  > 0.5) {
+      root.style.setProperty('--nevysha-color-from-luminance', `black`);
+    }
+    else {
+      root.style.setProperty('--nevysha-color-from-luminance', `white`);
+    }
   }
   setAccentColor()
   document.querySelector("#setting_nevyui_accentColor").querySelector("input").addEventListener("change", setAccentColor)
@@ -316,7 +324,7 @@ function loadSettings() {
   //font size
   const setFontSize = () => {
     const fontSize = document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").value;
-    document.querySelector(':root').style.setProperty('--nevysha-text-md', `${fontSize}px`);
+    root.style.setProperty('--nevysha-text-md', `${fontSize}px`);
   }
   setFontSize()
   document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").addEventListener("change", setFontSize)
@@ -331,15 +339,15 @@ function loadSettings() {
     if (!isLeftChecked) {
       document.querySelector(".nevysha.nevysha-tabnav").classList.add("menu-fix-top")
       document.querySelector(".gradio-container.app").classList.add("menu-fix-top")
-      document.querySelector(':root').style.setProperty('--nevysha-margin-left', `0`);
-      document.querySelector(':root').style.setProperty('--nevysha-menu-fix-top-height-less', `25px`);
+      root.style.setProperty('--nevysha-margin-left', `0`);
+      root.style.setProperty('--nevysha-menu-fix-top-height-less', `25px`);
     }
     //left mode
     else {
       document.querySelector(".nevysha.nevysha-tabnav").classList.remove("menu-fix-top")
       document.querySelector(".gradio-container.app").classList.remove("menu-fix-top")
-      document.querySelector(':root').style.setProperty('--nevysha-margin-left', `175px`);
-      document.querySelector(':root').style.setProperty('--nevysha-menu-fix-top-height-less', `1px`);
+      root.style.setProperty('--nevysha-margin-left', `175px`);
+      root.style.setProperty('--nevysha-menu-fix-top-height-less', `1px`);
     }
   }
   menuPosition()

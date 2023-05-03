@@ -5,6 +5,7 @@
     --ae-primary-color: rgb(92 175 214);
     --nevysha-gradiant-1: rgb(101,0,94);
     --nevysha-text-md: 12px;
+    --nevysha-color-from-luminance: black;
 }
 :root, .dark {
     /*--nevysha-gradiant-1: #8777a1;*/
@@ -914,7 +915,8 @@ canvas.nevysha {
     margin-top: 5px;
     color: #000000;
     font-weight: bold;
-    background-color: #e3cf7e;
+    background-color: var(--ae-primary-color);
+    color: var(--nevysha-color-from-luminance);
     padding: 8px;
     border-radius: 2px;
 }
