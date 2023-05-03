@@ -107,7 +107,16 @@ const addDraggable = ({prefix}) => {
   const results = document.getElementById(`${prefix}_results`);
 
   //change min-width to 320px
-  settings.style.minWidth = `min(${RESULT_MIN_WIDTH}px, 100%)`
+  settings.style.minWidth = `min(${RESULT_MIN_WIDTH}px, 100%)`;
+
+  //get linePosition from local storage
+  let linePosition = localStorage.getItem(`${prefix}_linePosition`);
+  if (!linePosition) {
+    linePosition = 50;
+    localStorage.setItem(`${prefix}_linePosition`, `${linePosition}`);
+  }
+  settings.style.flexBasis = `${linePosition}%`;
+  results.style.flexBasis = `${100 - linePosition}%`;
 
   let isDragging = false;
 
@@ -141,6 +150,9 @@ const addDraggable = ({prefix}) => {
     if (linePosition >= (1 - RESULT_MIN_WIDTH / containerWidth) * 100) {
       return;
     }
+
+    //save linePosition to local storage
+    localStorage.setItem(`${prefix}_linePosition`, `${linePosition}`);
 
     settings.style.flexBasis = `${linePosition}%`;
     results.style.flexBasis = `${100 - linePosition}%`;
