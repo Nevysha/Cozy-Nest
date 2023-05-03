@@ -47,7 +47,7 @@ def on_ui_settings():
 
     shared.opts.add_option("nevyui_accentColor",
                            shared.OptionInfo(
-                               default=rgb_to_hex(101, 0, 94),
+                               default=rgb_to_hex(92, 175, 214),
                                label="Accent color",
                                component=gr.ColorPicker,
                                section=section))

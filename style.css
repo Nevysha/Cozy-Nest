@@ -104,7 +104,7 @@
     --button-secondary-background-fill: var(--nevysha-dark);
     --button-secondary-background-fill-hover: var(--nevysha-dark);
     --checkbox-border-color: var(--nevysha-white);
-
+    --checkbox-border-color-hover: var(--ae-primary-color);
 
 
     /*default dark*/
@@ -128,7 +128,6 @@
     --block-title-text-color: var(--neutral-200);
     --checkbox-background-color-selected: var(--secondary-600);
     --checkbox-border-color-focus: var(--secondary-500);
-    --checkbox-border-color-hover: var(--neutral-600);
     --checkbox-border-color-selected: var(--secondary-600);
     --checkbox-label-background-fill: linear-gradient(to top, var(--neutral-900), var(--neutral-800));
     --checkbox-label-background-fill-hover: linear-gradient(to top, var(--neutral-900), var(--neutral-800));
@@ -883,6 +882,14 @@ canvas.nevysha {
     margin: 0 !important;
 }
 
+
+.nevysha-accent {
+    background-color: var(--ae-primary-color) !important;
+}
+
+#settings_nevyui {
+
+}
 .nevysha.settings-nevyui-top > h2 {
     font-size: 1.4em;
     color: var(--body-text-color);
@@ -910,6 +917,10 @@ canvas.nevysha {
     background-color: #e3cf7e;
     padding: 8px;
     border-radius: 2px;
+}
+.nevysha.settings-nevyui-bottom {
+    position: absolute;
+    bottom: 0;
 }
 .nevysha.settings-nevyui-bottom > p {
     font-size: 0.8em;

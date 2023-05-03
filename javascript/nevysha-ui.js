@@ -260,6 +260,10 @@ function addScrollable(bundle) {
   document.getElementById(`${bundle.prefix}_gallery_container`).classList.add("nevysha","nevysha-scrollable")
 }
 
+function getHexColorForAccent() {
+  return document.querySelector("#setting_nevyui_accentColor").querySelector("input").value;
+}
+
 function loadSettings() {
 
   //waves
@@ -281,6 +285,34 @@ function loadSettings() {
   }
   setGradientColor()
   document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").addEventListener("change", setGradientColor)
+
+  //background gradient
+  const setAccentColor = () => {
+    const hexColor = getHexColorForAccent();
+    const rgbColor = hexToRgb(hexColor);
+    document.querySelector(':root').style.setProperty('--ae-primary-color', `rgb(${rgbColor})`);
+  }
+  setAccentColor()
+  document.querySelector("#setting_nevyui_accentColor").querySelector("input").addEventListener("change", setAccentColor)
+
+  //accent generate button
+  const setAccentForGenerate = () => {
+    const checked = document.querySelector("#setting_nevyui_accentGenerateButton").querySelector("input").checked;
+    document.querySelectorAll('button[id$="_generate"]').forEach((btn) => {
+      if (checked) {
+        let txtColorAppending = "";
+        if (getLuminance(getHexColorForAccent())  > 0.5) {
+          txtColorAppending = "color: black !important";
+        }
+        btn.setAttribute("style", `background: var(--ae-primary-color) !important; ${txtColorAppending}`);
+      } else {
+        btn.setAttribute("style", '');
+      }
+    })
+  }
+  setAccentForGenerate()
+  document.querySelector("#setting_nevyui_accentGenerateButton").querySelector("input").addEventListener("change", setAccentForGenerate)
+
 
   //check if menu is in left or top mode
   const menuPosition = () => {
@@ -306,6 +338,18 @@ function loadSettings() {
   document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top]").addEventListener("change", menuPosition)
 
 
+}
+const getLuminance = (hexcolor) => {
+  // remove # character from hex color string
+  const hex = hexcolor.replace('#', '');
+
+  // convert hex color to RGB values
+  const r = parseInt(hex.substr(0,2),16);
+  const g = parseInt(hex.substr(2,2),16);
+  const b = parseInt(hex.substr(4,2),16);
+
+  // calculate the relative luminance of the color
+  return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
 }
 
 const onload = () => {
