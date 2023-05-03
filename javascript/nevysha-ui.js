@@ -82,6 +82,18 @@ function wrapSettings({prefix}) {
   //move generate button to the top
   generateBtn.classList.add('nevysha', 'generate-button')
   settingsContainer.insertBefore(generateBtn, settingsContainer.firstChild);
+
+  //wrap Skip and Interrupt buttons
+  const skipBtn = document.getElementById(`${prefix}_skip`);
+  skipBtn.classList.add('nevysha', 'skip-button');
+  const interruptBtn = document.getElementById(`${prefix}_interrupt`);
+  interruptBtn.classList.add('nevysha', 'interrupt-button');
+  const skipInterruptWrapper = document.createElement('div');
+  skipInterruptWrapper.classList.add('nevysha', 'skip-interrupt-wrapper');
+  skipInterruptWrapper.appendChild(skipBtn);
+  skipInterruptWrapper.appendChild(interruptBtn);
+  settingsContainer.insertBefore(skipInterruptWrapper, settingsContainer.firstChild);
+
 }
 
 const SETTINGS_MIN_WIDTH = 420;
@@ -107,7 +119,16 @@ const addDraggable = ({prefix}) => {
   const results = document.getElementById(`${prefix}_results`);
 
   //change min-width to 320px
-  settings.style.minWidth = `min(${RESULT_MIN_WIDTH}px, 100%)`
+  settings.style.minWidth = `min(${RESULT_MIN_WIDTH}px, 100%)`;
+
+  //get linePosition from local storage
+  let linePosition = localStorage.getItem(`${prefix}_linePosition`);
+  if (!linePosition) {
+    linePosition = 50;
+    localStorage.setItem(`${prefix}_linePosition`, `${linePosition}`);
+  }
+  settings.style.flexBasis = `${linePosition}%`;
+  results.style.flexBasis = `${100 - linePosition}%`;
 
   let isDragging = false;
 
@@ -141,6 +162,9 @@ const addDraggable = ({prefix}) => {
     if (linePosition >= (1 - RESULT_MIN_WIDTH / containerWidth) * 100) {
       return;
     }
+
+    //save linePosition to local storage
+    localStorage.setItem(`${prefix}_linePosition`, `${linePosition}`);
 
     settings.style.flexBasis = `${linePosition}%`;
     results.style.flexBasis = `${100 - linePosition}%`;
@@ -248,7 +272,13 @@ function addScrollable(bundle) {
   document.getElementById(`${bundle.prefix}_gallery_container`).classList.add("nevysha","nevysha-scrollable")
 }
 
+function getHexColorForAccent() {
+  return document.querySelector("#setting_nevyui_accentColor").querySelector("input").value;
+}
+
 function loadSettings() {
+
+  const root = document.querySelector(':root');
 
   //waves
   const setWaveColor = () => {
@@ -265,10 +295,56 @@ function loadSettings() {
   const setGradientColor = () => {
     const hexColor = document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").value;
     const rgbColor = hexToRgb(hexColor);
-    document.querySelector(':root').style.setProperty('--nevysha-gradiant-1', `rgb(${rgbColor})`);
+    root.style.setProperty('--nevysha-gradiant-1', `rgb(${rgbColor})`);
   }
   setGradientColor()
   document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").addEventListener("change", setGradientColor)
+
+  //background gradient
+  const setAccentColor = () => {
+    const hexColor = getHexColorForAccent();
+    const rgbColor = hexToRgb(hexColor);
+    root.style.setProperty('--ae-primary-color', `rgb(${rgbColor})`);
+    if (getLuminance(getHexColorForAccent())  > 0.5) {
+      root.style.setProperty('--nevysha-color-from-luminance', `black`);
+    }
+    else {
+      root.style.setProperty('--nevysha-color-from-luminance', `white`);
+    }
+  }
+  //accent generate button
+  const setAccentForGenerate = () => {
+    const checked = document.querySelector("#setting_nevyui_accentGenerateButton").querySelector("input").checked;
+    document.querySelectorAll('button[id$="_generate"]').forEach((btn) => {
+      if (checked) {
+        let txtColorAppending = "";
+        if (getLuminance(getHexColorForAccent())  > 0.5) {
+          txtColorAppending = "color: black !important";
+        }
+        btn.setAttribute("style", `background: var(--ae-primary-color) !important; ${txtColorAppending}`);
+      } else {
+        btn.setAttribute("style", '');
+      }
+    })
+  }
+
+  setAccentColor()
+  document.querySelector("#setting_nevyui_accentColor").querySelector("input").addEventListener("change", setAccentColor)
+  document.querySelector("#setting_nevyui_accentColor").querySelector("input").addEventListener("change", setAccentForGenerate)
+
+
+  setAccentForGenerate()
+  document.querySelector("#setting_nevyui_accentGenerateButton").querySelector("input").addEventListener("change", setAccentForGenerate);
+
+  //font size
+  const setFontSize = () => {
+    const fontSize = document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").value;
+    root.style.setProperty('--nevysha-text-md', `${fontSize}px`);
+  }
+  setFontSize()
+  document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").addEventListener("change", setFontSize)
+  document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=range]").addEventListener("change", setFontSize)
+
 
   //check if menu is in left or top mode
   const menuPosition = () => {
@@ -278,15 +354,17 @@ function loadSettings() {
     if (!isLeftChecked) {
       document.querySelector(".nevysha.nevysha-tabnav").classList.add("menu-fix-top")
       document.querySelector(".gradio-container.app").classList.add("menu-fix-top")
-      document.querySelector(':root').style.setProperty('--nevysha-margin-left', `0`);
-      document.querySelector(':root').style.setProperty('--nevysha-menu-fix-top-height-less', `25px`);
+      document.querySelector("#nevyui_sh_options")?.classList.add("menu-fix-top")
+      root.style.setProperty('--nevysha-margin-left', `0`);
+      root.style.setProperty('--nevysha-menu-fix-top-height-less', `25px`);
     }
     //left mode
     else {
       document.querySelector(".nevysha.nevysha-tabnav").classList.remove("menu-fix-top")
       document.querySelector(".gradio-container.app").classList.remove("menu-fix-top")
-      document.querySelector(':root').style.setProperty('--nevysha-margin-left', `175px`);
-      document.querySelector(':root').style.setProperty('--nevysha-menu-fix-top-height-less', `1px`);
+      document.querySelector("#nevyui_sh_options")?.classList.remove("menu-fix-top")
+      root.style.setProperty('--nevysha-margin-left', `175px`);
+      root.style.setProperty('--nevysha-menu-fix-top-height-less', `1px`);
     }
   }
   menuPosition()
@@ -294,6 +372,94 @@ function loadSettings() {
   document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top]").addEventListener("change", menuPosition)
 
 
+}
+const getLuminance = (hexcolor) => {
+  // remove # character from hex color string
+  const hex = hexcolor.replace('#', '');
+
+  // convert hex color to RGB values
+  const r = parseInt(hex.substr(0,2),16);
+  const g = parseInt(hex.substr(2,2),16);
+  const b = parseInt(hex.substr(4,2),16);
+
+  // calculate the relative luminance of the color
+  return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+}
+
+function tweakNevyUiSettings() {
+  // select button element with "Nevysha Comfy UI" as its content
+  const nevySettingstabMenu = $('#tabs > div > button:contains("Nevysha Comfy UI")');
+  // hide the button
+  nevySettingstabMenu.hide();
+
+  //add a new button in the tabnav
+  const nevySettingstabMenu2 = `<button id="nevyui_sh_options"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M234.7 42.7L197 56.8c-3 1.1-5 4-5 7.2s2 6.1 5 7.2l37.7 14.1L248.8 123c1.1 3 4 5 7.2 5s6.1-2 7.2-5l14.1-37.7L315 71.2c3-1.1 5-4 5-7.2s-2-6.1-5-7.2L277.3 42.7 263.2 5c-1.1-3-4-5-7.2-5s-6.1 2-7.2 5L234.7 42.7zM46.1 395.4c-18.7 18.7-18.7 49.1 0 67.9l34.6 34.6c18.7 18.7 49.1 18.7 67.9 0L529.9 116.5c18.7-18.7 18.7-49.1 0-67.9L495.3 14.1c-18.7-18.7-49.1-18.7-67.9 0L46.1 395.4zM484.6 82.6l-105 105-23.3-23.3 105-105 23.3 23.3zM7.5 117.2C3 118.9 0 123.2 0 128s3 9.1 7.5 10.8L64 160l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L128 160l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L128 96 106.8 39.5C105.1 35 100.8 32 96 32s-9.1 3-10.8 7.5L64 96 7.5 117.2zm352 256c-4.5 1.7-7.5 6-7.5 10.8s3 9.1 7.5 10.8L416 416l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L480 416l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L480 352l-21.2-56.5c-1.7-4.5-6-7.5-10.8-7.5s-9.1 3-10.8 7.5L416 352l-56.5 21.2z"/></svg></button>`;
+  document.querySelector("#tabs > div.tab-nav").insertAdjacentHTML('beforeend', nevySettingstabMenu2);
+
+  ///create an hideable right side panel
+  const nevySettingstab = `<div id="nevyui_sh_options_panel" class="nevysha nevysha-tab nevysha-tab-settings" style="display: none;">`;
+  document.querySelector("#tabs").insertAdjacentHTML('beforeend', nevySettingstab);
+  //put tab_nevyui inside the panel
+  document.querySelector("#nevyui_sh_options_panel").appendChild(document.querySelector("#tab_nevyui"));
+
+  //add an event listener on #nevyui_sh_options_submit to briefly show a message when the user clicks on it
+  document.querySelector("#nevyui_sh_options_submit").addEventListener("click", (e) => {
+      //cancel event
+      e.preventDefault();
+      e.stopPropagation();
+      //show the message with a smooth animation using jquery
+      $("#nevysha-saved-feedback").fadeIn();
+      //hide the message after 1.5 second
+      setTimeout(() => {
+            $("#nevysha-saved-feedback").fadeOut();
+      }, 1500);
+  });
+
+  //add an event listener on #nevyui_sh_options_submit to briefly show a message when the user clicks on it
+  document.querySelector("#nevyui_sh_options_reset").addEventListener("click", (e) => {
+    //cancel event
+    e.preventDefault();
+    e.stopPropagation();
+    //show the message with a smooth animation using jquery
+    $("#nevysha-reset-feedback").fadeIn();
+    //hide the message after 1.5 second
+    setTimeout(() => {
+      $("#nevysha-reset-feedback").fadeOut();
+    }, 1500);
+  });
+
+
+  //show tab_nevyui by default to bypass gradio
+  document.querySelector("#tab_nevyui").style.display = "block";
+
+  //add click event to the new button
+  let shown = false;
+  document.querySelector("#nevyui_sh_options").addEventListener("click", (e) => {
+    //cancel event
+    e.preventDefault();
+    e.stopPropagation();
+
+    //show tab_nevyui by default to bypass gradio hidding tabs
+    document.querySelector("#tab_nevyui").style.display = "block";
+
+    //toggle the panel with a slide animation using jquery
+    if (shown) {
+      $("#nevyui_sh_options_panel").slideUp();
+    } else {
+      $("#nevyui_sh_options_panel").slideDown();
+    }
+    shown = !shown;
+  });
+  //when shown is true, hide it on click outside
+  document.addEventListener("click", (e) => {
+    if (shown && !e.target.closest("#nevyui_sh_options_panel") && !e.target.closest("#nevyui_sh_options")) {
+      //cancel event
+      e.preventDefault();
+      e.stopPropagation();
+      $("#nevyui_sh_options_panel").slideUp();
+      shown = false;
+    }
+  });
 }
 
 const onload = () => {
@@ -357,11 +523,14 @@ const onload = () => {
   tweakButtonsIcons();
 
   //style tweak to be MORE IMPORTANT than important
-  gradioApp().querySelector('.tabs').querySelectorAll(".block.padded:not(.gradio-accordion, .gradio-dropdown)").forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 10px !important;`))
+  gradioApp().querySelector('.tabs').querySelectorAll(".block.padded:not(.gradio-accordion, .gradio-dropdown, #nevyui_sh_options)").forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 10px !important;`))
   gradioApp().querySelectorAll('#quicksettings > div.block').forEach(elem => elem.style.padding = "0 !important")
 
   //add expend to inpainting
   tweakInpainting();
+
+  //tweak webui setting page for nevysha comfy ui directly with JS because... gradio blblblbl
+  tweakNevyUiSettings();
 
   //load settings
   loadSettings();
@@ -369,35 +538,29 @@ const onload = () => {
   //apply theme
   if (getTheme() === "light") {
     document.querySelector("body").classList.add("nevysha-light")
-    ///TODO why this is not working ? ffs
-    // document.querySelectorAll('.gradio-accordion').forEach(elem => elem.style.setProperty('box-shadow', '1px 1px 3px rgba(0, 0, 0, 0.3) !important'))
     document.querySelectorAll('.gradio-accordion').forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3) !important;`))
   }
   else {
     document.querySelector("body").classList.remove("nevysha-light")
   }
 
-  //tweak webui setting page for nevysha comfy ui directly with JS because... gradio blblblbl
-  const settings_nevyui = document.querySelector("#settings_nevyui")
-  //add a div at the top
-  const settings_nevyui_top = document.createElement("div")
-  settings_nevyui_top.setAttribute("class", "nevysha settings-nevyui-top")
-  settings_nevyui_top.innerHTML =
-    "<h2>Nevysha Comfy UI</h2>" +
-    "<p class='info'>A collection of tweaks to make Auto1111 webui more comfy to use</p>" +
-    "<p class='warning'>WARNING : Settings are immediately applied but will not be saved until you click \"Apply Settings\"</p>"
-  settings_nevyui.insertAdjacentElement("afterbegin", settings_nevyui_top)
 
-  //add a div at the bottom
-  const settings_nevyui_bottom = document.createElement("div")
-  settings_nevyui_bottom.setAttribute("class", "nevysha settings-nevyui-bottom")
-  settings_nevyui_bottom.innerHTML =
-    "<p class='info'>Made by Nevysha with luv</p>";
-  settings_nevyui.insertAdjacentElement("beforeend", settings_nevyui_bottom)
-
-  console.log("nevysha-ui.js: DOMContentLoaded")
+  console.log("nevysha-ui.js: DOMContentLoaded");
 };
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+
+  try {
+    // dynamically import jQuery library
+    await import('https://code.jquery.com/jquery-3.6.4.min.js')
+
+    // jQuery is now loaded and ready to use
+    console.log("jQuery library loaded successfully");
+  }
+  catch (err) {
+    // handle any errors that occur during the import process
+    console.error("Failed to load jQuery library", err);
+  }
+
   onload();
 });
