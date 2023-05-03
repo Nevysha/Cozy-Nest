@@ -80,7 +80,7 @@ def on_ui_tabs():
                           "<p class='reporting'>Found a bug or want to ask for a feature ? Please use "
                           "  <a href='https://www.reddit.com/r/NevyshaComfyUi/'>this subreddit</a>"
                           " or <a href='https://github.com/Nevysha/a1111-nevysha-comfy-ui'>github</a></p>"
-                          "<p class='warning'>WARNING : Settings are immediately applied but will not be saved until you click \"Apply Settings\"</p></div>")
+                          "<p class='warning'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
 
             # main menu
             main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position", choices=['left', 'top'], elem_id="setting_nevyui_menuPosition", interactive=True)
