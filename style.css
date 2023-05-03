@@ -703,8 +703,16 @@ button.secondary, button.primary {
 
 /*txt2img tweaks*/
 
-.nevysha.generate-button {
+.nevysha.generate-button, .nevysha.skip-interrupt-wrapper {
     margin: 0 0 10px 0;
+}
+
+.nevysha.skip-interrupt-wrapper {
+    display: flex; !important;
+    flex-direction: row;
+}
+.nevysha.skip-interrupt-wrapper > button {
+    position: relative;
 }
 
 .nevysha.settings-wrapper {

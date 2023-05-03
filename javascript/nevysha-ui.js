@@ -82,6 +82,18 @@ function wrapSettings({prefix}) {
   //move generate button to the top
   generateBtn.classList.add('nevysha', 'generate-button')
   settingsContainer.insertBefore(generateBtn, settingsContainer.firstChild);
+
+  //wrap Skip and Interrupt buttons
+  const skipBtn = document.getElementById(`${prefix}_skip`);
+  skipBtn.classList.add('nevysha', 'skip-button');
+  const interruptBtn = document.getElementById(`${prefix}_interrupt`);
+  interruptBtn.classList.add('nevysha', 'interrupt-button');
+  const skipInterruptWrapper = document.createElement('div');
+  skipInterruptWrapper.classList.add('nevysha', 'skip-interrupt-wrapper');
+  skipInterruptWrapper.appendChild(skipBtn);
+  skipInterruptWrapper.appendChild(interruptBtn);
+  settingsContainer.insertBefore(skipInterruptWrapper, settingsContainer.firstChild);
+
 }
 
 const SETTINGS_MIN_WIDTH = 420;
