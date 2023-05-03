@@ -59,5 +59,13 @@ def on_ui_settings():
                                component=gr.Checkbox,
                                section=section))
 
+    shared.opts.add_option("nevyui_fontSize",
+                           shared.OptionInfo(
+                               default=12,
+                               label="Font size",
+                               component=gr.Slider,
+                               component_args={"maximum": 18, "minimum": 10, "step": 1},
+                               section=section))
+
 
 script_callbacks.on_ui_settings(on_ui_settings)

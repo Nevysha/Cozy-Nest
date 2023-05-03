@@ -311,7 +311,16 @@ function loadSettings() {
     })
   }
   setAccentForGenerate()
-  document.querySelector("#setting_nevyui_accentGenerateButton").querySelector("input").addEventListener("change", setAccentForGenerate)
+  document.querySelector("#setting_nevyui_accentGenerateButton").querySelector("input").addEventListener("change", setAccentForGenerate);
+
+  //font size
+  const setFontSize = () => {
+    const fontSize = document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").value;
+    document.querySelector(':root').style.setProperty('--nevysha-text-md', `${fontSize}px`);
+  }
+  setFontSize()
+  document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").addEventListener("change", setFontSize)
+  document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=range]").addEventListener("change", setFontSize)
 
 
   //check if menu is in left or top mode
