@@ -310,6 +310,7 @@
     --ae-input-bg-color: hsl(0, 0%, 100%);
     --button-secondary-background-fill: var(--nevysha-dark);
     --block-label-background-fill: var(--background-fill-secondary);
+    --checkbox-label-background-fill-hover: linear-gradient(to top, var(--neutral-900), var(--neutral-800));
 
     --vertical-line-bg-color: #18181859;
     --checkbox-background-color: var(--nevysha-dark);
