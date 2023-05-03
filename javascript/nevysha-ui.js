@@ -338,6 +338,7 @@ const onload = () => {
   tabs.forEach(tab => tab.setAttribute('class', `${tab.getAttribute('class')} nevysha`))
   //add nevysha css class to tabnav
   document.querySelectorAll('#tabs > div.tab-nav').forEach(tabnav => tabnav.setAttribute('class', `${tabnav.getAttribute('class')} nevysha nevysha-tabnav`))
+  document.querySelectorAll('input[type="number"]').forEach(input => input.setAttribute('class', `${input.getAttribute('class')} nevysha`))
 
 
   //manage text2img tab
@@ -368,7 +369,9 @@ const onload = () => {
   //apply theme
   if (getTheme() === "light") {
     document.querySelector("body").classList.add("nevysha-light")
-    document.querySelectorAll('.gradio-accordion').forEach(elem => elem.style.setProperty('box-shadow', '1px 1px 3px rgba(0, 0, 0, 0.3)'))
+    ///TODO why this is not working ? ffs
+    // document.querySelectorAll('.gradio-accordion').forEach(elem => elem.style.setProperty('box-shadow', '1px 1px 3px rgba(0, 0, 0, 0.3) !important'))
+    document.querySelectorAll('.gradio-accordion').forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3) !important;`))
   }
   else {
     document.querySelector("body").classList.remove("nevysha-light")
