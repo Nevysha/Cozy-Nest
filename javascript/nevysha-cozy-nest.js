@@ -1,5 +1,9 @@
 console.log("nevysha-ui.js")
 
+const waves = "<div><div class='wave'></div> <div class='wave'></div><div class='wave'></div></div>";
+const svg_magic_wand = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M234.7 42.7L197 56.8c-3 1.1-5 4-5 7.2s2 6.1 5 7.2l37.7 14.1L248.8 123c1.1 3 4 5 7.2 5s6.1-2 7.2-5l14.1-37.7L315 71.2c3-1.1 5-4 5-7.2s-2-6.1-5-7.2L277.3 42.7 263.2 5c-1.1-3-4-5-7.2-5s-6.1 2-7.2 5L234.7 42.7zM46.1 395.4c-18.7 18.7-18.7 49.1 0 67.9l34.6 34.6c18.7 18.7 49.1 18.7 67.9 0L529.9 116.5c18.7-18.7 18.7-49.1 0-67.9L495.3 14.1c-18.7-18.7-49.1-18.7-67.9 0L46.1 395.4zM484.6 82.6l-105 105-23.3-23.3 105-105 23.3 23.3zM7.5 117.2C3 118.9 0 123.2 0 128s3 9.1 7.5 10.8L64 160l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L128 160l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L128 96 106.8 39.5C105.1 35 100.8 32 96 32s-9.1 3-10.8 7.5L64 96 7.5 117.2zm352 256c-4.5 1.7-7.5 6-7.5 10.8s3 9.1 7.5 10.8L416 416l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L480 416l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L480 352l-21.2-56.5c-1.7-4.5-6-7.5-10.8-7.5s-9.1 3-10.8 7.5L416 352l-56.5 21.2z"/></svg>`;
+const loading_roll = `<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`
+
 const getTheme = () => {
   const gradioURL = window.location.href
   if (!gradioURL.includes('?__theme=')) {
@@ -422,7 +426,7 @@ function tweakNevyUiSettings() {
   nevySettingstabMenu.hide();
 
   //add a new button in the tabnav
-  const nevySettingstabMenu2 = `<button id="nevyui_sh_options"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M234.7 42.7L197 56.8c-3 1.1-5 4-5 7.2s2 6.1 5 7.2l37.7 14.1L248.8 123c1.1 3 4 5 7.2 5s6.1-2 7.2-5l14.1-37.7L315 71.2c3-1.1 5-4 5-7.2s-2-6.1-5-7.2L277.3 42.7 263.2 5c-1.1-3-4-5-7.2-5s-6.1 2-7.2 5L234.7 42.7zM46.1 395.4c-18.7 18.7-18.7 49.1 0 67.9l34.6 34.6c18.7 18.7 49.1 18.7 67.9 0L529.9 116.5c18.7-18.7 18.7-49.1 0-67.9L495.3 14.1c-18.7-18.7-49.1-18.7-67.9 0L46.1 395.4zM484.6 82.6l-105 105-23.3-23.3 105-105 23.3 23.3zM7.5 117.2C3 118.9 0 123.2 0 128s3 9.1 7.5 10.8L64 160l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L128 160l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L128 96 106.8 39.5C105.1 35 100.8 32 96 32s-9.1 3-10.8 7.5L64 96 7.5 117.2zm352 256c-4.5 1.7-7.5 6-7.5 10.8s3 9.1 7.5 10.8L416 416l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L480 416l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L480 352l-21.2-56.5c-1.7-4.5-6-7.5-10.8-7.5s-9.1 3-10.8 7.5L416 352l-56.5 21.2z"/></svg></button>`;
+  const nevySettingstabMenu2 = `<button id="nevyui_sh_options">${svg_magic_wand}</button>`;
   document.querySelector("#tabs > div.tab-nav").insertAdjacentHTML('beforeend', nevySettingstabMenu2);
 
   ///create an hideable right side panel
@@ -491,12 +495,12 @@ function tweakNevyUiSettings() {
   });
 }
 
-const onload = () => {
+const onload = (done) => {
 
   let gradioApp = window.gradioApp;
   if (typeof gradioApp !== "function") {
     console.log("not ready")
-    setTimeout(onload, 2000);
+    setTimeout(() => onload(done), 200);
     return
   }
 
@@ -505,7 +509,7 @@ const onload = () => {
 
   if (!quicksettings) {
     console.log("not ready")
-    setTimeout(onload, 2000);
+    setTimeout(() => onload(done), 200);
     return
   }
 
@@ -525,7 +529,6 @@ const onload = () => {
   body.style = ""
 
   //add triple wave div to the end of body for uwuness
-  const waves = "<div><div class='wave'></div> <div class='wave'></div><div class='wave'></div></div>"
   body.insertAdjacentHTML('beforeend', waves);
 
   const tabs = document.querySelectorAll('#tabs > .tabitem')
@@ -573,16 +576,64 @@ const onload = () => {
     document.querySelector("body").classList.remove("nevysha-light")
   }
 
-
-  console.log("nevysha-ui.js: DOMContentLoaded");
+  done();
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
 
+  const maybeLightThemeClass = getTheme() === "light" ? "nevysha-light" : ""
+
+  //add a full screen div hiding while the app is loading
+  const pushLoading = () => {
+    if (document.querySelector('#nevysha-loading')) return
+    const loading =
+          `<div id='nevysha-loading-wrap' class='nevysha ${maybeLightThemeClass}'>
+            <div id='nevysha-loading' class='nevysha'>
+              <div class="nevysha-loading-progress">
+                <div class="nevysha-cozy-nest-app-name animate__animated animate__backInLeft">
+                    Cozy Nest
+                </div>
+                ${loading_roll}
+                <div id="loading-step-estimator" class="subtext3 animate__animated animate__pulse animate__infinite">
+                  1
+                </div>
+                <div class="subtext1 animate__animated animate__pulse animate__infinite">
+                    Loading The Magic
+                </div>
+                <div class="subtext2 animate__animated animate__pulse animate__infinite">
+                  (and gradio)
+                </div>
+              </div>
+              ${waves}
+              <div class="footer">Made by Nevysha with <span class="heart">❤</span> and <span class="coffee">☕</span></div>
+            </div>
+          </div>`
+    document.querySelector('body').insertAdjacentHTML('beforeend', loading);
+  }
+  pushLoading();
+
+  // Create a new observer instance
+  let step = 0;
+  const observer = new MutationObserver(function(mutations) {
+    if (mutations[0].target.id !== 'loading-step-estimator') {
+      console.log(`nevysha-ui.js: Loading step:${++step}...`);
+
+      //estimate the percentage from the step, knowing that there are approximately 30 steps and percentage should never go above 99
+      const percentage = Math.min(99, Math.round(step / 30 * 100));
+
+      document.querySelector("#loading-step-estimator").innerText = `${percentage}%`
+      pushLoading();
+    }
+  });
+
+  // Configure the observer to watch for changes to the body element and its descendants
+  const config = { attributes: true, childList: true, subtree: true };
+  observer.observe(document.body, config);
+
+
   try {
     // dynamically import jQuery library
     await import('https://code.jquery.com/jquery-3.6.4.min.js')
-
     // jQuery is now loaded and ready to use
     console.log("jQuery library loaded successfully");
   }
@@ -591,5 +642,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Failed to load jQuery library", err);
   }
 
-  onload();
+  onload(() => {
+    console.log("nevysha-ui.js: Loading done!");
+    //remove #nevysha-loading from DOM
+    observer.disconnect();
+    document.querySelector("#nevysha-loading-wrap").remove();
+  });
+
 });
+
+(() => {
+  // Create a new link element and set its attributes
+  const animateCssLink = document.createElement('link');
+  animateCssLink.rel = 'stylesheet';
+  animateCssLink.type = 'text/css';
+  animateCssLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css';
+
+  // Append the link element to the document head
+  document.head.appendChild(animateCssLink);
+
+  // Google Fonts link
+  const googleFontsLink = document.createElement('link');
+  googleFontsLink.rel = 'stylesheet';
+  googleFontsLink.type = 'text/css';
+  googleFontsLink.href = 'https://fonts.googleapis.com/css?family=Caveat';
+
+  // Append the link element to the document head
+  document.head.appendChild(googleFontsLink);
+
+})();

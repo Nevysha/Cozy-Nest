@@ -613,7 +613,7 @@ html {
     overflow-y: hidden;
 }
 
-body {
+body, #nevysha-loading {
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     overflow: auto;
     background: linear-gradient(330deg, var(--nevysha-gradiant-1) 3%, var(--nevysha-gradiant-2) 38%);
@@ -1018,4 +1018,146 @@ canvas.nevysha {
     text-align: center;
     margin-top: -15px !important;
     color: var(--ae-primary-color) !important;
+}
+
+/*LOADING*/
+.nevysha-cozy-nest-app-name{
+    font-size: 4em;
+    margin-bottom: 30%;
+    color: #e378b2;
+    font-family: "Caveat", sans-serif;
+    text-transform: uppercase;
+}
+#nevysha-loading > div.nevysha-loading-progress > div.subtext1 {
+    font-size: 1em;
+    color: var(--body-text-color);
+    opacity: 1;
+    margin-top: 30%;
+}
+#nevysha-loading > div.nevysha-loading-progress > div.subtext2 {
+    font-size: 0.8em;
+    color: var(--body-text-color);
+    opacity: 0.2;
+}
+#nevysha-loading-wrap {
+    background-color: var(--nevysha-gradiant-2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9000;
+}
+
+#nevysha-loading-wrap > #nevysha-loading > .footer {
+    position: fixed;
+    bottom: 15%;
+    right: 15%;
+    color: var(--body-text-color);
+    font-size: 0.7em;
+    opacity: 0.3;
+}
+
+#nevysha-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    z-index: 9001;
+}
+#loading-step-estimator {
+    font-size: 0.8em;
+}
+
+.nevysha-loading-progress {
+    margin: auto;
+    color: var(--ae-primary-color);
+    text-align: center;
+}
+
+.lds-roller {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+.lds-roller div {
+    animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    transform-origin: 40px 40px;
+}
+.lds-roller div:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ae-primary-color);
+    margin: -4px 0 0 -4px;
+}
+.lds-roller div:nth-child(1) {
+    animation-delay: -0.036s;
+}
+.lds-roller div:nth-child(1):after {
+    top: 63px;
+    left: 63px;
+}
+.lds-roller div:nth-child(2) {
+    animation-delay: -0.072s;
+}
+.lds-roller div:nth-child(2):after {
+    top: 68px;
+    left: 56px;
+}
+.lds-roller div:nth-child(3) {
+    animation-delay: -0.108s;
+}
+.lds-roller div:nth-child(3):after {
+    top: 71px;
+    left: 48px;
+}
+.lds-roller div:nth-child(4) {
+    animation-delay: -0.144s;
+}
+.lds-roller div:nth-child(4):after {
+    top: 72px;
+    left: 40px;
+}
+.lds-roller div:nth-child(5) {
+    animation-delay: -0.18s;
+}
+.lds-roller div:nth-child(5):after {
+    top: 71px;
+    left: 32px;
+}
+.lds-roller div:nth-child(6) {
+    animation-delay: -0.216s;
+}
+.lds-roller div:nth-child(6):after {
+    top: 68px;
+    left: 24px;
+}
+.lds-roller div:nth-child(7) {
+    animation-delay: -0.252s;
+}
+.lds-roller div:nth-child(7):after {
+    top: 63px;
+    left: 17px;
+}
+.lds-roller div:nth-child(8) {
+    animation-delay: -0.288s;
+}
+.lds-roller div:nth-child(8):after {
+    top: 56px;
+    left: 12px;
+}
+@keyframes lds-roller {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
