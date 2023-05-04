@@ -387,8 +387,8 @@ const getLuminance = (hexcolor) => {
 }
 
 function tweakNevyUiSettings() {
-  // select button element with "Nevysha Comfy UI" as its content
-  const nevySettingstabMenu = $('#tabs > div > button:contains("Nevysha Comfy UI")');
+  // select button element with "Nevysha Cozy Nest" as its content
+  const nevySettingstabMenu = $('#tabs > div > button:contains("Nevysha Cozy Nest")');
   // hide the button
   nevySettingstabMenu.hide();
 
@@ -529,7 +529,7 @@ const onload = () => {
   //add expend to inpainting
   tweakInpainting();
 
-  //tweak webui setting page for nevysha comfy ui directly with JS because... gradio blblblbl
+  //tweak webui setting page for Cozy Nest directly with JS because... gradio blblblbl
   tweakNevyUiSettings();
 
   //load settings
