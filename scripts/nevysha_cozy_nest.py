@@ -25,11 +25,30 @@ EXTENSION_TECHNICAL_NAME = os.path.basename(os.path.dirname(os.path.dirname(os.p
 CONFIG_FILENAME = f"extensions/{EXTENSION_TECHNICAL_NAME}/nevyui_settings.json"
 
 
+def gradio_save_settings(main_menu_position,
+                         quicksettings_position,
+                         accent_generate_button,
+                         font_size,
+                         waves_color,
+                         bg_gradiant_color,
+                         accent_color):
+    settings = {
+        'main_menu_position':main_menu_position,
+        'quicksettings_position':quicksettings_position,
+        'accent_generate_button':accent_generate_button,
+        'font_size':font_size,
+        'waves_color':waves_color,
+        'bg_gradiant_color':bg_gradiant_color,
+        'accent_color':accent_color,
+    }
+
+    save_settings(settings)
+
+
 def save_settings(settings):
     # create the file in extensions/Cozy-Nest if it doesn't exist
     if not os.path.exists(CONFIG_FILENAME):
         open(CONFIG_FILENAME, 'w').close()
-
     # save each settings inside the file
     with open(CONFIG_FILENAME, 'w') as f:
         f.write(json.dumps(settings, indent=2))
@@ -52,7 +71,7 @@ def get_default_settings():
         'main_menu_position': 'top',
         'accent_generate_button': False,
         'font_size': 12,
-        'quicksettings_gap': True,
+        'quicksettings_position': 'split',
         'waves_color': rgb_to_hex(94, 26, 145),
         'bg_gradiant_color': rgb_to_hex(101, 0, 94),
         'accent_color': rgb_to_hex(92, 175, 214),
@@ -97,11 +116,11 @@ def on_ui_tabs():
             main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position",
                                           choices=['left', 'top', 'top_centered'],
                                           elem_id="setting_nevyui_menuPosition", interactive=True)
+            quicksettings_position = gr.Radio(value=config.get('quicksettings_position'), label="Quicksettings position",
+                                              choices=['left', 'split', 'centered'],
+                                              elem_id="setting_nevyui_quicksettingsPosition", interactive=True)
             accent_generate_button = gr.Checkbox(value=config.get('accent_generate_button'), label="Accent Generate Button", elem_id="setting_nevyui_accentGenerateButton", interactive=True)
             font_size = gr.Slider(value=config.get('font_size'), label="Font size", minimum=10, maximum=18, step=1, elem_id="setting_nevyui_fontSize", interactive=True)
-
-            with gr.Row():
-                quicksettings_gap = gr.Checkbox(value=config.get('quicksettings_gap'), label="Add a gap in quicksettings between checkpoint and the others", elem_id="setting_nevyui_quicksettingsGap", interactive=True)
 
             with gr.Row():
                 waves_color = gr.ColorPicker(value=config.get('waves_color'), label="Waves color", elem_id="setting_nevyui_waveColor", interactive=True)
@@ -115,11 +134,11 @@ def on_ui_tabs():
 
             with gr.Row():
                 btn_save = gr.Button(value="Save", elem_id="nevyui_sh_options_submit", elem_classes="nevyui_apply_settings")
-                btn_save.click(save_settings, inputs=[
+                btn_save.click(gradio_save_settings, inputs=[
                     main_menu_position,
+                    quicksettings_position,
                     accent_generate_button,
                     font_size,
-                    quicksettings_gap,
                     waves_color,
                     bg_gradiant_color,
                     accent_color,

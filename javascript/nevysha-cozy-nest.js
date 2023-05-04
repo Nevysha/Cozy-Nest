@@ -381,17 +381,25 @@ function loadSettings() {
   document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top_centered]").addEventListener("change", menuPosition)
 
   //quicksetting gap
-  const setQuicksettingGap = () => {
-    const gap = document.querySelector("#setting_nevyui_quicksettingsGap").querySelector("input[type=checkbox]").checked;
-    if (gap) {
+  const setQuicksettingPosition = () => {
+    const position = document.querySelector("#setting_nevyui_quicksettingsPosition")
+        .querySelector("input[type=radio]:checked").value;
+    if (position === 'split') {
       document.querySelector("#quicksettings_gap").classList.add("nevysha-quicksettings-gap")
+      document.querySelector("#quicksettings").classList.remove("centered-quicksettings")
+    }
+    else if (position === 'centered') {
+      document.querySelector("#quicksettings_gap").classList.remove("nevysha-quicksettings-gap")
+      document.querySelector("#quicksettings").classList.add("centered-quicksettings")
     }
     else {
       document.querySelector("#quicksettings_gap").classList.remove("nevysha-quicksettings-gap")
+      document.querySelector("#quicksettings").classList.remove("centered-quicksettings")
     }
   }
-  setQuicksettingGap()
-  document.querySelector("#setting_nevyui_quicksettingsGap").querySelector("input[type=checkbox]").addEventListener("change", setQuicksettingGap)
+  setQuicksettingPosition()
+  document.querySelector("#setting_nevyui_quicksettingsPosition")
+      .querySelectorAll("input[type=radio]").forEach((input) => input.addEventListener("change", setQuicksettingPosition))
 
 }
 const getLuminance = (hexcolor) => {

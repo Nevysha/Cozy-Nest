@@ -553,6 +553,9 @@ input[type=range]::-webkit-slider-thumb {
     height: 33px;
     margin-left: -20px;
 }
+#quicksettings.centered-quicksettings {
+    justify-content: center !important;
+}
 
 #footer {
     text-align: center;
