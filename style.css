@@ -453,6 +453,9 @@ input[type=range]::-webkit-slider-thumb {
     background-color: var(--tab-nav-background-color);
     border-bottom: none !important;
 }
+.nevysha.nevysha-tabnav.center-menu-items {
+    justify-content: center;
+}
 .nevysha.nevysha-tabnav > .selected {
     background-color: var(--tab-nav-background-color-selected) !important;
 }
@@ -991,7 +994,9 @@ canvas.nevysha {
     margin: 20px auto;
 }
 #nevyui_sh_options.menu-fix-top {
-    margin: 0 35px 0 auto;
+    position: fixed;
+    right: 9px;
+    top: -16px;
 }
 #nevyui_sh_options > svg {
     fill: var(--ae-primary-color);

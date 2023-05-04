@@ -28,6 +28,7 @@ CONFIG_FILENAME = f"extensions/{EXTENSION_TECHNICAL_NAME}/nevyui_settings.json"
 def save_settings(main_menu_position,
                   accent_generate_button,
                   font_size,
+                  center_menu_item,
                   waves_color,
                   bg_gradiant_color,
                   accent_color):
@@ -41,6 +42,7 @@ def save_settings(main_menu_position,
             'main_menu_position': main_menu_position,
             'accent_generate_button': accent_generate_button,
             'font_size': font_size,
+            'center_menu_item': center_menu_item,
             'waves_color': waves_color,
             'bg_gradiant_color': bg_gradiant_color,
             'accent_color': accent_color,
@@ -64,6 +66,7 @@ def get_default_settings():
         'main_menu_position': 'top',
         'accent_generate_button': False,
         'font_size': 12,
+        'center_menu_item': False,
         'waves_color': rgb_to_hex(94, 26, 145),
         'bg_gradiant_color': rgb_to_hex(101, 0, 94),
         'accent_color': rgb_to_hex(92, 175, 214),
@@ -115,6 +118,9 @@ def on_ui_tabs():
             main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position", choices=['left', 'top'], elem_id="setting_nevyui_menuPosition", interactive=True)
             accent_generate_button = gr.Checkbox(value=config.get('accent_generate_button'), label="Accent Generate Button", elem_id="setting_nevyui_accentGenerateButton", interactive=True)
             font_size = gr.Slider(value=config.get('font_size'), label="Font size", minimum=10, maximum=18, step=1, elem_id="setting_nevyui_fontSize", interactive=True)
+            center_menu_item = gr.Checkbox(value=config.get('accent_generate_button'), label="Center tab in the top menu", elem_id="setting_nevyui_centeredMenu", interactive=True)
+
+
 
             with gr.Row():
                 waves_color = gr.ColorPicker(value=config.get('waves_color'), label="Waves color", elem_id="setting_nevyui_waveColor", interactive=True)
@@ -132,6 +138,7 @@ def on_ui_tabs():
                     main_menu_position,
                     accent_generate_button,
                     font_size,
+                    center_menu_item,
                     waves_color,
                     bg_gradiant_color,
                     accent_color,

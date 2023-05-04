@@ -371,6 +371,17 @@ function loadSettings() {
   document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=left]").addEventListener("change", menuPosition)
   document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top]").addEventListener("change", menuPosition)
 
+  // centered menu item (only in top mode)
+  const centeredMenu = () => {
+    const isCenteredChecked = document.querySelector("#setting_nevyui_centeredMenu").querySelector("input").checked;
+    if (isCenteredChecked) {
+      document.querySelector(".nevysha.nevysha-tabnav").classList.add("center-menu-items")
+    } else {
+      document.querySelector(".nevysha.nevysha-tabnav").classList.remove("center-menu-items")
+    }
+  }
+  centeredMenu()
+  document.querySelector("#setting_nevyui_centeredMenu").querySelector("input").addEventListener("change", centeredMenu)
 
 }
 const getLuminance = (hexcolor) => {
