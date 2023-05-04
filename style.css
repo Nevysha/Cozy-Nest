@@ -1051,8 +1051,8 @@ canvas.nevysha {
 
 #nevysha-loading-wrap > #nevysha-loading > .footer {
     position: fixed;
-    bottom: 15%;
-    right: 15%;
+    bottom: calc(3.5em + 25px);
+    right: 25px;
     color: var(--body-text-color);
     font-size: 0.7em;
     opacity: 0.3;
