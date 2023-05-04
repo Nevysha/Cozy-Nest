@@ -778,9 +778,6 @@ button.secondary, button.primary {
 #txt2img_results, #img2img_results {
     height: 100%;
 }
-#txt2img_results > div.gradio-column.gap > div.gradio-group, #img2img_results > div.gradio-column.gap > div.gradio-group {
-    display: none;
-}
 #txt2img_gallery_container, #img2img_gallery_container {
     flex: 1;
     max-height: 100%;

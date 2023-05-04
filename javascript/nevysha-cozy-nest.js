@@ -20,7 +20,7 @@ const hexToRgb = (hex) => {
 const wrapDataGenerationInfo = ({prefix}) => {
   // Get the generation info container
   const previewBlocks = document.querySelectorAll(`#tab_${prefix} div#${prefix}_results > *:not(#${prefix}_results)`);
-  const generationInfoContainer = previewBlocks[1].children[2];
+  const generationInfoContainer = previewBlocks[1].querySelectorAll('#html_info_txt2img, #html_log_txt2img');
 
   // Create the new container element and add a class for styling
   const wrapper = document.createElement('div');
@@ -32,18 +32,18 @@ const wrapDataGenerationInfo = ({prefix}) => {
   toggleButton.classList.add('nevysha', 'lg', 'primary', 'gradio-button', 'btn');
   toggleButton.textContent = 'Show/Hide Generation Info';
   toggleButton.addEventListener('click', () => {
-    generationInfoContainer.style.display = generationInfoContainer.style.display === 'none' ? '' : 'none';
+    generationInfoContainer.forEach((el) => el.style.display = el.style.display === 'none' ? '' : 'none');
   });
 
   // Add the toggle button and generation info container to the wrapper
   wrapper.appendChild(toggleButton);
-  wrapper.appendChild(generationInfoContainer);
+  generationInfoContainer.forEach((el) => wrapper.appendChild(el));
 
   // Add the wrapper container at the end of the previewBlocks[1] container
   previewBlocks[1].appendChild(wrapper);
 
   // Hide the generation info container by default
-  generationInfoContainer.style.display = 'none';
+  generationInfoContainer.forEach((el) => el.style.display = 'none');
 
   // Remove the inline style from the previewBlocks[1] container
   previewBlocks[1].style = "";
