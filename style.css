@@ -929,6 +929,7 @@ canvas.nevysha {
 .nevysha.settings-nevyui-top > .info {
     color: var(--body-text-color);
     margin-bottom: 30px;
+    font-style: italic;
 }
 .nevysha.settings-nevyui-top > .reporting {
     color: var(--body-text-color);
@@ -968,6 +969,36 @@ canvas.nevysha {
 .nevysha.settings-nevyui-bottom > p {
     font-size: 0.8em;
     color: var(--body-text-color);
+}
+
+.nevysha-draggable-anchor-icon {
+    cursor: pointer;
+    position: relative;
+    top: 2px;
+    left: 2px;
+    width: 40px;
+    height: 35px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    background: var(--ae-input-bg-color);
+    border: 1px solid var(--ae-input-border-color);
+}
+
+.nevysha-draggable-anchor-icon > svg {
+    height: 15px;
+    fill: var(--body-text-color);
+}
+
+.nevysha-draggable-anchor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+    z-index: 9999;
+    width: 40px;
+    height: 35px;
 }
 
 
