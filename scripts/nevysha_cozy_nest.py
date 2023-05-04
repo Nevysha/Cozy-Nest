@@ -19,7 +19,10 @@ def hex_to_rgb(hex):
     return tuple(rgb)
 
 
-CONFIG_FILENAME = 'extensions/a1111-nevysha-comfy-ui/nevyui_settings.json'
+# check parent folder name to ensure compatibility after repo rename
+EXTENSION_TECHNICAL_NAME = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
+
+CONFIG_FILENAME = f"extensions/{EXTENSION_TECHNICAL_NAME}/nevyui_settings.json"
 
 
 def save_settings(main_menu_position,
@@ -28,7 +31,7 @@ def save_settings(main_menu_position,
                   waves_color,
                   bg_gradiant_color,
                   accent_color):
-    # create the file in extensions/a1111-nevysha-comfy-ui if it doesn't exist
+    # create the file in extensions/Cozy-Nest if it doesn't exist
     if not os.path.exists(CONFIG_FILENAME):
         open(CONFIG_FILENAME, 'w').close()
 
@@ -94,11 +97,11 @@ def on_ui_tabs():
             config = get_dict_from_config()
 
             # header
-            gr.HTML(value="<div class='nevysha settings-nevyui-top'><h2>Nevysha Comfy UI</h2>"
-                          "<p class='info'>A collection of tweaks to make Auto1111 webui more comfy to use</p>"
+            gr.HTML(value="<div class='nevysha settings-nevyui-top'><h2>Nevysha Cozy Nest</h2>"
+                          "<p class='info'>Find your cozy spot on Auto1111's webui</p>"
                           "<p class='reporting'>Found a bug or want to ask for a feature ? Please use "
-                          "  <a href='https://www.reddit.com/r/NevyshaComfyUi/'>this subreddit</a>"
-                          " or <a href='https://github.com/Nevysha/a1111-nevysha-comfy-ui'>github</a></p>"
+                          "  <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
+                          " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
                           "<p class='warning'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
 
             # main menu
@@ -144,7 +147,7 @@ def on_ui_tabs():
                           "  <p class='info'>Made by Nevysha with luv</p>"
                           "</div>", elem_id="nevyui_footer_wrapper")
 
-    return [(ui, "Nevysha Comfy UI", "nevyui")]
+    return [(ui, "Nevysha Cozy Nest", "nevyui")]
 
 
 script_callbacks.on_ui_tabs(on_ui_tabs)
