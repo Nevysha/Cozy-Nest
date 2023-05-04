@@ -357,6 +357,14 @@ function loadSettings() {
       document.querySelector("#nevyui_sh_options")?.classList.add("menu-fix-top")
       root.style.setProperty('--nevysha-margin-left', `0`);
       root.style.setProperty('--nevysha-menu-fix-top-height-less', `25px`);
+
+      //centered or not
+      const isCenteredChecked = document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top_centered]").checked;
+      if (isCenteredChecked) {
+        document.querySelector(".nevysha.nevysha-tabnav").classList.add("center-menu-items")
+      } else {
+        document.querySelector(".nevysha.nevysha-tabnav").classList.remove("center-menu-items")
+      }
     }
     //left mode
     else {
@@ -370,18 +378,7 @@ function loadSettings() {
   menuPosition()
   document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=left]").addEventListener("change", menuPosition)
   document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top]").addEventListener("change", menuPosition)
-
-  // centered menu item (only in top mode)
-  const centeredMenu = () => {
-    const isCenteredChecked = document.querySelector("#setting_nevyui_centeredMenu").querySelector("input").checked;
-    if (isCenteredChecked) {
-      document.querySelector(".nevysha.nevysha-tabnav").classList.add("center-menu-items")
-    } else {
-      document.querySelector(".nevysha.nevysha-tabnav").classList.remove("center-menu-items")
-    }
-  }
-  centeredMenu()
-  document.querySelector("#setting_nevyui_centeredMenu").querySelector("input").addEventListener("change", centeredMenu)
+  document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top_centered]").addEventListener("change", menuPosition)
 
   //quicksetting gap
   const setQuicksettingGap = () => {

@@ -52,7 +52,6 @@ def get_default_settings():
         'main_menu_position': 'top',
         'accent_generate_button': False,
         'font_size': 12,
-        'center_menu_item': False,
         'quicksettings_gap': True,
         'waves_color': rgb_to_hex(94, 26, 145),
         'bg_gradiant_color': rgb_to_hex(101, 0, 94),
@@ -95,12 +94,13 @@ def on_ui_tabs():
                           "<p class='warning'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
 
             # main menu
-            main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position", choices=['left', 'top'], elem_id="setting_nevyui_menuPosition", interactive=True)
+            main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position",
+                                          choices=['left', 'top', 'top_centered'],
+                                          elem_id="setting_nevyui_menuPosition", interactive=True)
             accent_generate_button = gr.Checkbox(value=config.get('accent_generate_button'), label="Accent Generate Button", elem_id="setting_nevyui_accentGenerateButton", interactive=True)
             font_size = gr.Slider(value=config.get('font_size'), label="Font size", minimum=10, maximum=18, step=1, elem_id="setting_nevyui_fontSize", interactive=True)
 
             with gr.Row():
-                center_menu_item = gr.Checkbox(value=config.get('accent_generate_button'), label="Center tab in the top menu", elem_id="setting_nevyui_centeredMenu", interactive=True)
                 quicksettings_gap = gr.Checkbox(value=config.get('quicksettings_gap'), label="Add a gap in quicksettings between checkpoint and the others", elem_id="setting_nevyui_quicksettingsGap", interactive=True)
 
             with gr.Row():
@@ -119,7 +119,6 @@ def on_ui_tabs():
                     main_menu_position,
                     accent_generate_button,
                     font_size,
-                    center_menu_item,
                     quicksettings_gap,
                     waves_color,
                     bg_gradiant_color,
