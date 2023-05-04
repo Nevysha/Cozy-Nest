@@ -383,6 +383,19 @@ function loadSettings() {
   centeredMenu()
   document.querySelector("#setting_nevyui_centeredMenu").querySelector("input").addEventListener("change", centeredMenu)
 
+  //quicksetting gap
+  const setQuicksettingGap = () => {
+    const gap = document.querySelector("#setting_nevyui_quicksettingsGap").querySelector("input[type=checkbox]").checked;
+    if (gap) {
+      document.querySelector("#quicksettings_gap").classList.add("nevysha-quicksettings-gap")
+    }
+    else {
+      document.querySelector("#quicksettings_gap").classList.remove("nevysha-quicksettings-gap")
+    }
+  }
+  setQuicksettingGap()
+  document.querySelector("#setting_nevyui_quicksettingsGap").querySelector("input[type=checkbox]").addEventListener("change", setQuicksettingGap)
+
 }
 const getLuminance = (hexcolor) => {
   // remove # character from hex color string
@@ -491,15 +504,15 @@ const onload = () => {
     return
   }
 
-  //add flex1 after checkpoint reload button
+  //add quicksettings_gap after checkpoint reload button
   // Select the target element
   const refresh_sd_model_checkpoint = document.querySelector('#refresh_sd_model_checkpoint');
 
   // Create a new div element
-  const flex1b = "<div class='nevysha flex1' />"
+  const quicksettings_gap = "<div id='quicksettings_gap' class='nevysha' />"
 
   // Insert the new div after the target element
-  refresh_sd_model_checkpoint.insertAdjacentHTML('afterend', flex1b);
+  refresh_sd_model_checkpoint.insertAdjacentHTML('afterend', quicksettings_gap);
 
   //get body from DOM
   const body = document.querySelector("body")

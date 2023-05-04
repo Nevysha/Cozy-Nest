@@ -464,6 +464,15 @@ input[type=range]::-webkit-slider-thumb {
     color: var(--tabmenu-button-color);
 }
 
+#quicksettings_gap {
+    display: none;
+}
+#quicksettings_gap.nevysha-quicksettings-gap {
+    display:block;
+    flex: 1;
+    max-width: none;
+}
+
 #tabs > .nevysha.tabitem {
     margin-left: calc(var(--nevysha-margin-left) + 10px);
     background-color: var(--main-tabs-background-color);
@@ -511,11 +520,6 @@ input[type=range]::-webkit-slider-thumb {
     height: 50px;
     background-color: var(--nevysha-dark);
     display: none;
-}
-
-.nevysha.flex1 {
-    flex: 1;
-    max-width: none !important;;
 }
 
 .block.padded:not(.gradio-accordion) {

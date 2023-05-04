@@ -25,28 +25,14 @@ EXTENSION_TECHNICAL_NAME = os.path.basename(os.path.dirname(os.path.dirname(os.p
 CONFIG_FILENAME = f"extensions/{EXTENSION_TECHNICAL_NAME}/nevyui_settings.json"
 
 
-def save_settings(main_menu_position,
-                  accent_generate_button,
-                  font_size,
-                  center_menu_item,
-                  waves_color,
-                  bg_gradiant_color,
-                  accent_color):
+def save_settings(settings):
     # create the file in extensions/Cozy-Nest if it doesn't exist
     if not os.path.exists(CONFIG_FILENAME):
         open(CONFIG_FILENAME, 'w').close()
 
     # save each settings inside the file
     with open(CONFIG_FILENAME, 'w') as f:
-        f.write(json.dumps({
-            'main_menu_position': main_menu_position,
-            'accent_generate_button': accent_generate_button,
-            'font_size': font_size,
-            'center_menu_item': center_menu_item,
-            'waves_color': waves_color,
-            'bg_gradiant_color': bg_gradiant_color,
-            'accent_color': accent_color,
-        }))
+        f.write(json.dumps(settings, indent=2))
         f.close()
 
 
@@ -67,6 +53,7 @@ def get_default_settings():
         'accent_generate_button': False,
         'font_size': 12,
         'center_menu_item': False,
+        'quicksettings_gap': True,
         'waves_color': rgb_to_hex(94, 26, 145),
         'bg_gradiant_color': rgb_to_hex(101, 0, 94),
         'accent_color': rgb_to_hex(92, 175, 214),
@@ -74,15 +61,8 @@ def get_default_settings():
 
 
 def reset_settings():
-    config = get_default_settings()
     save_settings(
-        config.get('main_menu_position'),
-        config.get('accent_generate_button'),
-        config.get('font_size'),
-        config.get('waves_color'),
-        config.get('bg_gradiant_color'),
-        config.get('accent_color'),
-    )
+        get_default_settings())
 
 
 def request_restart():
@@ -92,12 +72,12 @@ def request_restart():
 
 def on_ui_tabs():
 
-    json_object = json.dumps(shared.opts.data, indent=2)
-
     with gr.Blocks(analytics_enabled=False) as ui:
         with gr.Column(elem_id="nevyui-ui-block"):
             # shared options
             config = get_dict_from_config()
+            # merge default settings with user settings
+            config = {**get_default_settings(), **config}
 
             # check if user is on the old repo name and display a warning
             if EXTENSION_TECHNICAL_NAME != 'Cozy-Nest':
@@ -118,9 +98,10 @@ def on_ui_tabs():
             main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position", choices=['left', 'top'], elem_id="setting_nevyui_menuPosition", interactive=True)
             accent_generate_button = gr.Checkbox(value=config.get('accent_generate_button'), label="Accent Generate Button", elem_id="setting_nevyui_accentGenerateButton", interactive=True)
             font_size = gr.Slider(value=config.get('font_size'), label="Font size", minimum=10, maximum=18, step=1, elem_id="setting_nevyui_fontSize", interactive=True)
-            center_menu_item = gr.Checkbox(value=config.get('accent_generate_button'), label="Center tab in the top menu", elem_id="setting_nevyui_centeredMenu", interactive=True)
 
-
+            with gr.Row():
+                center_menu_item = gr.Checkbox(value=config.get('accent_generate_button'), label="Center tab in the top menu", elem_id="setting_nevyui_centeredMenu", interactive=True)
+                quicksettings_gap = gr.Checkbox(value=config.get('quicksettings_gap'), label="Add a gap in quicksettings between checkpoint and the others", elem_id="setting_nevyui_quicksettingsGap", interactive=True)
 
             with gr.Row():
                 waves_color = gr.ColorPicker(value=config.get('waves_color'), label="Waves color", elem_id="setting_nevyui_waveColor", interactive=True)
@@ -139,6 +120,7 @@ def on_ui_tabs():
                     accent_generate_button,
                     font_size,
                     center_menu_item,
+                    quicksettings_gap,
                     waves_color,
                     bg_gradiant_color,
                     accent_color,
