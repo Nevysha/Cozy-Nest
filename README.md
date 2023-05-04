@@ -2,6 +2,8 @@
 
 _Find your cozy spot on Auto1111's webui_
 
+**<div style='color:red'>WARNING : This extension has been renamed to Cozy Nest to avoid confusion with an other tool. If you had installed it through the old repo URL, please update to the latest version by following [these instructions](https://github.com/Nevysha/Cozy-Nest/wiki/How-to-switch-to-renamed-repository-Cozy-Nest).</div>**
+
 ![](https://nevysha.art/wp-content/uploads/2023/01/nevy-icon-1-256-round.png)
 
 Cozy Nest is a UI extension for Automatic's sd-webui. Inspired by [anapnoe](https://github.com/anapnoe/stable-diffusion-webui-ux)'s work
