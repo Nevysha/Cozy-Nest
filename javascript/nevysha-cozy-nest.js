@@ -356,6 +356,23 @@ function loadSettings() {
   document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").addEventListener("change", setFontSize)
   document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=range]").addEventListener("change", setFontSize)
 
+  //card height
+  const setCardHeight = () => {
+    const cardHeight = document.querySelector("#setting_nevyui_cardHeight").querySelector("input[type=number]").value;
+    root.style.setProperty('--extra-network-card-height', `${cardHeight}em`);
+  }
+  setCardHeight()
+  document.querySelector("#setting_nevyui_cardHeight").querySelector("input[type=number]").addEventListener("change", setCardHeight)
+  document.querySelector("#setting_nevyui_cardHeight").querySelector("input[type=range]").addEventListener("change", setCardHeight)
+
+  //card width
+  const setCardWidth = () => {
+      const cardWidth = document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=number]").value;
+      root.style.setProperty('--extra-network-card-width', `${cardWidth}em`);
+  }
+  setCardWidth()
+  document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=number]").addEventListener("change", setCardWidth)
+  document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=range]").addEventListener("change", setCardWidth)
 
   //check if menu is in left or top mode
   const menuPosition = () => {

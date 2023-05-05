@@ -31,7 +31,9 @@ def gradio_save_settings(main_menu_position,
                          font_size,
                          waves_color,
                          bg_gradiant_color,
-                         accent_color):
+                         accent_color,
+                         card_height,
+                         card_width):
     settings = {
         'main_menu_position':main_menu_position,
         'quicksettings_position':quicksettings_position,
@@ -75,6 +77,8 @@ def get_default_settings():
         'waves_color': rgb_to_hex(94, 26, 145),
         'bg_gradiant_color': rgb_to_hex(101, 0, 94),
         'accent_color': rgb_to_hex(92, 175, 214),
+        'card_height': '8',
+        'card_width': '13',
     }
 
 
@@ -120,7 +124,11 @@ def on_ui_tabs():
                                               choices=['left', 'split', 'centered'],
                                               elem_id="setting_nevyui_quicksettingsPosition", interactive=True)
             accent_generate_button = gr.Checkbox(value=config.get('accent_generate_button'), label="Accent Generate Button", elem_id="setting_nevyui_accentGenerateButton", interactive=True)
-            font_size = gr.Slider(value=config.get('font_size'), label="Font size", minimum=10, maximum=18, step=1, elem_id="setting_nevyui_fontSize", interactive=True)
+
+            with gr.Row():
+                font_size = gr.Slider(value=config.get('font_size'), label="Font size", minimum=10, maximum=18, step=1, elem_id="setting_nevyui_fontSize", interactive=True)
+                card_height = gr.Slider(value=config.get('card_height'), label="Extra network card height", minimum=5, maximum=20, step=1, elem_id="setting_nevyui_cardHeight", interactive=True)
+                card_width = gr.Slider(value=config.get('card_width'), label="Extra network card width", minimum=5, maximum=20, step=1, elem_id="setting_nevyui_cardWidth", interactive=True)
 
             with gr.Row():
                 waves_color = gr.ColorPicker(value=config.get('waves_color'), label="Waves color", elem_id="setting_nevyui_waveColor", interactive=True)
@@ -142,6 +150,8 @@ def on_ui_tabs():
                     waves_color,
                     bg_gradiant_color,
                     accent_color,
+                    card_height,
+                    card_width
                 ], outputs=[])
 
                 btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)", elem_id="nevyui_sh_options_reset", elem_classes="nevyui_apply_settings")

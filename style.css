@@ -966,6 +966,13 @@ canvas.nevysha {
     width: var(--extra-network-card-width);
     height: var(--extra-network-card-height);
 }
+.extra-network-cards .card .actions .name {
+    font-size: var(--nevysha-text-md);
+    line-break: normal;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: block;
+}
 
 #settings_nevyui {
 
