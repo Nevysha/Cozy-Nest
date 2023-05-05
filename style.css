@@ -838,7 +838,14 @@ button.secondary, button.primary {
     flex-basis: 50%;
 }
 
-
+#txt2img_seed_row, #img2img_seed_row {
+    display: flex;
+    align-content: center;
+    align-items: center;
+}
+#txt2img_seed_row > button, #img2img_seed_row > button {
+    align-self: auto;
+}
 
 
 /*image browser*/
