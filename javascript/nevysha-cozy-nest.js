@@ -103,6 +103,16 @@ function wrapSettings({prefix}) {
 
 const SETTINGS_MIN_WIDTH = 420;
 const RESULT_MIN_WIDTH = 320;
+
+function createVerticalLineComp() {
+  const lineWrapper = document.createElement('div');
+  lineWrapper.classList.add('vertical-line-wrapper');
+  const line = document.createElement('div');
+  line.classList.add('vertical-line');
+  lineWrapper.appendChild(line)
+  return lineWrapper;
+}
+
 const addDraggable = ({prefix}) => {
   const settings = document.getElementById(`${prefix}_settings`);
 
@@ -110,11 +120,7 @@ const addDraggable = ({prefix}) => {
   settings.style.minWidth = `min(${SETTINGS_MIN_WIDTH}px, 100%)`
 
   // Create a new vertical line element
-  const lineWrapper = document.createElement('div');
-  lineWrapper.classList.add('vertical-line-wrapper');
-  const line = document.createElement('div');
-  line.classList.add('vertical-line');
-  lineWrapper.appendChild(line)
+  const lineWrapper = createVerticalLineComp();
 
   // Insert the line element after the settings element
   settings.insertAdjacentElement('afterend', lineWrapper);
@@ -547,11 +553,110 @@ const makeSettingsDraggable = () => {
   });
 }
 
+function tweakExtraNetworks({prefix}) {
+  let extraNetworks = document.querySelector(`div#${prefix}_extra_networks`);
+
+  // txt2img and img2img extra network are not built the same way in the DOM (:
+  // so we handle the DOM tweak differently
+  let extraNetworkGradioWrapper
+  let extraNetworkNevyshaWrapper
+  if (prefix === 'img2img') {
+    extraNetworkGradioWrapper = document.createElement('div');
+    extraNetworkGradioWrapper.setAttribute('id', `${prefix}_extra_networks_parent`);
+
+    //hide it
+    extraNetworkGradioWrapper.style.display = 'none';
+
+    //add an event listener to show it when the user clicks on the button #img2img_extra_networks
+    let shown = false;
+    document.querySelector('button#img2img_extra_networks').addEventListener('click', (e) => {
+      if (!shown) {
+        //show the extra network
+        extraNetworkGradioWrapper.style.display = 'block';
+        extraNetworks.style.display = 'flex';
+      }
+      else {
+        //hide the extra network
+        extraNetworkGradioWrapper.style.display = 'none';
+        extraNetworks.style.display = 'none';
+      }
+      shown = !shown;
+    });
+
+    //add extraNetworkGradioWrapper at the beginning of the extraNetworks parent
+    extraNetworks.parentElement.insertAdjacentElement('afterbegin', extraNetworkGradioWrapper);
+
+    extraNetworkNevyshaWrapper = document.createElement('div');
+    extraNetworkNevyshaWrapper.setAttribute('id', `${prefix}_extra_networks_nevysha_wrapper`);
+    extraNetworkNevyshaWrapper.appendChild(extraNetworks);
+
+    extraNetworkGradioWrapper.appendChild(extraNetworkNevyshaWrapper);
+  }
+  else if (prefix === 'txt2img') {
+    // move everything that's inside extraNetworkGradioWrapper to a new div
+    extraNetworkGradioWrapper = extraNetworks.parentElement;
+    extraNetworkGradioWrapper.setAttribute('id', `${prefix}_extra_networks_parent`);
+
+    extraNetworkNevyshaWrapper = document.createElement('div');
+    extraNetworkNevyshaWrapper.setAttribute('id', `${prefix}_extra_networks_nevysha_wrapper`);
+    extraNetworkNevyshaWrapper.appendChild(extraNetworks);
+    extraNetworkGradioWrapper.appendChild(extraNetworkNevyshaWrapper);
+  }
+
+  //apply the width saved in local storage
+  const extraNetworksWidth = localStorage.getItem('nevysha_extra_networks_width');
+  if (extraNetworksWidth) {
+    extraNetworkGradioWrapper.style.width = extraNetworksWidth;
+  }
+
+  // Create a vertical line component
+  const lineWrapper = createVerticalLineComp();
+  //add the line to the beginning of the extraNetworkNevyshaWrapper
+  extraNetworkNevyshaWrapper.insertBefore(lineWrapper, extraNetworkNevyshaWrapper.firstChild);
+
+  // Add an event listener to the resizer element to track mouse movement
+  lineWrapper.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+
+    // Set the initial values for the width and height of the container
+    let width = extraNetworkGradioWrapper.offsetWidth;
+
+    // Set the initial mouse position
+    let x = e.clientX;
+
+    // Track mouse movement while dragging
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', stopDrag);
+
+    function drag(e) {
+      // Calculate the difference in mouse position
+      const diffX = e.clientX - x;
+
+      //log everything
+      console.log('diffX: ' + diffX);
+
+      // Update the container's width
+      extraNetworkGradioWrapper.style.width = (width - diffX) + 'px';
+    }
+
+    function stopDrag() {
+
+      //save the new width in local storage
+      localStorage.setItem(`nevysha_extra_networks_width`, extraNetworkGradioWrapper.style.width);
+
+      document.removeEventListener('mousemove', drag);
+      document.removeEventListener('mouseup', stopDrag);
+    }
+  });
+}
+
+const COZY_NEST_DOM_TWEAK_LOAD_DURATION = "CozyNest:tweakLoadDuration";
+const COZY_NEST_GRADIO_LOAD_DURATION = "CozyNest:gradioLoadDuration";
 const onload = (done) => {
 
   let gradioApp = window.gradioApp;
   if (typeof gradioApp !== "function") {
-    console.log("not ready")
+    console.log("waiting for gradio")
     setTimeout(() => onload(done), 200);
     return
   }
@@ -560,10 +665,13 @@ const onload = (done) => {
   const quicksettings = gradioApp().getElementById("quicksettings")
 
   if (!quicksettings) {
-    console.log("not ready")
+    console.log("waiting for gradio")
     setTimeout(() => onload(done), 200);
     return
   }
+
+  // log time for onLoad execution after gradio has loaded
+  console.time(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
 
   //add quicksettings_gap after checkpoint reload button
   // Select the target element
@@ -589,6 +697,8 @@ const onload = (done) => {
   //add nevysha css class to tabnav
   document.querySelectorAll('#tabs > div.tab-nav').forEach(tabnav => tabnav.setAttribute('class', `${tabnav.getAttribute('class')} nevysha nevysha-tabnav`))
   document.querySelectorAll('input[type="number"]').forEach(input => input.setAttribute('class', `${input.getAttribute('class')} nevysha`))
+  //add .nevysha-scrollable to each .extra-network-cards
+  document.querySelectorAll('.extra-network-cards').forEach(elem => elem.setAttribute('class', `${elem.getAttribute('class')} nevysha nevysha-scrollable`))
 
 
   //manage text2img tab
@@ -597,10 +707,14 @@ const onload = (done) => {
     wrapDataGenerationInfo(bundle);
     addDraggable(bundle);
     addScrollable(bundle);
+
   }
 
   nevysha_magic({prefix: "txt2img"});
   nevysha_magic({prefix: "img2img"});
+
+  tweakExtraNetworks({prefix: "txt2img"});
+  tweakExtraNetworks({prefix: "img2img"});
 
 
   //general
@@ -702,11 +816,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     //remove #nevysha-loading from DOM
     observer.disconnect();
     document.querySelector("#nevysha-loading-wrap").remove();
+
+    console.timeEnd(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
+    console.timeEnd(COZY_NEST_GRADIO_LOAD_DURATION);
   });
 
 });
 
 (() => {
+
+  console.time(COZY_NEST_GRADIO_LOAD_DURATION);
+
   // Create a new link element and set its attributes
   const animateCssLink = document.createElement('link');
   animateCssLink.rel = 'stylesheet';

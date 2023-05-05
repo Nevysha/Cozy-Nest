@@ -919,6 +919,33 @@ canvas.nevysha {
     background-color: var(--ae-primary-color) !important;
 }
 
+/*extra network*/
+#txt2img_extra_networks_parent,
+#img2img_extra_networks_parent {
+    position: fixed;
+    z-index: 9999;
+    background-color: var(--block-background-fill) !important;
+    width: 75vw;
+    right: 0;
+    height: calc(100% - (100px + var(--nevysha-menu-fix-top-height-less)));
+}
+#txt2img_extra_networks_nevysha_wrapper,
+#img2img_extra_networks_nevysha_wrapper {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+#txt2img_extra_networks_nevysha_wrapper > .vertical-line-wrapper,
+#img2img_extra_networks_nevysha_wrapper > .vertical-line-wrapper {
+    z-index: 9999;
+    margin: 15px 0 0 5px;
+}
+
+.extra-network-cards {
+    overflow-x: hidden;
+}
+
 #settings_nevyui {
 
 }
