@@ -2,12 +2,12 @@
     /*override by code when applying settings*/
     --nevysha-margin-left: 175px;
     --nevysha-menu-fix-top-height-less: 1px;
-    --ae-primary-color: rgb(92 175 214);
+    --ae-primary-color: rgb(92, 175, 214);
     --nevysha-gradiant-1: rgb(101,0,94);
     --nevysha-text-md: 12px;
     --nevysha-color-from-luminance: black;
-    --extra-network-card-width: 10em;
-    --extra-network-card-height: 14em;
+    --extra-network-card-width: 13em;
+    --extra-network-card-height: 8em;
 }
 :root, .dark {
     /*--nevysha-gradiant-1: #8777a1;*/
