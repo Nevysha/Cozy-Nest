@@ -1,4 +1,3 @@
-
 import gradio as gr
 import os
 import json
@@ -13,7 +12,7 @@ def rgb_to_hex(r, g, b):
 def hex_to_rgb(hex):
     rgb = []
     for i in (0, 2, 4):
-        decimal = int(hex[i:i+2], 16)
+        decimal = int(hex[i:i + 2], 16)
         rgb.append(decimal)
 
     return tuple(rgb)
@@ -35,13 +34,15 @@ def gradio_save_settings(main_menu_position,
                          card_height,
                          card_width):
     settings = {
-        'main_menu_position':main_menu_position,
-        'quicksettings_position':quicksettings_position,
-        'accent_generate_button':accent_generate_button,
-        'font_size':font_size,
-        'waves_color':waves_color,
-        'bg_gradiant_color':bg_gradiant_color,
-        'accent_color':accent_color,
+        'main_menu_position': main_menu_position,
+        'quicksettings_position': quicksettings_position,
+        'accent_generate_button': accent_generate_button,
+        'font_size': font_size,
+        'waves_color': waves_color,
+        'bg_gradiant_color': bg_gradiant_color,
+        'accent_color': accent_color,
+        'card_height': card_height,
+        'card_width': card_width,
     }
 
     save_settings(settings)
@@ -93,7 +94,6 @@ def request_restart():
 
 
 def on_ui_tabs():
-
     with gr.Blocks(analytics_enabled=False) as ui:
         with gr.Column(elem_id="nevyui-ui-block"):
             # shared options
@@ -120,28 +120,42 @@ def on_ui_tabs():
             main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position",
                                           choices=['left', 'top', 'top_centered'],
                                           elem_id="setting_nevyui_menuPosition", interactive=True)
-            quicksettings_position = gr.Radio(value=config.get('quicksettings_position'), label="Quicksettings position",
+            quicksettings_position = gr.Radio(value=config.get('quicksettings_position'),
+                                              label="Quicksettings position",
                                               choices=['left', 'split', 'centered'],
                                               elem_id="setting_nevyui_quicksettingsPosition", interactive=True)
-            accent_generate_button = gr.Checkbox(value=config.get('accent_generate_button'), label="Accent Generate Button", elem_id="setting_nevyui_accentGenerateButton", interactive=True)
+            accent_generate_button = gr.Checkbox(value=config.get('accent_generate_button'),
+                                                 label="Accent Generate Button",
+                                                 elem_id="setting_nevyui_accentGenerateButton", interactive=True)
 
             with gr.Row():
-                font_size = gr.Slider(value=config.get('font_size'), label="Font size", minimum=10, maximum=18, step=1, elem_id="setting_nevyui_fontSize", interactive=True)
-                card_height = gr.Slider(value=config.get('card_height'), label="Extra network card height", minimum=5, maximum=20, step=1, elem_id="setting_nevyui_cardHeight", interactive=True)
-                card_width = gr.Slider(value=config.get('card_width'), label="Extra network card width", minimum=5, maximum=20, step=1, elem_id="setting_nevyui_cardWidth", interactive=True)
+                font_size = gr.Slider(value=config.get('font_size'), label="Font size", minimum=10, maximum=18, step=1,
+                                      elem_id="setting_nevyui_fontSize", interactive=True)
+                card_height = gr.Slider(value=config.get('card_height'), label="Extra network card height", minimum=5,
+                                        maximum=20, step=1, elem_id="setting_nevyui_cardHeight", interactive=True)
+                card_width = gr.Slider(value=config.get('card_width'), label="Extra network card width", minimum=5,
+                                       maximum=20, step=1, elem_id="setting_nevyui_cardWidth", interactive=True)
 
             with gr.Row():
-                waves_color = gr.ColorPicker(value=config.get('waves_color'), label="Waves color", elem_id="setting_nevyui_waveColor", interactive=True)
-                bg_gradiant_color = gr.ColorPicker(value=config.get('bg_gradiant_color'), label="Background gradiant color", elem_id="setting_nevyui_bgGradiantColor", interactive=True)
-                accent_color = gr.ColorPicker(value=config.get('accent_color'), label="Accent color", elem_id="setting_nevyui_accentColor", interactive=True)
+                waves_color = gr.ColorPicker(value=config.get('waves_color'), label="Waves color",
+                                             elem_id="setting_nevyui_waveColor", interactive=True)
+                bg_gradiant_color = gr.ColorPicker(value=config.get('bg_gradiant_color'),
+                                                   label="Background gradiant color",
+                                                   elem_id="setting_nevyui_bgGradiantColor", interactive=True)
+                accent_color = gr.ColorPicker(value=config.get('accent_color'), label="Accent color",
+                                              elem_id="setting_nevyui_accentColor", interactive=True)
 
             with gr.Row(elem_id='nevysha-saved-feedback-wrapper'):
-                gr.HTML(value="<div id='nevysha-saved-feedback' class='nevysha nevysha-feedback' style='display:none;'>Saved !</div>")
-                gr.HTML(value="<div id='nevysha-reset-feedback' class='nevysha nevysha-feedback' style='display:none;'>Reset !</div>")
-                gr.HTML(value="<div id='nevysha-dummy-feedback' class='nevysha nevysha-feedback' style='display:none;' />")
+                gr.HTML(
+                    value="<div id='nevysha-saved-feedback' class='nevysha nevysha-feedback' style='display:none;'>Saved !</div>")
+                gr.HTML(
+                    value="<div id='nevysha-reset-feedback' class='nevysha nevysha-feedback' style='display:none;'>Reset !</div>")
+                gr.HTML(
+                    value="<div id='nevysha-dummy-feedback' class='nevysha nevysha-feedback' style='display:none;' />")
 
             with gr.Row():
-                btn_save = gr.Button(value="Save", elem_id="nevyui_sh_options_submit", elem_classes="nevyui_apply_settings")
+                btn_save = gr.Button(value="Save", elem_id="nevyui_sh_options_submit",
+                                     elem_classes="nevyui_apply_settings")
                 btn_save.click(gradio_save_settings, inputs=[
                     main_menu_position,
                     quicksettings_position,
@@ -154,17 +168,19 @@ def on_ui_tabs():
                     card_width
                 ], outputs=[])
 
-                btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)", elem_id="nevyui_sh_options_reset", elem_classes="nevyui_apply_settings")
+                btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)",
+                                      elem_id="nevyui_sh_options_reset", elem_classes="nevyui_apply_settings")
                 # restore default settings
                 btn_reset.click(reset_settings)
 
-                btn_reload = gr.Button(value="Reload UI", elem_id="nevyui_sh_options_reset", elem_classes="nevyui_apply_settings")
+                btn_reload = gr.Button(value="Reload UI", elem_id="nevyui_sh_options_reset",
+                                       elem_classes="nevyui_apply_settings")
                 # reload the page
                 btn_reload.click(
                     fn=request_restart,
                     _js='restart_reload',
                     inputs=[],
-                    outputs=[],)
+                    outputs=[], )
 
             # footer
             gr.HTML(value="<div class='nevysha settings-nevyui-bottom'>"

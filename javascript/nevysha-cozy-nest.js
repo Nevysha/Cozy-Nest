@@ -587,6 +587,33 @@ function tweakExtraNetworks({prefix}) {
         //I'm lazy
         document.querySelector(`#${prefix}_textual_inversion_cards`).style.height
             = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
+        document.querySelector(`#${prefix}_hypernetworks_cards`).style.height
+            = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
+        document.querySelector(`#${prefix}_checkpoints_cards`).style.height
+            = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
+
+        // Lora folder list is loaded async? Can't get its offsetHeight normally.
+        // Using a MutationObserver to wait for it to be loaded (and because I suck at CSS)
+        // Select the element to be observed
+        const targetNode = extraNetworkGradioWrapper;
+
+        // Options for the observer (which mutations to observe)
+        const config = { attributes: true, childList: true, subtree: true };
+
+        // Function to be called when mutations are observed
+        const callback = function(mutationsList, observer) {
+          let subdirOffsetHeight = document.querySelector(`#${prefix}_lora_subdirs`).offsetHeight;
+          if (subdirOffsetHeight <= 0) return;
+          document.querySelector(`#${prefix}_lora_cards`).style.height
+              = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100 - subdirOffsetHeight}px`;
+          observer.disconnect()
+        };
+
+        // Create a new observer instance
+        const observer = new MutationObserver(callback);
+
+        // Start observing the target element for configured mutations
+        observer.observe(targetNode, config);
 
         //show the extra network
         extraNetworkGradioWrapper.style.display = 'block';
