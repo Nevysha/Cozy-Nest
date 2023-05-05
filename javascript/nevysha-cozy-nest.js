@@ -569,8 +569,13 @@ function tweakExtraNetworks({prefix}) {
 
     //add an event listener to show it when the user clicks on the button #img2img_extra_networks
     let shown = false;
-    document.querySelector('button#img2img_extra_networks').addEventListener('click', (e) => {
+    document.querySelector(`button#${prefix}_extra_networks`).addEventListener('click', (e) => {
       if (!shown) {
+
+        //I'm lazy
+        document.querySelector(`#${prefix}_textual_inversion_cards`).style.height
+            = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
+
         //show the extra network
         extraNetworkGradioWrapper.style.display = 'block';
         extraNetworks.style.display = 'flex';
@@ -601,6 +606,16 @@ function tweakExtraNetworks({prefix}) {
     extraNetworkNevyshaWrapper.setAttribute('id', `${prefix}_extra_networks_nevysha_wrapper`);
     extraNetworkNevyshaWrapper.appendChild(extraNetworks);
     extraNetworkGradioWrapper.appendChild(extraNetworkNevyshaWrapper);
+
+    let shown = false;
+    document.querySelector(`button#${prefix}_extra_networks`).addEventListener('click', (e) => {
+      if (!shown) {
+        //I'm lazy
+        document.querySelector(`#${prefix}_textual_inversion_cards`).style.height
+            = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
+      }
+      shown = !shown;
+    });
   }
 
   //apply the width saved in local storage
