@@ -1,4 +1,4 @@
-﻿# Nevysha's Cozy Nest
+# Nevysha's Cozy Nest
 
 _Find your cozy spot on Auto1111's webui_
 
@@ -13,15 +13,22 @@ Tested in Chrome, should work in Firefox with minor bug. I plan to fix it later.
 Features:
 - [x]  Resizable panels
 - [x]  Full Screen Inpainting
-- [x]  Tab menu on top or left
-- [x]  Customizable via Auto1111 Settings
+- [x]  Customizable tab menu position (top, left, centered)
 - [x]  Cozy look with dark or light theme (add `?__theme=light` in url or set `--theme=light` in Auto1111 start arguments to switch to light theme)
 - [x]  Save resize bar position / panel ratio in local storage
 - [x]  Customize accent color
 - [x]  Add or remove accent to the generate buttons
 - [x]  Customize font size
-- [x]  Move settings in a dedicated collapsible tab
+- [x]  Move settings in a dedicated collapsible and movable tab
 - [x]  Smaller bottom padding bar to get a bit more screen space
+- [x]  Setting to center the top menu tabs
+- [x]  Setting to remove the gap between checkpoint and other quicksetting
+- [x]  Setting to center quicksetting
+- [x]  Loading screen with estimated percentage based on previous loading time
+- [x]  make settings tab movable
+- [x]  Extra network in a dedicated tab:
+   - [x]  Resizable side panel
+   - [x]  Customizable card size
 
 It's made by being a bit hacky on the DOM to tweaks Gradio default features and existing css of Auto1111. It will probably break with each update of auto1111, but I'll try to keep it up to date.
 
