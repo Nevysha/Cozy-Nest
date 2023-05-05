@@ -560,13 +560,8 @@ function tweakExtraNetworks({prefix}) {
   // so we handle the DOM tweak differently
   let extraNetworkGradioWrapper
   let extraNetworkNevyshaWrapper
-  if (prefix === 'img2img') {
-    extraNetworkGradioWrapper = document.createElement('div');
-    extraNetworkGradioWrapper.setAttribute('id', `${prefix}_extra_networks_parent`);
 
-    //hide it
-    extraNetworkGradioWrapper.style.display = 'none';
-
+  function tweakTabBehavior() {
     //add an event listener to show it when the user clicks on the button #img2img_extra_networks
     let shown = false;
     document.querySelector(`button#${prefix}_extra_networks`).addEventListener('click', (e) => {
@@ -578,15 +573,32 @@ function tweakExtraNetworks({prefix}) {
 
         //show the extra network
         extraNetworkGradioWrapper.style.display = 'block';
+        extraNetworkGradioWrapper.style.marginRight = `-${extraNetworkGradioWrapper.offsetWidth}px`;
+        // $(extraNetworkGradioWrapper).animate({'margin-right':'toggle'},150);
+        $(extraNetworkGradioWrapper).animate({"margin-right": `+=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
         extraNetworks.style.display = 'flex';
-      }
-      else {
+      } else {
         //hide the extra network
-        extraNetworkGradioWrapper.style.display = 'none';
-        extraNetworks.style.display = 'none';
+        $(extraNetworkGradioWrapper).animate({"margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
+
+        // hide it after the animation is done
+        setTimeout(() => {
+          extraNetworkGradioWrapper.style.display = 'none';
+          extraNetworks.style.display = 'none';
+        }, 350);
       }
       shown = !shown;
     });
+  }
+
+  if (prefix === 'img2img') {
+    extraNetworkGradioWrapper = document.createElement('div');
+    extraNetworkGradioWrapper.setAttribute('id', `${prefix}_extra_networks_parent`);
+
+    //hide it
+    extraNetworkGradioWrapper.style.display = 'none';
+
+    tweakTabBehavior();
 
     //add extraNetworkGradioWrapper at the beginning of the extraNetworks parent
     extraNetworks.parentElement.insertAdjacentElement('afterbegin', extraNetworkGradioWrapper);
@@ -602,20 +614,15 @@ function tweakExtraNetworks({prefix}) {
     extraNetworkGradioWrapper = extraNetworks.parentElement;
     extraNetworkGradioWrapper.setAttribute('id', `${prefix}_extra_networks_parent`);
 
+    //hide it
+    extraNetworkGradioWrapper.style.display = 'none';
+
     extraNetworkNevyshaWrapper = document.createElement('div');
     extraNetworkNevyshaWrapper.setAttribute('id', `${prefix}_extra_networks_nevysha_wrapper`);
     extraNetworkNevyshaWrapper.appendChild(extraNetworks);
     extraNetworkGradioWrapper.appendChild(extraNetworkNevyshaWrapper);
 
-    let shown = false;
-    document.querySelector(`button#${prefix}_extra_networks`).addEventListener('click', (e) => {
-      if (!shown) {
-        //I'm lazy
-        document.querySelector(`#${prefix}_textual_inversion_cards`).style.height
-            = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
-      }
-      shown = !shown;
-    });
+    tweakTabBehavior();
   }
 
   //add a button to close the extra network
