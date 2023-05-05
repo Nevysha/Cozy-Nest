@@ -618,6 +618,20 @@ function tweakExtraNetworks({prefix}) {
     });
   }
 
+  //add a button to close the extra network
+  const closeExtraNetworksButton = document.createElement('button');
+  closeExtraNetworksButton.setAttribute('id', `${prefix}_close_extra_networks`);
+  //add button class
+  closeExtraNetworksButton.classList.add('nevysha', 'lg', 'primary', 'gradio-button');
+  closeExtraNetworksButton.innerHTML = '<div>Close</div>';
+  //click the original button to close the extra network
+  closeExtraNetworksButton.addEventListener('click', (e) => {
+    document.querySelector(`button#${prefix}_extra_networks`).click();
+  });
+  //add the button at the begining of the div
+  // const extraNetworksTabs = extraNetworks.querySelector(`.tab-nav`);
+  extraNetworks.insertBefore(closeExtraNetworksButton, extraNetworks.firstChild);
+
   //apply the width saved in local storage
   const extraNetworksWidth = localStorage.getItem('nevysha_extra_networks_width');
   if (extraNetworksWidth) {

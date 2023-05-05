@@ -929,6 +929,7 @@ canvas.nevysha {
     right: 0;
     height: calc(100% - (100px + var(--nevysha-menu-fix-top-height-less)));
     top: calc(75px + var(--nevysha-menu-fix-top-height-less));
+    padding-right: 15px;
 }
 #txt2img_extra_networks_nevysha_wrapper,
 #img2img_extra_networks_nevysha_wrapper {
@@ -941,6 +942,20 @@ canvas.nevysha {
 #img2img_extra_networks_nevysha_wrapper > .vertical-line-wrapper {
     z-index: 9999;
     margin: 15px 0 0 5px;
+}
+#txt2img_close_extra_networks,
+#img2img_close_extra_networks {
+    position: absolute;
+    right: 0;
+    z-index: 9999;
+    height: 100%;
+    width: 25px;
+    min-width: 25px;
+}
+#txt2img_close_extra_networks > div,
+#img2img_close_extra_networks > div {
+    /*write the text vertically*/
+    writing-mode: vertical-rl;
 }
 
 .extra-network-cards {
