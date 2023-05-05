@@ -224,7 +224,7 @@ function tweakInpainting() {
   img2maskimg.insertAdjacentElement("beforeend", expendBtn)
 
   const inpaintTab = document.getElementById("img2maskimg");
-  const defaultStyle = inpaintTab.style;
+  let defaultStyle = inpaintTab.getAttribute("style");
   let nodesCanvasData = []
   let expended = false;
   expendBtn.addEventListener("click", () => {
@@ -232,7 +232,6 @@ function tweakInpainting() {
     if (!document.querySelectorAll("canvas")) {
       return;
     }
-
 
     if (!expended) {
       expendBtn.textContent = "Reduce"
@@ -266,7 +265,7 @@ function tweakInpainting() {
     } else {
       expendBtn.textContent = "Expand"
       expendBtn.style.position = "absolute";
-      inpaintTab.style = defaultStyle;
+      inpaintTab.setAttribute("style", defaultStyle);
 
       //revert canvas
       nodesCanvasData.forEach((canvasData) => {
