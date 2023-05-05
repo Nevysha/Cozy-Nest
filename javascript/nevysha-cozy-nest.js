@@ -756,7 +756,7 @@ const onload = (done) => {
   }
 
   // log time for onLoad execution after gradio has loaded
-  console.time(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
+  SimpleTimer.time(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
 
   //add quicksettings_gap after checkpoint reload button
   // Select the target element
@@ -868,14 +868,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Create a new observer instance
   let step = 0;
+  //get last loaded time. If null or zero, set it to 15000ms
+  const lastLoadingTimeSaved = SimpleTimer.last(COZY_NEST_GRADIO_LOAD_DURATION)
+  const lastLoadingTime = lastLoadingTimeSaved ? lastLoadingTimeSaved : 15000
+  //observer to update loading percentage
   const observer = new MutationObserver(function(mutations) {
     if (mutations[0].target.id !== 'loading-step-estimator') {
       console.log(`nevysha-ui.js: Loading step:${++step}...`);
 
-      //estimate the percentage from the step, knowing that there are approximately 30 steps and percentage should never go above 99
-      const percentage = Math.min(99, Math.round(step / 30 * 100));
+      //current elapsed loading time
+      const currentLoadingTime = SimpleTimer.get(COZY_NEST_GRADIO_LOAD_DURATION)
 
-      document.querySelector("#loading-step-estimator").innerText = `${percentage}%`
+      if (currentLoadingTime < lastLoadingTime + 1000) {
+        //estimate the percentage of loading. Never go above 99%
+        const percentage = Math.min(Math.round((currentLoadingTime / lastLoadingTime) * 100), 99)
+
+        document.querySelector("#loading-step-estimator").innerText = `${percentage}%`
+      }
+      else {
+        document.querySelector("#loading-step-estimator").innerText = `Woops, it's taking longer than expected...`
+      }
+
       pushLoading();
     }
   });
@@ -902,15 +915,66 @@ document.addEventListener("DOMContentLoaded", async () => {
     observer.disconnect();
     document.querySelector("#nevysha-loading-wrap").remove();
 
-    console.timeEnd(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
-    console.timeEnd(COZY_NEST_GRADIO_LOAD_DURATION);
+    SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
+    SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
   });
 
 });
 
+// create a SimpleTimer class
+class SimpleTimer {
+
+    static timers = {};
+
+    // static method to create a new instance of SimpleTimer
+    static time(timerName) {
+        SimpleTimer.timers[timerName] = new SimpleTimer(timerName)
+        return SimpleTimer.timers[timerName];
+    }
+
+    static end(timerName) {
+        return SimpleTimer.timers[timerName].end();
+    }
+
+    static last(timerName) {
+        return localStorage.getItem(timerName) && Number(localStorage.getItem(timerName));
+    }
+
+    static get(timerName) {
+      console.log(`nevysha-ui.js: ${timerName} elapsed ${SimpleTimer.timers[timerName].get()}ms`);
+      return SimpleTimer.timers[timerName].get();
+    }
+
+    // constructor
+    constructor(timerName) {
+        this.timerName = timerName;
+        this.startTime = new Date();
+    }
+
+    // method to get the elapsed time
+    get() {
+        const endTime = new Date();
+        const timeDiff = endTime - this.startTime; //in ms
+        return timeDiff;
+    }
+
+    // method to end the timer
+    end() {
+        const endTime = new Date();
+        const timeDiff = endTime - this.startTime; //in ms
+
+        console.log(`nevysha-ui.js: ${this.timerName} took ${timeDiff}ms`);
+
+        //save the time in the local storage
+        localStorage.setItem(this.timerName, `${timeDiff}`);
+
+        return timeDiff;
+    }
+}
+
 (() => {
 
-  console.time(COZY_NEST_GRADIO_LOAD_DURATION);
+  SimpleTimer.time(COZY_NEST_GRADIO_LOAD_DURATION);
 
   // Create a new link element and set its attributes
   const animateCssLink = document.createElement('link');
