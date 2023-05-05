@@ -6,6 +6,8 @@
     --nevysha-gradiant-1: rgb(101,0,94);
     --nevysha-text-md: 12px;
     --nevysha-color-from-luminance: black;
+    --extra-network-card-width: 10em;
+    --extra-network-card-height: 14em;
 }
 :root, .dark {
     /*--nevysha-gradiant-1: #8777a1;*/
@@ -957,9 +959,12 @@ canvas.nevysha {
     /*write the text vertically*/
     writing-mode: vertical-rl;
 }
-
 .extra-network-cards {
     overflow-x: hidden;
+}
+.extra-network-cards > .card {
+    width: var(--extra-network-card-width);
+    height: var(--extra-network-card-height);
 }
 
 #settings_nevyui {
