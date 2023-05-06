@@ -809,15 +809,11 @@ const onload = (done) => {
     wrapDataGenerationInfo(bundle);
     addDraggable(bundle);
     addScrollable(bundle);
-
+    tweakExtraNetworks(bundle);
   }
 
   nevysha_magic({prefix: "txt2img"});
   nevysha_magic({prefix: "img2img"});
-
-  tweakExtraNetworks({prefix: "txt2img"});
-  tweakExtraNetworks({prefix: "img2img"});
-
 
   //general
   tweakButtonsIcons();
