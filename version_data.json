@@ -1,0 +1,4 @@
+{
+  "number": "1.1.0",
+  "patchnote": "## New features\n\n- [x]  Customize font size\n- [x]  Settings in movable tab\n- [x]  Setting to center the top menu tabs\n- [x]  Setting to remove the gap between checkpoint and other quicksetting\n- [x]  Setting to center quicksetting\n- [x]  Loading screen with estimated percentage based on previous loading time\n- [x]  make settings tab movable\n- [x]  Extra network in a dedicated tab:\n    - [x]  Resizable side panel\n    - [x]  Customizable card size\n\n## Issues fixed\n\n- [x]  Some extension add component under the image viewer and do not work with Cozy-Nest\n- [x]  Expand in inpainting is broken\n- [x]  seed-related buttons and extra checkbox misalignment\n\n## Known Issue\n\n- [ ]  Partial compatibility with Firefox and Opera GX\n- [ ]  Most tweak will not support a live window resize\n- [ ]  Setting not effective during loading"
+}
