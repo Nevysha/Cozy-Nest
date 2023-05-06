@@ -8,7 +8,9 @@ _Find your cozy spot on Auto1111's webui_
 
 Cozy Nest is a UI extension for Automatic's sd-webui. Inspired by [anapnoe](https://github.com/anapnoe/stable-diffusion-webui-ux)'s work
 
-Tested in Chrome, should work in Firefox with minor bug. I plan to fix it later.
+Tested in Chrome, should work in Firefox with minor bug. I plan to fix it later. 
+
+User reported that it works on Vlad's fork of sd-webui, although I haven't tested it myself.
 
 Features:
 - [x]  Resizable panels
