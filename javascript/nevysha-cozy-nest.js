@@ -25,7 +25,7 @@ const hexToRgb = (hex) => {
 const wrapDataGenerationInfo = ({prefix}) => {
   // Get the generation info container
   const previewBlocks = document.querySelectorAll(`#tab_${prefix} div#${prefix}_results > *:not(#${prefix}_results)`);
-  const generationInfoContainer = previewBlocks[1].querySelectorAll('#html_info_txt2img, #html_log_txt2img');
+  const generationInfoContainer = previewBlocks[1].querySelectorAll('div[id^="html_info_"], div[id^="html_log_"]');
 
   // Create the new container element and add a class for styling
   const wrapper = document.createElement('div');
