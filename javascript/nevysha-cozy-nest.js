@@ -314,7 +314,7 @@ function applyAccentColor(hexColor, colorFromLuminance) {
   }
 }
 
-function loadSettings() {
+function applyCozyNestConfig() {
 
   //waves
   const setWaveColor = () => {
@@ -849,7 +849,7 @@ const onload = (done) => {
   tweakNevyUiSettings();
 
   //load settings
-  loadSettings();
+  applyCozyNestConfig();
 
   //apply theme
   if (getTheme() === "light") {
