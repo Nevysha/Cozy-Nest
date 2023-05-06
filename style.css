@@ -952,17 +952,16 @@ canvas.nevysha {
     z-index: 9999;
     margin: 15px 0 0 5px;
 }
-#txt2img_close_extra_networks,
-#img2img_close_extra_networks {
-    position: absolute;
+.nevysha-extra-network-btn {
+    position: fixed;
     right: 0;
+    top: calc(75px + var(--nevysha-menu-fix-top-height-less));
     z-index: 9999;
-    height: 100%;
+    height: calc(100vh - (100px + var(--nevysha-menu-fix-top-height-less)));
     width: 25px;
-    min-width: 25px;
+    min-width: 25px !important;
 }
-#txt2img_close_extra_networks > div,
-#img2img_close_extra_networks > div {
+.nevysha-extra-network-btn > div {
     /*write the text vertically*/
     writing-mode: vertical-rl;
 }
