@@ -1254,3 +1254,8 @@ canvas.nevysha {
         transform: rotate(360deg);
     }
 }
+
+/*quickfix*/
+.livePreview {
+    background-color: initial;
+}
