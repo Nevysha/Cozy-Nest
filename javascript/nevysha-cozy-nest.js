@@ -695,7 +695,7 @@ function tweakExtraNetworks({prefix}) {
   const closeExtraNetworksButton = document.createElement('button');
   closeExtraNetworksButton.setAttribute('id', `${prefix}_close_extra_networks`);
   //add button class
-  closeExtraNetworksButton.classList.add('nevysha', 'lg', 'primary', 'gradio-button');
+  closeExtraNetworksButton.classList.add('nevysha', 'lg', 'primary', 'gradio-button', 'nevysha-extra-network-btn');
   closeExtraNetworksButton.innerHTML = '<div>Close</div>';
   //click the original button to close the extra network
   closeExtraNetworksButton.addEventListener('click', (e) => {
@@ -754,6 +754,25 @@ function tweakExtraNetworks({prefix}) {
 
 const COZY_NEST_DOM_TWEAK_LOAD_DURATION = "CozyNest:tweakLoadDuration";
 const COZY_NEST_GRADIO_LOAD_DURATION = "CozyNest:gradioLoadDuration";
+
+function addExtraNetworksBtn({prefix}) {
+  const tab = document.querySelector(`div#tab_${prefix}`);
+
+  //create button
+  const extraNetworksBtn = document.createElement('button');
+  extraNetworksBtn.setAttribute('id', `${prefix}_extra_networks_right_button`);
+  extraNetworksBtn.classList.add('nevysha', 'lg', 'primary', 'gradio-button', 'nevysha-extra-network-btn');
+  extraNetworksBtn.innerHTML = '<div>Extra Networks</div>';
+  //click the original button to close the extra network
+  extraNetworksBtn.addEventListener('click', (e) => {
+    document.querySelector(`button#${prefix}_extra_networks`).click();
+  });
+
+  //add button to the begining of the tab
+  tab.insertBefore(extraNetworksBtn, tab.firstChild);
+
+}
+
 const onload = (done) => {
 
   let gradioApp = window.gradioApp;
@@ -810,6 +829,7 @@ const onload = (done) => {
     addDraggable(bundle);
     addScrollable(bundle);
     tweakExtraNetworks(bundle);
+    addExtraNetworksBtn(bundle);
   }
 
   nevysha_magic({prefix: "txt2img"});
