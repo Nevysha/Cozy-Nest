@@ -1117,7 +1117,8 @@ canvas.nevysha {
 .nevysha-cozy-nest-app-name{
     font-size: 4em;
     margin-bottom: 30%;
-    color: #e378b2;
+    /*color: #e378b2;*/
+    color: var(--ae-primary-color);
     font-family: "Caveat", sans-serif;
     text-transform: uppercase;
 }
@@ -1160,7 +1161,7 @@ canvas.nevysha {
     display: flex;
     z-index: 9001;
 }
-#loading-step-estimator {
+#loading_step_estimator {
     font-size: 0.8em;
 }
 

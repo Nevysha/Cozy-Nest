@@ -292,17 +292,34 @@ function getHexColorForAccent() {
   return document.querySelector("#setting_nevyui_accentColor").querySelector("input").value;
 }
 
-function loadSettings() {
+function applyWavesColor(hexColor) {
+  const rgbColor = hexToRgb(hexColor);
+  document.querySelectorAll(".wave").forEach((wave) => {
+    wave.setAttribute("style", `background: rgb(${rgbColor} / 16%)`);
+  })
+}
 
-  const root = document.querySelector(':root');
+function applyBgGradiantColor(hexColor) {
+  const rgbColor = hexToRgb(hexColor);
+  document.querySelector(':root').style.setProperty('--nevysha-gradiant-1', `rgb(${rgbColor})`);
+}
+
+function applyAccentColor(hexColor, colorFromLuminance) {
+  const rgbColor = hexToRgb(hexColor);
+  document.querySelector(':root').style.setProperty('--ae-primary-color', `rgb(${rgbColor})`);
+  if (getLuminance(colorFromLuminance) > 0.5) {
+    document.querySelector(':root').style.setProperty('--nevysha-color-from-luminance', `black`);
+  } else {
+    document.querySelector(':root').style.setProperty('--nevysha-color-from-luminance', `white`);
+  }
+}
+
+function loadSettings() {
 
   //waves
   const setWaveColor = () => {
     const hexColor = document.querySelector("#setting_nevyui_waveColor").querySelector("input").value;
-    const rgbColor = hexToRgb(hexColor);
-    document.querySelectorAll(".wave").forEach((wave) => {
-      wave.setAttribute("style", `background: rgb(${rgbColor} / 16%)`);
-    })
+    applyWavesColor(hexColor);
   }
   setWaveColor()
   document.querySelector("#setting_nevyui_waveColor").querySelector("input").addEventListener("change", setWaveColor)
@@ -310,8 +327,7 @@ function loadSettings() {
   //background gradient
   const setGradientColor = () => {
     const hexColor = document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").value;
-    const rgbColor = hexToRgb(hexColor);
-    root.style.setProperty('--nevysha-gradiant-1', `rgb(${rgbColor})`);
+    applyBgGradiantColor(hexColor);
   }
   setGradientColor()
   document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").addEventListener("change", setGradientColor)
@@ -319,14 +335,7 @@ function loadSettings() {
   //background gradient
   const setAccentColor = () => {
     const hexColor = getHexColorForAccent();
-    const rgbColor = hexToRgb(hexColor);
-    root.style.setProperty('--ae-primary-color', `rgb(${rgbColor})`);
-    if (getLuminance(getHexColorForAccent())  > 0.5) {
-      root.style.setProperty('--nevysha-color-from-luminance', `black`);
-    }
-    else {
-      root.style.setProperty('--nevysha-color-from-luminance', `white`);
-    }
+    applyAccentColor(hexColor, getHexColorForAccent());
   }
   //accent generate button
   const setAccentForGenerate = () => {
@@ -355,7 +364,7 @@ function loadSettings() {
   //font size
   const setFontSize = () => {
     const fontSize = document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").value;
-    root.style.setProperty('--nevysha-text-md', `${fontSize}px`);
+    document.querySelector(':root').style.setProperty('--nevysha-text-md', `${fontSize}px`);
   }
   setFontSize()
   document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").addEventListener("change", setFontSize)
@@ -364,7 +373,7 @@ function loadSettings() {
   //card height
   const setCardHeight = () => {
     const cardHeight = document.querySelector("#setting_nevyui_cardHeight").querySelector("input[type=number]").value;
-    root.style.setProperty('--extra-network-card-height', `${cardHeight}em`);
+    document.querySelector(':root').style.setProperty('--extra-network-card-height', `${cardHeight}em`);
   }
   setCardHeight()
   document.querySelector("#setting_nevyui_cardHeight").querySelector("input[type=number]").addEventListener("change", setCardHeight)
@@ -373,7 +382,7 @@ function loadSettings() {
   //card width
   const setCardWidth = () => {
       const cardWidth = document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=number]").value;
-      root.style.setProperty('--extra-network-card-width', `${cardWidth}em`);
+    document.querySelector(':root').style.setProperty('--extra-network-card-width', `${cardWidth}em`);
   }
   setCardWidth()
   document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=number]").addEventListener("change", setCardWidth)
@@ -388,8 +397,8 @@ function loadSettings() {
       document.querySelector(".nevysha.nevysha-tabnav").classList.add("menu-fix-top")
       document.querySelector(".gradio-container.app").classList.add("menu-fix-top")
       document.querySelector("#nevyui_sh_options")?.classList.add("menu-fix-top")
-      root.style.setProperty('--nevysha-margin-left', `0`);
-      root.style.setProperty('--nevysha-menu-fix-top-height-less', `25px`);
+      document.querySelector(':root').style.setProperty('--nevysha-margin-left', `0`);
+      document.querySelector(':root').style.setProperty('--nevysha-menu-fix-top-height-less', `25px`);
 
       //centered or not
       const isCenteredChecked = document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top_centered]").checked;
@@ -404,8 +413,8 @@ function loadSettings() {
       document.querySelector(".nevysha.nevysha-tabnav").classList.remove("menu-fix-top")
       document.querySelector(".gradio-container.app").classList.remove("menu-fix-top")
       document.querySelector("#nevyui_sh_options")?.classList.remove("menu-fix-top")
-      root.style.setProperty('--nevysha-margin-left', `175px`);
-      root.style.setProperty('--nevysha-menu-fix-top-height-less', `1px`);
+      document.querySelector(':root').style.setProperty('--nevysha-margin-left', `175px`);
+      document.querySelector(':root').style.setProperty('--nevysha-menu-fix-top-height-less', `1px`);
     }
   }
   menuPosition()
@@ -466,15 +475,19 @@ function tweakNevyUiSettings() {
 
   //add an event listener on #nevyui_sh_options_submit to briefly show a message when the user clicks on it
   document.querySelector("#nevyui_sh_options_submit").addEventListener("click", (e) => {
-      //cancel event
-      e.preventDefault();
-      e.stopPropagation();
-      //show the message with a smooth animation using jquery
-      $("#nevysha-saved-feedback").fadeIn();
-      //hide the message after 1.5 second
-      setTimeout(() => {
-            $("#nevysha-saved-feedback").fadeOut();
-      }, 1500);
+    //cancel event
+    e.preventDefault();
+    e.stopPropagation();
+
+    //show the message with a smooth animation using jquery
+    $("#nevysha-saved-feedback").fadeIn();
+    //hide the message after 1.5 second
+    setTimeout(() => {
+          $("#nevysha-saved-feedback").fadeOut();
+
+        //save new settings in localStorage
+        (() => fetchCozyNestConfig())() //ignore async warn
+    }, 1500);
   });
 
   //add an event listener on #nevyui_sh_options_submit to briefly show a message when the user clicks on it
@@ -482,11 +495,15 @@ function tweakNevyUiSettings() {
     //cancel event
     e.preventDefault();
     e.stopPropagation();
+
     //show the message with a smooth animation using jquery
     $("#nevysha-reset-feedback").fadeIn();
     //hide the message after 1.5 second
     setTimeout(() => {
       $("#nevysha-reset-feedback").fadeOut();
+
+      //save new settings in localStorage
+      (() => fetchCozyNestConfig())() //ignore async warn
     }, 1500);
   });
 
@@ -839,30 +856,43 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   //add a full screen div hiding while the app is loading
   const pushLoading = () => {
+
     if (document.querySelector('#nevysha-loading')) return
+
     const loading =
-          `<div id='nevysha-loading-wrap' class='nevysha ${maybeLightThemeClass}'>
-            <div id='nevysha-loading' class='nevysha'>
-              <div class="nevysha-loading-progress">
-                <div class="nevysha-cozy-nest-app-name animate__animated animate__backInLeft">
-                    Cozy Nest
-                </div>
-                ${loading_roll}
-                <div id="loading-step-estimator" class="subtext3 animate__animated animate__pulse animate__infinite">
-                  1
-                </div>
-                <div class="subtext1 animate__animated animate__pulse animate__infinite">
-                    Loading The Magic
-                </div>
-                <div class="subtext2 animate__animated animate__pulse animate__infinite">
-                  (and gradio)
-                </div>
+      `<div id='nevysha-loading-wrap' class='nevysha ${maybeLightThemeClass}'>
+          <div id='nevysha-loading' class='nevysha'>
+            <div class="nevysha-loading-progress">
+              <div class="nevysha-cozy-nest-app-name animate__animated animate__backInLeft">
+                  Cozy Nest
               </div>
-              ${waves}
-              <div class="footer">Made by Nevysha with <span class="heart">❤</span> and <span class="coffee">☕</span></div>
+              ${loading_roll}
+              <div id="loading_step_estimator" class="subtext3 animate__animated animate__pulse animate__infinite">
+                1
+              </div>
+              <div class="subtext1 animate__animated animate__pulse animate__infinite">
+                  Loading The Magic
+              </div>
+              <div class="subtext2 animate__animated animate__pulse animate__infinite">
+                (and gradio)
+              </div>
             </div>
-          </div>`
+            ${waves}
+            <div class="footer">Made by Nevysha with <span class="heart">❤</span> and <span class="coffee">☕</span></div>
+          </div>
+        </div>`
     document.querySelector('body').insertAdjacentHTML('beforeend', loading);
+
+    //get config from local storage COZY_NEST_CONFIG
+    let config = JSON.parse(localStorage.getItem("COZY_NEST_CONFIG"))
+    //merge with dummy config to avoid warning
+    config = {...{waves_color: "#ffffff", bg_gradiant_color: "#ffffff", accent_color: "#ffffff"}, ...config}
+
+    applyWavesColor(config.waves_color)
+    applyBgGradiantColor(config.bg_gradiant_color);
+    applyAccentColor(config.accent_color, config.accent_color);
+
+
   }
   pushLoading();
 
@@ -873,7 +903,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const lastLoadingTime = lastLoadingTimeSaved ? lastLoadingTimeSaved : 15000
   //observer to update loading percentage
   const observer = new MutationObserver(function(mutations) {
-    if (mutations[0].target.id !== 'loading-step-estimator') {
+    if (mutations[0].target.id !== 'loading_step_estimator') {
       console.log(`nevysha-ui.js: Loading step:${++step}...`);
 
       //current elapsed loading time
@@ -883,10 +913,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         //estimate the percentage of loading. Never go above 99%
         const percentage = Math.min(Math.round((currentLoadingTime / lastLoadingTime) * 100), 99)
 
-        document.querySelector("#loading-step-estimator").innerText = `${percentage}%`
+        document.querySelector("#loading_step_estimator").innerText = `${percentage}%`
       }
       else {
-        document.querySelector("#loading-step-estimator").innerText = `Woops, it's taking longer than expected...`
+        document.querySelector("#loading_step_estimator").innerText = `Woops, it's taking longer than expected...`
       }
 
       pushLoading();
@@ -972,7 +1002,18 @@ class SimpleTimer {
     }
 }
 
-(() => {
+let COZY_NEST_CONFIG;
+
+async function fetchCozyNestConfig() {
+  const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?${Date.now()}`);
+  if (response.ok) {
+    COZY_NEST_CONFIG = await response.json();
+    //save in local storage
+    localStorage.setItem('COZY_NEST_CONFIG', JSON.stringify(COZY_NEST_CONFIG));
+  }
+}
+
+(async () => {
 
   SimpleTimer.time(COZY_NEST_GRADIO_LOAD_DURATION);
 
@@ -994,4 +1035,22 @@ class SimpleTimer {
   // Append the link element to the document head
   document.head.appendChild(googleFontsLink);
 
+  // fetch file=extensions/Cozy-Nest/nevyui_settings.json. add Date to avoid cache
+  await fetchCozyNestConfig();
+
 })();
+
+//dummy method
+const dummy = () => {
+  const container = document.querySelector("#txt2img_lora_cards");
+
+  // Get the first child element of the container
+  const firstChild = container.firstChild;
+
+  // Duplicate the first child element 100 times and append them to the fragment
+  for (let i = 0; i < 100; i++) {
+    const clone = container.querySelector('.card').cloneNode(true);
+    container.insertBefore(clone, firstChild);
+  }
+
+};
