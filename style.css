@@ -1117,6 +1117,30 @@ canvas.nevysha {
     color: var(--ae-primary-color) !important;
 }
 
+#nevyui_update_info_panel {
+    padding: 5px;
+}
+.markdown-body {
+    font-size: 1em;
+    color: var(--body-text-color);
+    line-height: 1.5;
+    font-weight: 400;
+    letter-spacing: 0.00938em;
+    word-wrap: break-word;
+    padding: 0 10px;
+}
+.markdown-body > h2 {
+    font-size: 1.4em;
+    color: var(--body-text-color);
+    margin-top: 30px;
+}
+.markdown-body > ul {
+    margin-left: 20px;
+}
+.markdown-body > ul > li {
+    margin-bottom: 10px;
+}
+
 /*LOADING*/
 .nevysha-cozy-nest-app-name{
     font-size: 4em;

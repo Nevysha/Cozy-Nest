@@ -479,16 +479,33 @@ const addCozyNestCustomBtn = () => {
   updateTab.classList.add("nevysha-update-tab", "nevysha", "nevysha-tab", "nevysha-tab-settings");
   updateTab.id = "nevyui_update_info_panel";
   updateTab.style = "display: none;";
-  //fetch version_data.json
-  (async function () {
-    const response = await fetch('file=extensions/Cozy-Nest/version_data.json')
-    const version_data = await response.json()
-    console.log(version_data)
-
-    const converter = new showdown.Converter();
-    updateTab.innerHTML = converter.makeHtml(version_data.patchnote);
-  })();
   document.querySelector("#tabs").insertAdjacentElement("beforeend", updateTab)
+  //fetch version_data.json
+  loadVersionData().then(ignored => ignored)
+}
+
+async function loadVersionData() {
+  const current_version_data = await (await fetch('file=extensions/Cozy-Nest/version_data.json')).json()
+  console.log(current_version_data)
+
+  const remote_version_data = await (await fetch('https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/version_data.json')).json()
+  console.log(remote_version_data)
+
+  let remote_patchnote = await (await fetch('https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/PATCHNOTE.md')).text();
+
+  //regex to replace [x] with a checkmark
+  const regex = /\[x\]/g;
+  remote_patchnote = remote_patchnote.replace(regex, ""); //TODO add icon ?
+
+  //regex to replace [ ] with a cross
+  const regex2 = /\[ \]/g;
+  remote_patchnote = remote_patchnote.replace(regex2, ""); //TODO add icon ?
+
+
+  const converter = new showdown.Converter();
+
+  const article = `<article class="markdown-body">${converter.makeHtml(remote_patchnote)}</article>`
+  document.querySelector('#nevyui_update_info_panel').insertAdjacentHTML('beforeend', article)
 }
 
 const tweakNevyUiSettings = () => {
@@ -841,12 +858,12 @@ function addExtraNetworksBtn({prefix}) {
 }
 
 const onloadSafe = (done) => {
-  try {
+  // try {
     onLoad(done);
-  } catch (e) {
-    console.error("Failed to init Cozy Nest", e);
-    done();
-  }
+  // } catch (e) {
+  //   console.error("Failed to init Cozy Nest", e);
+  //   done();
+  // }
 }
 
 const onLoad = (done) => {
