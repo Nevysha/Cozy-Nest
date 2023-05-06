@@ -1080,7 +1080,7 @@ canvas.nevysha {
 #nevyui-ui-wrapper {
     background-color: var(--block-background-fill);
 }
-#nevyui_sh_options_panel {
+.nevysha-tab-settings {
     position: fixed;
     right: 5px;
     top: 30px;
@@ -1089,15 +1089,20 @@ canvas.nevysha {
     z-index: 9999;
     background-color: var(--block-background-fill);
 }
-#nevyui_sh_options {
-    margin: 20px auto;
+.nevysha-btn-menu-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
 }
-#nevyui_sh_options.menu-fix-top {
-    position: fixed;
-    right: 9px;
-    top: -16px;
+.nevysha-btn-menu-wrapper.menu-fix-top {
+    position: relative;
+    right: 20px;
+    margin: 0 0 0 auto;
+    display: flex;
+    gap: 10px;
+    justify-content: end;
 }
-#nevyui_sh_options > svg {
+.nevysha-btn-menu-wrapper > button > svg {
     fill: var(--ae-primary-color);
     width: 20px;
 }
