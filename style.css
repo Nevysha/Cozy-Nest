@@ -952,17 +952,16 @@ canvas.nevysha {
     z-index: 9999;
     margin: 15px 0 0 5px;
 }
-#txt2img_close_extra_networks,
-#img2img_close_extra_networks {
-    position: absolute;
+.nevysha-extra-network-btn {
+    position: fixed;
     right: 0;
+    top: calc(75px + var(--nevysha-menu-fix-top-height-less));
     z-index: 9999;
-    height: 100%;
+    height: calc(100vh - (100px + var(--nevysha-menu-fix-top-height-less)));
     width: 25px;
-    min-width: 25px;
+    min-width: 25px !important;
 }
-#txt2img_close_extra_networks > div,
-#img2img_close_extra_networks > div {
+.nevysha-extra-network-btn > div {
     /*write the text vertically*/
     writing-mode: vertical-rl;
 }
@@ -1081,7 +1080,7 @@ canvas.nevysha {
 #nevyui-ui-wrapper {
     background-color: var(--block-background-fill);
 }
-#nevyui_sh_options_panel {
+.nevysha-tab-settings {
     position: fixed;
     right: 5px;
     top: 30px;
@@ -1090,15 +1089,20 @@ canvas.nevysha {
     z-index: 9999;
     background-color: var(--block-background-fill);
 }
-#nevyui_sh_options {
-    margin: 20px auto;
+.nevysha-btn-menu-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
 }
-#nevyui_sh_options.menu-fix-top {
-    position: fixed;
-    right: 9px;
-    top: -16px;
+.nevysha-btn-menu-wrapper.menu-fix-top {
+    position: relative;
+    right: 20px;
+    margin: 0 0 0 auto;
+    display: flex;
+    gap: 10px;
+    justify-content: end;
 }
-#nevyui_sh_options > svg {
+.nevysha-btn-menu-wrapper > button > svg {
     fill: var(--ae-primary-color);
     width: 20px;
 }
@@ -1113,11 +1117,36 @@ canvas.nevysha {
     color: var(--ae-primary-color) !important;
 }
 
+#nevyui_update_info_panel {
+    padding: 5px;
+}
+.markdown-body {
+    font-size: 1em;
+    color: var(--body-text-color);
+    line-height: 1.5;
+    font-weight: 400;
+    letter-spacing: 0.00938em;
+    word-wrap: break-word;
+    padding: 0 10px;
+}
+.markdown-body > h2 {
+    font-size: 1.4em;
+    color: var(--body-text-color);
+    margin-top: 30px;
+}
+.markdown-body > ul {
+    margin-left: 20px;
+}
+.markdown-body > ul > li {
+    margin-bottom: 10px;
+}
+
 /*LOADING*/
 .nevysha-cozy-nest-app-name{
     font-size: 4em;
     margin-bottom: 30%;
-    color: #e378b2;
+    /*color: #e378b2;*/
+    color: var(--ae-primary-color);
     font-family: "Caveat", sans-serif;
     text-transform: uppercase;
 }
@@ -1160,7 +1189,7 @@ canvas.nevysha {
     display: flex;
     z-index: 9001;
 }
-#loading-step-estimator {
+#loading_step_estimator {
     font-size: 0.8em;
 }
 
