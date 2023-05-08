@@ -1156,13 +1156,29 @@ canvas.nevysha {
     margin-bottom: 10px;
 }
 
-#nevysha_other_tabs {
+#nevysha_other_tabs.empty {
     min-height: 200px;
     min-width: 200px;
+}
+
+#nevysha_other_tabs {
     background-color: var(--block-background-fill);
     position: absolute;
     display: flex;
     flex-direction: column;
+    border: 1px solid var(--ae-input-border-color);
+}
+
+#nevysha_other_tabs > button {
+    text-align: left;
+}
+.nevysha-other-tab-text {
+    padding: 3px 10px;
+    text-align: left;
+}
+.remove-nevysha-other-tab {
+    padding-right: 4px;
+    padding-left: 4px;
 }
 
 /*LOADING*/

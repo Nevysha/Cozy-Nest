@@ -951,9 +951,9 @@ const addTabWrapper = () => {
     //toggle the display of the floating div
     //toggle the panel with a slide animation using jquery
     if (shown) {
-      $("#nevysha_other_tabs").slideUp();
+      $("#nevysha_other_tabs").slideUp(100);
     } else {
-      $("#nevysha_other_tabs").slideDown();
+      $("#nevysha_other_tabs").slideDown(200);
     }
     shown = !shown;
   });
@@ -964,19 +964,30 @@ const addTabWrapper = () => {
   }
 
   function dragEnd(event) {
-    // Add any necessary code to run when the drag operation is finished
+    //add tab in moved tab array in local storage
+    const movedTabs = JSON.parse(localStorage.getItem('nevysha_moved_tabs')) || [];
+    //check if the tab is already in the array
+    if (!movedTabs.includes(event.target.id)) {
+      movedTabs.push(event.target.id);
+      localStorage.setItem('nevysha_moved_tabs', JSON.stringify(movedTabs));
+    }
   }
 
   function dragOver(event) {
     event.preventDefault();
   }
 
-  function drop(event) {
-    event.preventDefault();
+  function cloneAndPush(tab) {
 
-    //create a new tab with the same content as the original tab and hide the original tab
-    const tab = document.querySelector(`button#${event.dataTransfer.getData("text/plain")}`);
-    const newTab = tab.cloneNode(true);
+    //check if the tab is not already in the otherTabs
+    if (otherTabs.querySelector(`button#${tab.id}`)) {
+      return;
+    }
+
+    const newTab = document.createElement('button');
+    newTab.setAttribute('id', tab.id);
+    newTab.classList.add('nevysha', 'tab-nav', 'nevysha-other-tab');
+    newTab.innerHTML = `<span id="remove-${tab.id}" class="remove-nevysha-other-tab">X</span><span class="nevysha-other-tab-text">${tab.innerHTML}</span>`;
     newTab.setAttribute('draggable', true);
     newTab.addEventListener("dragstart", dragStart);
     newTab.addEventListener("dragend", dragEnd);
@@ -985,14 +996,22 @@ const addTabWrapper = () => {
       e.preventDefault();
       e.stopPropagation();
 
-      //TODO why does this re-add the tab in the main menu ? should maybe set a MutationObserver to prevent this...
-      tab.click();
+      document.querySelector(`div#tabs > .tab-nav > #${tab.id}`).click();
       //hide the floating div
       $("#nevysha_other_tabs").slideUp();
+      shown = !shown;
     });
     tab.style.display = 'none';
     //add the new tab to the otherTabs
     otherTabs.appendChild(newTab);
+  }
+
+  function drop(event) {
+    event.preventDefault();
+
+    //create a new tab with the same content as the original tab and hide the original tab
+    const tab = document.querySelector(`button#${event.dataTransfer.getData("text/plain")}`);
+    cloneAndPush(tab);
     shown = !shown;
   }
 
@@ -1000,9 +1019,10 @@ const addTabWrapper = () => {
   otherTabs.addEventListener("drop", drop);
 
   const tabs = gradioTab.querySelectorAll('button');
-  tabs.forEach((tab) => {
+
+  function addHandlerToTab(tab) {
     //skip the tabWrapper
-    if (tab.id === 'nevysha_tab_wrapper' || tab.id === 'nevysha-btn-menu-wrapper') {
+    if (tab.id) {
       return;
     }
 
@@ -1014,7 +1034,37 @@ const addTabWrapper = () => {
 
     tab.addEventListener("dragstart", dragStart);
     tab.addEventListener("dragend", dragEnd);
+  }
+
+  tabs.forEach((tab) => {
+    addHandlerToTab(tab);
+    //check if tab is marked as moved in local storage
+    const movedTabs = JSON.parse(localStorage.getItem('nevysha_moved_tabs')) || [];
+    if (movedTabs.includes(tab.id)) {
+      cloneAndPush(tab)
+    }
   });
+
+  //add a MutableObserver on gradioTab to handle gradio deleting and recreating the tab when it is clicked
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type !== 'childList') return
+      if (mutation.addedNodes.length === 0) return
+
+      const tab = mutation.addedNodes[0];
+      addHandlerToTab(tab);
+
+      //check if tab is marked as moved in local storage
+      const movedTabs = JSON.parse(localStorage.getItem('nevysha_moved_tabs')) || [];
+      if (movedTabs.includes(tab.id)) {
+        tab.style.display = 'none';
+        cloneAndPush(tab)
+      }
+    });
+  });
+  //observe on added nodes
+  const config = { attributes: false, childList: true, subtree: false };
+  observer.observe(gradioTab, config);
 
 }
 
