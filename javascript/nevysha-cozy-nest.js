@@ -973,9 +973,27 @@ const addTabWrapper = () => {
 
   function drop(event) {
     event.preventDefault();
-    const data = event.dataTransfer.getData("text/plain");
-    const draggableElement = document.getElementById(data);
-    event.target.appendChild(draggableElement);
+
+    //create a new tab with the same content as the original tab and hide the original tab
+    const tab = document.querySelector(`button#${event.dataTransfer.getData("text/plain")}`);
+    const newTab = tab.cloneNode(true);
+    newTab.setAttribute('draggable', true);
+    newTab.addEventListener("dragstart", dragStart);
+    newTab.addEventListener("dragend", dragEnd);
+    newTab.addEventListener("click", (e) => {
+      //cancel event
+      e.preventDefault();
+      e.stopPropagation();
+
+      //TODO why does this re-add the tab in the main menu ? should maybe set a MutationObserver to prevent this...
+      tab.click();
+      //hide the floating div
+      $("#nevysha_other_tabs").slideUp();
+    });
+    tab.style.display = 'none';
+    //add the new tab to the otherTabs
+    otherTabs.appendChild(newTab);
+    shown = !shown;
   }
 
   otherTabs.addEventListener("dragover", dragOver);
