@@ -460,6 +460,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 .nevysha.nevysha-tabnav > .selected {
     background-color: var(--tab-nav-background-color-selected) !important;
+    border-top: 2px solid var(--ae-primary-color);
 }
 
 .nevysha.nevysha-tabnav > button {
