@@ -987,7 +987,7 @@ const addTabWrapper = () => {
     const newTab = document.createElement('button');
     newTab.setAttribute('id', tab.id);
     newTab.classList.add('nevysha', 'tab-nav', 'nevysha-other-tab');
-    newTab.innerHTML = `<span id="remove-${tab.id}" class="remove-nevysha-other-tab">X</span><span class="nevysha-other-tab-text">${tab.innerHTML}</span>`;
+    // newTab.innerHTML = `<span id="remove-${tab.id}" class="remove-nevysha-other-tab">X</span><span class="nevysha-other-tab-text">${tab.innerHTML}</span>`;
     newTab.setAttribute('draggable', true);
     newTab.addEventListener("dragstart", dragStart);
     newTab.addEventListener("dragend", dragEnd);
@@ -1004,6 +1004,32 @@ const addTabWrapper = () => {
     tab.style.display = 'none';
     //add the new tab to the otherTabs
     otherTabs.appendChild(newTab);
+    const removeBtn = document.createElement('span');
+    removeBtn.setAttribute('id', `remove-${tab.id}`);
+    removeBtn.classList.add('remove-nevysha-other-tab');
+    removeBtn.innerHTML = 'X';
+    removeBtn.addEventListener('click', (e) => {
+      //cancel event
+      e.preventDefault();
+      e.stopPropagation();
+
+      //remove the tab from the otherTabs
+      otherTabs.removeChild(newTab);
+      //show the original tab
+      document.querySelector(`div#tabs > .tab-nav > #${tab.id}`).style.display = 'block';
+      //remove the tab from the moved tab array in local storage
+      const movedTabs = JSON.parse(localStorage.getItem('nevysha_moved_tabs')) || [];
+      const index = movedTabs.indexOf(tab.id);
+      if (index > -1) {
+          movedTabs.splice(index, 1);
+      }
+      localStorage.setItem('nevysha_moved_tabs', JSON.stringify(movedTabs));
+    });
+    newTab.appendChild(removeBtn);
+    const tabText = document.createElement('span');
+    tabText.classList.add('nevysha-other-tab-text');
+    tabText.innerHTML = tab.innerHTML;
+    newTab.appendChild(tabText);
   }
 
   function drop(event) {
