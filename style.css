@@ -773,6 +773,8 @@ button.secondary, button.primary {
     background-color: var(--nevysha-light-dark) !important;
     padding: 10px !important;
     margin-bottom: 6px;
+    display: flex;
+    flex-direction: column;
 }
 
 #txt2img_script_container, #img2img_script_container {
@@ -1342,3 +1344,20 @@ canvas.nevysha {
 .livePreview {
     background-color: initial;
 }
+
+
+/*Small Cards*/
+
+.actions, .actions ul, .actions li, .actions a, .actions .name {
+    font-size: var(--nevysha-text-md) !important;
+    margin: 0px !important;
+    padding:0.1em !important;
+    flex-wrap: wrap;
+    line-height: 1em;
+    text-align:center
+}
+.actions li a, .actions li {display:block; list-style:none;}
+.card {margin:0 !important; }
+.actions .name { max-height:3.3em; overflow:auto; }
+.actions .name:hover, .actions a:hover {filter: brightness(1.3);}
+.actions .name::-webkit-scrollbar {display:none;}
