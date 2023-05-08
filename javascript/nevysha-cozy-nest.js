@@ -486,16 +486,16 @@ const addCozyNestCustomBtn = () => {
 
 async function loadVersionData() {
 
-  //insert "Patchnote" title div
-  const patchnoteTitle = `<div class="nevysha-tabnav nevysha-tabnav-settings"><h2 class="nevysha-tabnav-title">Patchnote</h2></div>`;
-  document.querySelector("#nevyui_update_info_panel").insertAdjacentHTML('beforeend', patchnoteTitle);
-
   const current_version_data = await (await fetch(`file=extensions/Cozy-Nest/version_data.json?${new Date()}`)).json()
   const remote_version_data = await (await fetch(`https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/version_data.json?${new Date()}`)).json()
 
   //in current_version_data.version and remote_version_data.version, replace string version to int
   current_version_data.number = parseInt(current_version_data.version.replace(/\./g, ''))
   remote_version_data.number = parseInt(remote_version_data.version.replace(/\./g, ''))
+
+  //insert "Patchnote" title div
+  const patchnoteTitle = `<div class="nevysha-tabnav nevysha-tabnav-settings"><h2 class="nevysha-tabnav-title">Patchnote [${remote_version_data.version}]</h2></div>`;
+  document.querySelector("#nevyui_update_info_panel").insertAdjacentHTML('beforeend', patchnoteTitle);
 
   let remote_patchnote = await (await fetch(`https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/PATCHNOTE.md?${new Date()}`)).text();
 

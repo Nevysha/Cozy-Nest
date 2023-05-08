@@ -1012,6 +1012,15 @@ canvas.nevysha {
     padding: 8px;
     border-radius: 2px;
 }
+.nevysha-tabnav.nevysha-tabnav-settings > h2{
+    font-size: 1.6em;
+    margin-top: 20px;
+}
+#nevyui_update_info_panel > article {
+    border-left: 4px solid var(--ae-primary-color);
+    padding-left: 15px;
+    margin-left: 5px;
+}
 #nevysha-version-info {
     display: flex;
     justify-content: space-between;
@@ -1138,6 +1147,9 @@ canvas.nevysha {
     margin-top: 30px;
 }
 .markdown-body > ul {
+    margin-left: 20px;
+}
+.markdown-body > ul > li > ul {
     margin-left: 20px;
 }
 .markdown-body > ul > li {
