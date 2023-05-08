@@ -524,8 +524,19 @@ async function loadVersionData() {
   const updateBtn =
       `<button class="nevysha-btn-menu lg primary gradio-button nevysha generate-button" id="nevyui_update_btn" title="Update Cozy Nest">Update</button>`;
   document.querySelector('#nevysha-version-info').insertAdjacentHTML('beforeend', updateBtn)
-  document.querySelector('#nevyui_update_btn').addEventListener('click', () => {
-      //TODO
+  document.querySelector('#nevyui_update_btn').addEventListener('click', (e) => {
+    //prevent default behavior
+    e.preventDefault();
+    e.stopPropagation();
+
+    //trigger click on nevyui_sh_options_update button
+    document.querySelector('#nevyui_sh_options_update').click()
+    //wait for 5s and trigger reloadUI by clicking settings_restart_gradio button
+    //change nevyui_update_btn to Update in progress
+    document.querySelector('#nevyui_update_btn').innerHTML = "Update in progress..."
+    setTimeout(() => {
+        document.querySelector('#settings_restart_gradio').click()
+    }, 5000);
   });
 
   //in current_version_data.version and remote_version_data.version, replace string version to int
@@ -654,7 +665,7 @@ const tweakNevyUiSettings = () => {
     });
     //when shown is true, hide it on click outside
     document.addEventListener("click", (e) => {
-      if (shown && !e.target.closest("#nevyui_update_info_panel") && !e.target.closest("#nevyui_update_info")) {
+      if (shown && !e.target.closest("#nevyui_update_info_panel") && !e.target.closest("#nevyui_update_info") && !e.target.id === "#nevyui_sh_options_update") {
         //cancel event
         e.preventDefault();
         e.stopPropagation();

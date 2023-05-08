@@ -1,6 +1,7 @@
 import gradio as gr
 import os
 import json
+import subprocess
 
 from modules import scripts, script_callbacks, shared, sd_hijack
 
@@ -93,6 +94,18 @@ def request_restart():
     shared.state.need_restart = True
 
 
+def update():
+    git = os.environ.get('GIT', "git")
+
+    subdir = os.path.dirname(os.path.abspath(__file__))
+
+    # perform git pull in the extension folder
+    output = subprocess.check_output([git, '-C', subdir, 'pull', '--autostash'])
+    print(output.decode('utf-8'))
+
+
+
+
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui:
         with gr.Column(elem_id="nevyui-ui-block"):
@@ -181,6 +194,13 @@ def on_ui_tabs():
                     _js='restart_reload',
                     inputs=[],
                     outputs=[], )
+
+            # add button to trigger git pull
+            btn_update = gr.Button(value="Update", elem_id="nevyui_sh_options_update", visible=False,)
+            btn_update.click(
+                fn=update,
+                inputs=[],
+                outputs=[], )
 
             # footer
             gr.HTML(value="<div class='nevysha settings-nevyui-bottom'>"
