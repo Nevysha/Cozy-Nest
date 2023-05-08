@@ -64,6 +64,10 @@ It's made by being a bit hacky on the DOM to tweaks Gradio default features and 
 
 
 # Contribution
+
+My roadmap is available here : [Notion Roadmap](https://exclusive-drink-8c5.notion.site/Nevysha-Cozy-Nest-f95f333908f0406f990ed603b424780c).
+Please note that this is a draft and I'm not sure I'll be able to implement everything.
+
 Feel free to contribute to this project. I'm sure there are a lot of things that can be improved. 
 I'll try to keep this extension up to date with the latest version of auto1111.
 
