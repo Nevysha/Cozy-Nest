@@ -10,7 +10,6 @@
 
 - [x]  Show/Hide Generation Info broken on img2img
 - [x]  Setting not effective during loading
-- [x] 
 
 ## Known Issue
 
