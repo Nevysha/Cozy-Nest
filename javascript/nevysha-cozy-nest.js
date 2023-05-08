@@ -485,13 +485,19 @@ const addCozyNestCustomBtn = () => {
 }
 
 async function loadVersionData() {
-  const current_version_data = await (await fetch('file=extensions/Cozy-Nest/version_data.json')).json()
-  console.log(current_version_data)
 
-  const remote_version_data = await (await fetch('https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/version_data.json')).json()
-  console.log(remote_version_data)
+  //insert "Patchnote" title div
+  const patchnoteTitle = `<div class="nevysha-tabnav nevysha-tabnav-settings"><h2 class="nevysha-tabnav-title">Patchnote</h2></div>`;
+  document.querySelector("#nevyui_update_info_panel").insertAdjacentHTML('beforeend', patchnoteTitle);
 
-  let remote_patchnote = await (await fetch('https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/PATCHNOTE.md')).text();
+  const current_version_data = await (await fetch(`file=extensions/Cozy-Nest/version_data.json?${new Date()}`)).json()
+  const remote_version_data = await (await fetch(`https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/version_data.json?${new Date()}`)).json()
+
+  //in current_version_data.version and remote_version_data.version, replace string version to int
+  current_version_data.number = parseInt(current_version_data.version.replace(/\./g, ''))
+  remote_version_data.number = parseInt(remote_version_data.version.replace(/\./g, ''))
+
+  let remote_patchnote = await (await fetch(`https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/PATCHNOTE.md?${new Date()}`)).text();
 
   //regex to replace [x] with a checkmark
   const regex = /\[x\]/g;
@@ -506,6 +512,41 @@ async function loadVersionData() {
 
   const article = `<article class="markdown-body">${converter.makeHtml(remote_patchnote)}</article>`
   document.querySelector('#nevyui_update_info_panel').insertAdjacentHTML('beforeend', article)
+
+  //create a div that will contain info related to version compliance
+  const versionInfo = document.createElement("div");
+  versionInfo.classList.add("nevysha-version-info", "nevysha-emphasis");
+  versionInfo.id = "nevysha-version-info";
+  //add div to the beginning of the updateTab
+  document.querySelector('#nevyui_update_info_panel').insertAdjacentElement('afterbegin', versionInfo)
+
+  //add a button to update the extension
+  const updateBtn =
+      `<button class="nevysha-btn-menu lg primary gradio-button nevysha generate-button" id="nevyui_update_btn" title="Update Cozy Nest">Update</button>`;
+  document.querySelector('#nevysha-version-info').insertAdjacentHTML('beforeend', updateBtn)
+  document.querySelector('#nevyui_update_btn').addEventListener('click', () => {
+      //TODO
+  });
+
+  //in current_version_data.version and remote_version_data.version, replace string version to int
+  current_version_data.number = parseInt(current_version_data.version.replace(/\./g, ''))
+  remote_version_data.number = parseInt(remote_version_data.version.replace(/\./g, ''))
+  //compare versions and display info
+  if (current_version_data.number >= remote_version_data.number) {
+    //versions are the same
+    const p = `<p class="nevysha-version-info-text">You are up to date! (installed: v${current_version_data.version})</p>`
+    //add p to the beginning of nevysha-version-info
+    document.querySelector('#nevysha-version-info').insertAdjacentHTML('afterbegin', p)
+    //hide update button
+    document.querySelector('#nevyui_update_btn').style.display = "none";
+  }
+  else {
+    //local version is older than remote version
+    const p = `<p class="nevysha-version-info-text">An update is available! (installed: v${current_version_data.version}, new : v${remote_version_data.version})</p>`
+    //add p to the end of nevysha-version-info
+    document.querySelector('#nevysha-version-info').insertAdjacentHTML('afterbegin', p)
+  }
+
 }
 
 const tweakNevyUiSettings = () => {

@@ -992,26 +992,29 @@ canvas.nevysha {
     margin-bottom: 30px;
     font-style: italic;
 }
-.nevysha.settings-nevyui-top > .reporting {
-    color: var(--body-text-color);
+.nevysha-reporting {
+    color: var(--body-text-color) !important;
     margin: 15px 0 15px 0;
     border-left: 4px solid var(--ae-primary-color);
     padding-left: 5px;
     font-size: 1.2em;
 }
-.nevysha.settings-nevyui-top > .reporting > a {
+.nevysha.settings-nevyui-top > .nevysha-reporting > a {
     color: var(--ae-primary-color);
     text-decoration: underline;
 }
-.nevysha.settings-nevyui-top > .warning {
+.nevysha-emphasis {
     font-size: 1.1em;
     margin-top: 5px;
-    color: #000000;
     font-weight: bold;
     background-color: var(--ae-primary-color);
-    color: var(--nevysha-color-from-luminance);
+    color: var(--nevysha-color-from-luminance) !important;
     padding: 8px;
     border-radius: 2px;
+}
+#nevysha-version-info {
+    display: flex;
+    justify-content: space-between;
 }
 #nevysha-rename-important-msg {
     background-color: #9b0505;
