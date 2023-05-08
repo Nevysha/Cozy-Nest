@@ -1156,6 +1156,15 @@ canvas.nevysha {
     margin-bottom: 10px;
 }
 
+#nevysha_other_tabs {
+    min-height: 200px;
+    min-width: 200px;
+    background-color: var(--block-background-fill);
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+}
+
 /*LOADING*/
 .nevysha-cozy-nest-app-name{
     font-size: 4em;

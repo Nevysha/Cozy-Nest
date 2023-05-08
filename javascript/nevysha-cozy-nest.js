@@ -912,6 +912,94 @@ function addExtraNetworksBtn({prefix}) {
 
 }
 
+const addTabWrapper = () => {
+  const tabWrapper = document.createElement('button');
+  //add tabWrapper after the gradio tab
+  const gradioTab = document.querySelector(`div#tabs > .tab-nav`);
+
+  tabWrapper.setAttribute('id', `nevysha_tab_wrapper`);
+  tabWrapper.classList.add('nevysha', 'tab-wrapper',);
+
+  //retrive the svelte random class from the gradioTab.firstChild css class. it start with "svelte-"
+  gradioTab.querySelector('button').classList.forEach((className) => {
+    if (className.startsWith('svelte-')) {
+      tabWrapper.classList.add(className);
+    }
+  })
+
+  tabWrapper.innerHTML = `Others`;
+
+  //insert before nevysha-btn-menu-wrapper
+  gradioTab.insertBefore(tabWrapper, gradioTab.lastChild);
+
+  //create a div that will hold the other tabs
+  const otherTabs = document.createElement('div');
+  otherTabs.setAttribute('id', `nevysha_other_tabs`);
+  otherTabs.classList.add('nevysha', 'other-tabs',);
+  otherTabs.style.display = 'none';
+  //add at the end of div#tabs
+  tabWrapper.appendChild(otherTabs);
+
+
+  //show floating div when click on tabWrapper
+  let shown = false;
+  tabWrapper.addEventListener('click', (e) => {
+    //cancel event
+    e.preventDefault();
+    e.stopPropagation();
+
+    //toggle the display of the floating div
+    //toggle the panel with a slide animation using jquery
+    if (shown) {
+      $("#nevysha_other_tabs").slideUp();
+    } else {
+      $("#nevysha_other_tabs").slideDown();
+    }
+    shown = !shown;
+  });
+
+  //go through all the tabs button in gradioTab and add a drag event listener
+  function dragStart(event) {
+    event.dataTransfer.setData("text/plain", event.target.id);
+  }
+
+  function dragEnd(event) {
+    // Add any necessary code to run when the drag operation is finished
+  }
+
+  function dragOver(event) {
+    event.preventDefault();
+  }
+
+  function drop(event) {
+    event.preventDefault();
+    const data = event.dataTransfer.getData("text/plain");
+    const draggableElement = document.getElementById(data);
+    event.target.appendChild(draggableElement);
+  }
+
+  otherTabs.addEventListener("dragover", dragOver);
+  otherTabs.addEventListener("drop", drop);
+
+  const tabs = gradioTab.querySelectorAll('button');
+  tabs.forEach((tab) => {
+    //skip the tabWrapper
+    if (tab.id === 'nevysha_tab_wrapper' || tab.id === 'nevysha-btn-menu-wrapper') {
+      return;
+    }
+
+    // set an id for the tab from its text
+    tab.id = tab.innerText.toLowerCase().replace(/\s/g, '_');
+
+    //set draggable to true
+    tab.setAttribute('draggable', true);
+
+    tab.addEventListener("dragstart", dragStart);
+    tab.addEventListener("dragend", dragEnd);
+  });
+
+}
+
 const onloadSafe = (done) => {
   // try {
     onLoad(done);
@@ -998,6 +1086,9 @@ const onLoad = (done) => {
 
   //load settings
   applyCozyNestConfig();
+
+  //add tab wrapper
+  addTabWrapper();
 
   //apply theme
   if (getTheme() === "light") {
