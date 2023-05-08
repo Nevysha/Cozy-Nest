@@ -2,6 +2,7 @@ console.log("nevysha-ui.js")
 
 const waves = "<div><div class='wave'></div> <div class='wave'></div><div class='wave'></div></div>";
 const svg_magic_wand = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M234.7 42.7L197 56.8c-3 1.1-5 4-5 7.2s2 6.1 5 7.2l37.7 14.1L248.8 123c1.1 3 4 5 7.2 5s6.1-2 7.2-5l14.1-37.7L315 71.2c3-1.1 5-4 5-7.2s-2-6.1-5-7.2L277.3 42.7 263.2 5c-1.1-3-4-5-7.2-5s-6.1 2-7.2 5L234.7 42.7zM46.1 395.4c-18.7 18.7-18.7 49.1 0 67.9l34.6 34.6c18.7 18.7 49.1 18.7 67.9 0L529.9 116.5c18.7-18.7 18.7-49.1 0-67.9L495.3 14.1c-18.7-18.7-49.1-18.7-67.9 0L46.1 395.4zM484.6 82.6l-105 105-23.3-23.3 105-105 23.3 23.3zM7.5 117.2C3 118.9 0 123.2 0 128s3 9.1 7.5 10.8L64 160l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L128 160l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L128 96 106.8 39.5C105.1 35 100.8 32 96 32s-9.1 3-10.8 7.5L64 96 7.5 117.2zm352 256c-4.5 1.7-7.5 6-7.5 10.8s3 9.1 7.5 10.8L416 416l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L480 416l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L480 352l-21.2-56.5c-1.7-4.5-6-7.5-10.8-7.5s-9.1 3-10.8 7.5L416 352l-56.5 21.2z"/></svg>`;
+const svg_update_info = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-167l80 80c9.4 9.4 24.6 9.4 33.9 0l80-80c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-39 39V184c0-13.3-10.7-24-24-24s-24 10.7-24 24V318.1l-39-39c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9z"/></svg>`;
 const loading_roll = `<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`
 const svg_draggable_anchor = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M9.4 9.4C21.9-3.1 42.1-3.1 54.6 9.4L160 114.7V96c0-17.7 14.3-32 32-32s32 14.3 32 32v96c0 4.3-.9 8.5-2.4 12.2c-1.6 3.7-3.8 7.3-6.9 10.3l-.1 .1c-3.1 3-6.6 5.3-10.3 6.9c-3.8 1.6-7.9 2.4-12.2 2.4H96c-17.7 0-32-14.3-32-32s14.3-32 32-32h18.7L9.4 54.6C-3.1 42.1-3.1 21.9 9.4 9.4zM256 256a64 64 0 1 1 128 0 64 64 0 1 1 -128 0zM114.7 352H96c-17.7 0-32-14.3-32-32s14.3-32 32-32h96 0l.1 0c8.8 0 16.7 3.6 22.5 9.3l.1 .1c3 3.1 5.3 6.6 6.9 10.3c1.6 3.8 2.4 7.9 2.4 12.2v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V397.3L54.6 502.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L114.7 352zM416 96c0-17.7 14.3-32 32-32s32 14.3 32 32v18.7L585.4 9.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3L525.3 160H544c17.7 0 32 14.3 32 32s-14.3 32-32 32H448c-8.8 0-16.8-3.6-22.6-9.3l-.1-.1c-3-3.1-5.3-6.6-6.9-10.3s-2.4-7.8-2.4-12.2l0-.1v0V96zM525.3 352L630.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L480 397.3V416c0 17.7-14.3 32-32 32s-32-14.3-32-32V320v0c0 0 0-.1 0-.1c0-4.3 .9-8.4 2.4-12.2c1.6-3.8 3.9-7.3 6.9-10.4c5.8-5.8 13.7-9.3 22.5-9.4c0 0 .1 0 .1 0h0 96c17.7 0 32 14.3 32 32s-14.3 32-32 32H525.3z"/></svg>`
 
@@ -25,7 +26,7 @@ const hexToRgb = (hex) => {
 const wrapDataGenerationInfo = ({prefix}) => {
   // Get the generation info container
   const previewBlocks = document.querySelectorAll(`#tab_${prefix} div#${prefix}_results > *:not(#${prefix}_results)`);
-  const generationInfoContainer = previewBlocks[1].querySelectorAll('#html_info_txt2img, #html_log_txt2img');
+  const generationInfoContainer = previewBlocks[1].querySelectorAll(`#html_info_${prefix}, #html_log_${prefix}`);
 
   // Create the new container element and add a class for styling
   const wrapper = document.createElement('div');
@@ -292,17 +293,34 @@ function getHexColorForAccent() {
   return document.querySelector("#setting_nevyui_accentColor").querySelector("input").value;
 }
 
-function loadSettings() {
+function applyWavesColor(hexColor) {
+  const rgbColor = hexToRgb(hexColor);
+  document.querySelectorAll(".wave").forEach((wave) => {
+    wave.setAttribute("style", `background: rgb(${rgbColor} / 16%)`);
+  })
+}
 
-  const root = document.querySelector(':root');
+function applyBgGradiantColor(hexColor) {
+  const rgbColor = hexToRgb(hexColor);
+  document.querySelector(':root').style.setProperty('--nevysha-gradiant-1', `rgb(${rgbColor})`);
+}
+
+function applyAccentColor(hexColor, colorFromLuminance) {
+  const rgbColor = hexToRgb(hexColor);
+  document.querySelector(':root').style.setProperty('--ae-primary-color', `rgb(${rgbColor})`);
+  if (getLuminance(colorFromLuminance) > 0.5) {
+    document.querySelector(':root').style.setProperty('--nevysha-color-from-luminance', `black`);
+  } else {
+    document.querySelector(':root').style.setProperty('--nevysha-color-from-luminance', `white`);
+  }
+}
+
+function applyCozyNestConfig() {
 
   //waves
   const setWaveColor = () => {
     const hexColor = document.querySelector("#setting_nevyui_waveColor").querySelector("input").value;
-    const rgbColor = hexToRgb(hexColor);
-    document.querySelectorAll(".wave").forEach((wave) => {
-      wave.setAttribute("style", `background: rgb(${rgbColor} / 16%)`);
-    })
+    applyWavesColor(hexColor);
   }
   setWaveColor()
   document.querySelector("#setting_nevyui_waveColor").querySelector("input").addEventListener("change", setWaveColor)
@@ -310,8 +328,7 @@ function loadSettings() {
   //background gradient
   const setGradientColor = () => {
     const hexColor = document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").value;
-    const rgbColor = hexToRgb(hexColor);
-    root.style.setProperty('--nevysha-gradiant-1', `rgb(${rgbColor})`);
+    applyBgGradiantColor(hexColor);
   }
   setGradientColor()
   document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").addEventListener("change", setGradientColor)
@@ -319,14 +336,7 @@ function loadSettings() {
   //background gradient
   const setAccentColor = () => {
     const hexColor = getHexColorForAccent();
-    const rgbColor = hexToRgb(hexColor);
-    root.style.setProperty('--ae-primary-color', `rgb(${rgbColor})`);
-    if (getLuminance(getHexColorForAccent())  > 0.5) {
-      root.style.setProperty('--nevysha-color-from-luminance', `black`);
-    }
-    else {
-      root.style.setProperty('--nevysha-color-from-luminance', `white`);
-    }
+    applyAccentColor(hexColor, getHexColorForAccent());
   }
   //accent generate button
   const setAccentForGenerate = () => {
@@ -355,7 +365,7 @@ function loadSettings() {
   //font size
   const setFontSize = () => {
     const fontSize = document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").value;
-    root.style.setProperty('--nevysha-text-md', `${fontSize}px`);
+    document.querySelector(':root').style.setProperty('--nevysha-text-md', `${fontSize}px`);
   }
   setFontSize()
   document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").addEventListener("change", setFontSize)
@@ -364,7 +374,7 @@ function loadSettings() {
   //card height
   const setCardHeight = () => {
     const cardHeight = document.querySelector("#setting_nevyui_cardHeight").querySelector("input[type=number]").value;
-    root.style.setProperty('--extra-network-card-height', `${cardHeight}em`);
+    document.querySelector(':root').style.setProperty('--extra-network-card-height', `${cardHeight}em`);
   }
   setCardHeight()
   document.querySelector("#setting_nevyui_cardHeight").querySelector("input[type=number]").addEventListener("change", setCardHeight)
@@ -373,7 +383,7 @@ function loadSettings() {
   //card width
   const setCardWidth = () => {
       const cardWidth = document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=number]").value;
-      root.style.setProperty('--extra-network-card-width', `${cardWidth}em`);
+    document.querySelector(':root').style.setProperty('--extra-network-card-width', `${cardWidth}em`);
   }
   setCardWidth()
   document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=number]").addEventListener("change", setCardWidth)
@@ -387,9 +397,9 @@ function loadSettings() {
     if (!isLeftChecked) {
       document.querySelector(".nevysha.nevysha-tabnav").classList.add("menu-fix-top")
       document.querySelector(".gradio-container.app").classList.add("menu-fix-top")
-      document.querySelector("#nevyui_sh_options")?.classList.add("menu-fix-top")
-      root.style.setProperty('--nevysha-margin-left', `0`);
-      root.style.setProperty('--nevysha-menu-fix-top-height-less', `25px`);
+      document.querySelector("#nevysha-btn-menu-wrapper")?.classList.add("menu-fix-top")
+      document.querySelector(':root').style.setProperty('--nevysha-margin-left', `0`);
+      document.querySelector(':root').style.setProperty('--nevysha-menu-fix-top-height-less', `25px`);
 
       //centered or not
       const isCenteredChecked = document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top_centered]").checked;
@@ -403,9 +413,9 @@ function loadSettings() {
     else {
       document.querySelector(".nevysha.nevysha-tabnav").classList.remove("menu-fix-top")
       document.querySelector(".gradio-container.app").classList.remove("menu-fix-top")
-      document.querySelector("#nevyui_sh_options")?.classList.remove("menu-fix-top")
-      root.style.setProperty('--nevysha-margin-left', `175px`);
-      root.style.setProperty('--nevysha-menu-fix-top-height-less', `1px`);
+      document.querySelector("#nevysha-btn-menu-wrapper")?.classList.remove("menu-fix-top")
+      document.querySelector(':root').style.setProperty('--nevysha-margin-left', `175px`);
+      document.querySelector(':root').style.setProperty('--nevysha-menu-fix-top-height-less', `1px`);
     }
   }
   menuPosition()
@@ -448,15 +458,118 @@ const getLuminance = (hexcolor) => {
   return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
 }
 
-function tweakNevyUiSettings() {
+const addCozyNestCustomBtn = () => {
+  //create a wrapper div
+  const nevySettingstabMenuWrapper = document.createElement("div");
+  nevySettingstabMenuWrapper.classList.add("nevysha-btn-menu-wrapper");
+  nevySettingstabMenuWrapper.id = "nevysha-btn-menu-wrapper";
+
+  //add a new button in the tabnav
+  const nevySettingstabMenu2 = `<button class="nevysha-btn-menu" id="nevyui_sh_options" title="Nevysha Cozy Nest Settings">${svg_magic_wand}</button>`;
+  nevySettingstabMenuWrapper.insertAdjacentHTML('beforeend', nevySettingstabMenu2);
+  //add a new button in the tabnav
+  const updateInfoBtn = `<button class="nevysha-btn-menu" id="nevyui_update_info" title="Nevysha Cozy Nest Update Info">${svg_update_info}</button>`;
+  nevySettingstabMenuWrapper.insertAdjacentHTML('beforeend', updateInfoBtn);
+  //add the wrapper div in the tabnav
+  document.querySelector("#tabs > div.tab-nav").insertAdjacentElement('beforeend', nevySettingstabMenuWrapper);
+
+  //create a div that will contain a dialog
+  //create a wrapper div
+  const updateTab = document.createElement("div");
+  updateTab.classList.add("nevysha-update-tab", "nevysha", "nevysha-tab", "nevysha-tab-settings");
+  updateTab.id = "nevyui_update_info_panel";
+  updateTab.style = "display: none;";
+  document.querySelector("#tabs").insertAdjacentElement("beforeend", updateTab)
+  //fetch version_data.json
+  loadVersionData().then(ignored => ignored)
+}
+
+async function loadVersionData() {
+
+  const current_version_data = await (await fetch(`file=extensions/Cozy-Nest/version_data.json?${new Date()}`)).json()
+  const remote_version_data = await (await fetch(`https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/version_data.json?${new Date()}`)).json()
+
+  //in current_version_data.version and remote_version_data.version, replace string version to int
+  current_version_data.number = parseInt(current_version_data.version.replace(/\./g, ''))
+  remote_version_data.number = parseInt(remote_version_data.version.replace(/\./g, ''))
+
+  //insert "Patchnote" title div
+  const patchnoteTitle = `<div class="nevysha-tabnav nevysha-tabnav-settings"><h2 class="nevysha-tabnav-title">Patchnote [${remote_version_data.version}]</h2></div>`;
+  document.querySelector("#nevyui_update_info_panel").insertAdjacentHTML('beforeend', patchnoteTitle);
+
+  let remote_patchnote = await (await fetch(`https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/PATCHNOTE.md?${new Date()}`)).text();
+
+  //regex to replace [x] with a checkmark
+  const regex = /\[x\]/g;
+  remote_patchnote = remote_patchnote.replace(regex, ""); //TODO add icon ?
+
+  //regex to replace [ ] with a cross
+  const regex2 = /\[ \]/g;
+  remote_patchnote = remote_patchnote.replace(regex2, ""); //TODO add icon ?
+
+
+  const converter = new showdown.Converter();
+
+  const article = `<article class="markdown-body">${converter.makeHtml(remote_patchnote)}</article>`
+  document.querySelector('#nevyui_update_info_panel').insertAdjacentHTML('beforeend', article)
+
+  //create a div that will contain info related to version compliance
+  const versionInfo = document.createElement("div");
+  versionInfo.classList.add("nevysha-version-info", "nevysha-emphasis");
+  versionInfo.id = "nevysha-version-info";
+  //add div to the beginning of the updateTab
+  document.querySelector('#nevyui_update_info_panel').insertAdjacentElement('afterbegin', versionInfo)
+
+  //add a button to update the extension
+  const updateBtn =
+      `<button class="nevysha-btn-menu lg primary gradio-button nevysha generate-button" id="nevyui_update_btn" title="Update Cozy Nest">Update</button>`;
+  document.querySelector('#nevysha-version-info').insertAdjacentHTML('beforeend', updateBtn)
+  document.querySelector('#nevyui_update_btn').addEventListener('click', (e) => {
+    //prevent default behavior
+    e.preventDefault();
+    e.stopPropagation();
+
+    //trigger click on nevyui_sh_options_update button
+    document.querySelector('#nevyui_sh_options_update').click()
+    //wait for 5s and trigger reloadUI by clicking settings_restart_gradio button
+    //change nevyui_update_btn to Update in progress
+    document.querySelector('#nevyui_update_btn').innerHTML = "Update in progress..."
+    setTimeout(() => {
+        document.querySelector('#settings_restart_gradio').click()
+    }, 5000);
+  });
+
+  //in current_version_data.version and remote_version_data.version, replace string version to int
+  current_version_data.number = parseInt(current_version_data.version.replace(/\./g, ''))
+  remote_version_data.number = parseInt(remote_version_data.version.replace(/\./g, ''))
+  //compare versions and display info
+  if (current_version_data.number >= remote_version_data.number) {
+    //versions are the same
+    const p = `<p class="nevysha-version-info-text">You are up to date! (installed: v${current_version_data.version})</p>`
+    //add p to the beginning of nevysha-version-info
+    document.querySelector('#nevysha-version-info').insertAdjacentHTML('afterbegin', p)
+    //hide update button
+    document.querySelector('#nevyui_update_btn').style.display = "none";
+  }
+  else {
+    //local version is older than remote version
+    const p = `<p class="nevysha-version-info-text">An update is available! (installed: v${current_version_data.version}, new : v${remote_version_data.version})</p>`
+    //add p to the end of nevysha-version-info
+    document.querySelector('#nevysha-version-info').insertAdjacentHTML('afterbegin', p)
+
+    //set fill color of .nevysha-btn-menu-wrapper > button > svg to red
+    document.querySelector('#nevyui_update_info > svg').style.fill = "red";
+  }
+
+}
+
+const tweakNevyUiSettings = () => {
   // select button element with "Nevysha Cozy Nest" as its content
   const nevySettingstabMenu = $('#tabs > div > button:contains("Nevysha Cozy Nest")');
   // hide the button
   nevySettingstabMenu.hide();
 
-  //add a new button in the tabnav
-  const nevySettingstabMenu2 = `<button id="nevyui_sh_options">${svg_magic_wand}</button>`;
-  document.querySelector("#tabs > div.tab-nav").insertAdjacentHTML('beforeend', nevySettingstabMenu2);
+  addCozyNestCustomBtn();
 
   ///create an hideable right side panel
   const nevySettingstab = `<div id="nevyui_sh_options_panel" class="nevysha nevysha-tab nevysha-tab-settings" style="display: none;">`;
@@ -466,15 +579,19 @@ function tweakNevyUiSettings() {
 
   //add an event listener on #nevyui_sh_options_submit to briefly show a message when the user clicks on it
   document.querySelector("#nevyui_sh_options_submit").addEventListener("click", (e) => {
-      //cancel event
-      e.preventDefault();
-      e.stopPropagation();
-      //show the message with a smooth animation using jquery
-      $("#nevysha-saved-feedback").fadeIn();
-      //hide the message after 1.5 second
-      setTimeout(() => {
-            $("#nevysha-saved-feedback").fadeOut();
-      }, 1500);
+    //cancel event
+    e.preventDefault();
+    e.stopPropagation();
+
+    //show the message with a smooth animation using jquery
+    $("#nevysha-saved-feedback").fadeIn();
+    //hide the message after 1.5 second
+    setTimeout(() => {
+          $("#nevysha-saved-feedback").fadeOut();
+
+        //save new settings in localStorage
+        (() => fetchCozyNestConfig())() //ignore async warn
+    }, 1500);
   });
 
   //add an event listener on #nevyui_sh_options_submit to briefly show a message when the user clicks on it
@@ -482,11 +599,15 @@ function tweakNevyUiSettings() {
     //cancel event
     e.preventDefault();
     e.stopPropagation();
+
     //show the message with a smooth animation using jquery
     $("#nevysha-reset-feedback").fadeIn();
     //hide the message after 1.5 second
     setTimeout(() => {
       $("#nevysha-reset-feedback").fadeOut();
+
+      //save new settings in localStorage
+      (() => fetchCozyNestConfig())() //ignore async warn
     }, 1500);
   });
 
@@ -494,34 +615,69 @@ function tweakNevyUiSettings() {
   //show tab_nevyui by default to bypass gradio
   document.querySelector("#tab_nevyui").style.display = "block";
 
-  //add click event to the new button
-  let shown = false;
-  document.querySelector("#nevyui_sh_options").addEventListener("click", (e) => {
-    //cancel event
-    e.preventDefault();
-    e.stopPropagation();
-
-    //show tab_nevyui by default to bypass gradio hidding tabs
-    document.querySelector("#tab_nevyui").style.display = "block";
-
-    //toggle the panel with a slide animation using jquery
-    if (shown) {
-      $("#nevyui_sh_options_panel").slideUp();
-    } else {
-      $("#nevyui_sh_options_panel").slideDown();
-    }
-    shown = !shown;
-  });
-  //when shown is true, hide it on click outside
-  document.addEventListener("click", (e) => {
-    if (shown && !e.target.closest("#nevyui_sh_options_panel") && !e.target.closest("#nevyui_sh_options")) {
+  //add click event to the new settings button
+  (function closure() {
+    let shown = false;
+    document.querySelector("#nevyui_sh_options").addEventListener("click", (e) => {
       //cancel event
       e.preventDefault();
       e.stopPropagation();
-      $("#nevyui_sh_options_panel").slideUp();
-      shown = false;
-    }
-  });
+
+      //show tab_nevyui by default to bypass gradio hidding tabs
+      document.querySelector("#tab_nevyui").style.display = "block";
+
+      //toggle the panel with a slide animation using jquery
+      if (shown) {
+        $("#nevyui_sh_options_panel").slideUp();
+      } else {
+        $("#nevyui_sh_options_panel").slideDown();
+      }
+      shown = !shown;
+    });
+    //when shown is true, hide it on click outside
+    document.addEventListener("click", (e) => {
+      if (shown && !e.target.closest("#nevyui_sh_options_panel") && !e.target.closest("#nevyui_sh_options")) {
+        //cancel event
+        e.preventDefault();
+        e.stopPropagation();
+        $("#nevyui_sh_options_panel").slideUp();
+        shown = false;
+      }
+    });
+  })();
+
+
+  //add click event to the new update info button
+  (function closure() {
+    let shown = false;
+    document.querySelector("#nevyui_update_info").addEventListener("click", (e) => {
+      //cancel event
+      e.preventDefault();
+      e.stopPropagation();
+
+      //show tab_nevyui by default to bypass gradio hidding tabs
+      document.querySelector("#tab_nevyui").style.display = "block";
+
+      //toggle the panel with a slide animation using jquery
+      if (shown) {
+        $("#nevyui_update_info_panel").slideUp();
+      } else {
+        $("#nevyui_update_info_panel").slideDown();
+      }
+      shown = !shown;
+    });
+    //when shown is true, hide it on click outside
+    document.addEventListener("click", (e) => {
+      if (shown && !e.target.closest("#nevyui_update_info_panel") && !e.target.closest("#nevyui_update_info") && !e.target.id === "#nevyui_sh_options_update") {
+        //cancel event
+        e.preventDefault();
+        e.stopPropagation();
+        $("#nevyui_update_info_panel").slideUp();
+        shown = false;
+      }
+    });
+  })();
+
 }
 
 const makeSettingsDraggable = () => {
@@ -678,7 +834,7 @@ function tweakExtraNetworks({prefix}) {
   const closeExtraNetworksButton = document.createElement('button');
   closeExtraNetworksButton.setAttribute('id', `${prefix}_close_extra_networks`);
   //add button class
-  closeExtraNetworksButton.classList.add('nevysha', 'lg', 'primary', 'gradio-button');
+  closeExtraNetworksButton.classList.add('nevysha', 'lg', 'primary', 'gradio-button', 'nevysha-extra-network-btn');
   closeExtraNetworksButton.innerHTML = '<div>Close</div>';
   //click the original button to close the extra network
   closeExtraNetworksButton.addEventListener('click', (e) => {
@@ -737,12 +893,222 @@ function tweakExtraNetworks({prefix}) {
 
 const COZY_NEST_DOM_TWEAK_LOAD_DURATION = "CozyNest:tweakLoadDuration";
 const COZY_NEST_GRADIO_LOAD_DURATION = "CozyNest:gradioLoadDuration";
-const onload = (done) => {
+
+function addExtraNetworksBtn({prefix}) {
+  const tab = document.querySelector(`div#tab_${prefix}`);
+
+  //create button
+  const extraNetworksBtn = document.createElement('button');
+  extraNetworksBtn.setAttribute('id', `${prefix}_extra_networks_right_button`);
+  extraNetworksBtn.classList.add('nevysha', 'lg', 'primary', 'gradio-button', 'nevysha-extra-network-btn');
+  extraNetworksBtn.innerHTML = '<div>Extra Networks</div>';
+  //click the original button to close the extra network
+  extraNetworksBtn.addEventListener('click', (e) => {
+    document.querySelector(`button#${prefix}_extra_networks`).click();
+  });
+
+  //add button to the begining of the tab
+  tab.insertBefore(extraNetworksBtn, tab.firstChild);
+
+}
+
+const addTabWrapper = () => {
+  const tabWrapper = document.createElement('button');
+  //add tabWrapper after the gradio tab
+  const gradioTab = document.querySelector(`div#tabs > .tab-nav`);
+
+  tabWrapper.setAttribute('id', `nevysha_tab_wrapper`);
+  tabWrapper.classList.add('nevysha', 'tab-wrapper',);
+
+  //retrive the svelte random class from the gradioTab.firstChild css class. it start with "svelte-"
+  gradioTab.querySelector('button').classList.forEach((className) => {
+    if (className.startsWith('svelte-')) {
+      tabWrapper.classList.add(className);
+    }
+  })
+
+  tabWrapper.innerHTML = `Others`;
+
+  //insert before nevysha-btn-menu-wrapper
+  gradioTab.insertBefore(tabWrapper, gradioTab.lastChild);
+
+  //create a div that will hold the other tabs
+  const otherTabs = document.createElement('div');
+  otherTabs.setAttribute('id', `nevysha_other_tabs`);
+  otherTabs.classList.add('nevysha', 'other-tabs',);
+  otherTabs.style.display = 'none';
+  //add at the end of div#tabs
+  tabWrapper.appendChild(otherTabs);
+
+
+  //show floating div when click on tabWrapper
+  let shown = false;
+  tabWrapper.addEventListener('click', (e) => {
+    //cancel event
+    e.preventDefault();
+    e.stopPropagation();
+
+    //toggle the display of the floating div
+    //toggle the panel with a slide animation using jquery
+    if (shown) {
+      $("#nevysha_other_tabs").slideUp(100);
+    } else {
+      $("#nevysha_other_tabs").slideDown(200);
+    }
+    shown = !shown;
+  });
+
+  //go through all the tabs button in gradioTab and add a drag event listener
+  function dragStart(event) {
+    event.dataTransfer.setData("text/plain", event.target.id);
+  }
+
+  function dragEnd(event) {
+    //add tab in moved tab array in local storage
+    const movedTabs = JSON.parse(localStorage.getItem('nevysha_moved_tabs')) || [];
+    //check if the tab is already in the array
+    if (!movedTabs.includes(event.target.id)) {
+      movedTabs.push(event.target.id);
+      localStorage.setItem('nevysha_moved_tabs', JSON.stringify(movedTabs));
+    }
+  }
+
+  function dragOver(event) {
+    event.preventDefault();
+  }
+
+  function cloneAndPush(tab) {
+
+    //check if the tab is not already in the otherTabs
+    if (otherTabs.querySelector(`button#${tab.id}`)) {
+      return;
+    }
+
+    const newTab = document.createElement('button');
+    newTab.setAttribute('id', tab.id);
+    newTab.classList.add('nevysha', 'tab-nav', 'nevysha-other-tab');
+    // newTab.innerHTML = `<span id="remove-${tab.id}" class="remove-nevysha-other-tab">X</span><span class="nevysha-other-tab-text">${tab.innerHTML}</span>`;
+    newTab.setAttribute('draggable', true);
+    newTab.addEventListener("dragstart", dragStart);
+    newTab.addEventListener("dragend", dragEnd);
+    newTab.addEventListener("click", (e) => {
+      //cancel event
+      e.preventDefault();
+      e.stopPropagation();
+
+      document.querySelector(`div#tabs > .tab-nav > #${tab.id}`).click();
+      //hide the floating div
+      $("#nevysha_other_tabs").slideUp();
+      shown = !shown;
+    });
+    tab.style.display = 'none';
+    //add the new tab to the otherTabs
+    otherTabs.appendChild(newTab);
+    const removeBtn = document.createElement('span');
+    removeBtn.setAttribute('id', `remove-${tab.id}`);
+    removeBtn.classList.add('remove-nevysha-other-tab');
+    removeBtn.innerHTML = 'X';
+    removeBtn.addEventListener('click', (e) => {
+      //cancel event
+      e.preventDefault();
+      e.stopPropagation();
+
+      //remove the tab from the otherTabs
+      otherTabs.removeChild(newTab);
+      //show the original tab
+      document.querySelector(`div#tabs > .tab-nav > #${tab.id}`).style.display = 'block';
+      //remove the tab from the moved tab array in local storage
+      const movedTabs = JSON.parse(localStorage.getItem('nevysha_moved_tabs')) || [];
+      const index = movedTabs.indexOf(tab.id);
+      if (index > -1) {
+          movedTabs.splice(index, 1);
+      }
+      localStorage.setItem('nevysha_moved_tabs', JSON.stringify(movedTabs));
+    });
+    newTab.appendChild(removeBtn);
+    const tabText = document.createElement('span');
+    tabText.classList.add('nevysha-other-tab-text');
+    tabText.innerHTML = tab.innerHTML;
+    newTab.appendChild(tabText);
+  }
+
+  function drop(event) {
+    event.preventDefault();
+
+    //create a new tab with the same content as the original tab and hide the original tab
+    const tab = document.querySelector(`button#${event.dataTransfer.getData("text/plain")}`);
+    cloneAndPush(tab);
+    shown = !shown;
+  }
+
+  otherTabs.addEventListener("dragover", dragOver);
+  otherTabs.addEventListener("drop", drop);
+
+  const tabs = gradioTab.querySelectorAll('button');
+
+  function addHandlerToTab(tab) {
+    //skip the tabWrapper
+    if (tab.id) {
+      return;
+    }
+
+    // set an id for the tab from its text
+    tab.id = tab.innerText.toLowerCase().replace(/\s/g, '_');
+
+    //set draggable to true
+    tab.setAttribute('draggable', true);
+
+    tab.addEventListener("dragstart", dragStart);
+    tab.addEventListener("dragend", dragEnd);
+  }
+
+  tabs.forEach((tab) => {
+    addHandlerToTab(tab);
+    //check if tab is marked as moved in local storage
+    const movedTabs = JSON.parse(localStorage.getItem('nevysha_moved_tabs')) || [];
+    if (movedTabs.includes(tab.id)) {
+      cloneAndPush(tab)
+    }
+  });
+
+  //add a MutableObserver on gradioTab to handle gradio deleting and recreating the tab when it is clicked
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type !== 'childList') return
+      if (mutation.addedNodes.length === 0) return
+
+      const tab = mutation.addedNodes[0];
+      addHandlerToTab(tab);
+
+      //check if tab is marked as moved in local storage
+      const movedTabs = JSON.parse(localStorage.getItem('nevysha_moved_tabs')) || [];
+      if (movedTabs.includes(tab.id)) {
+        tab.style.display = 'none';
+        cloneAndPush(tab)
+      }
+    });
+  });
+  //observe on added nodes
+  const config = { attributes: false, childList: true, subtree: false };
+  observer.observe(gradioTab, config);
+
+}
+
+const onloadSafe = (done) => {
+  // try {
+    onLoad(done);
+  // } catch (e) {
+  //   console.error("Failed to init Cozy Nest", e);
+  //   done();
+  // }
+}
+
+const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
   if (typeof gradioApp !== "function") {
     console.log("waiting for gradio")
-    setTimeout(() => onload(done), 200);
+    setTimeout(() => onloadSafe(done), 200);
     return
   }
 
@@ -751,7 +1117,7 @@ const onload = (done) => {
 
   if (!quicksettings) {
     console.log("waiting for gradio")
-    setTimeout(() => onload(done), 200);
+    setTimeout(() => onloadSafe(done), 200);
     return
   }
 
@@ -792,15 +1158,12 @@ const onload = (done) => {
     wrapDataGenerationInfo(bundle);
     addDraggable(bundle);
     addScrollable(bundle);
-
+    tweakExtraNetworks(bundle);
+    addExtraNetworksBtn(bundle);
   }
 
   nevysha_magic({prefix: "txt2img"});
   nevysha_magic({prefix: "img2img"});
-
-  tweakExtraNetworks({prefix: "txt2img"});
-  tweakExtraNetworks({prefix: "img2img"});
-
 
   //general
   tweakButtonsIcons();
@@ -816,7 +1179,10 @@ const onload = (done) => {
   tweakNevyUiSettings();
 
   //load settings
-  loadSettings();
+  applyCozyNestConfig();
+
+  //add tab wrapper
+  addTabWrapper();
 
   //apply theme
   if (getTheme() === "light") {
@@ -833,36 +1199,49 @@ const onload = (done) => {
   done();
 };
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", async function() {
 
   const maybeLightThemeClass = getTheme() === "light" ? "nevysha-light" : ""
 
   //add a full screen div hiding while the app is loading
   const pushLoading = () => {
+
     if (document.querySelector('#nevysha-loading')) return
+
     const loading =
-          `<div id='nevysha-loading-wrap' class='nevysha ${maybeLightThemeClass}'>
-            <div id='nevysha-loading' class='nevysha'>
-              <div class="nevysha-loading-progress">
-                <div class="nevysha-cozy-nest-app-name animate__animated animate__backInLeft">
-                    Cozy Nest
-                </div>
-                ${loading_roll}
-                <div id="loading-step-estimator" class="subtext3 animate__animated animate__pulse animate__infinite">
-                  1
-                </div>
-                <div class="subtext1 animate__animated animate__pulse animate__infinite">
-                    Loading The Magic
-                </div>
-                <div class="subtext2 animate__animated animate__pulse animate__infinite">
-                  (and gradio)
-                </div>
+      `<div id='nevysha-loading-wrap' class='nevysha ${maybeLightThemeClass}'>
+          <div id='nevysha-loading' class='nevysha'>
+            <div class="nevysha-loading-progress">
+              <div class="nevysha-cozy-nest-app-name animate__animated animate__backInLeft">
+                  Cozy Nest
               </div>
-              ${waves}
-              <div class="footer">Made by Nevysha with <span class="heart">❤</span> and <span class="coffee">☕</span></div>
+              ${loading_roll}
+              <div id="loading_step_estimator" class="subtext3 animate__animated animate__pulse animate__infinite">
+                1
+              </div>
+              <div class="subtext1 animate__animated animate__pulse animate__infinite">
+                  Loading The Magic
+              </div>
+              <div class="subtext2 animate__animated animate__pulse animate__infinite">
+                (and gradio)
+              </div>
             </div>
-          </div>`
+            ${waves}
+            <div class="footer">Made by Nevysha with <span class="heart">❤</span> and <span class="coffee">☕</span></div>
+          </div>
+        </div>`
     document.querySelector('body').insertAdjacentHTML('beforeend', loading);
+
+    //get config from local storage COZY_NEST_CONFIG
+    let config = JSON.parse(localStorage.getItem("COZY_NEST_CONFIG"))
+    //merge with dummy config to avoid warning
+    config = {...{waves_color: "#ffffff", bg_gradiant_color: "#ffffff", accent_color: "#ffffff"}, ...config}
+
+    applyWavesColor(config.waves_color)
+    applyBgGradiantColor(config.bg_gradiant_color);
+    applyAccentColor(config.accent_color, config.accent_color);
+
+
   }
   pushLoading();
 
@@ -873,7 +1252,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const lastLoadingTime = lastLoadingTimeSaved ? lastLoadingTimeSaved : 15000
   //observer to update loading percentage
   const observer = new MutationObserver(function(mutations) {
-    if (mutations[0].target.id !== 'loading-step-estimator') {
+    if (mutations[0].target.id !== 'loading_step_estimator') {
       console.log(`nevysha-ui.js: Loading step:${++step}...`);
 
       //current elapsed loading time
@@ -883,10 +1262,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         //estimate the percentage of loading. Never go above 99%
         const percentage = Math.min(Math.round((currentLoadingTime / lastLoadingTime) * 100), 99)
 
-        document.querySelector("#loading-step-estimator").innerText = `${percentage}%`
+        document.querySelector("#loading_step_estimator").innerText = `${percentage}%`
       }
       else {
-        document.querySelector("#loading-step-estimator").innerText = `Woops, it's taking longer than expected...`
+        document.querySelector("#loading_step_estimator").innerText = `Woops, it's taking longer than expected...`
       }
 
       pushLoading();
@@ -909,7 +1288,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Failed to load jQuery library", err);
   }
 
-  onload(() => {
+  // load showdown library
+  $.getScript("https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js", function() {
+    console.log("showdown library loaded successfully");
+  });
+
+  onloadSafe(() => {
     console.log("nevysha-ui.js: Loading done!");
     //remove #nevysha-loading from DOM
     observer.disconnect();
@@ -918,6 +1302,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
     SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
   });
+
+
 
 });
 
@@ -972,7 +1358,18 @@ class SimpleTimer {
     }
 }
 
-(() => {
+let COZY_NEST_CONFIG;
+
+async function fetchCozyNestConfig() {
+  const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?${Date.now()}`);
+  if (response.ok) {
+    COZY_NEST_CONFIG = await response.json();
+    //save in local storage
+    localStorage.setItem('COZY_NEST_CONFIG', JSON.stringify(COZY_NEST_CONFIG));
+  }
+}
+
+(async () => {
 
   SimpleTimer.time(COZY_NEST_GRADIO_LOAD_DURATION);
 
@@ -994,4 +1391,22 @@ class SimpleTimer {
   // Append the link element to the document head
   document.head.appendChild(googleFontsLink);
 
+  // fetch file=extensions/Cozy-Nest/nevyui_settings.json. add Date to avoid cache
+  await fetchCozyNestConfig();
+
 })();
+
+//dummy method
+const dummy = () => {
+  const container = document.querySelector("#txt2img_lora_cards");
+
+  // Get the first child element of the container
+  const firstChild = container.firstChild;
+
+  // Duplicate the first child element 100 times and append them to the fragment
+  for (let i = 0; i < 100; i++) {
+    const clone = container.querySelector('.card').cloneNode(true);
+    container.insertBefore(clone, firstChild);
+  }
+
+};

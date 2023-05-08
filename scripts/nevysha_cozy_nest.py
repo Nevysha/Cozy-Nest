@@ -1,6 +1,7 @@
 import gradio as gr
 import os
 import json
+import subprocess
 
 from modules import scripts, script_callbacks, shared, sd_hijack
 
@@ -93,6 +94,18 @@ def request_restart():
     shared.state.need_restart = True
 
 
+def update():
+    git = os.environ.get('GIT', "git")
+
+    subdir = os.path.dirname(os.path.abspath(__file__))
+
+    # perform git pull in the extension folder
+    output = subprocess.check_output([git, '-C', subdir, 'pull', '--autostash'])
+    print(output.decode('utf-8'))
+
+
+
+
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui:
         with gr.Column(elem_id="nevyui-ui-block"):
@@ -104,17 +117,17 @@ def on_ui_tabs():
             # check if user is on the old repo name and display a warning
             if EXTENSION_TECHNICAL_NAME != 'Cozy-Nest':
                 gr.HTML(value="<div class='nevysha nevysha-warning'>"
-                              "<p id='nevysha-rename-important-msg' class='warning important'>WARNING : This extension has been renamed to Cozy Nest to avoid confusion with an other tool. "
+                              "<p id='nevysha-rename-important-msg' class='nevysha-emphasis important'>WARNING : This extension has been renamed to Cozy Nest to avoid confusion with an other tool. "
                               "Please update to the latest version by following "
                               "<a href='https://github.com/Nevysha/Cozy-Nest/wiki/How-to-switch-to-renamed-repository-Cozy-Nest'>these instructions</a></p>")
 
             # header
             gr.HTML(value="<div class='nevysha settings-nevyui-top'><h2>Nevysha's Cozy Nest</h2>"
                           "<p class='info'>Find your cozy spot on Auto1111's webui</p>"
-                          "<p class='reporting'>Found a bug or want to ask for a feature ? Please use "
+                          "<p class='nevysha-reporting'>Found a bug or want to ask for a feature ? Please use "
                           "  <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
                           " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
-                          "<p class='warning'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
+                          "<p class='nevysha-emphasis'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
 
             # main menu
             main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position",
@@ -181,6 +194,13 @@ def on_ui_tabs():
                     _js='restart_reload',
                     inputs=[],
                     outputs=[], )
+
+            # add button to trigger git pull
+            btn_update = gr.Button(value="Update", elem_id="nevyui_sh_options_update", visible=False,)
+            btn_update.click(
+                fn=update,
+                inputs=[],
+                outputs=[], )
 
             # footer
             gr.HTML(value="<div class='nevysha settings-nevyui-bottom'>"

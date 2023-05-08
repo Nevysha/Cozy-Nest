@@ -460,6 +460,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 .nevysha.nevysha-tabnav > .selected {
     background-color: var(--tab-nav-background-color-selected) !important;
+    border-top: 2px solid var(--ae-primary-color);
 }
 
 .nevysha.nevysha-tabnav > button {
@@ -773,6 +774,8 @@ button.secondary, button.primary {
     background-color: var(--nevysha-light-dark) !important;
     padding: 10px !important;
     margin-bottom: 6px;
+    display: flex;
+    flex-direction: column;
 }
 
 #txt2img_script_container, #img2img_script_container {
@@ -952,17 +955,16 @@ canvas.nevysha {
     z-index: 9999;
     margin: 15px 0 0 5px;
 }
-#txt2img_close_extra_networks,
-#img2img_close_extra_networks {
-    position: absolute;
+.nevysha-extra-network-btn {
+    position: fixed;
     right: 0;
+    top: calc(75px + var(--nevysha-menu-fix-top-height-less));
     z-index: 9999;
-    height: 100%;
+    height: calc(100vh - (100px + var(--nevysha-menu-fix-top-height-less)));
     width: 25px;
-    min-width: 25px;
+    min-width: 25px !important;
 }
-#txt2img_close_extra_networks > div,
-#img2img_close_extra_networks > div {
+.nevysha-extra-network-btn > div {
     /*write the text vertically*/
     writing-mode: vertical-rl;
 }
@@ -993,26 +995,38 @@ canvas.nevysha {
     margin-bottom: 30px;
     font-style: italic;
 }
-.nevysha.settings-nevyui-top > .reporting {
-    color: var(--body-text-color);
+.nevysha-reporting {
+    color: var(--body-text-color) !important;
     margin: 15px 0 15px 0;
     border-left: 4px solid var(--ae-primary-color);
     padding-left: 5px;
     font-size: 1.2em;
 }
-.nevysha.settings-nevyui-top > .reporting > a {
+.nevysha.settings-nevyui-top > .nevysha-reporting > a {
     color: var(--ae-primary-color);
     text-decoration: underline;
 }
-.nevysha.settings-nevyui-top > .warning {
+.nevysha-emphasis {
     font-size: 1.1em;
     margin-top: 5px;
-    color: #000000;
     font-weight: bold;
     background-color: var(--ae-primary-color);
-    color: var(--nevysha-color-from-luminance);
+    color: var(--nevysha-color-from-luminance) !important;
     padding: 8px;
     border-radius: 2px;
+}
+.nevysha-tabnav.nevysha-tabnav-settings > h2{
+    font-size: 1.6em;
+    margin-top: 20px;
+}
+#nevyui_update_info_panel > article {
+    border-left: 4px solid var(--ae-primary-color);
+    padding-left: 15px;
+    margin-left: 5px;
+}
+#nevysha-version-info {
+    display: flex;
+    justify-content: space-between;
 }
 #nevysha-rename-important-msg {
     background-color: #9b0505;
@@ -1081,7 +1095,7 @@ canvas.nevysha {
 #nevyui-ui-wrapper {
     background-color: var(--block-background-fill);
 }
-#nevyui_sh_options_panel {
+.nevysha-tab-settings {
     position: fixed;
     right: 5px;
     top: 30px;
@@ -1090,15 +1104,20 @@ canvas.nevysha {
     z-index: 9999;
     background-color: var(--block-background-fill);
 }
-#nevyui_sh_options {
-    margin: 20px auto;
+.nevysha-btn-menu-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
 }
-#nevyui_sh_options.menu-fix-top {
-    position: fixed;
-    right: 9px;
-    top: -16px;
+.nevysha-btn-menu-wrapper.menu-fix-top {
+    position: relative;
+    right: 20px;
+    margin: 0 0 0 auto;
+    display: flex;
+    gap: 10px;
+    justify-content: end;
 }
-#nevyui_sh_options > svg {
+.nevysha-btn-menu-wrapper > button > svg {
     fill: var(--ae-primary-color);
     width: 20px;
 }
@@ -1113,11 +1132,78 @@ canvas.nevysha {
     color: var(--ae-primary-color) !important;
 }
 
+#nevyui_update_info_panel {
+    padding: 5px;
+}
+.markdown-body {
+    font-size: 1em;
+    color: var(--body-text-color);
+    line-height: 1.5;
+    font-weight: 400;
+    letter-spacing: 0.00938em;
+    word-wrap: break-word;
+    padding: 0 10px;
+}
+.markdown-body > h2 {
+    font-size: 1.4em;
+    color: var(--body-text-color);
+    margin-top: 30px;
+}
+.markdown-body > ul {
+    margin-left: 20px;
+}
+.markdown-body > ul > li > ul {
+    margin-left: 20px;
+}
+.markdown-body > ul > li {
+    margin-bottom: 10px;
+}
+
+
+/*Style to apply when #nevysha_other_tabs is empty*/
+#nevysha_other_tabs:empty {
+    height: 200px;
+    width: 200px;
+}
+#nevysha_other_tabs:empty::before {
+    content: "Drop tabs here to hide them";
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    color: var(--body-text-color);
+    font-size: 1.2em;
+    font-weight: 500;
+    text-align: center;
+}
+
+#nevysha_other_tabs {
+    background-color: var(--block-background-fill);
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--ae-input-border-color);
+}
+
+#nevysha_other_tabs > button {
+    text-align: left;
+}
+.nevysha-other-tab-text {
+    padding: 3px 10px;
+    text-align: left;
+}
+.remove-nevysha-other-tab {
+    padding-right: 4px;
+    padding-left: 4px;
+}
+
 /*LOADING*/
 .nevysha-cozy-nest-app-name{
     font-size: 4em;
     margin-bottom: 30%;
-    color: #e378b2;
+    /*color: #e378b2;*/
+    color: var(--ae-primary-color);
     font-family: "Caveat", sans-serif;
     text-transform: uppercase;
 }
@@ -1160,7 +1246,7 @@ canvas.nevysha {
     display: flex;
     z-index: 9001;
 }
-#loading-step-estimator {
+#loading_step_estimator {
     font-size: 0.8em;
 }
 
@@ -1259,3 +1345,20 @@ canvas.nevysha {
 .livePreview {
     background-color: initial;
 }
+
+
+/*Small Cards*/
+
+.actions, .actions ul, .actions li, .actions a, .actions .name {
+    font-size: var(--nevysha-text-md) !important;
+    margin: 0px !important;
+    padding:0.1em !important;
+    flex-wrap: wrap;
+    line-height: 1em;
+    text-align:center
+}
+.actions li a, .actions li {display:block; list-style:none;}
+.card {margin:0 !important; }
+.actions .name { max-height:3.3em; overflow:auto; }
+.actions .name:hover, .actions a:hover {filter: brightness(1.3);}
+.actions .name::-webkit-scrollbar {display:none;}
