@@ -556,6 +556,9 @@ async function loadVersionData() {
     const p = `<p class="nevysha-version-info-text">An update is available! (installed: v${current_version_data.version}, new : v${remote_version_data.version})</p>`
     //add p to the end of nevysha-version-info
     document.querySelector('#nevysha-version-info').insertAdjacentHTML('afterbegin', p)
+
+    //set fill color of .nevysha-btn-menu-wrapper > button > svg to red
+    document.querySelector('#nevyui_update_info > svg').style.fill = "red";
   }
 
 }
