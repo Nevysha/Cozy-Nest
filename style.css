@@ -1346,6 +1346,14 @@ canvas.nevysha {
     }
 }
 
+#kofi_nevysha_support > img {
+    height: 15px !important;
+}
+.nevysha-kofi-tab {
+    width: auto;
+    height: auto;
+}
+
 /*quickfix*/
 .livePreview {
     background-color: initial;
