@@ -794,6 +794,20 @@ function tweakExtraNetworks({prefix}) {
       }
       shown = !shown;
     });
+
+    //add a listener to close the extra network when the user press the escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && shown) {
+        $(extraNetworkGradioWrapper).animate({"margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
+
+        // hide it after the animation is done
+        setTimeout(() => {
+          extraNetworkGradioWrapper.style.display = 'none';
+          extraNetworks.style.display = 'none';
+        }, 350);
+        shown = false;
+      }
+    });
   }
 
   if (prefix === 'img2img') {
