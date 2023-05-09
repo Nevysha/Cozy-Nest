@@ -480,6 +480,48 @@ const addCozyNestCustomBtn = () => {
   updateTab.id = "nevyui_update_info_panel";
   updateTab.style = "display: none;";
   document.querySelector("#tabs").insertAdjacentElement("beforeend", updateTab)
+
+  //add kofi image :blush:
+  const kofiImg = document.createElement('button')
+  kofiImg.id = 'kofi_nevysha_support'
+  kofiImg.innerHTML = `<img height="15" src="https://storage.ko-fi.com/cdn/cup-border.png" alt="Consider a donation on ko-fi! :3">`
+  kofiImg.title = "Consider a donation on ko-fi! :3"
+  nevySettingstabMenuWrapper.insertAdjacentElement('beforeend', kofiImg);
+
+  //create a div that will contain a dialog to display the iframe
+  const kofiTab = document.createElement("div");
+  kofiTab.classList.add("nevysha-kofi-tab", "nevysha", "nevysha-tab", "nevysha-tab-settings");
+  kofiTab.id = "nevyui_kofi_panel";
+  kofiTab.style = "display: none;";
+  // kofiTab.innerHTML = `<iframe id='kofiframe' src='https://ko-fi.com/nevysha/?hidefeed=true&widget=true&embed=true&preview=true' style='border:none;width:100%;padding:4px;background:#f9f9f9;' height='712' title='nevysha'></iframe>`
+  document.querySelector("#tabs").insertAdjacentElement("beforeend", kofiTab)
+
+  let kofiImgIsVisible = false
+
+  function toggleKofiPanel() {
+
+    //tmp : open kofi link in a new tab
+    window.open("https://ko-fi.com/nevysha", "_blank")
+
+    // if (!kofiImgIsVisible) {
+    //   $(kofiTab).slideDown(200)
+    // } else {
+    //   $(kofiTab).slideUp(200)
+    // }
+    // kofiImgIsVisible = !kofiImgIsVisible
+  }
+
+  //add event listener to the button
+  kofiImg.addEventListener("click", () => {
+    toggleKofiPanel();
+  });
+  //close the panel when clicking outside
+  document.addEventListener("click", (e) => {
+    if (kofiImgIsVisible && !e.target.closest("#kofi_nevysha_support")) {
+        toggleKofiPanel();
+    }
+  });
+
   //fetch version_data.json
   loadVersionData().then(ignored => ignored)
 }
