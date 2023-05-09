@@ -1,3 +1,6 @@
+## Minor changes
+- [x]  Added a link to my Ko-Fi page :3
+
 ## New features
 
 - [x]  Bypass Cozy Nest by adding `CozyNest=No` in URL param (ie: http://localhost:8501/?CozyNest=No) - useful for mobile
