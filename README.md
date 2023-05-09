@@ -8,6 +8,8 @@ _Find your cozy spot on Auto1111's webui_
 
 Cozy Nest is a UI extension for Automatic's sd-webui. Inspired by [anapnoe](https://github.com/anapnoe/stable-diffusion-webui-ux)'s work
 
+**![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) I won't support mobile usage. Although you can use Cozy Nest on your desktop and add `CozyNest=No` in the URL when using webui from your mobile.**
+
 Tested in Chrome, should work in Firefox with minor bug. I plan to fix it later. 
 
 User reported that it works on Vlad's fork of sd-webui, although I haven't tested it myself.
@@ -17,7 +19,7 @@ Features:
 - [x]  Full Screen Inpainting
 - [x]  Customizable tab menu position (top, left, centered)
 - [x]  Cozy look with dark or light theme (add `?__theme=light` in url or set `--theme=light` in Auto1111 start arguments to switch to light theme)
-- [x]  Bypass Cozy Nest by adding CozyNest=No in URL param (ie: http://localhost:8501/?CozyNest=No) - useful for mobile
+- [x]  Bypass Cozy Nest by adding `CozyNest=No` in URL param (ie: http://localhost:8501/?CozyNest=No) - useful for mobile
 - [x]  Save resize bar position / panel ratio in local storage
 - [x]  Customize accent color
 - [x]  Add or remove accent to the generate buttons
