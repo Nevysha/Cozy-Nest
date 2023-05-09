@@ -782,6 +782,7 @@ function tweakExtraNetworks({prefix}) {
         // $(extraNetworkGradioWrapper).animate({'margin-right':'toggle'},150);
         $(extraNetworkGradioWrapper).animate({"margin-right": `+=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
         extraNetworks.style.display = 'flex';
+
       } else {
         //hide the extra network
         $(extraNetworkGradioWrapper).animate({"margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
@@ -844,20 +845,6 @@ function tweakExtraNetworks({prefix}) {
     tweakTabBehavior();
   }
 
-  //add a button to close the extra network
-  const closeExtraNetworksButton = document.createElement('button');
-  closeExtraNetworksButton.setAttribute('id', `${prefix}_close_extra_networks`);
-  //add button class
-  closeExtraNetworksButton.classList.add('nevysha', 'lg', 'primary', 'gradio-button', 'nevysha-extra-network-btn');
-  closeExtraNetworksButton.innerHTML = '<div>Close</div>';
-  //click the original button to close the extra network
-  closeExtraNetworksButton.addEventListener('click', (e) => {
-    document.querySelector(`button#${prefix}_extra_networks`).click();
-  });
-  //add the button at the begining of the div
-  // const extraNetworksTabs = extraNetworks.querySelector(`.tab-nav`);
-  extraNetworks.insertBefore(closeExtraNetworksButton, extraNetworks.firstChild);
-
   //apply the width saved in local storage
   const extraNetworksWidth = localStorage.getItem('nevysha_extra_networks_width');
   if (extraNetworksWidth) {
@@ -868,6 +855,19 @@ function tweakExtraNetworks({prefix}) {
   const lineWrapper = createVerticalLineComp();
   //add the line to the beginning of the extraNetworkNevyshaWrapper
   extraNetworkNevyshaWrapper.insertBefore(lineWrapper, extraNetworkNevyshaWrapper.firstChild);
+
+  //add a close button inside the line
+  const closeENButton = document.createElement('button');
+  closeENButton.setAttribute('id', `${prefix}_floating_close_extra_networks`);
+  //add button class
+  closeENButton.classList.add('nevysha', 'lg', 'primary', 'gradio-button', 'nevysha-extra-network-floating-btn');
+  closeENButton.innerHTML = '<div>Close</div>';
+  //click the original button to close the extra network
+  closeENButton.addEventListener('click', (e) => {
+    document.querySelector(`button#${prefix}_extra_networks`).click();
+  });
+  //add the button at the begining of the div
+  lineWrapper.insertBefore(closeENButton, lineWrapper.firstChild);
 
   // Add an event listener to the resizer element to track mouse movement
   lineWrapper.addEventListener('mousedown', function(e) {
