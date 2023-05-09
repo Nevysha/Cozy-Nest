@@ -36,6 +36,7 @@ Features:
    - [x]  Customizable card size
 - [x]  Drag and Drop tab button inside or outside a “tab container” to bring them or move them from/out main menu
 - [x]  Extra Networks left sided tab.
+- [x]  Close Extra Network tab with escape key
 - [x]  Fetch version from a desicated json file hosted directly in the repo to an easier view of update of Cozy Nest.
 
 It's made by being a bit hacky on the DOM to tweaks Gradio default features and existing css of Auto1111. It will probably break with each update of auto1111, but I'll try to keep it up to date.
