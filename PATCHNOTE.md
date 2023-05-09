@@ -1,5 +1,6 @@
 ## New features
 
+- [x]  Bypass Cozy Nest by adding CozyNest=No in URL param (ie: http://localhost:8501/?CozyNest=No) - useful for mobile
 - [x]  Drag and Drop tab button inside or outside a “tab container” to bring them or move them from/out main menu
 - [x]  add a btn "Extra Networks" like the "vertical close" on the same place of the "close”
 - [x]  Fetch version from a desicated json file hosted directly in the repo. This file should contains version number as well as feature list. As it’s from github there is no risk of tracking from me.

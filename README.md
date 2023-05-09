@@ -17,6 +17,7 @@ Features:
 - [x]  Full Screen Inpainting
 - [x]  Customizable tab menu position (top, left, centered)
 - [x]  Cozy look with dark or light theme (add `?__theme=light` in url or set `--theme=light` in Auto1111 start arguments to switch to light theme)
+- [x]  Bypass Cozy Nest by adding CozyNest=No in URL param (ie: http://localhost:8501/?CozyNest=No) - useful for mobile
 - [x]  Save resize bar position / panel ratio in local storage
 - [x]  Customize accent color
 - [x]  Add or remove accent to the generate buttons
