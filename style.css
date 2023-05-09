@@ -964,9 +964,14 @@ canvas.nevysha {
     width: 25px;
     min-width: 25px !important;
 }
-.nevysha-extra-network-btn > div {
+.nevysha-extra-network-btn > div, .nevysha-extra-network-floating-btn > div {
     /*write the text vertically*/
     writing-mode: vertical-rl;
+}
+.nevysha-extra-network-floating-btn {
+    height: 100px;
+    position: absolute;
+    top: calc(50% - 50px);
 }
 .extra-network-cards {
     overflow-x: hidden;
