@@ -1496,7 +1496,7 @@ async function fetchCozyNestConfig() {
   const animateCssLink = document.createElement('link');
   animateCssLink.rel = 'stylesheet';
   animateCssLink.type = 'text/css';
-  animateCssLink.href = 'file=extensions/Cozy-Nest/assets/animate_4.1.1.min.css';
+  animateCssLink.href = 'file=extensions/Cozy-Nest/assets/animate-4.1.1.min.css';
 
   // Append the link element to the document head
   document.head.appendChild(animateCssLink);
