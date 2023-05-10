@@ -1,4 +1,5 @@
 ## Minor changes
+- [x]  Wix selected image border color when generating multiple images
 - [x]  Added a link to my Ko-Fi page :3
 
 ## New features

@@ -109,6 +109,7 @@
     --button-secondary-background-fill-hover: var(--nevysha-dark);
     --checkbox-border-color: var(--nevysha-white);
     --checkbox-border-color-hover: var(--ae-primary-color);
+    --color-accent: var(--ae-primary-color);
 
 
     /*default dark*/
@@ -122,7 +123,6 @@
     --link-text-color-hover: var(--secondary-400);
     --link-text-color-visited: var(--secondary-600);
     --body-text-color-subdued: var(--neutral-400);
-    --color-accent: var(--primary-500);
     --shadow-drop: rgba(0,0,0,0.05) 0px 1px 2px 0px;
     --shadow-drop-lg: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     --shadow-inset: rgba(0,0,0,0.05) 0px 2px 4px 0px inset;
