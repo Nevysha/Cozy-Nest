@@ -251,6 +251,11 @@ function tweakInpainting() {
       inpaintTab.style.height = "calc(100vh - 10px)";
       inpaintTab.style.overflow = "";
 
+      //hide button to delete image
+      //this button is inside #img2maskimg > .image-container
+      //it's the third button
+      document.querySelector('#img2maskimg > .image-container').querySelector("button:nth-child(3)").style.display = "none"
+
       //apply to canvas
       const nodesCanvas = document.querySelectorAll("canvas")
       nodesCanvasData = [];
@@ -273,6 +278,8 @@ function tweakInpainting() {
       expendBtn.textContent = "Expand"
       expendBtn.style.position = "absolute";
       inpaintTab.setAttribute("style", defaultStyle);
+
+      document.querySelector('#img2maskimg > .image-container').querySelector("button:nth-child(3)").style.display = "block"
 
       //revert canvas
       nodesCanvasData.forEach((canvasData) => {
@@ -484,7 +491,7 @@ const addCozyNestCustomBtn = () => {
   //add kofi image :blush:
   const kofiImg = document.createElement('button')
   kofiImg.id = 'kofi_nevysha_support'
-  kofiImg.innerHTML = `<img height="15" src="https://storage.ko-fi.com/cdn/cup-border.png" alt="Consider a donation on ko-fi! :3">`
+  kofiImg.innerHTML = `<img height="15" src="file=extensions/Cozy-Nest/assets/kofi-cup-border.png" alt="Consider a donation on ko-fi! :3">`
   kofiImg.title = "Consider a donation on ko-fi! :3"
   nevySettingstabMenuWrapper.insertAdjacentElement('beforeend', kofiImg);
 
@@ -521,6 +528,31 @@ const addCozyNestCustomBtn = () => {
         toggleKofiPanel();
     }
   });
+
+  //if AWQ-container is present in body, create a button to show/hide it
+  if (document.querySelector("#AWQ-container")) {
+    const awqContainer = document.querySelector("#AWQ-container")
+    awqContainer.style.zIndex = "9999"
+    awqContainer.style.display = "none"
+    awqContainer.style.position = "fixed"
+    awqContainer.style.bottom = "30px"
+
+    const btnAWQ = document.createElement("button")
+    btnAWQ.classList.add("nevysha-btn-menu", "nevysha-btn-menu-awq", "gradio-button", "primary", "nevysha")
+    btnAWQ.id = "nevyui_awq_btn"
+    btnAWQ.innerHTML = 'Show/Hide AWQ'
+    btnAWQ.title = "Show/Hide AWQ"
+    btnAWQ.setAttribute("style", "position: fixed; bottom: 0; left: calc(50% - 75px); width: 150px;")
+
+    document.querySelector('div.app').insertAdjacentElement('beforeend', btnAWQ)
+    btnAWQ.addEventListener("click", () => {
+      if (awqContainer.style.display === "none") {
+        awqContainer.style.display = "block"
+      } else {
+        awqContainer.style.display = "none"
+      }
+    });
+  }
 
   //fetch version_data.json
   loadVersionData().then(ignored => ignored)
@@ -1347,7 +1379,8 @@ document.addEventListener("DOMContentLoaded", async function() {
 
   try {
     // dynamically import jQuery library
-    await import('https://code.jquery.com/jquery-3.6.4.min.js')
+    await loadJQuery();
+
     // jQuery is now loaded and ready to use
     console.log("jQuery library loaded successfully");
   }
@@ -1357,7 +1390,7 @@ document.addEventListener("DOMContentLoaded", async function() {
   }
 
   // load showdown library
-  $.getScript("https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js", function() {
+  $.getScript("file=extensions/Cozy-Nest/assets/showdown-1.9.1.min.js", function() {
     console.log("showdown library loaded successfully");
   });
 
@@ -1370,10 +1403,28 @@ document.addEventListener("DOMContentLoaded", async function() {
     SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
     SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
   });
-
-
-
 });
+
+/**
+ * While jQuery has not been loaded we have to manually handle script load the old way
+ * @returns {Promise<unknown>}
+ */
+function loadJQuery() {
+  return new Promise(function(resolve, reject) {
+    const script = document.createElement('script');
+    script.src = 'file=extensions/Cozy-Nest/assets/jquery-3.6.4.min.js';
+
+    script.onload = function() {
+      resolve();
+    };
+
+    script.onerror = function() {
+      reject(new Error('Failed to load script jQuery'));
+    };
+
+    document.head.appendChild(script);
+  });
+}
 
 // create a SimpleTimer class
 class SimpleTimer {
@@ -1445,7 +1496,7 @@ async function fetchCozyNestConfig() {
   const animateCssLink = document.createElement('link');
   animateCssLink.rel = 'stylesheet';
   animateCssLink.type = 'text/css';
-  animateCssLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css';
+  animateCssLink.href = 'file=extensions/Cozy-Nest/assets/animate_4.1.1.min.css';
 
   // Append the link element to the document head
   document.head.appendChild(animateCssLink);
@@ -1465,7 +1516,7 @@ async function fetchCozyNestConfig() {
 })();
 
 //dummy method
-const dummy = () => {
+const dummyLoraCard = () => {
   const container = document.querySelector("#txt2img_lora_cards");
 
   // Get the first child element of the container
@@ -1476,5 +1527,17 @@ const dummy = () => {
     const clone = container.querySelector('.card').cloneNode(true);
     container.insertBefore(clone, firstChild);
   }
-
 };
+
+const dummyControlNetBloc = () => {
+  const container = document.querySelector("#txt2img_controlnet");
+
+  // Get the parent element of the container
+  const parent = container.parentElement;
+
+  // Duplicate the first child element 100 times and append them to the fragment
+  for (let i = 0; i < 100; i++) {
+    const clone = parent.cloneNode(true);
+    parent.parentElement.insertBefore(clone, parent);
+  }
+}

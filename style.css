@@ -109,6 +109,8 @@
     --button-secondary-background-fill-hover: var(--nevysha-dark);
     --checkbox-border-color: var(--nevysha-white);
     --checkbox-border-color-hover: var(--ae-primary-color);
+    --color-accent: var(--ae-primary-color);
+    --link-text-color: var(--nevysha-white);
 
 
     /*default dark*/
@@ -118,11 +120,9 @@
     --border-color-accent: var(--neutral-600);
     --border-color-primary: var(--neutral-700);
     --link-text-color-active: var(--secondary-500);
-    --link-text-color: var(--secondary-500);
     --link-text-color-hover: var(--secondary-400);
     --link-text-color-visited: var(--secondary-600);
     --body-text-color-subdued: var(--neutral-400);
-    --color-accent: var(--primary-500);
     --shadow-drop: rgba(0,0,0,0.05) 0px 1px 2px 0px;
     --shadow-drop-lg: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     --shadow-inset: rgba(0,0,0,0.05) 0px 2px 4px 0px inset;
@@ -959,7 +959,7 @@ canvas.nevysha {
     position: fixed;
     right: 0;
     top: calc(75px + var(--nevysha-menu-fix-top-height-less));
-    z-index: 9999;
+    z-index: 999;
     height: calc(100vh - (100px + var(--nevysha-menu-fix-top-height-less)));
     width: 25px;
     min-width: 25px !important;
@@ -1356,7 +1356,7 @@ canvas.nevysha {
 
 /*quickfix*/
 .livePreview {
-    background-color: initial;
+    background-color: var(--background-fill-primary) !important;
 }
 
 
