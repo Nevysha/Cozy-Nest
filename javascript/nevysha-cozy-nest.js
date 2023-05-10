@@ -852,10 +852,10 @@ function tweakExtraNetworks({prefix}) {
 
         //show the extra network
         extraNetworkGradioWrapper.style.display = 'block';
+        extraNetworks.style.display = 'flex';
         extraNetworkGradioWrapper.style.marginRight = `-${extraNetworkGradioWrapper.offsetWidth}px`;
         // $(extraNetworkGradioWrapper).animate({'margin-right':'toggle'},150);
         $(extraNetworkGradioWrapper).animate({"margin-right": `+=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
-        extraNetworks.style.display = 'flex';
 
       } else {
         //hide the extra network
@@ -960,9 +960,6 @@ function tweakExtraNetworks({prefix}) {
     function drag(e) {
       // Calculate the difference in mouse position
       const diffX = e.clientX - x;
-
-      //log everything
-      console.log('diffX: ' + diffX);
 
       // Update the container's width
       extraNetworkGradioWrapper.style.width = (width - diffX) + 'px';
@@ -1247,6 +1244,83 @@ function createRightWrapperDiv() {
     window.sendToSocket('{"type": "open_image_browser"}');
   });
   rightPanBtnWrapper.appendChild(cozyImgBrowserBtn);
+
+  //create a panel to display Cozy Image Browser
+  const cozyImgBrowserPanel =
+    `<div id="cozy_img_browser_panel" class="nevysha cozy-img-browser-panel slide-right-browser-panel" style="display: none">
+      <div class="nevysha slide-right-browser-panel-container">
+        Blep
+      </div>
+    </div>`;
+  //add the panel to the end of the tab
+  tab.insertAdjacentHTML('beforeend', cozyImgBrowserPanel);
+
+  // Create a vertical line component
+  const lineWrapper = createVerticalLineComp();
+  const cozyImgBrowserPanelWrapper = document.querySelector('#cozy_img_browser_panel');
+  cozyImgBrowserPanelWrapper.appendChild(lineWrapper)
+
+  //TODO refactor to factorise code bellow with extraNetwork
+  //add a close button inside the line
+  const closeCozyImgBrowser = document.createElement('button');
+  closeCozyImgBrowser.setAttribute('id', `floating_close_cozy_img_browser_panel_button`);
+  //add button class
+  closeCozyImgBrowser.classList.add('nevysha', 'lg', 'primary', 'gradio-button', 'nevysha-extra-network-floating-btn');
+  closeCozyImgBrowser.innerHTML = '<div>Close</div>';
+  //click the original button to close the extra network
+  closeCozyImgBrowser.addEventListener('click', (e) => {
+    cozyImgBrowserBtn.click();
+  });
+  //add the button at the begining of the div
+  lineWrapper.insertBefore(closeCozyImgBrowser, lineWrapper.firstChild);
+  //Add an event listener to the resizer element to track mouse movement
+  lineWrapper.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+
+    // Set the initial values for the width and height of the container
+    let width = cozyImgBrowserPanelWrapper.offsetWidth;
+
+    // Set the initial mouse position
+    let x = e.clientX;
+
+    // Track mouse movement while dragging
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', stopDrag);
+
+    function drag(e) {
+      // Calculate the difference in mouse position
+      const diffX = e.clientX - x;
+
+      // Update the container's width
+      cozyImgBrowserPanelWrapper.style.width = (width - diffX) + 'px';
+    }
+
+    function stopDrag() {
+
+      //save the new width in local storage
+      localStorage.setItem(`cozyImgBrowserPanelWrapper`, cozyImgBrowserPanelWrapper.style.width);
+
+      document.removeEventListener('mousemove', drag);
+      document.removeEventListener('mouseup', stopDrag);
+    }
+  });
+
+  //add listener to open or close the panel using jquery animate
+  cozyImgBrowserBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const panel = document.querySelector('#cozy_img_browser_panel');
+    if (panel.style.display === 'none') {
+      panel.style.display = 'flex'
+      panel.style.marginRight = `-${panel.offsetWidth}px`;
+      $(panel).animate({"margin-right": `+=${panel.offsetWidth}`}, 350);
+    }
+    else {
+      $(panel).animate({"margin-right": `-=${panel.offsetWidth}`}, 350, () => {
+        panel.style.display = 'none'
+      });
+    }
+  });
 }
 
 function setButtonVisibilityFromCurrentTab(id) {
@@ -1370,8 +1444,10 @@ const onLoad = (done) => {
   document.querySelector('#nevyui_sh_options_start_socket').addEventListener('click', () => {
     setTimeout(() => connectToImgBrowserSocket(), 1000)
   })
+
   ///TODO handle behind an auto start setting
-  connectToImgBrowserSocket();
+  // connectToImgBrowserSocket();
+  document.querySelector('#nevyui_sh_options_start_socket').click()
 
   done();
 };

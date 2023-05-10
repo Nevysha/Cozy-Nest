@@ -884,6 +884,13 @@ button.secondary, button.primary {
     display: flex;
     justify-content: center;
     margin: 15px -10px 0 -10px;
+    position: absolute;
+}
+
+.slide-right-browser-panel > .slide-right-browser-panel-container {
+    flex: 1;
+    padding: 10px;
+    margin-left: 15px;
 }
 
 .vertical-line {
@@ -951,7 +958,8 @@ canvas.nevysha {
 }
 
 #txt2img_extra_networks_nevysha_wrapper > .vertical-line-wrapper,
-#img2img_extra_networks_nevysha_wrapper > .vertical-line-wrapper {
+#img2img_extra_networks_nevysha_wrapper > .vertical-line-wrapper,
+.slide-right-browser-panel > .vertical-line-wrapper {
     z-index: 9999;
     margin: 15px 0 0 5px;
 }
@@ -1003,6 +1011,18 @@ canvas.nevysha {
     text-overflow: ellipsis;
     width: 100%;
     display: block;
+}
+.slide-right-browser-panel {
+    position: fixed;
+    z-index: 9999;
+    background-color: var(--block-background-fill) !important;
+    width: 75vw;
+    right: 0;
+    height: calc(100% - (100px + var(--nevysha-menu-fix-top-height-less)));
+    top: calc(75px + var(--nevysha-menu-fix-top-height-less));
+    padding-right: 15px;
+    display: flex;
+    flex-direction: row;
 }
 
 #settings_nevyui {
