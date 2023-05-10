@@ -1484,7 +1484,7 @@ async function fetchCozyNestConfig() {
 })();
 
 //dummy method
-const dummy = () => {
+const dummyLoraCard = () => {
   const container = document.querySelector("#txt2img_lora_cards");
 
   // Get the first child element of the container
@@ -1495,5 +1495,17 @@ const dummy = () => {
     const clone = container.querySelector('.card').cloneNode(true);
     container.insertBefore(clone, firstChild);
   }
-
 };
+
+const dummyControlNetBloc = () => {
+  const container = document.querySelector("#txt2img_controlnet");
+
+  // Get the parent element of the container
+  const parent = container.parentElement;
+
+  // Duplicate the first child element 100 times and append them to the fragment
+  for (let i = 0; i < 100; i++) {
+    const clone = parent.cloneNode(true);
+    parent.parentElement.insertBefore(clone, parent);
+  }
+}
