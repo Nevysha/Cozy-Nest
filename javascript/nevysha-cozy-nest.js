@@ -1197,6 +1197,11 @@ const onloadSafe = (done) => {
 }
 
 function connectToSocket() {
+  //check if the socket is already connected
+  if (window.sendToSocket) {
+    return;
+  }
+
   const socket = new WebSocket('ws://localhost:3333');
 
   socket.onopen = () => {
