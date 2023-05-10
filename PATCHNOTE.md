@@ -1,6 +1,8 @@
 ## Minor changes
 - [x]  Fix selected image border color when generating multiple images
 - [x]  Fix right arrow hidden by "Extra Network" button in full screen img view
+- [x]  Add external lib into the Cozy Nest extension folder
+- [x]  Fix download image link not visible
 - [x]  Added a link to my Ko-Fi page :3
 
 ## New features

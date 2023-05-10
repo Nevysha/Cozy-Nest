@@ -110,6 +110,7 @@
     --checkbox-border-color: var(--nevysha-white);
     --checkbox-border-color-hover: var(--ae-primary-color);
     --color-accent: var(--ae-primary-color);
+    --link-text-color: var(--nevysha-white);
 
 
     /*default dark*/
@@ -119,7 +120,6 @@
     --border-color-accent: var(--neutral-600);
     --border-color-primary: var(--neutral-700);
     --link-text-color-active: var(--secondary-500);
-    --link-text-color: var(--secondary-500);
     --link-text-color-hover: var(--secondary-400);
     --link-text-color-visited: var(--secondary-600);
     --body-text-color-subdued: var(--neutral-400);
