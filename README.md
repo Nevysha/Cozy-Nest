@@ -52,24 +52,24 @@ It's made by being a bit hacky on the DOM to tweaks Gradio default features and 
 
 # Looks
 
-![](https://github.com/Nevysha/Cozy-Nest/blob/main/assets/chrome-capture-2023-4-2%20(1).png?raw=true)
-![](https://github.com/Nevysha/Cozy-Nest/blob/main/assets/Screenshot%202023-05-03%20100850.png?raw=true)
+![](https://github.com/Nevysha/Cozy-Nest/blob/main/screenshots/chrome-capture-2023-4-2%20(1).png?raw=true)
+![](https://github.com/Nevysha/Cozy-Nest/blob/main/screenshots/Screenshot%202023-05-03%20100850.png?raw=true)
 
 ## Video
-![](https://github.com/Nevysha/Cozy-Nest/blob/main/assets/chrome-capture-2023-4-1.gif?raw=true)
-![](https://github.com/Nevysha/Cozy-Nest/blob/main/assets/chrome-capture-2023-4-2.gif?raw=true)
+![](https://github.com/Nevysha/Cozy-Nest/blob/main/screenshots/chrome-capture-2023-4-1.gif?raw=true)
+![](https://github.com/Nevysha/Cozy-Nest/blob/main/screenshots/chrome-capture-2023-4-2.gif?raw=true)
 
 ## Screenshots
 
 ### Main look
-![](https://github.com/Nevysha/Cozy-Nest/blob/main/assets/chrome-capture-2023-4-1.png?raw=true)
-![](https://github.com/Nevysha/Cozy-Nest/blob/main/assets/chrome-capture-2023-4-1%20(1).png?raw=true)
+![](https://github.com/Nevysha/Cozy-Nest/blob/main/screenshots/chrome-capture-2023-4-1.png?raw=true)
+![](https://github.com/Nevysha/Cozy-Nest/blob/main/screenshots/chrome-capture-2023-4-1%20(1).png?raw=true)
 
 ### Resizable Panels (txt2img and img2img)
-![](https://github.com/Nevysha/Cozy-Nest/blob/main/assets/chrome-capture-2023-4-2.png?raw=true)
+![](https://github.com/Nevysha/Cozy-Nest/blob/main/screenshots/chrome-capture-2023-4-2.png?raw=true)
 
 ### Full Screen Inpainting
-![](https://github.com/Nevysha/Cozy-Nest/blob/main/assets/chrome-capture-2023-4-1%20(3).png?raw=true)
+![](https://github.com/Nevysha/Cozy-Nest/blob/main/screenshots/chrome-capture-2023-4-1%20(3).png?raw=true)
 
 
 # Contribution
