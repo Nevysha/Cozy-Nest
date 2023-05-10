@@ -22,6 +22,12 @@ async def handle_client(websocket, path):
 
 
 def start_server():
+
+    # check if the server is already running
+    if 'serv_server' in globals():
+        print("Server already running")
+        return
+
     port = 3333
     print(f"Starting server on localhost:{port}...")
     # Configure the WebSocket server

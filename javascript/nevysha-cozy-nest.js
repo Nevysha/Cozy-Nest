@@ -985,6 +985,7 @@ const COZY_NEST_GRADIO_LOAD_DURATION = "CozyNest:gradioLoadDuration";
 function addExtraNetworksBtn({prefix}) {
   const tab = document.querySelector(`div#tab_${prefix}`);
 
+
   //create button
   const extraNetworksBtn = document.createElement('button');
   extraNetworksBtn.setAttribute('id', `${prefix}_extra_networks_right_button`);
@@ -995,8 +996,9 @@ function addExtraNetworksBtn({prefix}) {
     document.querySelector(`button#${prefix}_extra_networks`).click();
   });
 
-  //add button to the begining of the tab
-  tab.insertBefore(extraNetworksBtn, tab.firstChild);
+  //add button to the begining of the wrapper div
+  const rightPanBtnWrapper = document.querySelector(`div#right_button_wrapper`);
+  rightPanBtnWrapper.appendChild(extraNetworksBtn);
 
 }
 
@@ -1224,6 +1226,35 @@ function connectToSocket() {
   };
 }
 
+function createRightWrapperDiv() {
+  const tab = document.querySelector(`div#tabs`);
+
+  //create wrapper div for the button
+  const rightPanBtnWrapper = document.createElement('div');
+  rightPanBtnWrapper.setAttribute('id', `right_button_wrapper`);
+  rightPanBtnWrapper.classList.add('nevysha', 'nevysha-extra-network-btn');
+  //add button to the begining of the tab
+  tab.insertBefore(rightPanBtnWrapper, tab.firstChild);
+}
+
+function setButtonVisibilityFromCurrentTab(id) {
+  console.log("setButtonVisibilityFromCurrentTab", id)
+
+  //hide each button that ends with extra_networks_right_button
+  const extraNetworksRightBtns = document.querySelectorAll(`button[id$="extra_networks_right_button"]`);
+  extraNetworksRightBtns.forEach((btn) => {
+    btn.style.display = 'none';
+
+  })
+  if (id === 'tab_txt2img') {
+    document.querySelector('button#txt2img_extra_networks_right_button').style.display = 'block';
+  }
+  if (id === 'tab_img2img') {
+    document.querySelector('button#img2img_extra_networks_right_button').style.display = 'block';
+  }
+
+}
+
 const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
@@ -1272,6 +1303,11 @@ const onLoad = (done) => {
   //add .nevysha-scrollable to each .extra-network-cards
   document.querySelectorAll('.extra-network-cards').forEach(elem => elem.setAttribute('class', `${elem.getAttribute('class')} nevysha nevysha-scrollable`))
 
+  //create a wrapper div on the right for slidable panels
+  createRightWrapperDiv();
+  onUiTabChange(() => {
+    setButtonVisibilityFromCurrentTab(get_uiCurrentTabContent().id);
+  });
 
   //manage text2img tab
   const nevysha_magic = (bundle) => {
@@ -1285,6 +1321,8 @@ const onLoad = (done) => {
 
   nevysha_magic({prefix: "txt2img"});
   nevysha_magic({prefix: "img2img"});
+
+  setButtonVisibilityFromCurrentTab(get_uiCurrentTabContent().id);
 
   //general
   tweakButtonsIcons();

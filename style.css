@@ -955,6 +955,8 @@ canvas.nevysha {
     z-index: 9999;
     margin: 15px 0 0 5px;
 }
+
+/*TODO rename this*/
 .nevysha-extra-network-btn {
     position: fixed;
     right: 0;
@@ -964,7 +966,7 @@ canvas.nevysha {
     width: 25px;
     min-width: 25px !important;
 }
-.nevysha-extra-network-btn > div, .nevysha-extra-network-floating-btn > div {
+.nevysha-extra-network-btn > button > div, .nevysha-extra-network-floating-btn > div {
     /*write the text vertically*/
     writing-mode: vertical-rl;
 }
