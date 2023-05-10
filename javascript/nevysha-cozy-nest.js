@@ -989,7 +989,7 @@ function addExtraNetworksBtn({prefix}) {
   //create button
   const extraNetworksBtn = document.createElement('button');
   extraNetworksBtn.setAttribute('id', `${prefix}_extra_networks_right_button`);
-  extraNetworksBtn.classList.add('nevysha', 'lg', 'primary', 'gradio-button', 'nevysha-extra-network-btn');
+  extraNetworksBtn.classList.add('nevysha', 'lg', 'primary', 'gradio-button');
   extraNetworksBtn.innerHTML = '<div>Extra Networks</div>';
   //click the original button to close the extra network
   extraNetworksBtn.addEventListener('click', (e) => {
@@ -998,7 +998,7 @@ function addExtraNetworksBtn({prefix}) {
 
   //add button to the begining of the wrapper div
   const rightPanBtnWrapper = document.querySelector(`div#right_button_wrapper`);
-  rightPanBtnWrapper.appendChild(extraNetworksBtn);
+  rightPanBtnWrapper.insertBefore(extraNetworksBtn, rightPanBtnWrapper.firstChild);
 
 }
 
@@ -1198,7 +1198,7 @@ const onloadSafe = (done) => {
   // }
 }
 
-function connectToSocket() {
+function connectToImgBrowserSocket() {
   //check if the socket is already connected
   if (window.sendToSocket) {
     return;
@@ -1232,9 +1232,21 @@ function createRightWrapperDiv() {
   //create wrapper div for the button
   const rightPanBtnWrapper = document.createElement('div');
   rightPanBtnWrapper.setAttribute('id', `right_button_wrapper`);
-  rightPanBtnWrapper.classList.add('nevysha', 'nevysha-extra-network-btn');
+  rightPanBtnWrapper.classList.add('nevysha', 'nevysha-right-button-wrapper');
   //add button to the begining of the tab
   tab.insertBefore(rightPanBtnWrapper, tab.firstChild);
+
+  //add a button for image browser
+  const cozyImgBrowserBtn = document.createElement('button');
+  cozyImgBrowserBtn.setAttribute('id', `image_browser_right_button`);
+  cozyImgBrowserBtn.classList.add('nevysha', 'lg', 'primary', 'gradio-button');
+  cozyImgBrowserBtn.innerHTML = `<div>Cozy Image Browser</div>`;
+  cozyImgBrowserBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.sendToSocket('{"type": "open_image_browser"}');
+  });
+  rightPanBtnWrapper.appendChild(cozyImgBrowserBtn);
 }
 
 function setButtonVisibilityFromCurrentTab(id) {
@@ -1247,10 +1259,10 @@ function setButtonVisibilityFromCurrentTab(id) {
 
   })
   if (id === 'tab_txt2img') {
-    document.querySelector('button#txt2img_extra_networks_right_button').style.display = 'block';
+    document.querySelector('button#txt2img_extra_networks_right_button').style.display = 'flex';
   }
   if (id === 'tab_img2img') {
-    document.querySelector('button#img2img_extra_networks_right_button').style.display = 'block';
+    document.querySelector('button#img2img_extra_networks_right_button').style.display = 'flex';
   }
 
 }
@@ -1356,8 +1368,10 @@ const onLoad = (done) => {
   makeSettingsDraggable();
 
   document.querySelector('#nevyui_sh_options_start_socket').addEventListener('click', () => {
-    setTimeout(() => connectToSocket(), 1000)
+    setTimeout(() => connectToImgBrowserSocket(), 1000)
   })
+  ///TODO handle behind an auto start setting
+  connectToImgBrowserSocket();
 
   done();
 };

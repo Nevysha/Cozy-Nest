@@ -956,8 +956,7 @@ canvas.nevysha {
     margin: 15px 0 0 5px;
 }
 
-/*TODO rename this*/
-.nevysha-extra-network-btn {
+.nevysha-right-button-wrapper {
     position: fixed;
     right: 0;
     top: calc(75px + var(--nevysha-menu-fix-top-height-less));
@@ -965,11 +964,27 @@ canvas.nevysha {
     height: calc(100vh - (100px + var(--nevysha-menu-fix-top-height-less)));
     width: 25px;
     min-width: 25px !important;
+    display: flex;
+    flex-direction: column;
 }
-.nevysha-extra-network-btn > button > div, .nevysha-extra-network-floating-btn > div {
+.nevysha-right-button-wrapper > button {
+    flex: 1;
+    min-height: auto !important;
+    max-height: none !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.nevysha-right-button-wrapper > button > div, .nevysha-extra-network-floating-btn > div {
     /*write the text vertically*/
     writing-mode: vertical-rl;
+    width: 25px;
+    min-width: 25px !important;
 }
+
 .nevysha-extra-network-floating-btn {
     height: 100px;
     position: absolute;
