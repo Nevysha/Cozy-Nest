@@ -529,6 +529,31 @@ const addCozyNestCustomBtn = () => {
     }
   });
 
+  //if AWQ-container is present in body, create a button to show/hide it
+  if (document.querySelector("#AWQ-container")) {
+    const awqContainer = document.querySelector("#AWQ-container")
+    awqContainer.style.zIndex = "9999"
+    awqContainer.style.display = "none"
+    awqContainer.style.position = "fixed"
+    awqContainer.style.bottom = "30px"
+
+    const btnAWQ = document.createElement("button")
+    btnAWQ.classList.add("nevysha-btn-menu", "nevysha-btn-menu-awq", "gradio-button", "primary", "nevysha")
+    btnAWQ.id = "nevyui_awq_btn"
+    btnAWQ.innerHTML = 'Show/Hide AWQ'
+    btnAWQ.title = "Show/Hide AWQ"
+    btnAWQ.setAttribute("style", "position: fixed; bottom: 0; left: calc(50% - 75px); width: 150px;")
+
+    document.querySelector('div.app').insertAdjacentElement('beforeend', btnAWQ)
+    btnAWQ.addEventListener("click", () => {
+      if (awqContainer.style.display === "none") {
+        awqContainer.style.display = "block"
+      } else {
+        awqContainer.style.display = "none"
+      }
+    });
+  }
+
   //fetch version_data.json
   loadVersionData().then(ignored => ignored)
 }

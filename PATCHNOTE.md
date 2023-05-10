@@ -5,6 +5,7 @@
 - [x]  Fix download image link not visible
 - [x]  Hide the 'x' button on fullscreen inpainting
 - [x]  Fix background color of preview
+- [x]  Fix for Kryptortio/SDAtom-WebUi-client-queue-ext extension
 
 ## New features in 1.2.0
 
