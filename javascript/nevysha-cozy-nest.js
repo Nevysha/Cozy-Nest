@@ -1068,7 +1068,7 @@ const addTabWrapper = () => {
   function cloneAndPush(tab) {
 
     //check if the tab is not already in the otherTabs
-    if (otherTabs.querySelector(`button#${tab.id}`)) {
+    if (otherTabs.querySelector(`button #${tab.id}`)) {
       return;
     }
 
@@ -1141,7 +1141,12 @@ const addTabWrapper = () => {
     }
 
     // set an id for the tab from its text
-    tab.id = tab.innerText.toLowerCase().replace(/\s/g, '_');
+    tab.id =
+      tab.innerText.toLowerCase()
+        //remove all non-alphanumeric characters
+        .replace(/\s/g, '_')
+        //remove numbers
+        .replace(/[0-9]/g, '')
 
     //set draggable to true
     tab.setAttribute('draggable', true);
