@@ -251,6 +251,11 @@ function tweakInpainting() {
       inpaintTab.style.height = "calc(100vh - 10px)";
       inpaintTab.style.overflow = "";
 
+      //hide button to delete image
+      //this button is inside #img2maskimg > .image-container
+      //it's the third button
+      document.querySelector('#img2maskimg > .image-container').querySelector("button:nth-child(3)").style.display = "none"
+
       //apply to canvas
       const nodesCanvas = document.querySelectorAll("canvas")
       nodesCanvasData = [];
@@ -273,6 +278,8 @@ function tweakInpainting() {
       expendBtn.textContent = "Expand"
       expendBtn.style.position = "absolute";
       inpaintTab.setAttribute("style", defaultStyle);
+
+      document.querySelector('#img2maskimg > .image-container').querySelector("button:nth-child(3)").style.display = "block"
 
       //revert canvas
       nodesCanvasData.forEach((canvasData) => {
