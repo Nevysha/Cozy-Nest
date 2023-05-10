@@ -1,5 +1,6 @@
 ## Minor changes
-- [x]  Wix selected image border color when generating multiple images
+- [x]  Fix selected image border color when generating multiple images
+- [x]  Fix right arrow hidden by "Extra Network" button in full screen img view
 - [x]  Added a link to my Ko-Fi page :3
 
 ## New features

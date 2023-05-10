@@ -959,7 +959,7 @@ canvas.nevysha {
     position: fixed;
     right: 0;
     top: calc(75px + var(--nevysha-menu-fix-top-height-less));
-    z-index: 9999;
+    z-index: 999;
     height: calc(100vh - (100px + var(--nevysha-menu-fix-top-height-less)));
     width: 25px;
     min-width: 25px !important;
