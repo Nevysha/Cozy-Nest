@@ -1196,6 +1196,29 @@ const onloadSafe = (done) => {
   // }
 }
 
+function connectToSocket() {
+  const socket = new WebSocket('ws://localhost:3333');
+
+  socket.onopen = () => {
+    console.log('Connected to the server');
+
+    // Send data to the server
+    window.sendToSocket = (str) => socket.send(str);
+  };
+
+  socket.onmessage = (event) => {
+    console.log('Received data:', event.data);
+  };
+
+  socket.onclose = () => {
+    console.log('Connection closed');
+  };
+
+  socket.onerror = (error) => {
+    console.error('Socket error:', error);
+  };
+}
+
 const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
@@ -1288,6 +1311,10 @@ const onLoad = (done) => {
 
   //make settings draggable
   makeSettingsDraggable();
+
+  document.querySelector('#nevyui_sh_options_start_socket').addEventListener('click', () => {
+    setTimeout(() => connectToSocket(), 1000)
+  })
 
   done();
 };

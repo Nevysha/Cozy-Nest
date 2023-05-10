@@ -5,6 +5,8 @@ import subprocess
 
 from modules import scripts, script_callbacks, shared, sd_hijack
 
+from scripts.cozynest_image_browser import start_server
+
 
 def rgb_to_hex(r, g, b):
     return '#{:02x}{:02x}{:02x}'.format(r, g, b)
@@ -104,6 +106,16 @@ def update():
     print(output.decode('utf-8'))
 
 
+started_img_browser_socket = False
+
+
+def serv_img_browser_socket():
+    global started_img_browser_socket
+    if started_img_browser_socket:
+        print("Already started")
+        return
+    started_img_browser_socket = True
+    start_server()
 
 
 def on_ui_tabs():
@@ -192,6 +204,14 @@ def on_ui_tabs():
                 btn_reload.click(
                     fn=request_restart,
                     _js='restart_reload',
+                    inputs=[],
+                    outputs=[], )
+
+                # start socket server
+                btn_start = gr.Button(value="Start Socket Server", elem_id="nevyui_sh_options_start_socket",
+                                        elem_classes="nevyui_apply_settings")
+                btn_start.click(
+                    fn=serv_img_browser_socket,
                     inputs=[],
                     outputs=[], )
 
