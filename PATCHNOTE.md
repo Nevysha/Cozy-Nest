@@ -4,6 +4,7 @@
 - [x]  Add external lib into the Cozy Nest extension folder
 - [x]  Fix download image link not visible
 - [x]  Hide the 'x' button on fullscreen inpainting
+- [x]  Fix background color of preview
 
 ## New features in 1.2.0
 

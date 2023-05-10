@@ -1356,7 +1356,7 @@ canvas.nevysha {
 
 /*quickfix*/
 .livePreview {
-    background-color: initial;
+    background-color: var(--background-fill-primary) !important;
 }
 
 
