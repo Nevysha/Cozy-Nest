@@ -884,6 +884,9 @@ button.secondary, button.primary {
     display: flex;
     justify-content: center;
     margin: 15px -10px 0 -10px;
+}
+
+.slide-right-browser-panel > .vertical-line-wrapper {
     position: absolute;
 }
 

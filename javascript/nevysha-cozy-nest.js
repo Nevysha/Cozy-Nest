@@ -1249,7 +1249,7 @@ function createRightWrapperDiv() {
   const cozyImgBrowserPanel =
     `<div id="cozy_img_browser_panel" class="nevysha cozy-img-browser-panel slide-right-browser-panel" style="display: none">
       <div class="nevysha slide-right-browser-panel-container">
-        Blep
+        <div class="nevysha" id="cozy-img-browser-react"/>
       </div>
     </div>`;
   //add the panel to the end of the tab
@@ -1449,8 +1449,24 @@ const onLoad = (done) => {
   // connectToImgBrowserSocket();
   document.querySelector('#nevyui_sh_options_start_socket').click()
 
+  //load /assets/index-eff6a2cc.js
+  loadCozyNestImageBrowserSubmodule();
+
+
   done();
 };
+
+async function loadCozyNestImageBrowserSubmodule() {
+  try {
+    const jsModule = await fetch('file=extensions/Cozy-Nest/cozy-nest-image-browser/assets/index.js');
+    eval(await jsModule.text());
+    console.log("cozy-nest-image-browser submodule loaded successfully");
+  }
+  catch (err) {
+    // handle any errors that occur during the import process
+    console.error("Failed to load cozy-nest-image-browser submodule", err);
+  }
+}
 
 document.addEventListener("DOMContentLoaded", async function() {
 
@@ -1544,7 +1560,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
   try {
     // dynamically import jQuery library
-    await loadJQuery();
+    await jsDynamicLoad('file=extensions/Cozy-Nest/assets/jquery-3.6.4.min.js');
 
     // jQuery is now loaded and ready to use
     console.log("jQuery library loaded successfully");
@@ -1574,10 +1590,10 @@ document.addEventListener("DOMContentLoaded", async function() {
  * While jQuery has not been loaded we have to manually handle script load the old way
  * @returns {Promise<unknown>}
  */
-function loadJQuery() {
+function jsDynamicLoad(src) {
   return new Promise(function(resolve, reject) {
     const script = document.createElement('script');
-    script.src = 'file=extensions/Cozy-Nest/assets/jquery-3.6.4.min.js';
+    script.src = src;
 
     script.onload = function() {
       resolve();
@@ -1674,6 +1690,15 @@ async function fetchCozyNestConfig() {
 
   // Append the link element to the document head
   document.head.appendChild(googleFontsLink);
+
+  // Cozy-Nest-Image-Browser link
+  const cozyNestImageBrowserLink = document.createElement('link');
+  cozyNestImageBrowserLink.rel = 'stylesheet';
+  cozyNestImageBrowserLink.type = 'text/css';
+  cozyNestImageBrowserLink.href = 'file=extensions/Cozy-Nest/cozy-nest-image-browser/assets/index.css';
+
+  // Append the link element to the document head
+  document.head.appendChild(cozyNestImageBrowserLink);
 
   // fetch file=extensions/Cozy-Nest/nevyui_settings.json. add Date to avoid cache
   await fetchCozyNestConfig();
