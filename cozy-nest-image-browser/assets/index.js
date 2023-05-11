@@ -8740,7 +8740,7 @@ function Browser(props) {
   const loadMore = () => {
     setImagesLoaded(imagesLoaded.concat(imagesRef.slice(page * 20, page * 20 + 20)));
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "browser", onScroll: () => maybeLoadMore(), children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "browser nevysha nevysha-scrollable", onScroll: () => maybeLoadMore(), children: [
     imagesLoaded.map((image, index2) => {
       return /* @__PURE__ */ jsxRuntimeExports.jsx(CozyImage, { image }, index2);
     }),
