@@ -109,7 +109,6 @@ def update():
     print(output.decode('utf-8'))
 
 
-
 def serv_img_browser_socket():
     # TODO crash when reloadUI
 

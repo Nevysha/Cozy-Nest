@@ -1195,34 +1195,6 @@ const onloadSafe = (done) => {
   // }
 }
 
-function connectToImgBrowserSocket() {
-  //check if the socket is already connected
-  if (window.sendToSocket) {
-    return;
-  }
-
-  const socket = new WebSocket('ws://localhost:3333');
-
-  socket.onopen = () => {
-    console.log('Connected to the server');
-
-    // Send data to the server
-    window.sendToSocket = (str) => socket.send(str);
-  };
-
-  socket.onmessage = (event) => {
-    console.log('Received data:', event.data);
-  };
-
-  socket.onclose = () => {
-    console.log('Connection closed');
-  };
-
-  socket.onerror = (error) => {
-    console.error('Socket error:', error);
-  };
-}
-
 function createRightWrapperDiv() {
   const tab = document.querySelector(`div#tabs`);
 
@@ -1241,7 +1213,6 @@ function createRightWrapperDiv() {
   cozyImgBrowserBtn.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
-    window.sendToSocket('{"type": "open_image_browser"}');
   });
   rightPanBtnWrapper.appendChild(cozyImgBrowserBtn);
 
@@ -1388,6 +1359,7 @@ const onLoad = (done) => {
   document.querySelectorAll('input[type="number"]').forEach(input => input.setAttribute('class', `${input.getAttribute('class')} nevysha`))
   //add .nevysha-scrollable to each .extra-network-cards
   document.querySelectorAll('.extra-network-cards').forEach(elem => elem.setAttribute('class', `${elem.getAttribute('class')} nevysha nevysha-scrollable`))
+  document.querySelector('#nevyui_sh_options_start_socket').setAttribute('style', 'display: none;')
 
   //create a wrapper div on the right for slidable panels
   createRightWrapperDiv();
@@ -1440,14 +1412,6 @@ const onLoad = (done) => {
 
   //make settings draggable
   makeSettingsDraggable();
-
-  document.querySelector('#nevyui_sh_options_start_socket').addEventListener('click', () => {
-    setTimeout(() => connectToImgBrowserSocket(), 1000)
-  })
-
-  ///TODO handle behind an auto start setting
-  // connectToImgBrowserSocket();
-  // document.querySelector('#nevyui_sh_options_start_socket').click()
 
   //load /assets/index-eff6a2cc.js
   loadCozyNestImageBrowserSubmodule();
@@ -1661,8 +1625,7 @@ class SimpleTimer {
 let COZY_NEST_CONFIG;
 
 async function fetchCozyNestConfig() {
-  const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?${Date.now()}`);
-  if (response.ok) {
+  const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?${Date.now()}`);  if (response.ok) {
     COZY_NEST_CONFIG = await response.json();
     //save in local storage
     localStorage.setItem('COZY_NEST_CONFIG', JSON.stringify(COZY_NEST_CONFIG));

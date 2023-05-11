@@ -84,8 +84,12 @@ def start_server_in_dedicated_process(_images_folders, server_port):
     serv_process = multiprocessing.Process(target=start_server,
                                       args=(_images_folders, server_port))
 
-    # Start the process
-    serv_process.start()
+    try:
+        # Start the process
+        serv_process.start()
+    except KeyboardInterrupt:
+        print("CozyNest: terminating server process")
+        serv_process.terminate()
 
 
 def start_server(_images_folders, server_port=3333):
@@ -102,6 +106,10 @@ def start_server(_images_folders, server_port=3333):
     # Configure the WebSocket server
     serv_server = websockets.serve(handle_client, 'localhost', server_port, ssl=None)
 
-    # Start the server and run forever
-    asyncio.get_event_loop().run_until_complete(serv_server)
-    asyncio.get_event_loop().run_forever()
+    try:
+        # Start the server and run forever
+        asyncio.get_event_loop().run_until_complete(serv_server)
+        asyncio.get_event_loop().run_forever()
+    except KeyboardInterrupt:
+        print("CozyNest: Stopping server")
+        asyncio.get_event_loop().stop()

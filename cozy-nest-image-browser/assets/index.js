@@ -8747,8 +8747,10 @@ function Browser(props) {
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { id: "loadMoreThreshold", className: "hackyOffPageElement" })
   ] });
 }
+let _DEV = false;
 (function() {
   if (window.location.href.includes("file=extensions/Cozy-Nest/cozy-nest-image-browser")) {
+    _DEV = true;
     document.querySelector("body").setAttribute("style", "height: 100vh; overflow: hidden;");
     const linkGradioCss = document.createElement("link");
     linkGradioCss.rel = "stylesheet";
@@ -8762,27 +8764,6 @@ function Browser(props) {
     document.head.appendChild(linkCozyNestCss);
   }
 })();
-let _socket = null;
-(async () => _socket = await getSocket())();
-function getSocket() {
-  return new Promise(function(resolve, reject) {
-    if (_socket && _socket.readyState === 1) {
-      return resolve(_socket);
-    }
-    let socket = new WebSocket("ws://localhost:3333");
-    socket.onopen = () => {
-      console.log("connected");
-      _socket = socket;
-      return resolve(socket);
-    };
-    socket.onmessage = (event) => {
-      console.log("onmessage");
-    };
-    socket.onclose = () => {
-      console.log("disconnected");
-    };
-  });
-}
 function Row(props) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-row", children: props.children });
 }
@@ -8792,16 +8773,36 @@ function Column(props) {
 function App() {
   const [socketUrl, setSocketUrl] = reactExports.useState("ws://localhost:3333");
   const [messageHistory, setMessageHistory] = reactExports.useState([]);
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
   const [images, setImages] = reactExports.useState([]);
   const [filteredImages, setFilteredImages] = reactExports.useState([]);
   const [searchStr, setSearchStr] = reactExports.useState("");
-  const handleClickSendMessage = reactExports.useCallback(
+  const { sendMessage, lastMessage, readyState, getWebSocket } = useWebSocket(
+    socketUrl,
+    {
+      shouldReconnect: () => true,
+      reconnectAttempts: 10,
+      reconnectInterval: 3e3
+    }
+  );
+  const askForImages = reactExports.useCallback(
     () => sendMessage(
       JSON.stringify({ what: "images" })
     ),
     [sendMessage]
   );
+  const reconnect = () => {
+    if (readyState === dist.ReadyState.OPEN) {
+      console.log("already connected");
+      return;
+    }
+    setSocketUrl(socketUrl + "?t=" + Date.now());
+    if (!_DEV) {
+      const button = document.querySelector("#nevyui_sh_options_start_socket");
+      button.click();
+    } else {
+      console.log("dev mode - Dummy click on #nevyui_sh_options_start_socket");
+    }
+  };
   reactExports.useEffect(() => {
     if (lastMessage !== null) {
       const data = JSON.parse(lastMessage.data);
@@ -8811,12 +8812,12 @@ function App() {
     }
   }, [lastMessage, setMessageHistory]);
   reactExports.useEffect(() => {
-    if (images.length === 0) {
-      handleClickSendMessage();
+    if (images.length === 0 && readyState === dist.ReadyState.OPEN) {
+      askForImages();
     } else {
       setFilteredImages(images);
     }
-  }, [images, handleClickSendMessage]);
+  }, [images, readyState]);
   reactExports.useEffect(() => {
     if (searchStr !== "") {
       const filteredImages2 = images.filter((image) => {
@@ -8854,9 +8855,9 @@ function App() {
           {
             className: "nevysha lg primary gradio-button btn",
             style: { marginLeft: "20px", width: "100px" },
-            onClick: handleClickSendMessage,
+            onClick: reconnect,
             disabled: readyState === dist.ReadyState.OPEN,
-            children: "Restart"
+            children: "Connect"
           }
         )
       ] }),
