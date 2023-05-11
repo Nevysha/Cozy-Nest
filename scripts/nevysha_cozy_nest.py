@@ -110,13 +110,7 @@ def update():
 
 
 def serv_img_browser_socket():
-    # TODO crash when reloadUI
-
-    # if started_img_browser_socket:
-    #     print("CozyNest: Socket already started")
-    #     return
-
-    # TODO get this from gradio UI
+    # TODO check if the server is already running by checking if port is free
     server_port = 3333
     images_folders = [
         'D:\\stable-diffusion\\stable-diffusion-webui\\outputs\\img2img-images',
@@ -136,6 +130,12 @@ def serv_img_browser_socket():
 
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui:
+
+        # TODO add settings (maybe in a tab) for the image browser
+        #  - chose port number
+        #  - chose folders to scrap (may be multiple)
+        #  - chose if the server should be started automatically
+
         with gr.Column(elem_id="nevyui-ui-block"):
             # shared options
             config = get_dict_from_config()
