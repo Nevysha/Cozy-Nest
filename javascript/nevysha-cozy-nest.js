@@ -808,6 +808,9 @@ const makeSettingsDraggable = () => {
 function tweakExtraNetworks({prefix}) {
   let extraNetworks = document.querySelector(`div#${prefix}_extra_networks`);
 
+  //hide base button txt2img_extra_networks
+  document.querySelector(`button#${prefix}_extra_networks`).style.display = 'none';
+
   extraNetworks.style.display = 'flex'
 
   // txt2img and img2img extra network are not built the same way in the DOM (:
@@ -817,8 +820,9 @@ function tweakExtraNetworks({prefix}) {
 
   function tweakTabBehavior() {
     //add an event listener to show it when the user clicks on the button #img2img_extra_networks
-    let shown = false;
-    document.querySelector(`button#${prefix}_extra_networks`).addEventListener('click', (e) => {
+    window.extraNetworkHandler = window.extraNetworkHandler || {};
+    window.extraNetworkHandler[prefix] = (e) => {
+      let shown = extraNetworkGradioWrapper.style.display === 'flex';
       if (!shown) {
 
         //I'm lazy
@@ -867,20 +871,15 @@ function tweakExtraNetworks({prefix}) {
             // extraNetworks.style.display = 'none';
           });
       }
-      shown = !shown;
-    });
+    };
 
     //add a listener to close the extra network when the user press the escape key
     document.addEventListener('keydown', (e) => {
+      let shown = extraNetworkGradioWrapper.style.display === 'flex';
       if (e.key === 'Escape' && shown) {
-        $(extraNetworkGradioWrapper).animate({"margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
-
-        // hide it after the animation is done
-        setTimeout(() => {
+        $(extraNetworkGradioWrapper).animate({"margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`}, 350, () => {
           extraNetworkGradioWrapper.style.display = 'none';
-          extraNetworks.style.display = 'none';
-        }, 350);
-        shown = false;
+        });
       }
     });
   }
@@ -938,7 +937,7 @@ function tweakExtraNetworks({prefix}) {
   closeENButton.innerHTML = '<div>Close</div>';
   //click the original button to close the extra network
   closeENButton.addEventListener('click', (e) => {
-    document.querySelector(`button#${prefix}_extra_networks`).click();
+    window.extraNetworkHandler[prefix]();
   });
   //add the button at the begining of the div
   lineWrapper.insertBefore(closeENButton, lineWrapper.firstChild);
@@ -980,8 +979,6 @@ const COZY_NEST_DOM_TWEAK_LOAD_DURATION = "CozyNest:tweakLoadDuration";
 const COZY_NEST_GRADIO_LOAD_DURATION = "CozyNest:gradioLoadDuration";
 
 function addExtraNetworksBtn({prefix}) {
-  const tab = document.querySelector(`div#tab_${prefix}`);
-
 
   //create button
   const extraNetworksBtn = document.createElement('button');
@@ -990,7 +987,7 @@ function addExtraNetworksBtn({prefix}) {
   extraNetworksBtn.innerHTML = '<div>Extra Networks</div>';
   //click the original button to close the extra network
   extraNetworksBtn.addEventListener('click', (e) => {
-    document.querySelector(`button#${prefix}_extra_networks`).click();
+    window.extraNetworkHandler[prefix]();
   });
 
   //add button to the begining of the wrapper div
