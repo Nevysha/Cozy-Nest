@@ -110,9 +110,10 @@ started_img_browser_socket = False
 
 
 def serv_img_browser_socket():
+    # TODO crash when reloadUI
     global started_img_browser_socket
     if started_img_browser_socket:
-        print("Already started")
+        print("CozyNest: Socket already started")
         return
     started_img_browser_socket = True
     start_server()

@@ -1415,3 +1415,22 @@ canvas.nevysha {
 .actions .name { max-height:3.3em; overflow:auto; }
 .actions .name:hover, .actions a:hover {filter: brightness(1.3);}
 .actions .name::-webkit-scrollbar {display:none;}
+
+/*Image Browser*/
+.blocInfo, textarea {
+    display: block;
+    position: relative;
+    outline: none!important;
+    box-shadow: var(--input-shadow);
+    border: var(--input-border-width) solid var(--input-border-color);
+    border-color: var(--input-border-color)!important;
+    border-radius: var(--input-radius)!important;
+    background: var(--input-background-fill)!important;
+    background-color: var(--input-background-fill)!important;
+    width: 100%;
+    color: var(--body-text-color)!important;
+    font-weight: var(--input-text-weight)!important;
+    font-size: var(--input-text-size)!important;
+    line-height: var(--line-sm)!important;
+    font-family: monospace!important;
+}

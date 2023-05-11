@@ -39,6 +39,7 @@
     fetch(link.href, fetchOpts);
   }
 })();
+var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 function getDefaultExportFromCjs(x2) {
   return x2 && x2.__esModule && Object.prototype.hasOwnProperty.call(x2, "default") ? x2["default"] : x2;
 }
@@ -7584,29 +7585,1294 @@ var m = reactDomExports;
   client.createRoot = m.createRoot;
   client.hydrateRoot = m.hydrateRoot;
 }
-const reactLogo = "/file=extensions/Cozy-Nest/cozy-nest-image-browser/assets/react.svg";
-const viteLogo = "/file=extensions/Cozy-Nest/cozy-nest-image-browser/vite.svg";
 const App$1 = "";
-function App() {
-  const [count, setCount] = reactExports.useState(0);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "https://vitejs.dev", target: "_blank", children: /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: viteLogo, className: "logo", alt: "Vite logo" }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "https://react.dev", target: "_blank", children: /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: reactLogo, className: "logo react", alt: "React logo" }) })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "Vite + React" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "card", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => setCount((count2) => count2 + 1), children: [
-        "count is ",
-        count
+var dist = {};
+var useWebsocket = {};
+var constants = {};
+(function(exports) {
+  Object.defineProperty(exports, "__esModule", { value: true });
+  exports.isEventSourceSupported = exports.isReactNative = exports.ReadyState = exports.UNPARSABLE_JSON_OBJECT = exports.DEFAULT_RECONNECT_INTERVAL_MS = exports.DEFAULT_RECONNECT_LIMIT = exports.SOCKET_IO_PING_CODE = exports.SOCKET_IO_PATH = exports.SOCKET_IO_PING_INTERVAL = exports.DEFAULT_EVENT_SOURCE_OPTIONS = exports.EMPTY_EVENT_HANDLERS = exports.DEFAULT_OPTIONS = void 0;
+  var MILLISECONDS = 1;
+  var SECONDS = 1e3 * MILLISECONDS;
+  exports.DEFAULT_OPTIONS = {};
+  exports.EMPTY_EVENT_HANDLERS = {};
+  exports.DEFAULT_EVENT_SOURCE_OPTIONS = {
+    withCredentials: false,
+    events: exports.EMPTY_EVENT_HANDLERS
+  };
+  exports.SOCKET_IO_PING_INTERVAL = 25 * SECONDS;
+  exports.SOCKET_IO_PATH = "/socket.io/?EIO=3&transport=websocket";
+  exports.SOCKET_IO_PING_CODE = "2";
+  exports.DEFAULT_RECONNECT_LIMIT = 20;
+  exports.DEFAULT_RECONNECT_INTERVAL_MS = 5e3;
+  exports.UNPARSABLE_JSON_OBJECT = {};
+  (function(ReadyState) {
+    ReadyState[ReadyState["UNINSTANTIATED"] = -1] = "UNINSTANTIATED";
+    ReadyState[ReadyState["CONNECTING"] = 0] = "CONNECTING";
+    ReadyState[ReadyState["OPEN"] = 1] = "OPEN";
+    ReadyState[ReadyState["CLOSING"] = 2] = "CLOSING";
+    ReadyState[ReadyState["CLOSED"] = 3] = "CLOSED";
+  })(exports.ReadyState || (exports.ReadyState = {}));
+  var eventSourceSupported = function() {
+    try {
+      return "EventSource" in globalThis;
+    } catch (e) {
+      return false;
+    }
+  };
+  exports.isReactNative = typeof navigator !== "undefined" && navigator.product === "ReactNative";
+  exports.isEventSourceSupported = !exports.isReactNative && eventSourceSupported();
+})(constants);
+var createOrJoin = {};
+var globals = {};
+(function(exports) {
+  Object.defineProperty(exports, "__esModule", { value: true });
+  exports.resetWebSockets = exports.sharedWebSockets = void 0;
+  exports.sharedWebSockets = {};
+  exports.resetWebSockets = function(url) {
+    if (url && exports.sharedWebSockets.hasOwnProperty(url)) {
+      delete exports.sharedWebSockets[url];
+    } else {
+      for (var url_1 in exports.sharedWebSockets) {
+        if (exports.sharedWebSockets.hasOwnProperty(url_1)) {
+          delete exports.sharedWebSockets[url_1];
+        }
+      }
+    }
+  };
+})(globals);
+var attachListener = {};
+var socketIo = {};
+Object.defineProperty(socketIo, "__esModule", { value: true });
+socketIo.setUpSocketIOPing = socketIo.appendQueryParams = socketIo.parseSocketIOUrl = void 0;
+var constants_1$6 = constants;
+socketIo.parseSocketIOUrl = function(url) {
+  if (url) {
+    var isSecure = /^https|wss/.test(url);
+    var strippedProtocol = url.replace(/^(https?|wss?)(:\/\/)?/, "");
+    var removedFinalBackSlack = strippedProtocol.replace(/\/$/, "");
+    var protocol = isSecure ? "wss" : "ws";
+    return protocol + "://" + removedFinalBackSlack + constants_1$6.SOCKET_IO_PATH;
+  } else if (url === "") {
+    var isSecure = /^https/.test(window.location.protocol);
+    var protocol = isSecure ? "wss" : "ws";
+    var port = window.location.port ? ":" + window.location.port : "";
+    return protocol + "://" + window.location.hostname + port + constants_1$6.SOCKET_IO_PATH;
+  }
+  return url;
+};
+socketIo.appendQueryParams = function(url, params) {
+  if (params === void 0) {
+    params = {};
+  }
+  var hasParamsRegex = /\?([\w]+=[\w]+)/;
+  var alreadyHasParams = hasParamsRegex.test(url);
+  var stringified = "" + Object.entries(params).reduce(function(next, _a) {
+    var key = _a[0], value = _a[1];
+    return next + (key + "=" + value + "&");
+  }, "").slice(0, -1);
+  return "" + url + (alreadyHasParams ? "&" : "?") + stringified;
+};
+socketIo.setUpSocketIOPing = function(sendMessage, interval) {
+  if (interval === void 0) {
+    interval = constants_1$6.SOCKET_IO_PING_INTERVAL;
+  }
+  var ping = function() {
+    return sendMessage(constants_1$6.SOCKET_IO_PING_CODE);
+  };
+  return setInterval(ping, interval);
+};
+var util = {};
+var manageSubscribers = {};
+(function(exports) {
+  Object.defineProperty(exports, "__esModule", { value: true });
+  exports.resetSubscribers = exports.removeSubscriber = exports.addSubscriber = exports.hasSubscribers = exports.getSubscribers = void 0;
+  var subscribers = {};
+  var EMPTY_LIST = [];
+  exports.getSubscribers = function(url) {
+    if (exports.hasSubscribers(url)) {
+      return Array.from(subscribers[url]);
+    }
+    return EMPTY_LIST;
+  };
+  exports.hasSubscribers = function(url) {
+    var _a;
+    return ((_a = subscribers[url]) === null || _a === void 0 ? void 0 : _a.size) > 0;
+  };
+  exports.addSubscriber = function(url, subscriber) {
+    subscribers[url] = subscribers[url] || /* @__PURE__ */ new Set();
+    subscribers[url].add(subscriber);
+  };
+  exports.removeSubscriber = function(url, subscriber) {
+    subscribers[url].delete(subscriber);
+  };
+  exports.resetSubscribers = function(url) {
+    if (url && subscribers.hasOwnProperty(url)) {
+      delete subscribers[url];
+    } else {
+      for (var url_1 in subscribers) {
+        if (subscribers.hasOwnProperty(url_1)) {
+          delete subscribers[url_1];
+        }
+      }
+    }
+  };
+})(manageSubscribers);
+Object.defineProperty(util, "__esModule", { value: true });
+util.resetGlobalState = util.assertIsWebSocket = void 0;
+var globals_1$2 = globals;
+var manage_subscribers_1$2 = manageSubscribers;
+function assertIsWebSocket(webSocketInstance) {
+  if (webSocketInstance instanceof WebSocket === false)
+    throw new Error("");
+}
+util.assertIsWebSocket = assertIsWebSocket;
+function resetGlobalState(url) {
+  manage_subscribers_1$2.resetSubscribers(url);
+  globals_1$2.resetWebSockets(url);
+}
+util.resetGlobalState = resetGlobalState;
+var __assign$4 = commonjsGlobal && commonjsGlobal.__assign || function() {
+  __assign$4 = Object.assign || function(t2) {
+    for (var s, i = 1, n2 = arguments.length; i < n2; i++) {
+      s = arguments[i];
+      for (var p2 in s)
+        if (Object.prototype.hasOwnProperty.call(s, p2))
+          t2[p2] = s[p2];
+    }
+    return t2;
+  };
+  return __assign$4.apply(this, arguments);
+};
+Object.defineProperty(attachListener, "__esModule", { value: true });
+attachListener.attachListeners = void 0;
+var socket_io_1$2 = socketIo;
+var constants_1$5 = constants;
+var util_1$1 = util;
+var bindMessageHandler$1 = function(webSocketInstance, optionsRef, setLastMessage) {
+  webSocketInstance.onmessage = function(message) {
+    optionsRef.current.onMessage && optionsRef.current.onMessage(message);
+    if (typeof optionsRef.current.filter === "function" && optionsRef.current.filter(message) !== true) {
+      return;
+    }
+    setLastMessage(message);
+  };
+};
+var bindOpenHandler$1 = function(webSocketInstance, optionsRef, setReadyState, reconnectCount) {
+  webSocketInstance.onopen = function(event) {
+    optionsRef.current.onOpen && optionsRef.current.onOpen(event);
+    reconnectCount.current = 0;
+    setReadyState(constants_1$5.ReadyState.OPEN);
+  };
+};
+var bindCloseHandler$1 = function(webSocketInstance, optionsRef, setReadyState, reconnect, reconnectCount) {
+  if (constants_1$5.isEventSourceSupported && webSocketInstance instanceof EventSource) {
+    return function() {
+    };
+  }
+  util_1$1.assertIsWebSocket(webSocketInstance);
+  var reconnectTimeout;
+  webSocketInstance.onclose = function(event) {
+    var _a, _b;
+    optionsRef.current.onClose && optionsRef.current.onClose(event);
+    setReadyState(constants_1$5.ReadyState.CLOSED);
+    if (optionsRef.current.shouldReconnect && optionsRef.current.shouldReconnect(event)) {
+      var reconnectAttempts = (_a = optionsRef.current.reconnectAttempts) !== null && _a !== void 0 ? _a : constants_1$5.DEFAULT_RECONNECT_LIMIT;
+      if (reconnectCount.current < reconnectAttempts) {
+        reconnectTimeout = window.setTimeout(function() {
+          reconnectCount.current++;
+          reconnect();
+        }, (_b = optionsRef.current.reconnectInterval) !== null && _b !== void 0 ? _b : constants_1$5.DEFAULT_RECONNECT_INTERVAL_MS);
+      } else {
+        optionsRef.current.onReconnectStop && optionsRef.current.onReconnectStop(reconnectAttempts);
+        console.warn("Max reconnect attempts of " + reconnectAttempts + " exceeded");
+      }
+    }
+  };
+  return function() {
+    return reconnectTimeout && window.clearTimeout(reconnectTimeout);
+  };
+};
+var bindErrorHandler$1 = function(webSocketInstance, optionsRef, setReadyState, reconnect, reconnectCount) {
+  var reconnectTimeout;
+  webSocketInstance.onerror = function(error) {
+    var _a, _b;
+    optionsRef.current.onError && optionsRef.current.onError(error);
+    if (constants_1$5.isEventSourceSupported && webSocketInstance instanceof EventSource) {
+      optionsRef.current.onClose && optionsRef.current.onClose(__assign$4(__assign$4({}, error), { code: 1006, reason: "An error occurred with the EventSource: " + error, wasClean: false }));
+      setReadyState(constants_1$5.ReadyState.CLOSED);
+      webSocketInstance.close();
+    }
+    if (optionsRef.current.retryOnError) {
+      if (reconnectCount.current < ((_a = optionsRef.current.reconnectAttempts) !== null && _a !== void 0 ? _a : constants_1$5.DEFAULT_RECONNECT_LIMIT)) {
+        reconnectTimeout = window.setTimeout(function() {
+          reconnectCount.current++;
+          reconnect();
+        }, (_b = optionsRef.current.reconnectInterval) !== null && _b !== void 0 ? _b : constants_1$5.DEFAULT_RECONNECT_INTERVAL_MS);
+      } else {
+        optionsRef.current.onReconnectStop && optionsRef.current.onReconnectStop(optionsRef.current.reconnectAttempts);
+        console.warn("Max reconnect attempts of " + optionsRef.current.reconnectAttempts + " exceeded");
+      }
+    }
+  };
+  return function() {
+    return reconnectTimeout && window.clearTimeout(reconnectTimeout);
+  };
+};
+attachListener.attachListeners = function(webSocketInstance, setters, optionsRef, reconnect, reconnectCount, sendMessage) {
+  var setLastMessage = setters.setLastMessage, setReadyState = setters.setReadyState;
+  var interval;
+  var cancelReconnectOnClose;
+  var cancelReconnectOnError;
+  if (optionsRef.current.fromSocketIO) {
+    interval = socket_io_1$2.setUpSocketIOPing(sendMessage);
+  }
+  bindMessageHandler$1(webSocketInstance, optionsRef, setLastMessage);
+  bindOpenHandler$1(webSocketInstance, optionsRef, setReadyState, reconnectCount);
+  cancelReconnectOnClose = bindCloseHandler$1(webSocketInstance, optionsRef, setReadyState, reconnect, reconnectCount);
+  cancelReconnectOnError = bindErrorHandler$1(webSocketInstance, optionsRef, setReadyState, reconnect, reconnectCount);
+  return function() {
+    setReadyState(constants_1$5.ReadyState.CLOSING);
+    cancelReconnectOnClose();
+    cancelReconnectOnError();
+    webSocketInstance.close();
+    if (interval)
+      clearInterval(interval);
+  };
+};
+var attachSharedListeners = {};
+var __assign$3 = commonjsGlobal && commonjsGlobal.__assign || function() {
+  __assign$3 = Object.assign || function(t2) {
+    for (var s, i = 1, n2 = arguments.length; i < n2; i++) {
+      s = arguments[i];
+      for (var p2 in s)
+        if (Object.prototype.hasOwnProperty.call(s, p2))
+          t2[p2] = s[p2];
+    }
+    return t2;
+  };
+  return __assign$3.apply(this, arguments);
+};
+Object.defineProperty(attachSharedListeners, "__esModule", { value: true });
+attachSharedListeners.attachSharedListeners = void 0;
+var globals_1$1 = globals;
+var constants_1$4 = constants;
+var manage_subscribers_1$1 = manageSubscribers;
+var socket_io_1$1 = socketIo;
+var bindMessageHandler = function(webSocketInstance, url) {
+  webSocketInstance.onmessage = function(message) {
+    manage_subscribers_1$1.getSubscribers(url).forEach(function(subscriber) {
+      if (subscriber.optionsRef.current.onMessage) {
+        subscriber.optionsRef.current.onMessage(message);
+      }
+      if (typeof subscriber.optionsRef.current.filter === "function" && subscriber.optionsRef.current.filter(message) !== true) {
+        return;
+      }
+      subscriber.setLastMessage(message);
+    });
+  };
+};
+var bindOpenHandler = function(webSocketInstance, url) {
+  webSocketInstance.onopen = function(event) {
+    manage_subscribers_1$1.getSubscribers(url).forEach(function(subscriber) {
+      subscriber.reconnectCount.current = 0;
+      if (subscriber.optionsRef.current.onOpen) {
+        subscriber.optionsRef.current.onOpen(event);
+      }
+      subscriber.setReadyState(constants_1$4.ReadyState.OPEN);
+    });
+  };
+};
+var bindCloseHandler = function(webSocketInstance, url) {
+  if (webSocketInstance instanceof WebSocket) {
+    webSocketInstance.onclose = function(event) {
+      manage_subscribers_1$1.getSubscribers(url).forEach(function(subscriber) {
+        if (subscriber.optionsRef.current.onClose) {
+          subscriber.optionsRef.current.onClose(event);
+        }
+        subscriber.setReadyState(constants_1$4.ReadyState.CLOSED);
+      });
+      delete globals_1$1.sharedWebSockets[url];
+      manage_subscribers_1$1.getSubscribers(url).forEach(function(subscriber) {
+        var _a, _b;
+        if (subscriber.optionsRef.current.shouldReconnect && subscriber.optionsRef.current.shouldReconnect(event)) {
+          var reconnectAttempts = (_a = subscriber.optionsRef.current.reconnectAttempts) !== null && _a !== void 0 ? _a : constants_1$4.DEFAULT_RECONNECT_LIMIT;
+          if (subscriber.reconnectCount.current < reconnectAttempts) {
+            setTimeout(function() {
+              subscriber.reconnectCount.current++;
+              subscriber.reconnect.current();
+            }, (_b = subscriber.optionsRef.current.reconnectInterval) !== null && _b !== void 0 ? _b : constants_1$4.DEFAULT_RECONNECT_INTERVAL_MS);
+          } else {
+            subscriber.optionsRef.current.onReconnectStop && subscriber.optionsRef.current.onReconnectStop(subscriber.optionsRef.current.reconnectAttempts);
+            console.warn("Max reconnect attempts of " + reconnectAttempts + " exceeded");
+          }
+        }
+      });
+    };
+  }
+};
+var bindErrorHandler = function(webSocketInstance, url) {
+  webSocketInstance.onerror = function(error) {
+    manage_subscribers_1$1.getSubscribers(url).forEach(function(subscriber) {
+      if (subscriber.optionsRef.current.onError) {
+        subscriber.optionsRef.current.onError(error);
+      }
+      if (constants_1$4.isEventSourceSupported && webSocketInstance instanceof EventSource) {
+        subscriber.optionsRef.current.onClose && subscriber.optionsRef.current.onClose(__assign$3(__assign$3({}, error), { code: 1006, reason: "An error occurred with the EventSource: " + error, wasClean: false }));
+        subscriber.setReadyState(constants_1$4.ReadyState.CLOSED);
+      }
+    });
+    if (constants_1$4.isEventSourceSupported && webSocketInstance instanceof EventSource) {
+      webSocketInstance.close();
+    }
+  };
+};
+attachSharedListeners.attachSharedListeners = function(webSocketInstance, url, optionsRef, sendMessage) {
+  var interval;
+  if (optionsRef.current.fromSocketIO) {
+    interval = socket_io_1$1.setUpSocketIOPing(sendMessage);
+  }
+  bindMessageHandler(webSocketInstance, url);
+  bindCloseHandler(webSocketInstance, url);
+  bindOpenHandler(webSocketInstance, url);
+  bindErrorHandler(webSocketInstance, url);
+  return function() {
+    if (interval)
+      clearInterval(interval);
+  };
+};
+Object.defineProperty(createOrJoin, "__esModule", { value: true });
+createOrJoin.createOrJoinSocket = void 0;
+var globals_1 = globals;
+var constants_1$3 = constants;
+var attach_listener_1 = attachListener;
+var attach_shared_listeners_1 = attachSharedListeners;
+var manage_subscribers_1 = manageSubscribers;
+var cleanSubscribers = function(url, subscriber, optionsRef, setReadyState, clearSocketIoPingInterval) {
+  return function() {
+    manage_subscribers_1.removeSubscriber(url, subscriber);
+    if (!manage_subscribers_1.hasSubscribers(url)) {
+      try {
+        var socketLike = globals_1.sharedWebSockets[url];
+        if (socketLike instanceof WebSocket) {
+          socketLike.onclose = function(event) {
+            if (optionsRef.current.onClose) {
+              optionsRef.current.onClose(event);
+            }
+            setReadyState(constants_1$3.ReadyState.CLOSED);
+          };
+        }
+        socketLike.close();
+      } catch (e) {
+      }
+      if (clearSocketIoPingInterval)
+        clearSocketIoPingInterval();
+      delete globals_1.sharedWebSockets[url];
+    }
+  };
+};
+createOrJoin.createOrJoinSocket = function(webSocketRef, url, setReadyState, optionsRef, setLastMessage, startRef, reconnectCount, sendMessage) {
+  if (!constants_1$3.isEventSourceSupported && optionsRef.current.eventSourceOptions) {
+    if (constants_1$3.isReactNative) {
+      throw new Error("EventSource is not supported in ReactNative");
+    } else {
+      throw new Error("EventSource is not supported");
+    }
+  }
+  if (optionsRef.current.share) {
+    var clearSocketIoPingInterval = null;
+    if (globals_1.sharedWebSockets[url] === void 0) {
+      globals_1.sharedWebSockets[url] = optionsRef.current.eventSourceOptions ? new EventSource(url, optionsRef.current.eventSourceOptions) : new WebSocket(url, optionsRef.current.protocols);
+      webSocketRef.current = globals_1.sharedWebSockets[url];
+      setReadyState(constants_1$3.ReadyState.CONNECTING);
+      clearSocketIoPingInterval = attach_shared_listeners_1.attachSharedListeners(globals_1.sharedWebSockets[url], url, optionsRef, sendMessage);
+    } else {
+      webSocketRef.current = globals_1.sharedWebSockets[url];
+      setReadyState(globals_1.sharedWebSockets[url].readyState);
+    }
+    var subscriber = {
+      setLastMessage,
+      setReadyState,
+      optionsRef,
+      reconnectCount,
+      reconnect: startRef
+    };
+    manage_subscribers_1.addSubscriber(url, subscriber);
+    return cleanSubscribers(url, subscriber, optionsRef, setReadyState, clearSocketIoPingInterval);
+  } else {
+    webSocketRef.current = optionsRef.current.eventSourceOptions ? new EventSource(url, optionsRef.current.eventSourceOptions) : new WebSocket(url, optionsRef.current.protocols);
+    setReadyState(constants_1$3.ReadyState.CONNECTING);
+    if (!webSocketRef.current) {
+      throw new Error("WebSocket failed to be created");
+    }
+    return attach_listener_1.attachListeners(webSocketRef.current, {
+      setLastMessage,
+      setReadyState
+    }, optionsRef, startRef.current, reconnectCount, sendMessage);
+  }
+};
+var getUrl = {};
+var __awaiter$1 = commonjsGlobal && commonjsGlobal.__awaiter || function(thisArg, _arguments, P2, generator) {
+  function adopt(value) {
+    return value instanceof P2 ? value : new P2(function(resolve) {
+      resolve(value);
+    });
+  }
+  return new (P2 || (P2 = Promise))(function(resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+var __generator$1 = commonjsGlobal && commonjsGlobal.__generator || function(thisArg, body) {
+  var _ = { label: 0, sent: function() {
+    if (t2[0] & 1)
+      throw t2[1];
+    return t2[1];
+  }, trys: [], ops: [] }, f2, y2, t2, g;
+  return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() {
+    return this;
+  }), g;
+  function verb(n2) {
+    return function(v2) {
+      return step([n2, v2]);
+    };
+  }
+  function step(op) {
+    if (f2)
+      throw new TypeError("Generator is already executing.");
+    while (_)
+      try {
+        if (f2 = 1, y2 && (t2 = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t2 = y2["return"]) && t2.call(y2), 0) : y2.next) && !(t2 = t2.call(y2, op[1])).done)
+          return t2;
+        if (y2 = 0, t2)
+          op = [op[0] & 2, t2.value];
+        switch (op[0]) {
+          case 0:
+          case 1:
+            t2 = op;
+            break;
+          case 4:
+            _.label++;
+            return { value: op[1], done: false };
+          case 5:
+            _.label++;
+            y2 = op[1];
+            op = [0];
+            continue;
+          case 7:
+            op = _.ops.pop();
+            _.trys.pop();
+            continue;
+          default:
+            if (!(t2 = _.trys, t2 = t2.length > 0 && t2[t2.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+              _ = 0;
+              continue;
+            }
+            if (op[0] === 3 && (!t2 || op[1] > t2[0] && op[1] < t2[3])) {
+              _.label = op[1];
+              break;
+            }
+            if (op[0] === 6 && _.label < t2[1]) {
+              _.label = t2[1];
+              t2 = op;
+              break;
+            }
+            if (t2 && _.label < t2[2]) {
+              _.label = t2[2];
+              _.ops.push(op);
+              break;
+            }
+            if (t2[2])
+              _.ops.pop();
+            _.trys.pop();
+            continue;
+        }
+        op = body.call(thisArg, _);
+      } catch (e) {
+        op = [6, e];
+        y2 = 0;
+      } finally {
+        f2 = t2 = 0;
+      }
+    if (op[0] & 5)
+      throw op[1];
+    return { value: op[0] ? op[1] : void 0, done: true };
+  }
+};
+Object.defineProperty(getUrl, "__esModule", { value: true });
+getUrl.getUrl = void 0;
+var socket_io_1 = socketIo;
+getUrl.getUrl = function(url, optionsRef) {
+  return __awaiter$1(void 0, void 0, void 0, function() {
+    var convertedUrl, parsedUrl, parsedWithQueryParams;
+    return __generator$1(this, function(_a) {
+      switch (_a.label) {
+        case 0:
+          if (!(typeof url === "function"))
+            return [3, 2];
+          return [4, url()];
+        case 1:
+          convertedUrl = _a.sent();
+          return [3, 3];
+        case 2:
+          convertedUrl = url;
+          _a.label = 3;
+        case 3:
+          parsedUrl = optionsRef.current.fromSocketIO ? socket_io_1.parseSocketIOUrl(convertedUrl) : convertedUrl;
+          parsedWithQueryParams = optionsRef.current.queryParams ? socket_io_1.appendQueryParams(parsedUrl, optionsRef.current.queryParams) : parsedUrl;
+          return [2, parsedWithQueryParams];
+      }
+    });
+  });
+};
+var proxy = {};
+(function(exports) {
+  Object.defineProperty(exports, "__esModule", { value: true });
+  exports.websocketWrapper = void 0;
+  exports.websocketWrapper = function(webSocket, start) {
+    return new Proxy(webSocket, {
+      get: function(obj, key) {
+        var val = obj[key];
+        if (key === "reconnect")
+          return start;
+        if (typeof val === "function") {
+          console.error("Calling methods directly on the websocket is not supported at this moment. You must use the methods returned by useWebSocket.");
+          return function() {
+          };
+        } else {
+          return val;
+        }
+      },
+      set: function(obj, key, val) {
+        if (/^on/.test(key)) {
+          console.warn("The websocket's event handlers should be defined through the options object passed into useWebSocket.");
+          return false;
+        } else {
+          obj[key] = val;
+          return true;
+        }
+      }
+    });
+  };
+  exports.default = exports.websocketWrapper;
+})(proxy);
+var __assign$2 = commonjsGlobal && commonjsGlobal.__assign || function() {
+  __assign$2 = Object.assign || function(t2) {
+    for (var s, i = 1, n2 = arguments.length; i < n2; i++) {
+      s = arguments[i];
+      for (var p2 in s)
+        if (Object.prototype.hasOwnProperty.call(s, p2))
+          t2[p2] = s[p2];
+    }
+    return t2;
+  };
+  return __assign$2.apply(this, arguments);
+};
+var __awaiter = commonjsGlobal && commonjsGlobal.__awaiter || function(thisArg, _arguments, P2, generator) {
+  function adopt(value) {
+    return value instanceof P2 ? value : new P2(function(resolve) {
+      resolve(value);
+    });
+  }
+  return new (P2 || (P2 = Promise))(function(resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+var __generator = commonjsGlobal && commonjsGlobal.__generator || function(thisArg, body) {
+  var _ = { label: 0, sent: function() {
+    if (t2[0] & 1)
+      throw t2[1];
+    return t2[1];
+  }, trys: [], ops: [] }, f2, y2, t2, g;
+  return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() {
+    return this;
+  }), g;
+  function verb(n2) {
+    return function(v2) {
+      return step([n2, v2]);
+    };
+  }
+  function step(op) {
+    if (f2)
+      throw new TypeError("Generator is already executing.");
+    while (_)
+      try {
+        if (f2 = 1, y2 && (t2 = op[0] & 2 ? y2["return"] : op[0] ? y2["throw"] || ((t2 = y2["return"]) && t2.call(y2), 0) : y2.next) && !(t2 = t2.call(y2, op[1])).done)
+          return t2;
+        if (y2 = 0, t2)
+          op = [op[0] & 2, t2.value];
+        switch (op[0]) {
+          case 0:
+          case 1:
+            t2 = op;
+            break;
+          case 4:
+            _.label++;
+            return { value: op[1], done: false };
+          case 5:
+            _.label++;
+            y2 = op[1];
+            op = [0];
+            continue;
+          case 7:
+            op = _.ops.pop();
+            _.trys.pop();
+            continue;
+          default:
+            if (!(t2 = _.trys, t2 = t2.length > 0 && t2[t2.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+              _ = 0;
+              continue;
+            }
+            if (op[0] === 3 && (!t2 || op[1] > t2[0] && op[1] < t2[3])) {
+              _.label = op[1];
+              break;
+            }
+            if (op[0] === 6 && _.label < t2[1]) {
+              _.label = t2[1];
+              t2 = op;
+              break;
+            }
+            if (t2 && _.label < t2[2]) {
+              _.label = t2[2];
+              _.ops.push(op);
+              break;
+            }
+            if (t2[2])
+              _.ops.pop();
+            _.trys.pop();
+            continue;
+        }
+        op = body.call(thisArg, _);
+      } catch (e) {
+        op = [6, e];
+        y2 = 0;
+      } finally {
+        f2 = t2 = 0;
+      }
+    if (op[0] & 5)
+      throw op[1];
+    return { value: op[0] ? op[1] : void 0, done: true };
+  }
+};
+var __importDefault = commonjsGlobal && commonjsGlobal.__importDefault || function(mod) {
+  return mod && mod.__esModule ? mod : { "default": mod };
+};
+Object.defineProperty(useWebsocket, "__esModule", { value: true });
+useWebsocket.useWebSocket = void 0;
+var react_1$2 = reactExports;
+var constants_1$2 = constants;
+var create_or_join_1 = createOrJoin;
+var get_url_1 = getUrl;
+var proxy_1 = __importDefault(proxy);
+var util_1 = util;
+useWebsocket.useWebSocket = function(url, options, connect) {
+  if (options === void 0) {
+    options = constants_1$2.DEFAULT_OPTIONS;
+  }
+  if (connect === void 0) {
+    connect = true;
+  }
+  var _a = react_1$2.useState(null), lastMessage = _a[0], setLastMessage = _a[1];
+  var _b = react_1$2.useState({}), readyState = _b[0], setReadyState = _b[1];
+  var lastJsonMessage = react_1$2.useMemo(function() {
+    if (lastMessage) {
+      try {
+        return JSON.parse(lastMessage.data);
+      } catch (e) {
+        return constants_1$2.UNPARSABLE_JSON_OBJECT;
+      }
+    }
+    return null;
+  }, [lastMessage]);
+  var convertedUrl = react_1$2.useRef(null);
+  var webSocketRef = react_1$2.useRef(null);
+  var startRef = react_1$2.useRef(function() {
+    return void 0;
+  });
+  var reconnectCount = react_1$2.useRef(0);
+  var messageQueue = react_1$2.useRef([]);
+  var webSocketProxy = react_1$2.useRef(null);
+  var optionsCache = react_1$2.useRef(options);
+  optionsCache.current = options;
+  var readyStateFromUrl = convertedUrl.current && readyState[convertedUrl.current] !== void 0 ? readyState[convertedUrl.current] : url !== null && connect === true ? constants_1$2.ReadyState.CONNECTING : constants_1$2.ReadyState.UNINSTANTIATED;
+  var stringifiedQueryParams = options.queryParams ? JSON.stringify(options.queryParams) : null;
+  var sendMessage = react_1$2.useCallback(function(message, keep) {
+    var _a2;
+    if (keep === void 0) {
+      keep = true;
+    }
+    if (constants_1$2.isEventSourceSupported && webSocketRef.current instanceof EventSource) {
+      console.warn("Unable to send a message from an eventSource");
+      return;
+    }
+    if (((_a2 = webSocketRef.current) === null || _a2 === void 0 ? void 0 : _a2.readyState) === constants_1$2.ReadyState.OPEN) {
+      util_1.assertIsWebSocket(webSocketRef.current);
+      webSocketRef.current.send(message);
+    } else if (keep) {
+      messageQueue.current.push(message);
+    }
+  }, []);
+  var sendJsonMessage = react_1$2.useCallback(function(message, keep) {
+    if (keep === void 0) {
+      keep = true;
+    }
+    sendMessage(JSON.stringify(message), keep);
+  }, [sendMessage]);
+  var getWebSocket = react_1$2.useCallback(function() {
+    if (optionsCache.current.share !== true || constants_1$2.isEventSourceSupported && webSocketRef.current instanceof EventSource) {
+      return webSocketRef.current;
+    }
+    if (webSocketProxy.current === null && webSocketRef.current) {
+      util_1.assertIsWebSocket(webSocketRef.current);
+      webSocketProxy.current = proxy_1.default(webSocketRef.current, startRef);
+    }
+    return webSocketProxy.current;
+  }, []);
+  react_1$2.useEffect(function() {
+    if (url !== null && connect === true) {
+      var removeListeners_1;
+      var expectClose_1 = false;
+      var start_1 = function() {
+        return __awaiter(void 0, void 0, void 0, function() {
+          var _a2, protectedSetLastMessage, protectedSetReadyState;
+          return __generator(this, function(_b2) {
+            switch (_b2.label) {
+              case 0:
+                _a2 = convertedUrl;
+                return [4, get_url_1.getUrl(url, optionsCache)];
+              case 1:
+                _a2.current = _b2.sent();
+                protectedSetLastMessage = function(message) {
+                  if (!expectClose_1) {
+                    setLastMessage(message);
+                  }
+                };
+                protectedSetReadyState = function(state) {
+                  if (!expectClose_1) {
+                    setReadyState(function(prev) {
+                      var _a3;
+                      return __assign$2(__assign$2({}, prev), convertedUrl.current && (_a3 = {}, _a3[convertedUrl.current] = state, _a3));
+                    });
+                  }
+                };
+                removeListeners_1 = create_or_join_1.createOrJoinSocket(webSocketRef, convertedUrl.current, protectedSetReadyState, optionsCache, protectedSetLastMessage, startRef, reconnectCount, sendMessage);
+                return [
+                  2
+                  /*return*/
+                ];
+            }
+          });
+        });
+      };
+      startRef.current = function() {
+        if (!expectClose_1) {
+          if (webSocketProxy.current)
+            webSocketProxy.current = null;
+          removeListeners_1 === null || removeListeners_1 === void 0 ? void 0 : removeListeners_1();
+          start_1();
+        }
+      };
+      start_1();
+      return function() {
+        expectClose_1 = true;
+        if (webSocketProxy.current)
+          webSocketProxy.current = null;
+        removeListeners_1 === null || removeListeners_1 === void 0 ? void 0 : removeListeners_1();
+        setLastMessage(null);
+      };
+    } else if (url === null || connect === false) {
+      reconnectCount.current = 0;
+      setReadyState(function(prev) {
+        var _a2;
+        return __assign$2(__assign$2({}, prev), convertedUrl.current && (_a2 = {}, _a2[convertedUrl.current] = constants_1$2.ReadyState.CLOSED, _a2));
+      });
+    }
+  }, [url, connect, stringifiedQueryParams, sendMessage]);
+  react_1$2.useEffect(function() {
+    if (readyStateFromUrl === constants_1$2.ReadyState.OPEN) {
+      messageQueue.current.splice(0).forEach(function(message) {
+        sendMessage(message);
+      });
+    }
+  }, [readyStateFromUrl]);
+  return {
+    sendMessage,
+    sendJsonMessage,
+    lastMessage,
+    lastJsonMessage,
+    readyState: readyStateFromUrl,
+    getWebSocket
+  };
+};
+var useSocketIo = {};
+var __assign$1 = commonjsGlobal && commonjsGlobal.__assign || function() {
+  __assign$1 = Object.assign || function(t2) {
+    for (var s, i = 1, n2 = arguments.length; i < n2; i++) {
+      s = arguments[i];
+      for (var p2 in s)
+        if (Object.prototype.hasOwnProperty.call(s, p2))
+          t2[p2] = s[p2];
+    }
+    return t2;
+  };
+  return __assign$1.apply(this, arguments);
+};
+Object.defineProperty(useSocketIo, "__esModule", { value: true });
+useSocketIo.useSocketIO = void 0;
+var react_1$1 = reactExports;
+var use_websocket_1$1 = useWebsocket;
+var constants_1$1 = constants;
+var emptyEvent = {
+  type: "empty",
+  payload: null
+};
+var getSocketData = function(event) {
+  if (!event || !event.data) {
+    return emptyEvent;
+  }
+  var match = event.data.match(/\[.*]/);
+  if (!match) {
+    return emptyEvent;
+  }
+  var data = JSON.parse(match);
+  if (!Array.isArray(data) || !data[1]) {
+    return emptyEvent;
+  }
+  return {
+    type: data[0],
+    payload: data[1]
+  };
+};
+useSocketIo.useSocketIO = function(url, options, connect) {
+  if (options === void 0) {
+    options = constants_1$1.DEFAULT_OPTIONS;
+  }
+  if (connect === void 0) {
+    connect = true;
+  }
+  var optionsWithSocketIO = react_1$1.useMemo(function() {
+    return __assign$1(__assign$1({}, options), { fromSocketIO: true });
+  }, []);
+  var _a = use_websocket_1$1.useWebSocket(url, optionsWithSocketIO, connect), sendMessage = _a.sendMessage, sendJsonMessage = _a.sendJsonMessage, lastMessage = _a.lastMessage, readyState = _a.readyState, getWebSocket = _a.getWebSocket;
+  var socketIOLastMessage = react_1$1.useMemo(function() {
+    return getSocketData(lastMessage);
+  }, [lastMessage]);
+  return {
+    sendMessage,
+    sendJsonMessage,
+    lastMessage: socketIOLastMessage,
+    lastJsonMessage: socketIOLastMessage,
+    readyState,
+    getWebSocket
+  };
+};
+var useEventSource = {};
+var __assign = commonjsGlobal && commonjsGlobal.__assign || function() {
+  __assign = Object.assign || function(t2) {
+    for (var s, i = 1, n2 = arguments.length; i < n2; i++) {
+      s = arguments[i];
+      for (var p2 in s)
+        if (Object.prototype.hasOwnProperty.call(s, p2))
+          t2[p2] = s[p2];
+    }
+    return t2;
+  };
+  return __assign.apply(this, arguments);
+};
+var __rest = commonjsGlobal && commonjsGlobal.__rest || function(s, e) {
+  var t2 = {};
+  for (var p2 in s)
+    if (Object.prototype.hasOwnProperty.call(s, p2) && e.indexOf(p2) < 0)
+      t2[p2] = s[p2];
+  if (s != null && typeof Object.getOwnPropertySymbols === "function")
+    for (var i = 0, p2 = Object.getOwnPropertySymbols(s); i < p2.length; i++) {
+      if (e.indexOf(p2[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p2[i]))
+        t2[p2[i]] = s[p2[i]];
+    }
+  return t2;
+};
+Object.defineProperty(useEventSource, "__esModule", { value: true });
+useEventSource.useEventSource = void 0;
+var react_1 = reactExports;
+var use_websocket_1 = useWebsocket;
+var constants_1 = constants;
+useEventSource.useEventSource = function(url, _a, connect) {
+  if (_a === void 0) {
+    _a = constants_1.DEFAULT_EVENT_SOURCE_OPTIONS;
+  }
+  if (connect === void 0) {
+    connect = true;
+  }
+  var withCredentials = _a.withCredentials, events = _a.events, options = __rest(_a, ["withCredentials", "events"]);
+  var optionsWithEventSource = __assign(__assign({}, options), { eventSourceOptions: {
+    withCredentials
+  } });
+  var eventsRef = react_1.useRef(constants_1.EMPTY_EVENT_HANDLERS);
+  if (events) {
+    eventsRef.current = events;
+  }
+  var _b = use_websocket_1.useWebSocket(url, optionsWithEventSource, connect), lastMessage = _b.lastMessage, readyState = _b.readyState, getWebSocket = _b.getWebSocket;
+  react_1.useEffect(function() {
+    if (lastMessage === null || lastMessage === void 0 ? void 0 : lastMessage.type) {
+      Object.entries(eventsRef.current).forEach(function(_a2) {
+        var type = _a2[0], handler = _a2[1];
+        if (type === lastMessage.type) {
+          handler(lastMessage);
+        }
+      });
+    }
+  }, [lastMessage]);
+  return {
+    lastEvent: lastMessage,
+    readyState,
+    getEventSource: getWebSocket
+  };
+};
+(function(exports) {
+  Object.defineProperty(exports, "__esModule", { value: true });
+  var use_websocket_12 = useWebsocket;
+  Object.defineProperty(exports, "default", { enumerable: true, get: function() {
+    return use_websocket_12.useWebSocket;
+  } });
+  var use_socket_io_1 = useSocketIo;
+  Object.defineProperty(exports, "useSocketIO", { enumerable: true, get: function() {
+    return use_socket_io_1.useSocketIO;
+  } });
+  var constants_12 = constants;
+  Object.defineProperty(exports, "ReadyState", { enumerable: true, get: function() {
+    return constants_12.ReadyState;
+  } });
+  var use_event_source_1 = useEventSource;
+  Object.defineProperty(exports, "useEventSource", { enumerable: true, get: function() {
+    return use_event_source_1.useEventSource;
+  } });
+  var util_12 = util;
+  Object.defineProperty(exports, "resetGlobalState", { enumerable: true, get: function() {
+    return util_12.resetGlobalState;
+  } });
+})(dist);
+const useWebSocket = /* @__PURE__ */ getDefaultExportFromCjs(dist);
+const baseUrl = window.location.href.split(":")[0] + ":" + window.location.href.split(":")[1];
+const gradioPort = 7860;
+function SendTo() {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Row, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "nevysha lg primary gradio-button btn", children: "txt2img" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "nevysha lg primary gradio-button btn", children: "img2img" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "nevysha lg primary gradio-button btn", children: "inpainting" })
+  ] });
+}
+function CozyImageInfo(props) {
+  const date = new Date(props.image.metadata.date * 1e3).toISOString().replace(/T/, " ").replace(/\..+/, "");
+  const model = props.image.metadata.exif.parameters.split("Model: ")[1].split(",")[0];
+  const size = props.image.metadata.exif.parameters.split("Size: ")[1].split(",")[0];
+  const seed = props.image.metadata.exif.parameters.split("Seed: ")[1].split(",")[0];
+  const steps = props.image.metadata.exif.parameters.split("Steps: ")[1].split(",")[0];
+  const sampler = props.image.metadata.exif.parameters.split("Sampler: ")[1].split(",")[0];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "image-info", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("table", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tbody", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: "Date:" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: date })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
-        "Edit ",
-        /* @__PURE__ */ jsxRuntimeExports.jsx("code", { children: "src/App.jsx" }),
-        " and save to test HMR"
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: "Model:" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: model })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: "Size:" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: size })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: "Seed:" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: seed })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: "Steps:" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: steps })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: "Sampler:" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: sampler })
       ] })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(SendTo, {})
+  ] });
+}
+function CozyFullImageInfo(props) {
+  const date = new Date(props.image.metadata.date * 1e3).toISOString().replace(/T/, " ").replace(/\..+/, "");
+  const model = props.image.metadata.exif.parameters.split("Model: ")[1].split(",")[0];
+  const size = props.image.metadata.exif.parameters.split("Size: ")[1].split(",")[0];
+  const seed = props.image.metadata.exif.parameters.split("Seed: ")[1].split(",")[0];
+  const steps = props.image.metadata.exif.parameters.split("Steps: ")[1].split(",")[0];
+  const sampler = props.image.metadata.exif.parameters.split("Sampler: ")[1].split(",")[0];
+  const modelHash = props.image.metadata.exif.parameters.split("Model hash: ")[1].split(",")[0];
+  let formattedAll = props.image.metadata.exif.parameters;
+  formattedAll = formattedAll.replace(/\n/g, "<br>");
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "image-info", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        className: "nevysha lg primary gradio-button btn",
+        onClick: () => props.closeModal(),
+        children: "Close"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("table", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tbody", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: "Date: " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: date })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: "Model: " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: model })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: "Model Hash: " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: modelHash })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: "Size: " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: size })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: "Seed: " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: seed })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: "Steps: " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: steps })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: "Sampler: " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: sampler })
+      ] })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "blocInfo", dangerouslySetInnerHTML: { __html: formattedAll } }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(SendTo, {})
+  ] });
+}
+function CozyImage(props) {
+  const [showModal, setShowModal] = reactExports.useState(false);
+  function toggleModal() {
+    console.log("close modal");
+    console.log(`showModal: ${showModal}`);
+    setShowModal(!showModal);
+  }
+  function openModal() {
+    if (showModal)
+      return;
+    console.log("open modal");
+    console.log(`showModal: ${showModal}`);
+    setShowModal(true);
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "image", onClick: openModal, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "image-wrapper", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "img",
+      {
+        className: "cozy-nest-thumbnail",
+        src: `${baseUrl}:${gradioPort}/file=${props.image.path}`,
+        alt: "image"
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(CozyImageInfo, { image: props.image }),
+    showModal && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "infoModal", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "image-wrapper", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "img",
+        {
+          className: "cozy-nest-thumbnail",
+          src: `${baseUrl}:${gradioPort}/file=${props.image.path}`,
+          alt: "image"
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CozyFullImageInfo, { image: props.image, closeModal: toggleModal })
+    ] })
+  ] });
+}
+function Browser(props) {
+  const imagesRef = props.imagesRef;
+  const [imagesLoaded, setImagesLoaded] = reactExports.useState([]);
+  reactExports.useEffect(() => {
+    setImagesLoaded([]);
+  }, [imagesRef]);
+  if (imagesRef.length > 0 && imagesLoaded.length === 0) {
+    setImagesLoaded(imagesRef.slice(0, 20));
+  }
+  const page = Math.floor(imagesLoaded.length / 20);
+  const maybeLoadMore = () => {
+    const loadMoreThreshold = document.getElementById("loadMoreThreshold");
+    if (loadMoreThreshold.getBoundingClientRect().top < window.innerHeight) {
+      loadMore();
+    }
+  };
+  const loadMore = () => {
+    setImagesLoaded(imagesLoaded.concat(imagesRef.slice(page * 20, page * 20 + 20)));
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "browser", onScroll: () => maybeLoadMore(), children: [
+    imagesLoaded.map((image, index2) => {
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(CozyImage, { image }, index2);
+    }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { id: "loadMoreThreshold", className: "hackyOffPageElement" })
+  ] });
+}
+(function() {
+  if (window.location.href.includes("file=extensions/Cozy-Nest/cozy-nest-image-browser")) {
+    document.querySelector("body").setAttribute("style", "height: 100vh; overflow: hidden;");
+    const linkGradioCss = document.createElement("link");
+    linkGradioCss.rel = "stylesheet";
+    linkGradioCss.type = "text/css";
+    linkGradioCss.href = "http://127.0.0.1:7860/theme.css";
+    document.head.appendChild(linkGradioCss);
+    const linkCozyNestCss = document.createElement("link");
+    linkCozyNestCss.rel = "stylesheet";
+    linkCozyNestCss.type = "text/css";
+    linkCozyNestCss.href = "http://127.0.0.1:7860/file=extensions/Cozy-Nest/style.css";
+    document.head.appendChild(linkCozyNestCss);
+  }
+})();
+let _socket = null;
+(async () => _socket = await getSocket())();
+function getSocket() {
+  return new Promise(function(resolve, reject) {
+    if (_socket && _socket.readyState === 1) {
+      return resolve(_socket);
+    }
+    let socket = new WebSocket("ws://localhost:3333");
+    socket.onopen = () => {
+      console.log("connected");
+      _socket = socket;
+      return resolve(socket);
+    };
+    socket.onmessage = (event) => {
+      console.log("onmessage");
+    };
+    socket.onclose = () => {
+      console.log("disconnected");
+    };
+  });
+}
+function Row(props) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-row", children: props.children });
+}
+function Column(props) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-column", children: props.children });
+}
+function App() {
+  const [socketUrl, setSocketUrl] = reactExports.useState("ws://localhost:3333");
+  const [messageHistory, setMessageHistory] = reactExports.useState([]);
+  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
+  const [images, setImages] = reactExports.useState([]);
+  const [filteredImages, setFilteredImages] = reactExports.useState([]);
+  const [searchStr, setSearchStr] = reactExports.useState("");
+  const handleClickSendMessage = reactExports.useCallback(
+    () => sendMessage(
+      JSON.stringify({ what: "images" })
+    ),
+    [sendMessage]
+  );
+  reactExports.useEffect(() => {
+    if (lastMessage !== null) {
+      const data = JSON.parse(lastMessage.data);
+      if (data.what === "images")
+        setImages(data.images);
+      setMessageHistory((prev) => prev.concat(lastMessage));
+    }
+  }, [lastMessage, setMessageHistory]);
+  reactExports.useEffect(() => {
+    if (images.length === 0) {
+      handleClickSendMessage();
+    } else {
+      setFilteredImages(images);
+    }
+  }, [images, handleClickSendMessage]);
+  reactExports.useEffect(() => {
+    if (searchStr !== "") {
+      const filteredImages2 = images.filter((image) => {
+        if (image.metadata.exif.parameters.includes(searchStr)) {
+          console.log(`path: ${image.path}`);
+          return true;
+        } else
+          return false;
+      });
+      setFilteredImages(filteredImages2);
+    } else {
+      setFilteredImages(images);
+    }
+  }, [searchStr]);
+  const connectionStatus = {
+    [dist.ReadyState.CONNECTING]: "Connecting",
+    [dist.ReadyState.OPEN]: "Open",
+    [dist.ReadyState.CLOSING]: "Closing",
+    [dist.ReadyState.CLOSED]: "Closed",
+    [dist.ReadyState.UNINSTANTIATED]: "Uninstantiated"
+  }[readyState];
+  const connexionStatusStyle = {
+    color: readyState === dist.ReadyState.OPEN ? "green" : readyState === dist.ReadyState.CONNECTING ? "orange" : "red"
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Column, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "Cozy Nest Image Browser" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Row, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+          "The WebSocket is currently ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "connexionStatus", style: connexionStatusStyle, children: connectionStatus })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            className: "nevysha lg primary gradio-button btn",
+            style: { marginLeft: "20px", width: "100px" },
+            onClick: handleClickSendMessage,
+            disabled: readyState === dist.ReadyState.OPEN,
+            children: "Restart"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "textarea",
+        {
+          "data-testid": "textbox",
+          placeholder: "",
+          rows: "1",
+          spellCheck: "false",
+          "data-gramm": "false",
+          onChange: (e) => setSearchStr(e.target.value)
+        }
+      )
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "read-the-docs", children: "Click on the Vite and React logos to learn more" })
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Browser, { imagesRef: filteredImages }, 0)
   ] });
 }
 const index = "";

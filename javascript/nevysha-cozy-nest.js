@@ -1248,7 +1248,7 @@ function createRightWrapperDiv() {
   //create a panel to display Cozy Image Browser
   const cozyImgBrowserPanel =
     `<div id="cozy_img_browser_panel" class="nevysha cozy-img-browser-panel slide-right-browser-panel" style="display: none">
-      <div class="nevysha slide-right-browser-panel-container">
+      <div class="nevysha slide-right-browser-panel-container nevysha-scrollable">
         <div class="nevysha" id="cozy-img-browser-react"/>
       </div>
     </div>`;
@@ -1447,7 +1447,7 @@ const onLoad = (done) => {
 
   ///TODO handle behind an auto start setting
   // connectToImgBrowserSocket();
-  document.querySelector('#nevyui_sh_options_start_socket').click()
+  // document.querySelector('#nevyui_sh_options_start_socket').click()
 
   //load /assets/index-eff6a2cc.js
   loadCozyNestImageBrowserSubmodule();
