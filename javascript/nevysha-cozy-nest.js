@@ -808,6 +808,8 @@ const makeSettingsDraggable = () => {
 function tweakExtraNetworks({prefix}) {
   let extraNetworks = document.querySelector(`div#${prefix}_extra_networks`);
 
+  extraNetworks.style.display = 'flex'
+
   // txt2img and img2img extra network are not built the same way in the DOM (:
   // so we handle the DOM tweak differently
   let extraNetworkGradioWrapper
@@ -851,21 +853,19 @@ function tweakExtraNetworks({prefix}) {
         observer.observe(targetNode, config);
 
         //show the extra network
-        extraNetworkGradioWrapper.style.display = 'block';
-        extraNetworks.style.display = 'flex';
+        extraNetworkGradioWrapper.style.display = 'flex';
         extraNetworkGradioWrapper.style.marginRight = `-${extraNetworkGradioWrapper.offsetWidth}px`;
-        // $(extraNetworkGradioWrapper).animate({'margin-right':'toggle'},150);
         $(extraNetworkGradioWrapper).animate({"margin-right": `+=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
-
       } else {
         //hide the extra network
-        $(extraNetworkGradioWrapper).animate({"margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
-
-        // hide it after the animation is done
-        setTimeout(() => {
-          extraNetworkGradioWrapper.style.display = 'none';
-          extraNetworks.style.display = 'none';
-        }, 350);
+        $(extraNetworkGradioWrapper).animate({
+          "margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`},
+          350,
+          () => {
+            // hide it after the animation is done
+            extraNetworkGradioWrapper.style.display = 'none';
+            // extraNetworks.style.display = 'none';
+          });
       }
       shown = !shown;
     });
