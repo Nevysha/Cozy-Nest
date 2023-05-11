@@ -1,5 +1,6 @@
 import asyncio
 import json
+import multiprocessing
 import os
 from PIL import Image
 from PIL.ExifTags import TAGS
@@ -77,7 +78,17 @@ def process(data):
         return json.dumps(data)
 
 
-def start_server(_images_folders, port=3333):
+def start_server_in_dedicated_process(_images_folders, server_port):
+    # call start_server() in a new process
+    # Create a new process
+    serv_process = multiprocessing.Process(target=start_server,
+                                      args=(_images_folders, server_port))
+
+    # Start the process
+    serv_process.start()
+
+
+def start_server(_images_folders, server_port=3333):
 
     global serv_server, images_folders
     images_folders = _images_folders
@@ -87,9 +98,9 @@ def start_server(_images_folders, port=3333):
         print("CozyNest: Server is already running")
         return
 
-    print(f"CozyNest: Starting server on localhost:{port}...")
+    print(f"CozyNest: Starting server on localhost:{server_port}...")
     # Configure the WebSocket server
-    serv_server = websockets.serve(handle_client, 'localhost', port, ssl=None)
+    serv_server = websockets.serve(handle_client, 'localhost', server_port, ssl=None)
 
     # Start the server and run forever
     asyncio.get_event_loop().run_until_complete(serv_server)

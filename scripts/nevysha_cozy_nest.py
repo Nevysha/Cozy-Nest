@@ -1,3 +1,6 @@
+import multiprocessing
+import sys
+
 import gradio as gr
 import os
 import json
@@ -5,7 +8,7 @@ import subprocess
 
 from modules import scripts, script_callbacks, shared, sd_hijack
 
-from scripts.cozynest_image_browser import start_server
+from scripts.cozynest_image_browser import start_server_in_dedicated_process
 
 
 def rgb_to_hex(r, g, b):
@@ -106,17 +109,30 @@ def update():
     print(output.decode('utf-8'))
 
 
-started_img_browser_socket = False
-
 
 def serv_img_browser_socket():
     # TODO crash when reloadUI
-    global started_img_browser_socket
-    if started_img_browser_socket:
-        print("CozyNest: Socket already started")
-        return
-    started_img_browser_socket = True
-    start_server()
+
+    # if started_img_browser_socket:
+    #     print("CozyNest: Socket already started")
+    #     return
+
+    # TODO get this from gradio UI
+    server_port = 3333
+    images_folders = [
+        'D:\\stable-diffusion\\stable-diffusion-webui\\outputs\\img2img-images',
+        'D:\\stable-diffusion\\stable-diffusion-webui\\outputs\\txt2img-images'
+    ]
+
+    try:
+        parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        # add the CozyNest extension to the sys.path.
+        sys.path.append(parent_dir)
+        # start the server in a separate process
+        start_server_in_dedicated_process(images_folders, server_port)
+    except Exception as e:
+        print("CozyNest: Error while starting socket server")
+        print(e)
 
 
 def on_ui_tabs():

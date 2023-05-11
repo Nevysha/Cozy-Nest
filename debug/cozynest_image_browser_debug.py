@@ -1,5 +1,14 @@
+import os
 import sys
-from scripts.cozynest_image_browser import start_server, stop_server
+
+
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# add the CozyNest extension to the sys.path.
+sys.path.append(parent_dir)
+
+
+from scripts.cozynest_image_browser import start_server, stop_server, start_server_in_dedicated_process
 
 # call start_server()
 
@@ -18,8 +27,8 @@ if __name__ == '__main__':
     for i in range(1, len(sys.argv)):
         images_folders.append(sys.argv[i])
 
-
-    start_server(images_folders, port)
+    # start_server(images_folders, port)
+    start_server_in_dedicated_process(images_folders, port)
 
     # close the server on keyboard interrupt
     try:
