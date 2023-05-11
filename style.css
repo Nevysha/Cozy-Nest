@@ -910,6 +910,10 @@ button.secondary, button.primary {
     padding: 0 !important;
 }
 
+#nevyui-ui-block {
+    gap: 0;
+}
+
 #img2maskimg {
 
 }
