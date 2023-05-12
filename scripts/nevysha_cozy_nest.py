@@ -122,11 +122,15 @@ def is_port_free(port):
         sock.close()
 
 
-def serv_img_browser_socket(server_port=3333):
+def serv_img_browser_socket(server_port=3333, auto_search_port=True):
+
     # check if port is free
-    if not is_port_free(server_port):
-        print(f"CozyNest: Port {server_port} is already in use. Aborting.")
-        return
+    if auto_search_port:
+        # search for a free port
+        server_port = 3333
+        while not is_port_free(server_port) and server_port < 64000:
+            print(f"CozyNest: Port {server_port} is already in use. Searching for a free port.")
+            server_port += 1
 
     outdir_txt2img_samples = shared.opts.data['outdir_txt2img_samples']
     outdir_img2img_samples = shared.opts.data['outdir_img2img_samples']
@@ -145,7 +149,7 @@ def serv_img_browser_socket(server_port=3333):
         # add the CozyNest extension to the sys.path.
         sys.path.append(parent_dir)
         # start the server in a separate process
-        start_server_in_dedicated_process(images_folders, server_port)
+        start_server_in_dedicated_process(images_folders, server_port, True)
     except Exception as e:
         print("CozyNest: Error while starting socket server")
         print(e)
@@ -157,14 +161,14 @@ def on_ui_tabs():
     # merge default settings with user settings
     config = {**get_default_settings(), **config}
 
+    serv_img_browser_socket()
+
     with gr.Blocks(analytics_enabled=False) as ui:
 
         # TODO add settings (maybe in a tab) for the image browser
         #  - chose port number
         #  - chose folders to scrap (may be multiple)
         #  - chose if the server should be started automatically
-
-        serv_img_browser_socket()
 
         with gr.Column(elem_id="nevyui-ui-block"):
 

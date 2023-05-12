@@ -4,23 +4,53 @@ import multiprocessing
 import os
 from PIL import Image
 from PIL.ExifTags import TAGS
-
+from modules import script_callbacks
 import websockets
 
 serv_server = None
 images_folders = []
 
+
 def stop_server():
+    global serv_server
     print("CozyNest: Stopping server...")
     serv_server.close()
     asyncio.get_event_loop().stop()
     print("CozyNest: Server stopped")
 
 
+def on_image_saved(gen_params: script_callbacks.ImageSaveParams):
+
+    print(f"CozyNest: on_image_saved{gen_params}")
+
+    for websocket in CLIENTS.copy():
+        websocket_send(gen_params, websocket)
+
+
+async def websocket_send(gen_params, websocket):
+    try:
+        await websocket.send(json.dumps({
+            'what': 'image_saved',
+            'data': {
+                'filename': gen_params.filename,
+                'pnginfo': gen_params.pnginfo,
+            }
+        }))
+    except websockets.ConnectionClosed:
+        pass
+
+
+script_callbacks.on_image_saved(on_image_saved)
+# script_callbacks.on_before_reload(stop_server)
+
+CLIENTS = set()
+
+
 async def handle_client(websocket, path):
     print(f"CozyNest: New connection: {websocket.remote_address}")
 
     try:
+        CLIENTS.add(websocket)
         while True:
             # Receive data from the client
             data = await websocket.recv()
@@ -78,11 +108,16 @@ def process(data):
         return json.dumps(data)
 
 
-def start_server_in_dedicated_process(_images_folders, server_port):
+def start_server_in_dedicated_process(_images_folders, server_port, dedicated_process=False):
+    if not dedicated_process:
+        # call start_server() in the current process
+        start_server(_images_folders, server_port)
+        return
+
     # call start_server() in a new process
     # Create a new process
     serv_process = multiprocessing.Process(target=start_server,
-                                      args=(_images_folders, server_port))
+                                           args=(_images_folders, server_port))
 
     try:
         # Start the process
@@ -93,16 +128,10 @@ def start_server_in_dedicated_process(_images_folders, server_port):
 
 
 def start_server(_images_folders, server_port=3333):
-
     global serv_server, images_folders
     images_folders = _images_folders
 
-    # check if the server is already running
-    if serv_server is not None:
-        print("CozyNest: Server is already running")
-        return
-
-    print(f"CozyNest: Starting server on localhost:{server_port}...")
+    print(f"CozyNest: Starting socket server on localhost:{server_port}...")
     # Configure the WebSocket server
     serv_server = websockets.serve(handle_client, 'localhost', server_port, ssl=None)
 
