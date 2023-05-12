@@ -8587,11 +8587,41 @@ useEventSource.useEventSource = function(url, _a, connect) {
 const useWebSocket = /* @__PURE__ */ getDefaultExportFromCjs(dist);
 const baseUrl = window.location.href.split(":")[0] + ":" + window.location.href.split(":")[1];
 const gradioPort = 7860;
-function SendTo() {
+function SendTo(props) {
+  const sendToPipe = (e, where) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (window.sendToPipe) {
+      window.sendToPipe(where, props.imgRef.current);
+    } else {
+      console.log(`mock sendToPipe(${where}, ${props.imgRef.current.src})`);
+    }
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(Row, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "nevysha lg primary gradio-button btn", children: "txt2img" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "nevysha lg primary gradio-button btn", children: "img2img" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "nevysha lg primary gradio-button btn", children: "inpainting" })
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        className: "nevysha lg primary gradio-button btn",
+        onClick: (e) => sendToPipe(e, "txt2img"),
+        children: "txt2img"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        className: "nevysha lg primary gradio-button btn",
+        onClick: (e) => sendToPipe(e, "img2img"),
+        children: "img2img"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        className: "nevysha lg primary gradio-button btn",
+        onClick: (e) => sendToPipe(e, "inpainting"),
+        children: "inpainting"
+      }
+    )
   ] });
 }
 function CozyImageInfo(props) {
@@ -8628,7 +8658,7 @@ function CozyImageInfo(props) {
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { children: sampler })
       ] })
     ] }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(SendTo, {})
+    /* @__PURE__ */ jsxRuntimeExports.jsx(SendTo, { imgRef: props.imgRef })
   ] });
 }
 function CozyFullImageInfo(props) {
@@ -8681,11 +8711,12 @@ function CozyFullImageInfo(props) {
       ] })
     ] }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "blocInfo", dangerouslySetInnerHTML: { __html: formattedAll } }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(SendTo, {})
+    /* @__PURE__ */ jsxRuntimeExports.jsx(SendTo, { imgRef: props.imgRef })
   ] });
 }
 function CozyImage(props) {
   const [showModal, setShowModal] = reactExports.useState(false);
+  const imgRef = reactExports.useRef(null);
   function toggleModal() {
     console.log("close modal");
     console.log(`showModal: ${showModal}`);
@@ -8694,8 +8725,6 @@ function CozyImage(props) {
   function openModal() {
     if (showModal)
       return;
-    console.log("open modal");
-    console.log(`showModal: ${showModal}`);
     setShowModal(true);
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "image", onClick: openModal, children: [
@@ -8704,10 +8733,11 @@ function CozyImage(props) {
       {
         className: "cozy-nest-thumbnail",
         src: `${baseUrl}:${gradioPort}/file=${props.image.path}`,
-        alt: "image"
+        alt: "image",
+        ref: imgRef
       }
     ) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(CozyImageInfo, { image: props.image }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(CozyImageInfo, { image: props.image, imgRef }),
     showModal && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "infoModal", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "image-wrapper", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
         "img",
@@ -8717,7 +8747,7 @@ function CozyImage(props) {
           alt: "image"
         }
       ) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(CozyFullImageInfo, { image: props.image, closeModal: toggleModal })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CozyFullImageInfo, { image: props.image, closeModal: toggleModal, imgRef })
     ] })
   ] });
 }

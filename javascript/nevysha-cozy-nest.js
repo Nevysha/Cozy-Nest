@@ -1313,6 +1313,48 @@ function setButtonVisibilityFromCurrentTab(id) {
   }
 }
 
+async function sendToPipe(where, elemImgFrom) {
+
+  class FakeDataTransfer {
+    constructor(imgFromBlob) {
+      this.files = [imgFromBlob];
+    }
+  }
+
+  // let elemImgFrom = document.querySelector("#cozy-img-browser-react > div.browser.nevysha.nevysha-scrollable > div:nth-child(1) > div.image-wrapper > img");
+  let inputTo = document.querySelector("#nevysha-send-to > #nevysha_pnginfo_image > div.image-container > div")
+
+  //get image file from elemImgFrom.src
+  const blob = await fetch(elemImgFrom.src).then(r => r.blob());
+
+  // Create a new drop event
+  let dropEvent = new DragEvent("drop", {
+    bubbles: true,
+    cancelable: true,
+  });
+  Object.defineProperty(dropEvent, 'dataTransfer', {
+    value: new FakeDataTransfer(blob)
+  });
+
+  // Dispatch the drop event on the target element
+  inputTo.dispatchEvent(dropEvent);
+
+  //wait a bit and click #nevysha-send-to-button > button#txt2img_tab
+  setTimeout(() => {
+    let clicker;
+    if (where === 'txt2img') {
+      clicker = document.querySelector("#nevysha-send-to-button > button#txt2img_tab")
+    }
+    else if (where === 'img2img') {
+      clicker = document.querySelector("#nevysha-send-to-button > button#img2img_tab")
+    }
+    else if (where === 'inpainting') {
+      clicker = document.querySelector("#nevysha-send-to-button > button#inpaint_tab")
+    }
+    clicker.click()
+  }, 1000)
+}
+
 const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
@@ -1419,48 +1461,6 @@ const onLoad = (done) => {
 
   //load /assets/index-eff6a2cc.js
   loadCozyNestImageBrowserSubmodule();
-
-  //testing gradio hacky way to load load image
-  setTimeout(() => {
-    console.log('ready')
-
-    class FakeDataTransfer {
-      constructor(imgFromBlob) {
-        this.files = [imgFromBlob];
-      }
-    }
-
-    const btnSendTo = document.querySelector("#cozy-img-browser-react > div.browser.nevysha.nevysha-scrollable > div:nth-child(1) > div.image-info > div > button:nth-child(1)")
-    btnSendTo.addEventListener("click", async (e) => {
-
-      e.stopPropagation()
-      e.preventDefault()
-
-      let imgFrom = document.querySelector("#cozy-img-browser-react > div.browser.nevysha.nevysha-scrollable > div:nth-child(1) > div.image-wrapper > img");
-      let inputTo = document.querySelector("#nevysha-send-to > #nevysha_pnginfo_image > div.image-container > div")
-
-      //get image file from imgFrom.src
-      const blob = await fetch(imgFrom.src).then(r => r.blob());
-
-      // Create a new drop event
-      let dropEvent = new DragEvent("drop", {
-        bubbles: true,
-        cancelable: true,
-      });
-      Object.defineProperty(dropEvent, 'dataTransfer', {
-        value: new FakeDataTransfer(blob)
-      });
-
-      // Dispatch the drop event on the target element
-      inputTo.dispatchEvent(dropEvent);
-
-      //wait a bit and click #nevysha-send-to-button > button#txt2img_tab
-      setTimeout(() => {
-        document.querySelector("#nevysha-send-to-button > button#txt2img_tab").click()
-      }, 1000)
-    })
-  }, 5000)
-
 
   done();
 };
