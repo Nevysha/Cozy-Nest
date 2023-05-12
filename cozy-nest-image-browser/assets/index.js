@@ -8715,8 +8715,20 @@ function CozyFullImageInfo(props) {
   ] });
 }
 function CozyImage(props) {
+  const viewPort = props.viewPort;
   const [showModal, setShowModal] = reactExports.useState(false);
   const imgRef = reactExports.useRef(null);
+  const _me = reactExports.useRef(null);
+  const [onScreen, setOnScreen] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    const top = _me.current.offsetTop;
+    const isOnScreen = top >= viewPort.top && top <= viewPort.bottom + _me.current.offsetHeight || top + _me.current.offsetHeight >= viewPort.top && top + _me.current.offsetHeight <= viewPort.bottom;
+    if (isOnScreen) {
+      setOnScreen(true);
+    } else {
+      setOnScreen(false);
+    }
+  }, [viewPort]);
   function toggleModal() {
     console.log("close modal");
     console.log(`showModal: ${showModal}`);
@@ -8727,8 +8739,8 @@ function CozyImage(props) {
       return;
     setShowModal(true);
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "image", onClick: openModal, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "image-wrapper", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { id: `img_${props.index}`, className: "image", ref: _me, children: onScreen ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "image-wrapper", onClick: openModal, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       "img",
       {
         className: "cozy-nest-thumbnail",
@@ -8749,11 +8761,17 @@ function CozyImage(props) {
       ) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(CozyFullImageInfo, { image: props.image, closeModal: toggleModal, imgRef })
     ] })
-  ] });
+  ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "image image-placeholder" }) });
 }
+const _LAZY_LOAD_MARGIN = 300;
 function Browser(props) {
   const imagesRef = props.imagesRef;
+  const _me = reactExports.useRef(null);
   const [imagesLoaded, setImagesLoaded] = reactExports.useState([]);
+  const [viewPort, setViewPort] = reactExports.useState({
+    top: 0,
+    bottom: window.innerHeight + _LAZY_LOAD_MARGIN
+  });
   reactExports.useEffect(() => {
     setImagesLoaded([]);
   }, [imagesRef]);
@@ -8761,18 +8779,23 @@ function Browser(props) {
     setImagesLoaded(imagesRef.slice(0, 20));
   }
   const page = Math.floor(imagesLoaded.length / 20);
+  const scrollHandler = () => {
+    maybeLoadMore();
+    const _viewPort = {
+      top: _me.current.scrollTop - _LAZY_LOAD_MARGIN > 0 ? _me.current.scrollTop - _LAZY_LOAD_MARGIN : 0,
+      bottom: _me.current.scrollTop + _me.current.clientHeight + _LAZY_LOAD_MARGIN
+    };
+    setViewPort(_viewPort);
+  };
   const maybeLoadMore = () => {
     const loadMoreThreshold = document.getElementById("loadMoreThreshold");
     if (loadMoreThreshold.getBoundingClientRect().top < window.innerHeight) {
-      loadMore();
+      setImagesLoaded(imagesLoaded.concat(imagesRef.slice(page * 20, page * 20 + 20)));
     }
   };
-  const loadMore = () => {
-    setImagesLoaded(imagesLoaded.concat(imagesRef.slice(page * 20, page * 20 + 20)));
-  };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "browser nevysha nevysha-scrollable", onScroll: () => maybeLoadMore(), children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "browser nevysha nevysha-scrollable", onScroll: () => scrollHandler(), ref: _me, children: [
     imagesLoaded.map((image, index2) => {
-      return /* @__PURE__ */ jsxRuntimeExports.jsx(CozyImage, { image }, index2);
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(CozyImage, { index: index2, image, viewPort }, index2);
     }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { id: "loadMoreThreshold", className: "hackyOffPageElement" })
   ] });

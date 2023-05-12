@@ -43,6 +43,7 @@
     position: relative;
     width: 50%;
     overflow: hidden;
+    cursor: pointer;
 }
 .cozy-nest-thumbnail {
     position: absolute;
