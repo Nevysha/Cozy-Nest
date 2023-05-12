@@ -1,12 +1,10 @@
-import multiprocessing
-import sys
-
-import gradio as gr
-import os
 import json
+import os
 import subprocess
-
-from modules import scripts, script_callbacks, shared, sd_hijack
+import sys
+import gradio as gr
+import modules
+from modules import script_callbacks, shared, call_queue
 
 from scripts.cozynest_image_browser import start_server_in_dedicated_process
 
@@ -237,6 +235,24 @@ def on_ui_tabs():
                 fn=update,
                 inputs=[],
                 outputs=[], )
+
+            with gr.Row(elem_id='nevysha-send-to'):
+                html = gr.HTML()
+                generation_info = gr.Textbox(visible=False, elem_id="nevysha_pnginfo_generation_info")
+                html2 = gr.HTML()
+                image = gr.Image(elem_id="nevysha_pnginfo_image", label="Source", source="upload", interactive=True, type="pil")
+                image.change(
+                    fn=call_queue.wrap_gradio_call(modules.extras.run_pnginfo),
+                    inputs=[image],
+                    outputs=[html, generation_info, html2],
+                )
+                with gr.Row(elem_id='nevysha-send-to-button'):
+                    buttons = modules.generation_parameters_copypaste.create_buttons(["txt2img", "img2img", "inpaint", "extras"])
+
+                for tabname, button in buttons.items():
+                    modules.generation_parameters_copypaste.register_paste_params_button(modules.generation_parameters_copypaste.ParamBinding(
+                        paste_button=button, tabname=tabname, source_text_component=generation_info, source_image_component=image,
+                    ))
 
             # footer
             gr.HTML(value="<div class='nevysha settings-nevyui-bottom'>"

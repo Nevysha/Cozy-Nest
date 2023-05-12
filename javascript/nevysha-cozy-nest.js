@@ -1361,6 +1361,9 @@ const onLoad = (done) => {
   //add .nevysha-scrollable to each .extra-network-cards
   document.querySelectorAll('.extra-network-cards').forEach(elem => elem.setAttribute('class', `${elem.getAttribute('class')} nevysha nevysha-scrollable`))
   document.querySelector('#nevyui_sh_options_start_socket').setAttribute('style', 'display: none;')
+  //hide "send to" panel in settings
+  //this panel is used to transfert image data into tab
+  document.querySelector('#nevysha-send-to').setAttribute('style', 'display: none;')
 
   //create a wrapper div on the right for slidable panels
   createRightWrapperDiv();
@@ -1434,7 +1437,7 @@ const onLoad = (done) => {
       e.preventDefault()
 
       let imgFrom = document.querySelector("#cozy-img-browser-react > div.browser.nevysha.nevysha-scrollable > div:nth-child(1) > div.image-wrapper > img");
-      let inputTo = document.querySelector("#pnginfo_image > div.image-container.svelte-p3y7hu > div")
+      let inputTo = document.querySelector("#nevysha-send-to > #nevysha_pnginfo_image > div.image-container > div")
 
       //get image file from imgFrom.src
       const blob = await fetch(imgFrom.src).then(r => r.blob());
@@ -1450,6 +1453,11 @@ const onLoad = (done) => {
 
       // Dispatch the drop event on the target element
       inputTo.dispatchEvent(dropEvent);
+
+      //wait a bit and click #nevysha-send-to-button > button#txt2img_tab
+      setTimeout(() => {
+        document.querySelector("#nevysha-send-to-button > button#txt2img_tab").click()
+      }, 1000)
     })
   }, 5000)
 
