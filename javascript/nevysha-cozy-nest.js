@@ -1460,8 +1460,7 @@ const onLoad = (done) => {
   makeSettingsDraggable();
 
   //load /assets/index-eff6a2cc.js
-  // loadCozyNestImageBrowserSubmodule();
-  loadCozyNestImageBrowserSubmoduleIframe()
+  loadCozyNestImageBrowserSubmodule();
 
   done();
 };
@@ -1476,16 +1475,6 @@ async function loadCozyNestImageBrowserSubmodule() {
     // handle any errors that occur during the import process
     console.error("Failed to load cozy-nest-image-browser submodule", err);
   }
-}
-
-async function loadCozyNestImageBrowserSubmoduleIframe() {
-  const html = await fetch('file=extensions/Cozy-Nest/cozy-nest-image-browser/index.html').then(res => res.text());
-
-  const iframe = document.createElement('iframe')
-  iframe.src = 'cozy-nest-image-browser/static/index.html'
-  iframe.style = `width: 100%;height:100vh`
-
-  document.querySelector('#cozy-img-browser-react').appendChild(iframe)
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
