@@ -1226,6 +1226,11 @@ function createRightWrapperDiv() {
   // Create a vertical line component
   const lineWrapper = createVerticalLineComp();
   const cozyImgBrowserPanelWrapper = document.querySelector('#cozy_img_browser_panel');
+  //set cozyImgBrowserPanelWrapper.style.width from local storage value if it exists
+  const cozyImgBrowserPanelWidth = localStorage.getItem('cozyImgBrowserPanelWrapper');
+  if (cozyImgBrowserPanelWidth) {
+    cozyImgBrowserPanelWrapper.style.width = cozyImgBrowserPanelWidth;
+  }
   cozyImgBrowserPanelWrapper.appendChild(lineWrapper)
 
   //TODO refactor to factorise code bellow with extraNetwork
@@ -1306,7 +1311,6 @@ function setButtonVisibilityFromCurrentTab(id) {
   if (id === 'tab_img2img') {
     document.querySelector('button#img2img_extra_networks_right_button').style.display = 'flex';
   }
-
 }
 
 const onLoad = (done) => {
@@ -1412,6 +1416,42 @@ const onLoad = (done) => {
 
   //load /assets/index-eff6a2cc.js
   loadCozyNestImageBrowserSubmodule();
+
+  //testing gradio hacky way to load load image
+  setTimeout(() => {
+    console.log('ready')
+
+    class FakeDataTransfer {
+      constructor(imgFromBlob) {
+        this.files = [imgFromBlob];
+      }
+    }
+
+    const btnSendTo = document.querySelector("#cozy-img-browser-react > div.browser.nevysha.nevysha-scrollable > div:nth-child(1) > div.image-info > div > button:nth-child(1)")
+    btnSendTo.addEventListener("click", async (e) => {
+
+      e.stopPropagation()
+      e.preventDefault()
+
+      let imgFrom = document.querySelector("#cozy-img-browser-react > div.browser.nevysha.nevysha-scrollable > div:nth-child(1) > div.image-wrapper > img");
+      let inputTo = document.querySelector("#pnginfo_image > div.image-container.svelte-p3y7hu > div")
+
+      //get image file from imgFrom.src
+      const blob = await fetch(imgFrom.src).then(r => r.blob());
+
+      // Create a new drop event
+      let dropEvent = new DragEvent("drop", {
+        bubbles: true,
+        cancelable: true,
+      });
+      Object.defineProperty(dropEvent, 'dataTransfer', {
+        value: new FakeDataTransfer(blob)
+      });
+
+      // Dispatch the drop event on the target element
+      inputTo.dispatchEvent(dropEvent);
+    })
+  }, 5000)
 
 
   done();
