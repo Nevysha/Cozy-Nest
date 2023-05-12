@@ -8918,7 +8918,7 @@ function App() {
         "textarea",
         {
           "data-testid": "textbox",
-          placeholder: "",
+          placeholder: "Search anything : Prompt, Size, Model, ...",
           rows: "1",
           spellCheck: "false",
           "data-gramm": "false",

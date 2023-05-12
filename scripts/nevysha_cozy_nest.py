@@ -1,10 +1,11 @@
 import json
 import os
+import socket
 import subprocess
 import sys
 import gradio as gr
 import modules
-from modules import script_callbacks, shared, call_queue
+from modules import script_callbacks, shared, call_queue, scripts
 
 from scripts.cozynest_image_browser import start_server_in_dedicated_process
 
@@ -107,12 +108,36 @@ def update():
     print(output.decode('utf-8'))
 
 
-def serv_img_browser_socket():
-    # TODO check if the server is already running by checking if port is free
-    server_port = 3333
+def is_port_free(port):
+    # Create a socket object
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        # Try to bind the socket to the specified port
+        sock.bind(("localhost", port))
+        return True
+    except socket.error:
+        return False
+    finally:
+        # Close the socket
+        sock.close()
+
+
+def serv_img_browser_socket(server_port=3333):
+    # check if port is free
+    if not is_port_free(server_port):
+        print(f"CozyNest: Port {server_port} is already in use. Aborting.")
+        return
+
+    outdir_txt2img_samples = shared.opts.data['outdir_txt2img_samples']
+    outdir_img2img_samples = shared.opts.data['outdir_img2img_samples']
+    outdir_extras_samples = shared.opts.data['outdir_extras_samples']
+
+    base_dir = scripts.basedir()
+
     images_folders = [
-        'D:\\stable-diffusion\\stable-diffusion-webui\\outputs\\img2img-images',
-        'D:\\stable-diffusion\\stable-diffusion-webui\\outputs\\txt2img-images'
+        os.path.normpath(os.path.join(base_dir, outdir_txt2img_samples)),
+        os.path.normpath(os.path.join(base_dir, outdir_img2img_samples)),
+        os.path.normpath(os.path.join(base_dir, outdir_extras_samples))
     ]
 
     try:
@@ -127,6 +152,11 @@ def serv_img_browser_socket():
 
 
 def on_ui_tabs():
+    # shared options
+    config = get_dict_from_config()
+    # merge default settings with user settings
+    config = {**get_default_settings(), **config}
+
     with gr.Blocks(analytics_enabled=False) as ui:
 
         # TODO add settings (maybe in a tab) for the image browser
@@ -134,11 +164,9 @@ def on_ui_tabs():
         #  - chose folders to scrap (may be multiple)
         #  - chose if the server should be started automatically
 
+        serv_img_browser_socket()
+
         with gr.Column(elem_id="nevyui-ui-block"):
-            # shared options
-            config = get_dict_from_config()
-            # merge default settings with user settings
-            config = {**get_default_settings(), **config}
 
             # check if user is on the old repo name and display a warning
             if EXTENSION_TECHNICAL_NAME != 'Cozy-Nest':
@@ -223,14 +251,14 @@ def on_ui_tabs():
 
                 # start socket server
                 btn_start = gr.Button(value="Start Socket Server", elem_id="nevyui_sh_options_start_socket",
-                                        elem_classes="nevyui_apply_settings")
+                                      elem_classes="nevyui_apply_settings")
                 btn_start.click(
                     fn=serv_img_browser_socket,
                     inputs=[],
                     outputs=[], )
 
             # add button to trigger git pull
-            btn_update = gr.Button(value="Update", elem_id="nevyui_sh_options_update", visible=False,)
+            btn_update = gr.Button(value="Update", elem_id="nevyui_sh_options_update", visible=False, )
             btn_update.click(
                 fn=update,
                 inputs=[],
@@ -240,19 +268,23 @@ def on_ui_tabs():
                 html = gr.HTML()
                 generation_info = gr.Textbox(visible=False, elem_id="nevysha_pnginfo_generation_info")
                 html2 = gr.HTML()
-                image = gr.Image(elem_id="nevysha_pnginfo_image", label="Source", source="upload", interactive=True, type="pil")
+                image = gr.Image(elem_id="nevysha_pnginfo_image", label="Source", source="upload", interactive=True,
+                                 type="pil")
                 image.change(
                     fn=call_queue.wrap_gradio_call(modules.extras.run_pnginfo),
                     inputs=[image],
                     outputs=[html, generation_info, html2],
                 )
                 with gr.Row(elem_id='nevysha-send-to-button'):
-                    buttons = modules.generation_parameters_copypaste.create_buttons(["txt2img", "img2img", "inpaint", "extras"])
+                    buttons = modules.generation_parameters_copypaste.create_buttons(
+                        ["txt2img", "img2img", "inpaint", "extras"])
 
                 for tabname, button in buttons.items():
-                    modules.generation_parameters_copypaste.register_paste_params_button(modules.generation_parameters_copypaste.ParamBinding(
-                        paste_button=button, tabname=tabname, source_text_component=generation_info, source_image_component=image,
-                    ))
+                    modules.generation_parameters_copypaste.register_paste_params_button(
+                        modules.generation_parameters_copypaste.ParamBinding(
+                            paste_button=button, tabname=tabname, source_text_component=generation_info,
+                            source_image_component=image,
+                        ))
 
             # footer
             gr.HTML(value="<div class='nevysha settings-nevyui-bottom'>"
