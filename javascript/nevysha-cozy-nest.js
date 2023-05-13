@@ -1691,8 +1691,12 @@ function setupErrorHandling() {
 
   //set a global error handler
   window.addEventListener('error', function ({message, filename , lineno, colno, error }) {
+
+    // get setting_nevyui_errorPopup checkbox value
+    const errorPopup = document.querySelector('#setting_nevyui_errorPopup').checked;
+    if (!errorPopup) return;
+
     // Handle the error here
-    console.error('An error occurred:', message, 'at', filename , 'line', lineno, 'column', colno, 'error', error);
     populateInstanceInfoDialog();
     document.querySelector('#cozy_nest_error_handling_display').innerHTML = `An error occurred: ${message} at ${filename } line ${lineno} column ${colno}`;
     document.querySelector('#cozy_nest_error_handling_display_stack').innerHTML = error.stack;

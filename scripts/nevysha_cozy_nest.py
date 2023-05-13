@@ -43,7 +43,8 @@ def gradio_save_settings(main_menu_position,
                          bg_gradiant_color,
                          accent_color,
                          card_height,
-                         card_width):
+                         card_width,
+                         error_popup):
     settings = {
         'main_menu_position': main_menu_position,
         'quicksettings_position': quicksettings_position,
@@ -54,6 +55,7 @@ def gradio_save_settings(main_menu_position,
         'accent_color': accent_color,
         'card_height': card_height,
         'card_width': card_width,
+        'error_popup': error_popup,
     }
 
     save_settings(settings)
@@ -92,6 +94,7 @@ def get_default_settings():
         'accent_color': rgb_to_hex(92, 175, 214),
         'card_height': '8',
         'card_width': '13',
+        'error_popup': True,
     }
 
 
@@ -242,6 +245,10 @@ def on_ui_tabs():
                           " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
                           "<p class='nevysha-emphasis'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
 
+            # error popup checkbox
+            error_popup = gr.Checkbox(value=config.get('error_popup'), label="Display information dialog on Cozy Nest error", elem_id="setting_nevyui_errorPopup", interactive=True)
+
+
             # main menu
             main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position",
                                           choices=['left', 'top', 'top_centered'],
@@ -291,7 +298,8 @@ def on_ui_tabs():
                     bg_gradiant_color,
                     accent_color,
                     card_height,
-                    card_width
+                    card_width,
+                    error_popup
                 ], outputs=[])
 
                 btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)",
