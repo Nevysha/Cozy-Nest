@@ -71,6 +71,7 @@ def save_settings(settings):
 
 def get_dict_from_config():
     if not os.path.exists(CONFIG_FILENAME):
+        reset_settings()
         # return default config
         return get_default_settings()
 
@@ -127,10 +128,8 @@ def is_port_free(port):
         # Close the socket
         sock.close()
 
-_server_port = 3333
 
 def serv_img_browser_socket(server_port=3333, auto_search_port=True):
-
     # check if port is free
     if auto_search_port:
         # search for a free port
@@ -152,8 +151,6 @@ def serv_img_browser_socket(server_port=3333, auto_search_port=True):
     if not os.path.isabs(outdir_extras_samples):
         outdir_extras_samples = os.path.normpath(os.path.join(base_dir, outdir_extras_samples))
 
-
-
     images_folders = [
         outdir_txt2img_samples,
         outdir_img2img_samples,
@@ -166,7 +163,7 @@ def serv_img_browser_socket(server_port=3333, auto_search_port=True):
         sys.path.append(parent_dir)
         # start the server in a separate process
         start_server_in_dedicated_process(images_folders, server_port)
-        _server_port = server_port
+        return server_port
     except Exception as e:
         print("CozyNest: Error while starting socket server")
         print(e)
@@ -181,47 +178,44 @@ def start_server_in_dedicated_process(_images_folders, server_port):
     server_thread.start()
 
 
-async def send_to_socket(data):
-    async with websockets.connect('ws://localhost:3333') as websocket:
-        try:
-            while True:
-                # Send data to the server
-                data = json.dumps(data).encode('utf-8')
-                await websocket.send(data)
-
-                # Receive response from the server
-                await websocket.recv()
-                websocket.close()
-                break
-
-        except websockets.exceptions.ConnectionClosed:
-            print("Connection to socket closed")
-
-
-def on_image_saved(gen_params: script_callbacks.ImageSaveParams):
-    base_dir = scripts.basedir()
-
-    if not os.path.isabs(gen_params.filename):
-        path = os.path.normpath(os.path.join(base_dir, gen_params.filename))
-    else:
-        path = gen_params.filename
-
-    asyncio.run(send_to_socket({
-        'what': 'image_saved',
-        'data': get_exif(path),
-    }))
-
-
-script_callbacks.on_image_saved(on_image_saved)
-
-
 def on_ui_tabs():
     # shared options
     config = get_dict_from_config()
     # merge default settings with user settings
     config = {**get_default_settings(), **config}
 
-    serv_img_browser_socket()
+    server_port = serv_img_browser_socket()
+
+    async def send_to_socket(data):
+        async with websockets.connect(f'ws://localhost:{server_port}') as websocket:
+            try:
+                while True:
+                    # Send data to the server
+                    data = json.dumps(data).encode('utf-8')
+                    await websocket.send(data)
+
+                    # Receive response from the server
+                    await websocket.recv()
+                    websocket.close()
+                    break
+
+            except websockets.exceptions.ConnectionClosed:
+                print("Connection to socket closed")
+
+    def on_image_saved(gen_params: script_callbacks.ImageSaveParams):
+        base_dir = scripts.basedir()
+
+        if not os.path.isabs(gen_params.filename):
+            path = os.path.normpath(os.path.join(base_dir, gen_params.filename))
+        else:
+            path = gen_params.filename
+
+        asyncio.run(send_to_socket({
+            'what': 'image_saved',
+            'data': get_exif(path),
+        }))
+
+    script_callbacks.on_image_saved(on_image_saved)
 
     with gr.Blocks(analytics_enabled=False) as ui:
 
@@ -328,6 +322,10 @@ def on_ui_tabs():
                 fn=update,
                 inputs=[],
                 outputs=[], )
+
+            # text with port number
+            gr.Textbox(elem_id='cnib_socket_server_port', value=f"{server_port}", label="Server port READONLY",
+                       readonly=True, visible=False)
 
             with gr.Row(elem_id='nevysha-send-to'):
                 html = gr.HTML()

@@ -8823,8 +8823,16 @@ function Row(props) {
 function Column(props) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-column", children: props.children });
 }
+const serverPort = (() => {
+  try {
+    return document.querySelector("#cnib_socket_server_port > label > textarea").value;
+  } catch (e) {
+    console.warn("cnib_socket_server_port not found in main gradio app");
+    return 3333;
+  }
+})();
 function App() {
-  const [socketUrl, setSocketUrl] = reactExports.useState("ws://localhost:3333");
+  const [socketUrl, setSocketUrl] = reactExports.useState(`ws://localhost:${serverPort}`);
   const [messageHistory, setMessageHistory] = reactExports.useState([]);
   const [images, setImages] = reactExports.useState([]);
   const [filteredImages, setFilteredImages] = reactExports.useState([]);
