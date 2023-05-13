@@ -624,6 +624,8 @@ async function loadVersionData() {
     document.querySelector('#nevysha-version-info').insertAdjacentHTML('afterbegin', p)
     //hide update button
     document.querySelector('#nevyui_update_btn').style.display = "none";
+    //add version info to the bottom-right corner (no update available)
+    document.getElementsByClassName("versions")[0].innerHTML += '⠀•⠀Cozy Nest: <a href="https://github.com/Nevysha/Cozy-Nest" target="_blank">⠀v' + current_version_data.version + '</a>';
   }
   else {
     //local version is older than remote version
@@ -633,6 +635,9 @@ async function loadVersionData() {
 
     //set fill color of .nevysha-btn-menu-wrapper > button > svg to red
     document.querySelector('#nevyui_update_info > svg').style.fill = "red";
+	
+    //add version info to the bottom-right corner with a notice about an update
+    document.getElementsByClassName("versions")[0].innerHTML += '⠀•⠀Cozy Nest:⠀<span style="color: #f9e02d; text-decoration: underline;" title="Nevysha\'s Cozy Nest Update Available! Latest version: v' + remote_version_data.version + '.\nView update info in the top-right corner for more details.">v' + current_version_data.version + '</span>';
   }
 
 }
