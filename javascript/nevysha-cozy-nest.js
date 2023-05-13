@@ -825,9 +825,6 @@ function tweakExtraNetworks({prefix}) {
       let shown = extraNetworkGradioWrapper.style.display === 'flex';
       if (!shown) {
 
-        //TODO remove
-        throw new Error('testing error handling')
-
         //I'm lazy
         document.querySelector(`#${prefix}_textual_inversion_cards`).style.height
             = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
