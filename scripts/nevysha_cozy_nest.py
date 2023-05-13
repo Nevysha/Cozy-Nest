@@ -9,9 +9,11 @@ import threading
 import gradio as gr
 import modules
 import websockets
+from PIL import Image
+from PIL.ExifTags import TAGS
 from modules import script_callbacks, shared, call_queue, scripts
 
-from scripts.cozynest_image_browser import start_server
+from scripts.cozynest_image_browser import start_server, get_exif
 
 
 def rgb_to_hex(r, g, b):
@@ -188,12 +190,13 @@ async def send_to_socket(data):
 
 
 def on_image_saved(gen_params: script_callbacks.ImageSaveParams):
+    base_dir = scripts.basedir()
+    path = os.path.normpath(os.path.join(base_dir, gen_params.filename))
+
     asyncio.run(send_to_socket({
         'what': 'image_saved',
-        'data': {
-            'filename': gen_params.filename,
-            'pnginfo': gen_params.pnginfo,
-        }}))
+        'data': get_exif(path),
+    }))
 
 
 script_callbacks.on_image_saved(on_image_saved)

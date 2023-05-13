@@ -8868,6 +8868,9 @@ function App() {
         }
         setImages(data.images);
       }
+      if (data.what === "dispatch_on_image_saved") {
+        setImages((prev) => [data.data, ...prev]);
+      }
       setMessageHistory((prev) => prev.concat(lastMessage));
     }
   }, [lastMessage, setMessageHistory]);

@@ -11,6 +11,27 @@ import websockets
 from websockets.server import serve
 
 
+def get_exif(path):
+    exif = {}
+    try:
+        image = Image.open(path)
+        info = image.info
+        for tag, value in info.items():
+            decoded = TAGS.get(tag, tag)
+            exif[decoded] = value
+    except Exception as e:
+        print(f"CozyNestSocket: Error while getting exif data: {e}")
+        pass
+    img = {
+        'path': path,
+        'metadata': {
+            'date': os.path.getmtime(path),
+            'exif': exif
+        }
+    }
+    return img
+
+
 async def start_server(images_folders, server_port):
     print(f"CozyNestSocket: Starting socket server on localhost:{server_port}...")
 
@@ -46,26 +67,9 @@ async def start_server(images_folders, server_port):
                 for root, dirs, files in os.walk(images_folder):
                     for file in files:
                         if file.endswith(".png"):
-
                             # get exif data
-                            exif = {}
-                            try:
-                                image = Image.open(os.path.join(root, file))
-                                info = image.info
-                                for tag, value in info.items():
-                                    decoded = TAGS.get(tag, tag)
-                                    exif[decoded] = value
-                            except Exception as e:
-                                print(f"CozyNestSocket: Error while getting exif data: {e}")
-                                pass
-
-                            images.append({
-                                'path': os.path.join(root, file),
-                                'metadata': {
-                                    'date': os.path.getmtime(os.path.join(root, file)),
-                                    'exif': exif
-                                }
-                            })
+                            img = get_exif(os.path.join(root, file))
+                            images.append(img)
 
             # sort the images by date (newest first) metadata.date
             images.sort(key=lambda x: x['metadata']['date'], reverse=True)
