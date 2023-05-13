@@ -831,12 +831,19 @@ function tweakExtraNetworks({prefix}) {
       if (!shown) {
 
         //I'm lazy
-        document.querySelector(`#${prefix}_textual_inversion_cards`).style.height
-            = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
-        document.querySelector(`#${prefix}_hypernetworks_cards`).style.height
-            = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
-        document.querySelector(`#${prefix}_checkpoints_cards`).style.height
-            = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
+        function safeMe(func) {
+            try {
+                func();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        safeMe(
+            () => document.querySelector(`#${prefix}_textual_inversion_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`);
+        safeMe(
+            () => document.querySelector(`#${prefix}_hypernetworks_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`);
+        safeMe(
+            () => document.querySelector(`#${prefix}_checkpoints_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`);
 
         // Lora folder list is loaded async? Can't get its offsetHeight normally.
         // Using a MutationObserver to wait for it to be loaded (and because I suck at CSS)
