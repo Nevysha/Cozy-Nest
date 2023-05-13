@@ -8,7 +8,7 @@ parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
 
-from scripts.cozynest_image_browser import start_server, stop_server, start_server_in_dedicated_process
+from scripts.cozynest_image_browser import start_server, start_server_in_dedicated_process
 
 # call start_server()
 
@@ -30,10 +30,5 @@ if __name__ == '__main__':
     # start_server(images_folders, port)
     start_server_in_dedicated_process(images_folders, port)
 
-    # close the server on keyboard interrupt
-    try:
-        while True:
-            pass
-    except KeyboardInterrupt:
-        stop_server()
-        exit()
+    while True:
+        pass

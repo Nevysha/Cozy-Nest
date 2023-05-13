@@ -8829,6 +8829,7 @@ function App() {
   const [images, setImages] = reactExports.useState([]);
   const [filteredImages, setFilteredImages] = reactExports.useState([]);
   const [searchStr, setSearchStr] = reactExports.useState("");
+  const [emptyFetch, setEmptyFetch] = reactExports.useState(false);
   const { sendMessage, lastMessage, readyState, getWebSocket } = useWebSocket(
     socketUrl,
     {
@@ -8859,13 +8860,18 @@ function App() {
   reactExports.useEffect(() => {
     if (lastMessage !== null) {
       const data = JSON.parse(lastMessage.data);
-      if (data.what === "images")
+      if (data.what === "images") {
+        if (data.images.length === 0) {
+          console.warn("Received empty images array from socket");
+          setEmptyFetch(true);
+        }
         setImages(data.images);
+      }
       setMessageHistory((prev) => prev.concat(lastMessage));
     }
   }, [lastMessage, setMessageHistory]);
   reactExports.useEffect(() => {
-    if (images.length === 0 && readyState === dist.ReadyState.OPEN) {
+    if (images.length === 0 && readyState === dist.ReadyState.OPEN && !emptyFetch) {
       askForImages();
     } else {
       setFilteredImages(images);

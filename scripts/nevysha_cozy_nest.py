@@ -1,13 +1,16 @@
+import asyncio
 import json
 import os
 import socket
 import subprocess
 import sys
+import threading
+
 import gradio as gr
 import modules
 from modules import script_callbacks, shared, call_queue, scripts
 
-from scripts.cozynest_image_browser import start_server_in_dedicated_process
+from scripts.cozynest_image_browser import start_server
 
 
 def rgb_to_hex(r, g, b):
@@ -121,6 +124,7 @@ def is_port_free(port):
         # Close the socket
         sock.close()
 
+_server_port = 3333
 
 def serv_img_browser_socket(server_port=3333, auto_search_port=True):
 
@@ -149,10 +153,41 @@ def serv_img_browser_socket(server_port=3333, auto_search_port=True):
         # add the CozyNest extension to the sys.path.
         sys.path.append(parent_dir)
         # start the server in a separate process
-        start_server_in_dedicated_process(images_folders, server_port, True)
+        start_server_in_dedicated_process(images_folders, server_port)
+        _server_port = server_port
     except Exception as e:
         print("CozyNest: Error while starting socket server")
         print(e)
+
+
+def start_server_in_dedicated_process(_images_folders, server_port):
+    def run_server():
+        asyncio.run(start_server(_images_folders, server_port))
+
+    # Start the server in a separate thread
+    server_thread = threading.Thread(target=run_server)
+    server_thread.start()
+
+
+def on_image_saved(gen_params: script_callbacks.ImageSaveParams):
+    print(f"CozyNest: on_image_saved{gen_params}")
+
+    # send a message to the socket server to notify that a new image has been saved
+    # create a socket object
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # connect to the server
+    sock.connect(("localhost", _server_port))
+    # Send data to server
+    sock.send(json.dumps({
+        'what': 'image_saved',
+        'data': {
+            'filename': gen_params.filename,
+            'pnginfo': gen_params.pnginfo,
+        }
+    }).encode('utf-8'))
+
+
+script_callbacks.on_image_saved(on_image_saved)
 
 
 def on_ui_tabs():
