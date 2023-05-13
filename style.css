@@ -1403,6 +1403,67 @@ canvas.nevysha {
     background-color: var(--background-fill-primary) !important;
 }
 
+:root {
+    --error-handler-white: #eeeeee;
+}
+#dialog-message {
+    font-size: 12px;
+}
+.ui-dialog-title {
+    color: var(--error-handler-white);
+}
+#cozy_nest_error_handling_display {
+    color: var(--error-handler-white);
+}
+#cozy_nest_error_handling_display_stack {
+    color: red;
+    font-weight: bold;
+    font-family: monospace;
+    white-space: pre-wrap;
+    background-color: #222222;
+    padding: 25px;
+    border-radius: 3px;
+    border-color: red;
+}
+#cozynest-error-extentions > table > tbody > tr > td > a {
+    color: var(--error-handler-white);
+    font-style: italic;
+}
+#dialog-message > fieldset {
+    color: var(--error-handler-white);
+    margin-bottom: 40px;
+}
+#cozynest-error-instance-info > a {
+    color: cyan !important;
+    text-decoration: underline;
+    font-weight: bold;
+}
+.cozynest-error-tips {
+    font-weight: bold;
+    color: var(--error-handler-white);
+}
+.cozynest-error-tips > a {
+    color: cyan;
+    text-decoration: underline;
+    font-weight: bold;
+}
+.ui-dialog {
+    background-color: #101010;
+    border: none;
+}
+.ui-dialog-titlebar, .ui-dialog-buttonpane {
+    background-color: black;
+    border: none;
+    color: var(--error-handler-white);
+}
+.ui-button {
+    background-color: #222222;
+    border: none;
+    color: var(--error-handler-white);
+}
+.ui-button:hover, .ui-widget.ui-widget-content {
+    border: none;
+}
 
 /*Small Cards*/
 

@@ -825,6 +825,9 @@ function tweakExtraNetworks({prefix}) {
       let shown = extraNetworkGradioWrapper.style.display === 'flex';
       if (!shown) {
 
+        //TODO remove
+        throw new Error('testing error handling')
+
         //I'm lazy
         document.querySelector(`#${prefix}_textual_inversion_cards`).style.height
             = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
@@ -1467,7 +1470,7 @@ const onLoad = (done) => {
 
 async function loadCozyNestImageBrowserSubmodule() {
   try {
-    const jsModule = await fetch('file=extensions/Cozy-Nest/cozy-nest-image-browser/assets/index.js');
+    const jsModule = await fetch(`file=extensions/Cozy-Nest/cozy-nest-image-browser/assets/index.js?t=${Date.now()}`);
     eval(await jsModule.text());
     console.log("cozy-nest-image-browser submodule loaded successfully");
   }
@@ -1475,6 +1478,61 @@ async function loadCozyNestImageBrowserSubmodule() {
     // handle any errors that occur during the import process
     console.error("Failed to load cozy-nest-image-browser submodule", err);
   }
+}
+
+function setupErrorHandling() {
+  const dialogHtml =
+    `
+    <div id="dialog-message" title="🥺 Woops - Cozy Nest Error" style="display:none;">
+      <p class="cozynest-error-tips">Want to report an issue ? Screenshot me and post me on <a href="https://github.com/Nevysha/Cozy-Nest">Github</a></p>
+      <fieldset>
+        <legend>Instance info</legend>
+        <div class="versions cozyerror" id="cozynest-error-instance-info"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Extensions</legend>
+        <div class="cozyerror" id="cozynest-error-extentions"></div>
+      </fieldset>
+      <div id="cozy_nest_error_handling_display"></div>
+      <div id="cozy_nest_error_handling_display_stack" /></div>
+    </div>
+    `
+  document.querySelector('body').insertAdjacentHTML('beforeend', dialogHtml);
+
+  //set a global error handler
+  window.addEventListener('error', function ({message, filename , lineno, colno, error }) {
+    // Handle the error here
+    console.error('An error occurred:', message, 'at', filename , 'line', lineno, 'column', colno, 'error', error);
+    document.querySelector('#cozy_nest_error_handling_display').innerHTML = `An error occurred: ${message} at ${filename } line ${lineno} column ${colno}`;
+    document.querySelector('#cozynest-error-instance-info').innerHTML = document.querySelector('.versions').innerHTML
+        //add browser info
+        + `<br><br>Browser: <span>${navigator.userAgent}</span>`
+        //add window size
+        + `<br><br>Window size: <span>${window.innerWidth}x${window.innerHeight}</span>`
+    document.querySelector('#cozynest-error-extentions').innerHTML = document.querySelector('#tabs_extensions').querySelector('#extensions').parentElement.innerHTML;
+    //for each tab row, check the first td input and hide the row if it's not checked
+    document.querySelector('#cozynest-error-extentions > table').querySelectorAll('tr').forEach(row => {
+      if (!row.querySelector('td')) return;
+        if (!row.querySelector('td').querySelector('label > input').checked) {
+          row.setAttribute('style', 'display: none;')
+        }
+        //disable input
+        else {
+          row.querySelector('td').querySelector('label > input').setAttribute('disabled', 'disabled')
+        }
+    })
+    document.querySelector('#cozy_nest_error_handling_display_stack').innerHTML = error.stack;
+    $("#dialog-message").dialog({
+      modal: true,
+      width: window.innerWidth - 100,
+      height: window.innerHeight - 100,
+      buttons: {
+        Ok: function () {
+          $(this).dialog("close");
+        }
+      }
+    });
+  });
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
@@ -1579,6 +1637,19 @@ document.addEventListener("DOMContentLoaded", async function() {
     console.error("Failed to load jQuery library", err);
   }
 
+  try {
+    await jsDynamicLoad('file=extensions/Cozy-Nest/assets/jquery-ui.min.js');
+    // jquery-ui is now loaded and ready to use
+    console.log("jquery-ui library loaded successfully");
+  }
+  catch (err) {
+    // handle any errors that occur during the import process
+    console.error("Failed to load jquery-ui library", err);
+  }
+
+
+  setupErrorHandling();
+
   // load showdown library
   $.getScript("file=extensions/Cozy-Nest/assets/showdown-1.9.1.min.js", function() {
     console.log("showdown library loaded successfully");
@@ -1670,7 +1741,7 @@ class SimpleTimer {
 let COZY_NEST_CONFIG;
 
 async function fetchCozyNestConfig() {
-  const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?${Date.now()}`);  if (response.ok) {
+  const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?t=${Date.now()}`);  if (response.ok) {
     COZY_NEST_CONFIG = await response.json();
     //save in local storage
     localStorage.setItem('COZY_NEST_CONFIG', JSON.stringify(COZY_NEST_CONFIG));
@@ -1703,10 +1774,19 @@ async function fetchCozyNestConfig() {
   const cozyNestImageBrowserLink = document.createElement('link');
   cozyNestImageBrowserLink.rel = 'stylesheet';
   cozyNestImageBrowserLink.type = 'text/css';
-  cozyNestImageBrowserLink.href = 'file=extensions/Cozy-Nest/cozy-nest-image-browser/assets/index.css';
+  cozyNestImageBrowserLink.href = `file=extensions/Cozy-Nest/cozy-nest-image-browser/assets/index.css?t=${Date.now()}`;
 
   // Append the link element to the document head
   document.head.appendChild(cozyNestImageBrowserLink);
+
+  // JQuery UI link
+  const jqueryUiLink = document.createElement('link');
+  jqueryUiLink.rel = 'stylesheet';
+  jqueryUiLink.type = 'text/css';
+  jqueryUiLink.href = `file=extensions/Cozy-Nest/assets/jquery-ui.css?t=${Date.now()}`;
+
+  // Append the link element to the document head
+  document.head.appendChild(jqueryUiLink);
 
   // fetch file=extensions/Cozy-Nest/nevyui_settings.json. add Date to avoid cache
   await fetchCozyNestConfig();
