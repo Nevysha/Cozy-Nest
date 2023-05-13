@@ -5,16 +5,17 @@
     - [x]  Clean memory for image not visible (unload them / replace with dummy div) clean filteredImages and loadedImage Array
     - [x]  manage new image generated
     - [x]  Automatically get image output folder (without grid folder)
+    - [x]  Drag and drop image
 
 ## Issues fixed
 
 - [x]  Laggy Extra Network tab opening (still a bit laggy, but better)
-- 
+- [x]  crash when loading without setting file saved
+- [x] Fix Drag and drop image
 
 ## Known Issue
 
 - [ ]  Partial compatibility with Firefox and Opera GX
 - [ ]  Most tweak will not support a live window resize
 - [ ]  Some user report a missing scrollbar in Extra network tab
-- [ ]  Some user report an issue when having to many script "block" in txt2img or img2img
-- [ ]  If setting are saved and user refresh, it will revert to old setting (only visually) because webui load them at gradio launch]
+- [ ]  Some user report an crash when attempting to open Extra Network tab

@@ -8915,7 +8915,10 @@ function App() {
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Column, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "Cozy Nest Image Browser" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "cnib-title", children: [
+        "Cozy Nest Image Browser ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "beta-emphasis", children: "beta" })
+      ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(Row, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
           "The WebSocket is currently ",

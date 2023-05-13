@@ -112,6 +112,21 @@ textarea {
     padding: 8px;
 }
 
+.cnib-title {
+    margin-bottom: 10px;
+}
+
+.beta-emphasis {
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: bold;
+    /* margin-bottom: 6px; */
+    position: absolute;
+    color: #e32f4e;
+    /* left: 5px; */
+    top: 5px;
+}
+
 /*img {*/
 /*    filter: blur(20px);*/
 /*}*/
