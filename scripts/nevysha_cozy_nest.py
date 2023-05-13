@@ -144,11 +144,20 @@ def serv_img_browser_socket(server_port=3333, auto_search_port=True):
     outdir_extras_samples = shared.opts.data['outdir_extras_samples']
 
     base_dir = scripts.basedir()
+    # check if outdir_txt2img_samples is a relative path
+    if not os.path.isabs(outdir_txt2img_samples):
+        outdir_txt2img_samples = os.path.normpath(os.path.join(base_dir, outdir_txt2img_samples))
+    if not os.path.isabs(outdir_img2img_samples):
+        outdir_img2img_samples = os.path.normpath(os.path.join(base_dir, outdir_img2img_samples))
+    if not os.path.isabs(outdir_extras_samples):
+        outdir_extras_samples = os.path.normpath(os.path.join(base_dir, outdir_extras_samples))
+
+
 
     images_folders = [
-        os.path.normpath(os.path.join(base_dir, outdir_txt2img_samples)),
-        os.path.normpath(os.path.join(base_dir, outdir_img2img_samples)),
-        os.path.normpath(os.path.join(base_dir, outdir_extras_samples))
+        outdir_txt2img_samples,
+        outdir_img2img_samples,
+        outdir_extras_samples,
     ]
 
     try:
@@ -191,7 +200,11 @@ async def send_to_socket(data):
 
 def on_image_saved(gen_params: script_callbacks.ImageSaveParams):
     base_dir = scripts.basedir()
-    path = os.path.normpath(os.path.join(base_dir, gen_params.filename))
+
+    if not os.path.isabs(gen_params.filename):
+        path = os.path.normpath(os.path.join(base_dir, gen_params.filename))
+    else:
+        path = gen_params.filename
 
     asyncio.run(send_to_socket({
         'what': 'image_saved',
