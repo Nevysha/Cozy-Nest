@@ -17,6 +17,7 @@ Tested in Chrome, should work in Firefox with minor bug. I plan to fix it later.
 User reported that it works on Vlad's fork of sd-webui, although I haven't tested it myself.
 
 Features:
+- [x]  Fully integrated Image Browser
 - [x]  Resizable panels
 - [x]  Full Screen Inpainting
 - [x]  Customizable tab menu position (top, left, centered)

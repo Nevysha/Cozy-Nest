@@ -1,27 +1,15 @@
-## Minor changes in 1.2.3
-- [x]  Fix selected image border color when generating multiple images
-- [x]  Fix right arrow hidden by "Extra Network" button in full screen img view
-- [x]  Add external lib into the Cozy Nest extension folder
-- [x]  Fix download image link not visible
-- [x]  Hide the 'x' button on fullscreen inpainting
-- [x]  Fix background color of preview
-- [x]  Fix for Kryptortio/SDAtom-WebUi-client-queue-ext extension
+## New features in 2.0.0
 
-## New features in 1.2.0
-
-- [x]  Bypass Cozy Nest by adding `CozyNest=No` in URL param (ie: http://localhost:8501/?CozyNest=No) - useful for mobile
-- [x]  Close Extra Network tab with escape key
-- [x]  Drag and Drop tab button inside or outside a “tab container” to bring them or move them from/out main menu
-- [x]  add a btn "Extra Networks" like the "vertical close" on the same place of the "close”
-- [x]  Fetch version from a desicated json file hosted directly in the repo. This file should contains version number as well as feature list. As it’s from github there is no risk of tracking from me.
-- [x]  Put settings panel button of prompt pan always under positive/negative prompt
-- [x]  Add small accent color to the selected Main Menu
-- [x]  Added a link to my Ko-Fi page :3
+- [x]  Fully integrated Image Browser **IN BETA**. Lots of bugs and missing features. Please be kind with Github issues.
+    - [x]  Send to txt2img / img2img / …
+    - [x]  Clean memory for image not visible (unload them / replace with dummy div) clean filteredImages and loadedImage Array
+    - [x]  manage new image generated
+    - [x]  Automatically get image output folder (without grid folder)
 
 ## Issues fixed
 
-- [x]  Show/Hide Generation Info broken on img2img
-- [x]  Setting not effective during loading
+- [x]  Laggy Extra Network tab opening (still a bit laggy, but better)
+- 
 
 ## Known Issue
 
