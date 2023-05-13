@@ -28,15 +28,16 @@ async def start_server(images_folders, server_port):
 
                 # decode the received data as json
                 data = json.loads(data)
-                res = process(data)
+                res = await process(data)
 
                 # Send a response back to the client
-                await websocket.send(res)
+                if res:
+                    await websocket.send(res)
 
         except websockets.exceptions.ConnectionClosed:
             print(f"CozyNestSocket: Connection closed: {websocket.remote_address}")
 
-    def process(data):
+    async def process(data):
         what = data['what']
         if what == 'images':
             # scrape the images folder recursively
@@ -77,13 +78,28 @@ async def start_server(images_folders, server_port):
             return json.dumps(data)
 
         if what == 'image_saved':
-            on_image_saved(data['data'])
+            await on_image_saved(data['data'])
+            return json.dumps({
+                'what': 'success',
+                'data': 'None'
+            })
 
-    def on_image_saved(data):
+        else:
+            print(f"CozyNestSocket: Unknown data: {data}")
+            return json.dumps({
+                'what': 'error',
+                'data': 'None',
+                'error': 'Unknown data'
+            })
+
+    async def on_image_saved(data):
         print(f"CozyNestSocket: on_image_saved{data}")
 
-        for websocket in CLIENTS.copy():
-            websocket_send('dispatch_on_image_saved', data, websocket)
+        CLIENTS_COPY = CLIENTS.copy()
+        CLIENTS.clear()
+
+        for websocket in CLIENTS_COPY.copy():
+            await websocket_send('dispatch_on_image_saved', data, websocket)
 
     async def websocket_send(what, data, websocket):
         try:
@@ -91,6 +107,7 @@ async def start_server(images_folders, server_port):
                 'what': what,
                 'data': data
             }))
+            CLIENTS.add(websocket)
         except websockets.ConnectionClosed:
             pass
 

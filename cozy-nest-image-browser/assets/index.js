@@ -8838,6 +8838,7 @@ function App() {
       reconnectInterval: 3e3
     }
   );
+  window.ws = getWebSocket();
   const askForImages = reactExports.useCallback(
     () => sendMessage(
       JSON.stringify({ what: "images" })

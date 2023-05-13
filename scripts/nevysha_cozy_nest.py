@@ -8,6 +8,7 @@ import threading
 
 import gradio as gr
 import modules
+import websockets
 from modules import script_callbacks, shared, call_queue, scripts
 
 from scripts.cozynest_image_browser import start_server
@@ -169,22 +170,30 @@ def start_server_in_dedicated_process(_images_folders, server_port):
     server_thread.start()
 
 
-def on_image_saved(gen_params: script_callbacks.ImageSaveParams):
-    print(f"CozyNest: on_image_saved{gen_params}")
+async def send_to_socket(data):
+    async with websockets.connect('ws://localhost:3333') as websocket:
+        try:
+            while True:
+                # Send data to the server
+                data = json.dumps(data).encode('utf-8')
+                await websocket.send(data)
 
-    # send a message to the socket server to notify that a new image has been saved
-    # create a socket object
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # connect to the server
-    sock.connect(("localhost", _server_port))
-    # Send data to server
-    sock.send(json.dumps({
+                # Receive response from the server
+                await websocket.recv()
+                websocket.close()
+                break
+
+        except websockets.exceptions.ConnectionClosed:
+            print("Connection to socket closed")
+
+
+def on_image_saved(gen_params: script_callbacks.ImageSaveParams):
+    asyncio.run(send_to_socket({
         'what': 'image_saved',
         'data': {
             'filename': gen_params.filename,
             'pnginfo': gen_params.pnginfo,
-        }
-    }).encode('utf-8'))
+        }}))
 
 
 script_callbacks.on_image_saved(on_image_saved)
