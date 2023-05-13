@@ -1438,3 +1438,21 @@ canvas.nevysha {
     line-height: var(--line-sm)!important;
     font-family: monospace!important;
 }
+
+/*Fix for generation info size*/
+
+.infotext {
+    max-height: 200px;
+    overflow-y: auto;
+}
+.infotext::-webkit-scrollbar {
+    width: 5px;
+}
+
+.infotext::-webkit-scrollbar-thumb {
+    background-color: var(--ae-primary-color);
+    border-radius: 20px;
+}
+.infotext::-webkit-scrollbar-track {
+    background-color: transparent;
+}
