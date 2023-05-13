@@ -242,8 +242,9 @@ def on_ui_tabs():
             # header
             gr.HTML(value="<div class='nevysha settings-nevyui-top'><h2>Nevysha's Cozy Nest</h2>"
                           "<p class='info'>Find your cozy spot on Auto1111's webui</p>"
-                          "<p class='nevysha-reporting'>Found a bug or want to ask for a feature ? Please use "
-                          "  <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
+                          "<p class='nevysha-reporting'>Found a bug or want to ask for a feature ? Please "
+                          "<a onClick='gatherInfoAndShowDialog();return false;' href='_blank'>click here to gather relevant info</a>"
+                          " then use <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
                           " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
                           "<p class='nevysha-emphasis'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
 

@@ -1441,6 +1441,9 @@ canvas.nevysha {
 .cozynest-error-tips {
     font-weight: bold;
     color: var(--error-handler-white);
+    background-color: #d57411;
+    padding: 10px;
+    font-size: 15px;
 }
 .cozynest-error-tips > a {
     color: cyan;
