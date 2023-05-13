@@ -732,7 +732,7 @@ button.secondary, button.primary {
     flex: 1;
     margin-top: 15px;
     overflow-y: scroll;
-    padding: 0 5px 15px 0;
+    padding: 0 5px 150px 0;
 }
 .nevysha.settings-wrapper::-webkit-scrollbar {
     width: 5px;
@@ -1359,6 +1359,9 @@ canvas.nevysha {
     background-color: var(--background-fill-primary) !important;
 }
 
+.preview-block-wrapper {
+    margin-bottom: 120px;
+}
 
 /*Small Cards*/
 
