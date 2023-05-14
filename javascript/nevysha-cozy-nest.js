@@ -810,6 +810,26 @@ const makeSettingsDraggable = () => {
   });
 }
 
+function observeElementAdded(targetSelector, callback) {
+  // Create a new MutationObserver instance
+  const observer = new MutationObserver(function(mutationsList) {
+    for (const mutation of mutationsList) {
+      // Check if the target element is added
+      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+        for(const node of mutation.addedNodes) {
+          if(node.matches && node.matches(targetSelector)) {
+            observer.disconnect();
+            callback(node);
+          }
+        }
+      }
+    }
+  });
+
+  // Start observing the document body for changes
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
 function tweakExtraNetworks({prefix}) {
   let extraNetworks = document.querySelector(`div#${prefix}_extra_networks`);
 
@@ -827,61 +847,66 @@ function tweakExtraNetworks({prefix}) {
     //add an event listener to show it when the user clicks on the button #img2img_extra_networks
     window.extraNetworkHandler = window.extraNetworkHandler || {};
     window.extraNetworkHandler[prefix] = (e) => {
-      let shown = extraNetworkGradioWrapper.style.display === 'flex';
-      if (!shown) {
 
-        //I'm lazy
-        function safeMe(func) {
-            try {
-                func();
-            } catch (e) {
-                console.error(e);
-            }
+      function closure() {
+
+        let shown = extraNetworkGradioWrapper.style.display === 'flex';
+        if (!shown) {
+
+          //I'm lazy
+          document.querySelector(`#${prefix}_textual_inversion_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
+          document.querySelector(`#${prefix}_hypernetworks_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
+          document.querySelector(`#${prefix}_checkpoints_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
+
+          // Lora folder list is loaded async? Can't get its offsetHeight normally.
+          // Using a MutationObserver to wait for it to be loaded (and because I suck at CSS)
+          // Select the element to be observed
+          const targetNode = extraNetworkGradioWrapper;
+
+          // Options for the observer (which mutations to observe)
+          const config = { attributes: true, childList: true, subtree: true };
+
+          // Function to be called when mutations are observed
+          const callback = function(mutationsList, observer) {
+            let subdirOffsetHeight = document.querySelector(`#${prefix}_lora_subdirs`).offsetHeight;
+            if (subdirOffsetHeight <= 0) return;
+            document.querySelector(`#${prefix}_lora_cards`).style.height
+                = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100 - subdirOffsetHeight}px`;
+            observer.disconnect()
+          };
+
+          // Create a new observer instance
+          const observer = new MutationObserver(callback);
+
+          // Start observing the target element for configured mutations
+          observer.observe(targetNode, config);
+
+          //show the extra network
+          extraNetworkGradioWrapper.style.display = 'flex';
+          extraNetworkGradioWrapper.style.marginRight = `-${extraNetworkGradioWrapper.offsetWidth}px`;
+          $(extraNetworkGradioWrapper).animate({"margin-right": `+=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
+        } else {
+          //hide the extra network
+          $(extraNetworkGradioWrapper).animate({
+                "margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`},
+              350,
+              () => {
+                // hide it after the animation is done
+                extraNetworkGradioWrapper.style.display = 'none';
+                // extraNetworks.style.display = 'none';
+              });
         }
-        safeMe(
-            () => document.querySelector(`#${prefix}_textual_inversion_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`);
-        safeMe(
-            () => document.querySelector(`#${prefix}_hypernetworks_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`);
-        safeMe(
-            () => document.querySelector(`#${prefix}_checkpoints_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`);
+      }
 
-        // Lora folder list is loaded async? Can't get its offsetHeight normally.
-        // Using a MutationObserver to wait for it to be loaded (and because I suck at CSS)
-        // Select the element to be observed
-        const targetNode = extraNetworkGradioWrapper;
+      //click the base button to show the extra network
+      document.querySelector(`button#${prefix}_extra_networks`).click();
 
-        // Options for the observer (which mutations to observe)
-        const config = { attributes: true, childList: true, subtree: true };
-
-        // Function to be called when mutations are observed
-        const callback = function(mutationsList, observer) {
-          let subdirOffsetHeight = document.querySelector(`#${prefix}_lora_subdirs`).offsetHeight;
-          if (subdirOffsetHeight <= 0) return;
-          document.querySelector(`#${prefix}_lora_cards`).style.height
-              = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100 - subdirOffsetHeight}px`;
-          observer.disconnect()
-        };
-
-        // Create a new observer instance
-        const observer = new MutationObserver(callback);
-
-        // Start observing the target element for configured mutations
-        observer.observe(targetNode, config);
-
-        //show the extra network
-        extraNetworkGradioWrapper.style.display = 'flex';
-        extraNetworkGradioWrapper.style.marginRight = `-${extraNetworkGradioWrapper.offsetWidth}px`;
-        $(extraNetworkGradioWrapper).animate({"margin-right": `+=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
-      } else {
-        //hide the extra network
-        $(extraNetworkGradioWrapper).animate({
-          "margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`},
-          350,
-          () => {
-            // hide it after the animation is done
-            extraNetworkGradioWrapper.style.display = 'none';
-            // extraNetworks.style.display = 'none';
-          });
+      if (document.querySelector(`#${prefix}_textual_inversion_cards`)) {
+        closure();
+      }
+      else {
+        // Start observing the target node
+        observeElementAdded(`#${prefix}_textual_inversion_cards`, closure);
       }
     };
 
