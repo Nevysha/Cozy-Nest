@@ -38,14 +38,12 @@ async def start_server(images_folders, server_port):
     CLIENTS = set()
 
     async def handle_client(websocket, path):
-        print(f"CozyNestSocket: New connection: {websocket.remote_address}")
 
         try:
             CLIENTS.add(websocket)
             while True:
                 # Receive data from the client
                 data = await websocket.recv()
-                print(f"CozyNestSocket: Received data from {websocket.remote_address}: {data}")
 
                 # decode the received data as json
                 data = json.loads(data)
@@ -97,7 +95,6 @@ async def start_server(images_folders, server_port):
             })
 
     async def on_image_saved(data):
-        print(f"CozyNestSocket: on_image_saved{data}")
 
         CLIENTS_COPY = CLIENTS.copy()
         CLIENTS.clear()
