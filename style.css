@@ -1189,6 +1189,11 @@ canvas.nevysha {
     word-wrap: break-word;
     padding: 0 10px;
 }
+.markdown-body > h1 {
+    font-size: medium;
+    color: var(--body-text-color);
+    margin-top: 30px;
+}
 .markdown-body > h2 {
     font-size: 1.4em;
     color: var(--body-text-color);

@@ -1,4 +1,4 @@
-Add to push this update a bit sooner than expected due to a1111 1.2.0 update. Enjoy the new image browser!
+# Add to push this update a bit sooner than expected due to a1111 1.2.0 update. Enjoy the new image browser!
 
 ## New features in 2.0.0
 
