@@ -1215,6 +1215,14 @@ canvas.nevysha {
     word-wrap: break-word;
     padding: 0 10px;
 }
+.markdown-body code {
+    font-family: monospace;
+    font-size: 0.9em;
+    background-color: var(--ae-input-bg-color);
+    color: var(--body-text-color);
+    padding: 2px;
+    border-radius: 2px;
+}
 .markdown-body > h1 {
     font-size: medium;
     color: var(--body-text-color);

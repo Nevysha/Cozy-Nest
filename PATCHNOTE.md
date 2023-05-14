@@ -7,6 +7,7 @@ From a1111 5ab7f213 commit to the 1.2.0 release (b08500ce atm).
 ## Minor changes & fixes in 2.0.3
 
 - [x] "Send to" buttons are opening right side drawer panels rather than swapping tabs #75
+- [x] Fix: tweak of SDAtom-WebUi-client-queue-ext extension. To enable the tweak you have to add `"extensions": ["SDAtom-WebUi-client-queue-ext"]` to your nevyui_settings.json file
 
 ## Minor changes & fixes in 2.0.2
 
