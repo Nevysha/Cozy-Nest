@@ -1,5 +1,3 @@
-console.log("nevysha-ui.js")
-
 const waves = "<div id='nevy_waves'><div class='wave'></div> <div class='wave'></div><div class='wave'></div></div>";
 const svg_magic_wand = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M234.7 42.7L197 56.8c-3 1.1-5 4-5 7.2s2 6.1 5 7.2l37.7 14.1L248.8 123c1.1 3 4 5 7.2 5s6.1-2 7.2-5l14.1-37.7L315 71.2c3-1.1 5-4 5-7.2s-2-6.1-5-7.2L277.3 42.7 263.2 5c-1.1-3-4-5-7.2-5s-6.1 2-7.2 5L234.7 42.7zM46.1 395.4c-18.7 18.7-18.7 49.1 0 67.9l34.6 34.6c18.7 18.7 49.1 18.7 67.9 0L529.9 116.5c18.7-18.7 18.7-49.1 0-67.9L495.3 14.1c-18.7-18.7-49.1-18.7-67.9 0L46.1 395.4zM484.6 82.6l-105 105-23.3-23.3 105-105 23.3 23.3zM7.5 117.2C3 118.9 0 123.2 0 128s3 9.1 7.5 10.8L64 160l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L128 160l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L128 96 106.8 39.5C105.1 35 100.8 32 96 32s-9.1 3-10.8 7.5L64 96 7.5 117.2zm352 256c-4.5 1.7-7.5 6-7.5 10.8s3 9.1 7.5 10.8L416 416l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L480 416l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L480 352l-21.2-56.5c-1.7-4.5-6-7.5-10.8-7.5s-9.1 3-10.8 7.5L416 352l-56.5 21.2z"/></svg>`;
 const svg_update_info = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-167l80 80c9.4 9.4 24.6 9.4 33.9 0l80-80c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-39 39V184c0-13.3-10.7-24-24-24s-24 10.7-24 24V318.1l-39-39c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9z"/></svg>`;
@@ -487,6 +485,64 @@ const getLuminance = (hexcolor) => {
   return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
 }
 
+function tweakAWQ() {
+
+  const observer = new MutationObserver((mutationsList, observer) => {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'childList') {
+        const addedNodes = Array.from(mutation.addedNodes);
+        const targetNode = addedNodes.find(node => node.id === 'AWQ-container');
+        if (targetNode) {
+          observer.disconnect();
+          closure();
+          break;
+        }
+      }
+    }
+  });
+
+  const observerConfig = {
+    childList: true,
+    subtree: true
+  };
+
+  observer.observe(document.documentElement, observerConfig);
+
+  const closure = () => {
+    const awqContainer = document.querySelector("#AWQ-container")
+
+    //create a wrapper div
+    const awqWrapper = document.createElement("div")
+    awqWrapper.id = "nevysha_awq_wrapper"
+    awqWrapper.style.zIndex = "9999"
+    awqWrapper.style.display = "none"
+    awqWrapper.style.position = "fixed"
+    awqWrapper.style.bottom = "30px"
+    document.body.appendChild(awqWrapper)
+
+    //bush awqContainer into wrapper
+    awqWrapper.appendChild(awqContainer)
+
+    const btnAWQ = document.createElement("button")
+    btnAWQ.classList.add("nevysha-btn-menu", "nevysha-btn-menu-awq", "gradio-button", "primary", "nevysha")
+    btnAWQ.id = "nevyui_awq_btn"
+    btnAWQ.innerHTML = 'Show/Hide AWQ'
+    btnAWQ.title = "Show/Hide AWQ"
+    btnAWQ.setAttribute("style", "position: fixed; bottom: 0; left: calc(50% - 75px); width: 150px;")
+
+    document.querySelector('div.app').insertAdjacentElement('beforeend', btnAWQ)
+    btnAWQ.addEventListener("click", () => {
+      if (awqWrapper.style.display === "none") {
+        awqWrapper.style.display = "block"
+      } else {
+        awqWrapper.style.display = "none"
+      }
+    });
+  }
+
+
+}
+
 const addCozyNestCustomBtn = () => {
   //create a wrapper div
   const nevySettingstabMenuWrapper = document.createElement("div");
@@ -550,31 +606,6 @@ const addCozyNestCustomBtn = () => {
         toggleKofiPanel();
     }
   });
-
-  //if AWQ-container is present in body, create a button to show/hide it
-  if (document.querySelector("#AWQ-container")) {
-    const awqContainer = document.querySelector("#AWQ-container")
-    awqContainer.style.zIndex = "9999"
-    awqContainer.style.display = "none"
-    awqContainer.style.position = "fixed"
-    awqContainer.style.bottom = "30px"
-
-    const btnAWQ = document.createElement("button")
-    btnAWQ.classList.add("nevysha-btn-menu", "nevysha-btn-menu-awq", "gradio-button", "primary", "nevysha")
-    btnAWQ.id = "nevyui_awq_btn"
-    btnAWQ.innerHTML = 'Show/Hide AWQ'
-    btnAWQ.title = "Show/Hide AWQ"
-    btnAWQ.setAttribute("style", "position: fixed; bottom: 0; left: calc(50% - 75px); width: 150px;")
-
-    document.querySelector('div.app').insertAdjacentElement('beforeend', btnAWQ)
-    btnAWQ.addEventListener("click", () => {
-      if (awqContainer.style.display === "none") {
-        awqContainer.style.display = "block"
-      } else {
-        awqContainer.style.display = "none"
-      }
-    });
-  }
 
   //fetch version_data.json
   loadVersionData().then(ignored => ignored)
@@ -852,7 +883,6 @@ const makeSettingsDraggable = () => {
 }
 
 function observeElementAdded(targetSelector, callback) {
-  console.log('CozyNest: observeElementAdded', targetSelector);
   // Create a new MutationObserver instance
   const observer = new MutationObserver(function(mutationsList) {
     for (const mutation of mutationsList) {
@@ -1053,7 +1083,8 @@ function addExtraNetworksBtn({prefix}) {
   extraNetworksBtn.innerHTML = '<div>Extra Networks</div>';
   //click the original button to close the extra network
   extraNetworksBtn.addEventListener('click', (e) => {
-   window.extraNetworkHandler[prefix]();
+    if (!e.isTrusted) return
+    window.extraNetworkHandler[prefix]();
   });
 
   //add button to the begining of the wrapper div
@@ -1363,7 +1394,6 @@ function createRightWrapperDiv() {
 }
 
 function setButtonVisibilityFromCurrentTab(id) {
-  console.log("setButtonVisibilityFromCurrentTab", id)
 
   //hide each button that ends with extra_networks_right_button
   const extraNetworksRightBtns = document.querySelectorAll(`button[id$="extra_networks_right_button"]`);
@@ -1438,7 +1468,6 @@ const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
   if (typeof gradioApp !== "function") {
-    console.log("waiting for gradio")
     setTimeout(() => onloadSafe(done), 200);
     return
   }
@@ -1447,7 +1476,6 @@ const onLoad = (done) => {
   const quicksettings = gradioApp().getElementById("quicksettings")
 
   if (!quicksettings) {
-    console.log("waiting for gradio")
     setTimeout(() => onloadSafe(done), 200);
     return
   }
@@ -1545,6 +1573,14 @@ const onLoad = (done) => {
   //load /assets/index-eff6a2cc.js
   loadCozyNestImageBrowserSubmodule();
 
+  /* --------------- TWEAK SOME EXTENSION --------------- */
+  //if AWQ-container is present in COZY_NEST_CONFIG.extensions array from localStorage, tweak AWQ
+  if (COZY_NEST_CONFIG.extensions
+      && COZY_NEST_CONFIG.extensions.length > 0
+      && COZY_NEST_CONFIG.extensions.includes("SDAtom-WebUi-client-queue-ext")) {
+    tweakAWQ();
+  }
+
   done();
 };
 
@@ -1552,7 +1588,6 @@ async function loadCozyNestImageBrowserSubmodule() {
   try {
     const jsModule = await fetch(`file=extensions/Cozy-Nest/cozy-nest-image-browser/assets/index.js?t=${Date.now()}`);
     eval(await jsModule.text());
-    console.log("cozy-nest-image-browser submodule loaded successfully");
   }
   catch (err) {
     // handle any errors that occur during the import process
@@ -1628,7 +1663,6 @@ document.addEventListener("DOMContentLoaded", async function() {
   //observer to update loading percentage
   const observer = new MutationObserver(function(mutations) {
     if (mutations[0].target.id !== 'loading_step_estimator') {
-      console.log(`nevysha-ui.js: Loading step:${++step}...`);
 
       //current elapsed loading time
       const currentLoadingTime = SimpleTimer.get(COZY_NEST_GRADIO_LOAD_DURATION)
@@ -1655,9 +1689,6 @@ document.addEventListener("DOMContentLoaded", async function() {
   try {
     // dynamically import jQuery library
     await jsDynamicLoad('file=extensions/Cozy-Nest/assets/jquery-3.6.4.min.js');
-
-    // jQuery is now loaded and ready to use
-    console.log("jQuery library loaded successfully");
   }
   catch (err) {
     // handle any errors that occur during the import process
@@ -1666,8 +1697,6 @@ document.addEventListener("DOMContentLoaded", async function() {
 
   try {
     await jsDynamicLoad('file=extensions/Cozy-Nest/assets/jquery-ui.min.js');
-    // jquery-ui is now loaded and ready to use
-    console.log("jquery-ui library loaded successfully");
   }
   catch (err) {
     // handle any errors that occur during the import process
@@ -1679,11 +1708,11 @@ document.addEventListener("DOMContentLoaded", async function() {
 
   // load showdown library
   $.getScript("file=extensions/Cozy-Nest/assets/showdown-1.9.1.min.js", function() {
-    console.log("showdown library loaded successfully");
+
   });
 
   onloadSafe(() => {
-    console.log("nevysha-ui.js: Loading done!");
+    console.log(`Cozy Nest running.`);
     //remove #nevysha-loading from DOM
     observer.disconnect();
 
@@ -1824,7 +1853,6 @@ class SimpleTimer {
     }
 
     static get(timerName) {
-      console.log(`nevysha-ui.js: ${timerName} elapsed ${SimpleTimer.timers[timerName].get()}ms`);
       return SimpleTimer.timers[timerName].get();
     }
 
@@ -1845,8 +1873,6 @@ class SimpleTimer {
     end() {
         const endTime = new Date();
         const timeDiff = endTime - this.startTime; //in ms
-
-        console.log(`nevysha-ui.js: ${this.timerName} took ${timeDiff}ms`);
 
         //save the time in the local storage
         localStorage.setItem(this.timerName, `${timeDiff}`);
