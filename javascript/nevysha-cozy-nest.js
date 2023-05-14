@@ -862,40 +862,6 @@ function tweakExtraNetworks({prefix}) {
         let shown = extraNetworkGradioWrapper.style.display === 'flex';
         if (!shown) {
 
-          //I'm lazy
-          document.querySelector(`#${prefix}_textual_inversion_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
-          document.querySelector(`#${prefix}_textual_inversion_cards`).classList.add('nevysha', 'nevysha-scrollable')
-
-          document.querySelector(`#${prefix}_hypernetworks_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
-          document.querySelector(`#${prefix}_hypernetworks_cards`).classList.add('nevysha', 'nevysha-scrollable')
-
-          document.querySelector(`#${prefix}_checkpoints_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
-          document.querySelector(`#${prefix}_checkpoints_cards`).classList.add('nevysha', 'nevysha-scrollable')
-
-          // Lora folder list is loaded async? Can't get its offsetHeight normally.
-          // Using a MutationObserver to wait for it to be loaded (and because I suck at CSS)
-          // Select the element to be observed
-          const targetNode = extraNetworkGradioWrapper;
-
-          // Options for the observer (which mutations to observe)
-          const config = { attributes: true, childList: true, subtree: true };
-
-          // Function to be called when mutations are observed
-          const callback = function(mutationsList, observer) {
-            let subdirOffsetHeight = document.querySelector(`#${prefix}_lora_subdirs`).offsetHeight;
-            if (subdirOffsetHeight <= 0) return;
-            document.querySelector(`#${prefix}_lora_cards`).style.height
-                = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100 - subdirOffsetHeight}px`;
-            document.querySelector(`#${prefix}_lora_cards`).classList.add('nevysha', 'nevysha-scrollable')
-            observer.disconnect()
-          };
-
-          // Create a new observer instance
-          const observer = new MutationObserver(callback);
-
-          // Start observing the target element for configured mutations
-          observer.observe(targetNode, config);
-
           //show the extra network
           extraNetworkGradioWrapper.style.display = 'flex';
           extraNetworkGradioWrapper.style.marginRight = `-${extraNetworkGradioWrapper.offsetWidth}px`;
@@ -1035,7 +1001,17 @@ function addExtraNetworksBtn({prefix}) {
   extraNetworksBtn.innerHTML = '<div>Extra Networks</div>';
   //click the original button to close the extra network
   extraNetworksBtn.addEventListener('click', (e) => {
-    window.extraNetworkHandler[prefix]();
+    // wait for _EXTRA_NETWORKS_READY = true
+    if (!_EXTRA_NETWORKS_READY) {
+      const interval = setInterval(() => {
+        if (_EXTRA_NETWORKS_READY) {
+          clearInterval(interval);
+          window.extraNetworkHandler[prefix]();
+        }
+      }, 100);
+    }
+    else
+      window.extraNetworkHandler[prefix]();
   });
 
   //add button to the begining of the wrapper div
@@ -1416,6 +1392,8 @@ async function sendToPipe(where, elemImgFrom) {
   }, 1000)
 }
 
+let _EXTRA_NETWORKS_READY = false;
+
 const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
@@ -1492,6 +1470,21 @@ const onLoad = (done) => {
     const {prefix} = bundle;
     //click to fetch html tab
     document.querySelector(`button#${prefix}_extra_networks`).click();
+    //wait a bit and tweak size and add scrollable
+    setTimeout(() => {
+      //tweak height
+      const $cards_html = $('div[id$="_cards_html"]');
+      //does not matter with tab_"txt2img" we take as reference
+      $cards_html.css('height', `${document.querySelector(`#tab_txt2img`).offsetHeight - 100}px`);
+      $cards_html.css('display', 'flex');
+
+      //add classes : 'nevysha', 'nevysha-scrollable'
+      const $cards = $('div[id$="_cards"]');
+      $cards.css('height', '100%')
+      $cards.addClass('nevysha');
+      $cards.addClass('nevysha-scrollable');
+      _EXTRA_NETWORKS_READY = true;
+    }, 2000);
   }
 
   nevysha_magic({prefix: "txt2img"});
