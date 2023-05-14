@@ -1,3 +1,5 @@
+Add to push this update a bit sooner than expected due to a1111 1.2.0 update. Enjoy the new image browser!
+
 ## New features in 2.0.0
 
 - [x]  Fully integrated Image Browser **IN BETA**. Lots of bugs and missing features. Please be kind with Github issues.
@@ -15,6 +17,7 @@
 
 ## Known Issue
 
+- [ ]  Image Browser socket do not always close properly when reloading the UI
 - [ ]  Partial compatibility with Firefox and Opera GX
 - [ ]  Most tweak will not support a live window resize
 - [ ]  Some user report a missing scrollbar in Extra network tab
