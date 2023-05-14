@@ -45,7 +45,8 @@ def gradio_save_settings(main_menu_position,
                          card_height,
                          card_width,
                          error_popup,
-                         disable_image_browser, ):
+                         disable_image_browser,
+                         disable_waves_and_gradiant):
     settings = {
         'main_menu_position': main_menu_position,
         'quicksettings_position': quicksettings_position,
@@ -58,6 +59,7 @@ def gradio_save_settings(main_menu_position,
         'card_width': card_width,
         'error_popup': error_popup,
         'disable_image_browser': disable_image_browser,
+        'disable_waves_and_gradiant': disable_waves_and_gradiant,
     }
 
     save_settings(settings)
@@ -98,6 +100,7 @@ def get_default_settings():
         'card_width': '13',
         'error_popup': True,
         'disable_image_browser': True,
+        'disable_waves_and_gradiant': False,
     }
 
 
@@ -273,15 +276,21 @@ def on_ui_tabs():
                           " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
                           "<p class='nevysha-emphasis'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
 
-            # disable_image_browser
-            disable_image_browser = gr.Checkbox(value=config.get('disable_image_browser'),
-                                                label="Disable image browser (requires reload UI)",
-                                                elem_id="setting_nevyui_disableImageBrowser", interactive=True)
+            with gr.Row():
+                # disable_image_browser
+                disable_image_browser = gr.Checkbox(value=config.get('disable_image_browser'),
+                                                    label="Disable image browser (requires reload UI)",
+                                                    elem_id="setting_nevyui_disableImageBrowser", interactive=True)
 
-            # error popup checkbox
-            error_popup = gr.Checkbox(value=config.get('error_popup'),
-                                      label="Display information dialog on Cozy Nest error",
-                                      elem_id="setting_nevyui_errorPopup", interactive=True)
+                # error popup checkbox
+                error_popup = gr.Checkbox(value=config.get('error_popup'),
+                                          label="Display information dialog on Cozy Nest error",
+                                          elem_id="setting_nevyui_errorPopup", interactive=True)
+
+                # disable waves and gradiant bg
+                disable_waves_and_gradiant = gr.Checkbox(value=config.get('disable_waves_and_gradiant'),
+                                                         label="Disable waves and gradiant background",
+                                                         elem_id="setting_nevyui_disableWavesAndGradiant", interactive=True)
 
             # main menu
             main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position",
@@ -334,7 +343,8 @@ def on_ui_tabs():
                     card_height,
                     card_width,
                     error_popup,
-                    disable_image_browser
+                    disable_image_browser,
+                    disable_waves_and_gradiant
                 ], outputs=[])
 
                 btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)",

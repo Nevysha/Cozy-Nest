@@ -8624,13 +8624,20 @@ function SendTo(props) {
     )
   ] });
 }
+const safeExifSplit = (fn) => {
+  try {
+    return fn();
+  } catch (ignored) {
+    return "Error parsing metadata";
+  }
+};
 function CozyImageInfo(props) {
   const date = new Date(props.image.metadata.date * 1e3).toISOString().replace(/T/, " ").replace(/\..+/, "");
-  const model = props.image.metadata.exif.parameters.split("Model: ")[1].split(",")[0];
-  const size = props.image.metadata.exif.parameters.split("Size: ")[1].split(",")[0];
-  const seed = props.image.metadata.exif.parameters.split("Seed: ")[1].split(",")[0];
-  const steps = props.image.metadata.exif.parameters.split("Steps: ")[1].split(",")[0];
-  const sampler = props.image.metadata.exif.parameters.split("Sampler: ")[1].split(",")[0];
+  const model = safeExifSplit(() => props.image.metadata.exif.parameters.split("Model: ")[1].split(",")[0]);
+  const size = safeExifSplit(() => props.image.metadata.exif.parameters.split("Size: ")[1].split(",")[0]);
+  const seed = safeExifSplit(() => props.image.metadata.exif.parameters.split("Seed: ")[1].split(",")[0]);
+  const steps = safeExifSplit(() => props.image.metadata.exif.parameters.split("Steps: ")[1].split(",")[0]);
+  const sampler = safeExifSplit(() => props.image.metadata.exif.parameters.split("Sampler: ")[1].split(",")[0]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "image-info", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("table", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tbody", { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
@@ -8663,12 +8670,12 @@ function CozyImageInfo(props) {
 }
 function CozyFullImageInfo(props) {
   const date = new Date(props.image.metadata.date * 1e3).toISOString().replace(/T/, " ").replace(/\..+/, "");
-  const model = props.image.metadata.exif.parameters.split("Model: ")[1].split(",")[0];
-  const size = props.image.metadata.exif.parameters.split("Size: ")[1].split(",")[0];
-  const seed = props.image.metadata.exif.parameters.split("Seed: ")[1].split(",")[0];
-  const steps = props.image.metadata.exif.parameters.split("Steps: ")[1].split(",")[0];
-  const sampler = props.image.metadata.exif.parameters.split("Sampler: ")[1].split(",")[0];
-  const modelHash = props.image.metadata.exif.parameters.split("Model hash: ")[1].split(",")[0];
+  const model = safeExifSplit(() => props.image.metadata.exif.parameters.split("Model: ")[1].split(",")[0]);
+  const size = safeExifSplit(() => props.image.metadata.exif.parameters.split("Size: ")[1].split(",")[0]);
+  const seed = safeExifSplit(() => props.image.metadata.exif.parameters.split("Seed: ")[1].split(",")[0]);
+  const steps = safeExifSplit(() => props.image.metadata.exif.parameters.split("Steps: ")[1].split(",")[0]);
+  const sampler = safeExifSplit(() => props.image.metadata.exif.parameters.split("Sampler: ")[1].split(",")[0]);
+  const modelHash = safeExifSplit(() => props.image.metadata.exif.parameters.split("Model hash: ")[1].split(",")[0]);
   let formattedAll = props.image.metadata.exif.parameters;
   formattedAll = formattedAll.replace(/\n/g, "<br>");
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "image-info", children: [
