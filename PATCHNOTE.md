@@ -6,6 +6,7 @@ From a1111 5ab7f213 commit to the 1.2.0 release (b08500ce atm).
 
 ## Minor changes & fixes in 2.0.2
 
+- [x] Cozy Nest error popup should now only be displayed if filename contains Cozy Nest
 - [x] Fix image browser crash if metadata are not formatted as expected (although metadata display may display "Error parsing metadata")
 - [x] Fix Download image link hidden on hover
 - [x] Fix selectable options list passing under other elements

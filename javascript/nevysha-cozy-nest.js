@@ -1492,12 +1492,6 @@ const onLoad = (done) => {
     setButtonVisibilityFromCurrentTab(get_uiCurrentTabContent().id);
   });
 
-  //create a hidden div to contains some container while loading
-  const hiddenDiv = document.createElement('div');
-  hiddenDiv.setAttribute('id', 'nevysha_hidden_div');
-  hiddenDiv.setAttribute('style', 'display: none;');
-  document.querySelector('body').appendChild(hiddenDiv);
-
   //manage text2img tab
   const nevysha_magic = (bundle) => {
     wrapSettings(bundle);
@@ -1776,6 +1770,9 @@ function setupErrorHandling() {
     // get setting_nevyui_errorPopup checkbox value
     const errorPopup = document.querySelector('#setting_nevyui_errorPopup').querySelector("input").checked;
     if (!errorPopup) return;
+
+    //if filename does not contains Cozy-Nest, ignore
+    if (!filename.toLowerCase().includes('cozy-nest')) return;
 
     // Handle the error here
     populateInstanceInfoDialog();
