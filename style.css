@@ -120,7 +120,7 @@
     --border-color-accent: var(--neutral-600);
     --border-color-primary: var(--neutral-700);
     --link-text-color-active: var(--secondary-500);
-    --link-text-color-hover: var(--secondary-400);
+    --link-text-color-hover: var(--ae-primary-color);
     --link-text-color-visited: var(--secondary-600);
     --body-text-color-subdued: var(--neutral-400);
     --shadow-drop: rgba(0,0,0,0.05) 0px 1px 2px 0px;
@@ -302,6 +302,8 @@
     --neutral-800: var(--nevysha-light-dark);
     --neutral-900: var(--nevysha-light-dark);
     --neutral-950: var(--nevysha-light-dark);
+
+    --link-text-color-hover: var(--ae-primary-color);
 
     --ae-slider-bg-overlay: repeating-linear-gradient( 90deg, transparent, transparent max(3px, calc(0.671141% - 2px)), var(--ae-input-border-color) max(3px, calc(0.671141% - 2px)), var(--ae-input-border-color) max(4px, calc(0.671141% + 0px)) );
     --ae-subgroup-input-bg-color: hsl(225deg 6% 13%);
@@ -544,12 +546,27 @@ input[type=range]::-webkit-slider-thumb {
 
 #quicksettings {
     width: auto;
-    align-items: end;
+    align-items: stretch;
     gap: 20px;
+}
+#quicksettings > .block.gradio-slider {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
 }
 
 #quicksettings > div.block {
     padding: 0 !important;
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+}
+
+#quicksettings > div.block > * {
+    width: 100%;
+}
+#quicksettings > div.block > input[type="range"] {
+    margin-bottom: 2px;
 }
 
 #quicksettings > .gradio-button.tool {
@@ -651,7 +668,7 @@ body, #nevysha-loading {
     opacity: 0.8;
     bottom: 0;
     left: 0;
-    z-index: -1;
+    z-index: 0;
 }
 
 .wave:nth-of-type(2) {
@@ -1136,6 +1153,9 @@ canvas.nevysha {
     width: 100%;
     top: 0;
 }
+.gradio-container.app {
+    z-index: 1;
+}
 .gradio-container.app.menu-fix-top {
     padding-top: 25px !important;
 }
@@ -1528,6 +1548,59 @@ canvas.nevysha {
     background-color: transparent;
 }
 
+ul.options {
+    max-height: 300px !important;
+    overflow-y: auto;
+}
+ul.options::-webkit-scrollbar {
+    width: 5px;
+}
+
+ul.options::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+ul.options::-webkit-scrollbar-thumb {
+    background-color: var(--ae-primary-color);
+    border-radius: 20px;
+}
+
 button:hover {
     filter: brightness(1.2) !important;
+}
+.nevysha-button:hover {
+    filter: brightness(1.2) !important;
+}
+body.nevysha-light button:hover {
+    filter: brightness(0.95) !important
+}
+body.nevysha-light .nevysha-button:hover {
+    filter: brightness(0.95) !important
+}
+
+.nevysha-enhanced-prompt-field {
+    padding: 10px !important;
+}
+.nevysha-enhanced-prompt-field > .prompt {
+    height: 289px;
+    display: block;
+    position: relative;
+    outline: none!important;
+    box-shadow: var(--input-shadow);
+    border: var(--input-border-width) solid var(--input-border-color);
+    border-radius: var(--input-radius);
+    background: var(--input-background-fill);
+    width: 100%;
+    color: var(--body-text-color)!important;
+    font-weight: var(--input-text-weight)!important;
+    font-size: var(--input-text-size)!important;
+    line-height: var(--line-sm)!important;
+    font-family: monospace!important;
+    overflow: auto;
+    min-height: 45px;
+    padding: 10px;
+}
+.nevysha-enhanced-prompt-field-bracket {
+    font-weight:bold;
+    font-size: 1.2em;
 }
