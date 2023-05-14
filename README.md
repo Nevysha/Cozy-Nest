@@ -17,7 +17,12 @@ Tested in Chrome, should work in Firefox with minor bug. I plan to fix it later.
 User reported that it works on Vlad's fork of sd-webui, although I haven't tested it myself.
 
 Features:
-- [x]  Fully integrated Image Browser
+- [x]  Fully integrated Image Browser **IN BETA**. Lots of bugs and missing features. Please be kind with Github issues.
+   - [x]  Send to txt2img / img2img / …
+   - [x]  Clean memory for image not visible (unload them / replace with dummy div) clean filteredImages and loadedImage Array
+   - [x]  manage new image generated
+   - [x]  Automatically get image output folder (without grid folder)
+   - [x]  Drag and drop image
 - [x]  Resizable panels
 - [x]  Full Screen Inpainting
 - [x]  Customizable tab menu position (top, left, centered)
