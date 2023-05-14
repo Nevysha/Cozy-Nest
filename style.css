@@ -546,12 +546,27 @@ input[type=range]::-webkit-slider-thumb {
 
 #quicksettings {
     width: auto;
-    align-items: end;
+    align-items: stretch;
     gap: 20px;
+}
+#quicksettings > .block.gradio-slider {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
 }
 
 #quicksettings > div.block {
     padding: 0 !important;
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+}
+
+#quicksettings > div.block > * {
+    width: 100%;
+}
+#quicksettings > div.block > input[type="range"] {
+    margin-bottom: 2px;
 }
 
 #quicksettings > .gradio-button.tool {
