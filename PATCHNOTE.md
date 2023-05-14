@@ -7,6 +7,7 @@ From a1111 5ab7f213 commit to the 1.2.0 release (b08500ce atm).
 ## Minor changes & fixes in 2.0.1
 
 - [x] extra network tab fix and perf (a bit)
+- [x] fix image browser spamming console
 
 ## New features in 2.0.0
 
