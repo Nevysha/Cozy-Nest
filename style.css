@@ -1527,3 +1527,7 @@ canvas.nevysha {
 .infotext::-webkit-scrollbar-track {
     background-color: transparent;
 }
+
+button:hover {
+    filter: brightness(1.2) !important;
+}
