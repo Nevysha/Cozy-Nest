@@ -54,7 +54,7 @@ async def start_server(images_folders, server_port):
                     await websocket.send(res)
 
         except websockets.exceptions.ConnectionClosed:
-            print(f"CozyNestSocket: Connection closed: {websocket.remote_address}")
+            pass
 
     async def process(data):
         what = data['what']

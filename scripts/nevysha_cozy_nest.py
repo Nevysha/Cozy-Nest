@@ -203,7 +203,7 @@ def on_ui_tabs():
                     break
 
             except websockets.exceptions.ConnectionClosed:
-                print("Connection to socket closed")
+                pass
 
     def on_image_saved(gen_params: script_callbacks.ImageSaveParams):
         base_dir = scripts.basedir()
