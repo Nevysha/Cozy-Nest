@@ -1214,6 +1214,8 @@ canvas.nevysha {
     letter-spacing: 0.00938em;
     word-wrap: break-word;
     padding: 0 10px;
+    max-height: 400px;
+    overflow-y: auto;
 }
 .markdown-body code {
     font-family: monospace;
