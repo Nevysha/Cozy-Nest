@@ -859,6 +859,25 @@ function tweakExtraNetworks({prefix}) {
 
       function closure() {
 
+        //tweak height
+        const $cards_html = $('div[id$="_cards_html"]');
+        $cards_html.css('height', `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`);
+        $cards_html.css('display', 'flex');
+
+        //add classes : 'nevysha', 'nevysha-scrollable'
+        const $cards = $('div[id$="_cards"]');
+        $cards.css('height', '100%')
+        $cards.addClass('nevysha');
+        $cards.addClass('nevysha-scrollable');
+
+        const $subdirs = $('div[id$="_subdirs"]');
+        $subdirs.css('height', '100%');
+        $subdirs.css('overflow', 'scroll');
+        $subdirs.css('margin-right', '10px');
+        $subdirs.css('max-width', 'min(33%, 250px)');
+        $subdirs.addClass('nevysha');
+        $subdirs.addClass('nevysha-scrollable');
+
         let shown = extraNetworkGradioWrapper.style.display === 'flex';
         if (!shown) {
 
@@ -1001,17 +1020,7 @@ function addExtraNetworksBtn({prefix}) {
   extraNetworksBtn.innerHTML = '<div>Extra Networks</div>';
   //click the original button to close the extra network
   extraNetworksBtn.addEventListener('click', (e) => {
-    // wait for _EXTRA_NETWORKS_READY = true
-    if (!_EXTRA_NETWORKS_READY) {
-      const interval = setInterval(() => {
-        if (_EXTRA_NETWORKS_READY) {
-          clearInterval(interval);
-          window.extraNetworkHandler[prefix]();
-        }
-      }, 100);
-    }
-    else
-      window.extraNetworkHandler[prefix]();
+   window.extraNetworkHandler[prefix]();
   });
 
   //add button to the begining of the wrapper div
@@ -1392,8 +1401,6 @@ async function sendToPipe(where, elemImgFrom) {
   }, 1000)
 }
 
-let _EXTRA_NETWORKS_READY = false;
-
 const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
@@ -1470,21 +1477,6 @@ const onLoad = (done) => {
     const {prefix} = bundle;
     //click to fetch html tab
     document.querySelector(`button#${prefix}_extra_networks`).click();
-    //wait a bit and tweak size and add scrollable
-    setTimeout(() => {
-      //tweak height
-      const $cards_html = $('div[id$="_cards_html"]');
-      //does not matter with tab_"txt2img" we take as reference
-      $cards_html.css('height', `${document.querySelector(`#tab_txt2img`).offsetHeight - 100}px`);
-      $cards_html.css('display', 'flex');
-
-      //add classes : 'nevysha', 'nevysha-scrollable'
-      const $cards = $('div[id$="_cards"]');
-      $cards.css('height', '100%')
-      $cards.addClass('nevysha');
-      $cards.addClass('nevysha-scrollable');
-      _EXTRA_NETWORKS_READY = true;
-    }, 2000);
   }
 
   nevysha_magic({prefix: "txt2img"});
@@ -1914,4 +1906,9 @@ const dummyControlNetBloc = () => {
     const clone = parent.cloneNode(true);
     parent.parentElement.insertBefore(clone, parent);
   }
+}
+
+const dummySubdirs = () => {
+  const $subdirs = $('#txt2img_lora_subdirs');
+  $subdirs.append($subdirs.html());
 }

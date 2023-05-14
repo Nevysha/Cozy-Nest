@@ -32,7 +32,7 @@ def get_exif(path):
     return img
 
 
-async def start_server(images_folders, server_port):
+async def start_server(images_folders, server_port, stopper):
     print(f"CozyNestSocket: Starting socket server on localhost:{server_port}...")
 
     CLIENTS = set()
@@ -42,6 +42,11 @@ async def start_server(images_folders, server_port):
         try:
             CLIENTS.add(websocket)
             while True:
+
+                if stopper.is_set():
+                    print(f"CozyNestSocket: Stopping socket server on localhost:{server_port}...")
+                    break
+
                 # Receive data from the client
                 data = await websocket.recv()
 
@@ -113,5 +118,11 @@ async def start_server(images_folders, server_port):
             pass
 
     # Configure the WebSocket server
+    stop = asyncio.Future()  # set this future to exit the server
     async with serve(handle_client, 'localhost', server_port, ssl=None):
-        await asyncio.Future()  # run forever
+        while True:
+            await asyncio.sleep(1)
+            if stopper.is_set():
+                print(f"CozyNestSocket: Stopping socket server on localhost:{server_port}...")
+                stop.set_result(True)
+                break

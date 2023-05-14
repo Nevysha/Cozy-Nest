@@ -177,11 +177,18 @@ def serv_img_browser_socket(server_port=3333, auto_search_port=True):
 
 def start_server_in_dedicated_process(_images_folders, server_port):
     def run_server():
-        asyncio.run(start_server(_images_folders, server_port))
+        asyncio.run(start_server(_images_folders, server_port, stopper))
+
+    stopper = threading.Event()
+
+    def stop_server():
+        stopper.set()
 
     # Start the server in a separate thread
     server_thread = threading.Thread(target=run_server)
     server_thread.start()
+
+    script_callbacks.on_before_reload(stop_server)
 
 
 def on_ui_tabs():

@@ -6,9 +6,12 @@ From a1111 5ab7f213 commit to the 1.2.0 release (b08500ce atm).
 
 ## Minor changes & fixes in 2.0.1
 
-- [x] disable image browser via settings (disabled by default)
+- [x] Fix: Some user report a missing scrollbar in Extra network tab
+- [x] Fix: image browser spamming console
+- [x] Fix: Image Browser socket do not always close properly when reloading the UI
+- [x] disable image browser via settings (NOW DISABLED BY DEFAULT)
 - [x] extra network tab fix and perf (a bit)
-- [x] fix image browser spamming console
+
 
 ## New features in 2.0.0
 
@@ -27,7 +30,6 @@ From a1111 5ab7f213 commit to the 1.2.0 release (b08500ce atm).
 
 ## Known Issue
 
-- [ ]  Image Browser socket do not always close properly when reloading the UI
 - [ ]  Partial compatibility with Firefox and Opera GX
 - [ ]  Most tweak will not support a live window resize
 - [ ]  Some user report a missing scrollbar in Extra network tab
