@@ -668,7 +668,7 @@ body, #nevysha-loading {
     opacity: 0.8;
     bottom: 0;
     left: 0;
-    z-index: -1;
+    z-index: 0;
 }
 
 .wave:nth-of-type(2) {
@@ -1152,6 +1152,9 @@ canvas.nevysha {
     flex-direction: row;
     width: 100%;
     top: 0;
+}
+.gradio-container.app {
+    z-index: 1;
 }
 .gradio-container.app.menu-fix-top {
     padding-top: 25px !important;
