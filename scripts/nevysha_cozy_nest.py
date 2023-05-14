@@ -1,9 +1,19 @@
-import gradio as gr
-import os
+import asyncio
 import json
+import os
+import socket
 import subprocess
+import sys
+import threading
 
-from modules import scripts, script_callbacks, shared, sd_hijack
+import gradio as gr
+import modules
+import websockets
+from PIL import Image
+from PIL.ExifTags import TAGS
+from modules import script_callbacks, shared, call_queue, scripts
+
+from scripts.cozynest_image_browser import start_server, get_exif
 
 
 def rgb_to_hex(r, g, b):
@@ -33,7 +43,8 @@ def gradio_save_settings(main_menu_position,
                          bg_gradiant_color,
                          accent_color,
                          card_height,
-                         card_width):
+                         card_width,
+                         error_popup):
     settings = {
         'main_menu_position': main_menu_position,
         'quicksettings_position': quicksettings_position,
@@ -44,6 +55,7 @@ def gradio_save_settings(main_menu_position,
         'accent_color': accent_color,
         'card_height': card_height,
         'card_width': card_width,
+        'error_popup': error_popup,
     }
 
     save_settings(settings)
@@ -61,6 +73,7 @@ def save_settings(settings):
 
 def get_dict_from_config():
     if not os.path.exists(CONFIG_FILENAME):
+        reset_settings()
         # return default config
         return get_default_settings()
 
@@ -81,6 +94,7 @@ def get_default_settings():
         'accent_color': rgb_to_hex(92, 175, 214),
         'card_height': '8',
         'card_width': '13',
+        'error_popup': True,
     }
 
 
@@ -104,15 +118,116 @@ def update():
     print(output.decode('utf-8'))
 
 
+def is_port_free(port):
+    # Create a socket object
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        # Try to bind the socket to the specified port
+        sock.bind(("localhost", port))
+        return True
+    except socket.error:
+        return False
+    finally:
+        # Close the socket
+        sock.close()
+
+
+def serv_img_browser_socket(server_port=3333, auto_search_port=True):
+    # check if port is free
+    if auto_search_port:
+        # search for a free port
+        server_port = 3333
+        while not is_port_free(server_port) and server_port < 64000:
+            print(f"CozyNest: Port {server_port} is already in use. Searching for a free port.")
+            server_port += 1
+
+    outdir_txt2img_samples = shared.opts.data['outdir_txt2img_samples']
+    outdir_img2img_samples = shared.opts.data['outdir_img2img_samples']
+    outdir_extras_samples = shared.opts.data['outdir_extras_samples']
+
+    base_dir = scripts.basedir()
+    # check if outdir_txt2img_samples is a relative path
+    if not os.path.isabs(outdir_txt2img_samples):
+        outdir_txt2img_samples = os.path.normpath(os.path.join(base_dir, outdir_txt2img_samples))
+    if not os.path.isabs(outdir_img2img_samples):
+        outdir_img2img_samples = os.path.normpath(os.path.join(base_dir, outdir_img2img_samples))
+    if not os.path.isabs(outdir_extras_samples):
+        outdir_extras_samples = os.path.normpath(os.path.join(base_dir, outdir_extras_samples))
+
+    images_folders = [
+        outdir_txt2img_samples,
+        outdir_img2img_samples,
+        outdir_extras_samples,
+    ]
+
+    try:
+        parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        # add the CozyNest extension to the sys.path.
+        sys.path.append(parent_dir)
+        # start the server in a separate process
+        start_server_in_dedicated_process(images_folders, server_port)
+        return server_port
+    except Exception as e:
+        print("CozyNest: Error while starting socket server")
+        print(e)
+
+
+def start_server_in_dedicated_process(_images_folders, server_port):
+    def run_server():
+        asyncio.run(start_server(_images_folders, server_port))
+
+    # Start the server in a separate thread
+    server_thread = threading.Thread(target=run_server)
+    server_thread.start()
 
 
 def on_ui_tabs():
+    # shared options
+    config = get_dict_from_config()
+    # merge default settings with user settings
+    config = {**get_default_settings(), **config}
+
+    server_port = serv_img_browser_socket()
+
+    async def send_to_socket(data):
+        async with websockets.connect(f'ws://localhost:{server_port}') as websocket:
+            try:
+                while True:
+                    # Send data to the server
+                    data = json.dumps(data).encode('utf-8')
+                    await websocket.send(data)
+
+                    # Receive response from the server
+                    await websocket.recv()
+                    websocket.close()
+                    break
+
+            except websockets.exceptions.ConnectionClosed:
+                print("Connection to socket closed")
+
+    def on_image_saved(gen_params: script_callbacks.ImageSaveParams):
+        base_dir = scripts.basedir()
+
+        if not os.path.isabs(gen_params.filename):
+            path = os.path.normpath(os.path.join(base_dir, gen_params.filename))
+        else:
+            path = gen_params.filename
+
+        asyncio.run(send_to_socket({
+            'what': 'image_saved',
+            'data': get_exif(path),
+        }))
+
+    script_callbacks.on_image_saved(on_image_saved)
+
     with gr.Blocks(analytics_enabled=False) as ui:
+
+        # TODO add settings (maybe in a tab) for the image browser
+        #  - chose port number
+        #  - chose folders to scrap (may be multiple)
+        #  - chose if the server should be started automatically
+
         with gr.Column(elem_id="nevyui-ui-block"):
-            # shared options
-            config = get_dict_from_config()
-            # merge default settings with user settings
-            config = {**get_default_settings(), **config}
 
             # check if user is on the old repo name and display a warning
             if EXTENSION_TECHNICAL_NAME != 'Cozy-Nest':
@@ -124,10 +239,15 @@ def on_ui_tabs():
             # header
             gr.HTML(value="<div class='nevysha settings-nevyui-top'><h2>Nevysha's Cozy Nest</h2>"
                           "<p class='info'>Find your cozy spot on Auto1111's webui</p>"
-                          "<p class='nevysha-reporting'>Found a bug or want to ask for a feature ? Please use "
-                          "  <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
+                          "<p class='nevysha-reporting'>Found a bug or want to ask for a feature ? Please "
+                          "<a onClick='gatherInfoAndShowDialog();return false;' href='_blank'>click here to gather relevant info</a>"
+                          " then use <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
                           " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
                           "<p class='nevysha-emphasis'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
+
+            # error popup checkbox
+            error_popup = gr.Checkbox(value=config.get('error_popup'), label="Display information dialog on Cozy Nest error", elem_id="setting_nevyui_errorPopup", interactive=True)
+
 
             # main menu
             main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position",
@@ -178,7 +298,8 @@ def on_ui_tabs():
                     bg_gradiant_color,
                     accent_color,
                     card_height,
-                    card_width
+                    card_width,
+                    error_popup
                 ], outputs=[])
 
                 btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)",
@@ -195,12 +316,46 @@ def on_ui_tabs():
                     inputs=[],
                     outputs=[], )
 
+                # start socket server
+                btn_start = gr.Button(value="Start Socket Server", elem_id="nevyui_sh_options_start_socket",
+                                      elem_classes="nevyui_apply_settings")
+                btn_start.click(
+                    fn=serv_img_browser_socket,
+                    inputs=[],
+                    outputs=[], )
+
             # add button to trigger git pull
-            btn_update = gr.Button(value="Update", elem_id="nevyui_sh_options_update", visible=False,)
+            btn_update = gr.Button(value="Update", elem_id="nevyui_sh_options_update", visible=False, )
             btn_update.click(
                 fn=update,
                 inputs=[],
                 outputs=[], )
+
+            # text with port number
+            gr.Textbox(elem_id='cnib_socket_server_port', value=f"{server_port}", label="Server port READONLY",
+                       readonly=True, visible=False)
+
+            with gr.Row(elem_id='nevysha-send-to'):
+                html = gr.HTML()
+                generation_info = gr.Textbox(visible=False, elem_id="nevysha_pnginfo_generation_info")
+                html2 = gr.HTML()
+                image = gr.Image(elem_id="nevysha_pnginfo_image", label="Source", source="upload", interactive=True,
+                                 type="pil")
+                image.change(
+                    fn=call_queue.wrap_gradio_call(modules.extras.run_pnginfo),
+                    inputs=[image],
+                    outputs=[html, generation_info, html2],
+                )
+                with gr.Row(elem_id='nevysha-send-to-button'):
+                    buttons = modules.generation_parameters_copypaste.create_buttons(
+                        ["txt2img", "img2img", "inpaint", "extras"])
+
+                for tabname, button in buttons.items():
+                    modules.generation_parameters_copypaste.register_paste_params_button(
+                        modules.generation_parameters_copypaste.ParamBinding(
+                            paste_button=button, tabname=tabname, source_text_component=generation_info,
+                            source_image_component=image,
+                        ))
 
             # footer
             gr.HTML(value="<div class='nevysha settings-nevyui-bottom'>"

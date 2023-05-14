@@ -1,0 +1,203 @@
+#cozy-img-browser-react {
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.connexionStatus {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+.browser {
+    height: 100%;
+    /*overflow-y: scroll;*/
+    display: flex;
+    flex-wrap: wrap;
+    overflow: auto !important;
+}
+
+.hackyOffPageElement {
+    bottom: -20px;
+    display: block;
+    height: 10px;
+    width: 10px;
+}
+
+.image {
+    display: flex;
+    height: 300px;
+    width: 400px;
+    flex-direction: row;
+    padding: 2px;
+}
+.image-wrapper {
+    position: relative;
+    width: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+.cozy-nest-thumbnail {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100% !important;
+    object-fit: cover; /* Maintain aspect ratio while covering the entire container */
+}
+.image-info {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    font-size: 12px;
+    padding: 0 3px;
+    border: 1px solid var(--ae-input-border-color);
+    background: var(--ae-input-bg-color);
+    color: var(--ae-input-color);
+}
+
+.infoModal {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+    border: 1px solid var(--ae-input-border-color);
+    background: var(--ae-input-bg-color);
+    color: var(--ae-input-color);
+    display: flex;
+}
+
+.infoModal > .image-wrapper {
+    width: 80%;
+}
+
+.infoModal > .image-wrapper > img {
+    object-fit: contain;
+}
+
+.infoModal > .image-info {
+    width: 20%
+}
+
+.blocInfo, textarea {
+    display: block;
+    position: relative;
+    outline: none!important;
+    box-shadow: var(--input-shadow);
+    border: var(--input-border-width) solid var(--input-border-color);
+    border-color: var(--input-border-color)!important;
+    border-radius: var(--input-radius)!important;
+    background: var(--input-background-fill)!important;
+    background-color: var(--input-background-fill)!important;
+    width: 100%;
+    color: var(--body-text-color)!important;
+    font-weight: var(--input-text-weight)!important;
+    font-size: var(--input-text-size)!important;
+    line-height: var(--line-sm)!important;
+    font-family: monospace!important;
+}
+
+textarea {
+    resize: none;
+    padding: 8px;
+}
+
+.cnib-title {
+    margin-bottom: 10px;
+}
+
+.beta-emphasis {
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: bold;
+    /* margin-bottom: 6px; */
+    position: absolute;
+    color: #e32f4e;
+    /* left: 5px; */
+    top: 5px;
+}
+
+/*img {*/
+/*    filter: blur(20px);*/
+/*}*/
+/*.infoModal > .image-wrapper > img {*/
+/*    filter: blur(50px);*/
+/*}*/:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}

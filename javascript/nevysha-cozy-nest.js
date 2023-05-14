@@ -624,6 +624,8 @@ async function loadVersionData() {
     document.querySelector('#nevysha-version-info').insertAdjacentHTML('afterbegin', p)
     //hide update button
     document.querySelector('#nevyui_update_btn').style.display = "none";
+    //add version info to the bottom-right corner (no update available)
+    document.getElementsByClassName("versions")[0].innerHTML += '⠀•⠀Cozy Nest: <a href="https://github.com/Nevysha/Cozy-Nest" target="_blank">⠀v' + current_version_data.version + '</a>';
   }
   else {
     //local version is older than remote version
@@ -633,6 +635,9 @@ async function loadVersionData() {
 
     //set fill color of .nevysha-btn-menu-wrapper > button > svg to red
     document.querySelector('#nevyui_update_info > svg').style.fill = "red";
+	
+    //add version info to the bottom-right corner with a notice about an update
+    document.getElementsByClassName("versions")[0].innerHTML += '⠀•⠀Cozy Nest:⠀<span style="color: #f9e02d; text-decoration: underline;" title="Nevysha\'s Cozy Nest Update Available! Latest version: v' + remote_version_data.version + '.\nView update info in the top-right corner for more details.">v' + current_version_data.version + '</span>';
   }
 
 }
@@ -805,8 +810,34 @@ const makeSettingsDraggable = () => {
   });
 }
 
+function observeElementAdded(targetSelector, callback) {
+  console.log('CozyNest: observeElementAdded', targetSelector);
+  // Create a new MutationObserver instance
+  const observer = new MutationObserver(function(mutationsList) {
+    for (const mutation of mutationsList) {
+      // Check if the target element is added
+      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+        for(const node of mutation.addedNodes) {
+          if(node.matches && node.matches(targetSelector)) {
+            observer.disconnect();
+            callback(node);
+          }
+        }
+      }
+    }
+  });
+
+  // Start observing the document body for changes
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
 function tweakExtraNetworks({prefix}) {
   let extraNetworks = document.querySelector(`div#${prefix}_extra_networks`);
+
+  //hide base button txt2img_extra_networks
+  document.querySelector(`button#${prefix}_extra_networks`).style.display = 'none';
+
+  extraNetworks.style.display = 'flex'
 
   // txt2img and img2img extra network are not built the same way in the DOM (:
   // so we handle the DOM tweak differently
@@ -815,72 +846,80 @@ function tweakExtraNetworks({prefix}) {
 
   function tweakTabBehavior() {
     //add an event listener to show it when the user clicks on the button #img2img_extra_networks
-    let shown = false;
-    document.querySelector(`button#${prefix}_extra_networks`).addEventListener('click', (e) => {
-      if (!shown) {
+    window.extraNetworkHandler = window.extraNetworkHandler || {};
+    window.extraNetworkHandler[prefix] = (e) => {
 
-        //I'm lazy
-        document.querySelector(`#${prefix}_textual_inversion_cards`).style.height
-            = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
-        document.querySelector(`#${prefix}_hypernetworks_cards`).style.height
-            = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
-        document.querySelector(`#${prefix}_checkpoints_cards`).style.height
-            = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
+      function closure() {
 
-        // Lora folder list is loaded async? Can't get its offsetHeight normally.
-        // Using a MutationObserver to wait for it to be loaded (and because I suck at CSS)
-        // Select the element to be observed
-        const targetNode = extraNetworkGradioWrapper;
+        let shown = extraNetworkGradioWrapper.style.display === 'flex';
+        if (!shown) {
 
-        // Options for the observer (which mutations to observe)
-        const config = { attributes: true, childList: true, subtree: true };
+          //I'm lazy
+          document.querySelector(`#${prefix}_textual_inversion_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
+          document.querySelector(`#${prefix}_textual_inversion_cards`).classList.add('nevysha', 'nevysha-scrollable')
 
-        // Function to be called when mutations are observed
-        const callback = function(mutationsList, observer) {
-          let subdirOffsetHeight = document.querySelector(`#${prefix}_lora_subdirs`).offsetHeight;
-          if (subdirOffsetHeight <= 0) return;
-          document.querySelector(`#${prefix}_lora_cards`).style.height
-              = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100 - subdirOffsetHeight}px`;
-          observer.disconnect()
-        };
+          document.querySelector(`#${prefix}_hypernetworks_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
+          document.querySelector(`#${prefix}_hypernetworks_cards`).classList.add('nevysha', 'nevysha-scrollable')
 
-        // Create a new observer instance
-        const observer = new MutationObserver(callback);
+          document.querySelector(`#${prefix}_checkpoints_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
+          document.querySelector(`#${prefix}_checkpoints_cards`).classList.add('nevysha', 'nevysha-scrollable')
 
-        // Start observing the target element for configured mutations
-        observer.observe(targetNode, config);
+          // Lora folder list is loaded async? Can't get its offsetHeight normally.
+          // Using a MutationObserver to wait for it to be loaded (and because I suck at CSS)
+          // Select the element to be observed
+          const targetNode = extraNetworkGradioWrapper;
 
-        //show the extra network
-        extraNetworkGradioWrapper.style.display = 'block';
-        extraNetworkGradioWrapper.style.marginRight = `-${extraNetworkGradioWrapper.offsetWidth}px`;
-        // $(extraNetworkGradioWrapper).animate({'margin-right':'toggle'},150);
-        $(extraNetworkGradioWrapper).animate({"margin-right": `+=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
-        extraNetworks.style.display = 'flex';
+          // Options for the observer (which mutations to observe)
+          const config = { attributes: true, childList: true, subtree: true };
 
-      } else {
-        //hide the extra network
-        $(extraNetworkGradioWrapper).animate({"margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
+          // Function to be called when mutations are observed
+          const callback = function(mutationsList, observer) {
+            let subdirOffsetHeight = document.querySelector(`#${prefix}_lora_subdirs`).offsetHeight;
+            if (subdirOffsetHeight <= 0) return;
+            document.querySelector(`#${prefix}_lora_cards`).style.height
+                = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100 - subdirOffsetHeight}px`;
+            document.querySelector(`#${prefix}_lora_cards`).classList.add('nevysha', 'nevysha-scrollable')
+            observer.disconnect()
+          };
 
-        // hide it after the animation is done
-        setTimeout(() => {
-          extraNetworkGradioWrapper.style.display = 'none';
-          extraNetworks.style.display = 'none';
-        }, 350);
+          // Create a new observer instance
+          const observer = new MutationObserver(callback);
+
+          // Start observing the target element for configured mutations
+          observer.observe(targetNode, config);
+
+          //show the extra network
+          extraNetworkGradioWrapper.style.display = 'flex';
+          extraNetworkGradioWrapper.style.marginRight = `-${extraNetworkGradioWrapper.offsetWidth}px`;
+          $(extraNetworkGradioWrapper).animate({"margin-right": `+=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
+        } else {
+          //hide the extra network
+          $(extraNetworkGradioWrapper).animate({
+                "margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`},
+              350,
+              () => {
+                // hide it after the animation is done
+                extraNetworkGradioWrapper.style.display = 'none';
+              });
+        }
       }
-      shown = !shown;
-    });
+
+      if (document.querySelector(`#${prefix}_textual_inversion_cards`)) {
+        closure();
+      }
+      else {
+        // Start observing the target node
+        observeElementAdded(`#${prefix}_textual_inversion_cards`, closure);
+      }
+    };
 
     //add a listener to close the extra network when the user press the escape key
     document.addEventListener('keydown', (e) => {
+      let shown = extraNetworkGradioWrapper.style.display === 'flex';
       if (e.key === 'Escape' && shown) {
-        $(extraNetworkGradioWrapper).animate({"margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
-
-        // hide it after the animation is done
-        setTimeout(() => {
+        $(extraNetworkGradioWrapper).animate({"margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`}, 350, () => {
           extraNetworkGradioWrapper.style.display = 'none';
-          extraNetworks.style.display = 'none';
-        }, 350);
-        shown = false;
+        });
       }
     });
   }
@@ -938,7 +977,7 @@ function tweakExtraNetworks({prefix}) {
   closeENButton.innerHTML = '<div>Close</div>';
   //click the original button to close the extra network
   closeENButton.addEventListener('click', (e) => {
-    document.querySelector(`button#${prefix}_extra_networks`).click();
+    window.extraNetworkHandler[prefix]();
   });
   //add the button at the begining of the div
   lineWrapper.insertBefore(closeENButton, lineWrapper.firstChild);
@@ -961,9 +1000,6 @@ function tweakExtraNetworks({prefix}) {
       // Calculate the difference in mouse position
       const diffX = e.clientX - x;
 
-      //log everything
-      console.log('diffX: ' + diffX);
-
       // Update the container's width
       extraNetworkGradioWrapper.style.width = (width - diffX) + 'px';
     }
@@ -983,20 +1019,20 @@ const COZY_NEST_DOM_TWEAK_LOAD_DURATION = "CozyNest:tweakLoadDuration";
 const COZY_NEST_GRADIO_LOAD_DURATION = "CozyNest:gradioLoadDuration";
 
 function addExtraNetworksBtn({prefix}) {
-  const tab = document.querySelector(`div#tab_${prefix}`);
 
   //create button
   const extraNetworksBtn = document.createElement('button');
   extraNetworksBtn.setAttribute('id', `${prefix}_extra_networks_right_button`);
-  extraNetworksBtn.classList.add('nevysha', 'lg', 'primary', 'gradio-button', 'nevysha-extra-network-btn');
+  extraNetworksBtn.classList.add('nevysha', 'lg', 'primary', 'gradio-button');
   extraNetworksBtn.innerHTML = '<div>Extra Networks</div>';
   //click the original button to close the extra network
   extraNetworksBtn.addEventListener('click', (e) => {
-    document.querySelector(`button#${prefix}_extra_networks`).click();
+    window.extraNetworkHandler[prefix]();
   });
 
-  //add button to the begining of the tab
-  tab.insertBefore(extraNetworksBtn, tab.firstChild);
+  //add button to the begining of the wrapper div
+  const rightPanBtnWrapper = document.querySelector(`div#right_button_wrapper`);
+  rightPanBtnWrapper.insertBefore(extraNetworksBtn, rightPanBtnWrapper.firstChild);
 
 }
 
@@ -1196,6 +1232,169 @@ const onloadSafe = (done) => {
   // }
 }
 
+function createRightWrapperDiv() {
+  const tab = document.querySelector(`div#tabs`);
+
+  //create wrapper div for the button
+  const rightPanBtnWrapper = document.createElement('div');
+  rightPanBtnWrapper.setAttribute('id', `right_button_wrapper`);
+  rightPanBtnWrapper.classList.add('nevysha', 'nevysha-right-button-wrapper');
+  //add button to the begining of the tab
+  tab.insertBefore(rightPanBtnWrapper, tab.firstChild);
+
+  //add a button for image browser
+  const cozyImgBrowserBtn = document.createElement('button');
+  cozyImgBrowserBtn.setAttribute('id', `image_browser_right_button`);
+  cozyImgBrowserBtn.classList.add('nevysha', 'lg', 'primary', 'gradio-button');
+  cozyImgBrowserBtn.innerHTML = `<div>Cozy Image Browser</div>`;
+  cozyImgBrowserBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  });
+  rightPanBtnWrapper.appendChild(cozyImgBrowserBtn);
+
+  //create a panel to display Cozy Image Browser
+  const cozyImgBrowserPanel =
+    `<div id="cozy_img_browser_panel" class="nevysha cozy-img-browser-panel slide-right-browser-panel" style="display: none">
+      <div class="nevysha slide-right-browser-panel-container nevysha-scrollable">
+        <div class="nevysha" id="cozy-img-browser-react"/>
+      </div>
+    </div>`;
+  //add the panel to the end of the tab
+  tab.insertAdjacentHTML('beforeend', cozyImgBrowserPanel);
+
+  // Create a vertical line component
+  const lineWrapper = createVerticalLineComp();
+  const cozyImgBrowserPanelWrapper = document.querySelector('#cozy_img_browser_panel');
+  //set cozyImgBrowserPanelWrapper.style.width from local storage value if it exists
+  const cozyImgBrowserPanelWidth = localStorage.getItem('cozyImgBrowserPanelWrapper');
+  if (cozyImgBrowserPanelWidth) {
+    cozyImgBrowserPanelWrapper.style.width = cozyImgBrowserPanelWidth;
+  }
+  cozyImgBrowserPanelWrapper.appendChild(lineWrapper)
+
+  //TODO refactor to factorise code bellow with extraNetwork
+  //add a close button inside the line
+  const closeCozyImgBrowser = document.createElement('button');
+  closeCozyImgBrowser.setAttribute('id', `floating_close_cozy_img_browser_panel_button`);
+  //add button class
+  closeCozyImgBrowser.classList.add('nevysha', 'lg', 'primary', 'gradio-button', 'nevysha-extra-network-floating-btn');
+  closeCozyImgBrowser.innerHTML = '<div>Close</div>';
+  //click the original button to close the extra network
+  closeCozyImgBrowser.addEventListener('click', (e) => {
+    cozyImgBrowserBtn.click();
+  });
+  //add the button at the begining of the div
+  lineWrapper.insertBefore(closeCozyImgBrowser, lineWrapper.firstChild);
+  //Add an event listener to the resizer element to track mouse movement
+  lineWrapper.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+
+    // Set the initial values for the width and height of the container
+    let width = cozyImgBrowserPanelWrapper.offsetWidth;
+
+    // Set the initial mouse position
+    let x = e.clientX;
+
+    // Track mouse movement while dragging
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', stopDrag);
+
+    function drag(e) {
+      // Calculate the difference in mouse position
+      const diffX = e.clientX - x;
+
+      // Update the container's width
+      cozyImgBrowserPanelWrapper.style.width = (width - diffX) + 'px';
+    }
+
+    function stopDrag() {
+
+      //save the new width in local storage
+      localStorage.setItem(`cozyImgBrowserPanelWrapper`, cozyImgBrowserPanelWrapper.style.width);
+
+      document.removeEventListener('mousemove', drag);
+      document.removeEventListener('mouseup', stopDrag);
+    }
+  });
+
+  //add listener to open or close the panel using jquery animate
+  cozyImgBrowserBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const panel = document.querySelector('#cozy_img_browser_panel');
+    if (panel.style.display === 'none') {
+      panel.style.display = 'flex'
+      panel.style.marginRight = `-${panel.offsetWidth}px`;
+      $(panel).animate({"margin-right": `+=${panel.offsetWidth}`}, 350);
+    }
+    else {
+      $(panel).animate({"margin-right": `-=${panel.offsetWidth}`}, 350, () => {
+        panel.style.display = 'none'
+      });
+    }
+  });
+}
+
+function setButtonVisibilityFromCurrentTab(id) {
+  console.log("setButtonVisibilityFromCurrentTab", id)
+
+  //hide each button that ends with extra_networks_right_button
+  const extraNetworksRightBtns = document.querySelectorAll(`button[id$="extra_networks_right_button"]`);
+  extraNetworksRightBtns.forEach((btn) => {
+    btn.style.display = 'none';
+
+  })
+  if (id === 'tab_txt2img') {
+    document.querySelector('button#txt2img_extra_networks_right_button').style.display = 'flex';
+  }
+  if (id === 'tab_img2img') {
+    document.querySelector('button#img2img_extra_networks_right_button').style.display = 'flex';
+  }
+}
+
+async function sendToPipe(where, elemImgFrom) {
+
+  class FakeDataTransfer {
+    constructor(imgFromBlob) {
+      this.files = [imgFromBlob];
+    }
+  }
+
+  // let elemImgFrom = document.querySelector("#cozy-img-browser-react > div.browser.nevysha.nevysha-scrollable > div:nth-child(1) > div.image-wrapper > img");
+  let inputTo = document.querySelector("#nevysha-send-to > #nevysha_pnginfo_image > div.image-container > div")
+
+  //get image file from elemImgFrom.src
+  const blob = await fetch(elemImgFrom.src).then(r => r.blob());
+
+  // Create a new drop event
+  let dropEvent = new DragEvent("drop", {
+    bubbles: true,
+    cancelable: true,
+  });
+  Object.defineProperty(dropEvent, 'dataTransfer', {
+    value: new FakeDataTransfer(blob)
+  });
+
+  // Dispatch the drop event on the target element
+  inputTo.dispatchEvent(dropEvent);
+
+  //wait a bit and click #nevysha-send-to-button > button#txt2img_tab
+  setTimeout(() => {
+    let clicker;
+    if (where === 'txt2img') {
+      clicker = document.querySelector("#nevysha-send-to-button > button#txt2img_tab")
+    }
+    else if (where === 'img2img') {
+      clicker = document.querySelector("#nevysha-send-to-button > button#img2img_tab")
+    }
+    else if (where === 'inpainting') {
+      clicker = document.querySelector("#nevysha-send-to-button > button#inpaint_tab")
+    }
+    clicker.click()
+  }, 1000)
+}
+
 const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
@@ -1243,7 +1442,22 @@ const onLoad = (done) => {
   document.querySelectorAll('input[type="number"]').forEach(input => input.setAttribute('class', `${input.getAttribute('class')} nevysha`))
   //add .nevysha-scrollable to each .extra-network-cards
   document.querySelectorAll('.extra-network-cards').forEach(elem => elem.setAttribute('class', `${elem.getAttribute('class')} nevysha nevysha-scrollable`))
+  document.querySelector('#nevyui_sh_options_start_socket').setAttribute('style', 'display: none;')
+  //hide "send to" panel in settings
+  //this panel is used to transfert image data into tab
+  document.querySelector('#nevysha-send-to').setAttribute('style', 'display: none;')
 
+  //create a wrapper div on the right for slidable panels
+  createRightWrapperDiv();
+  onUiTabChange(() => {
+    setButtonVisibilityFromCurrentTab(get_uiCurrentTabContent().id);
+  });
+
+  //create a hidden div to contains some container while loading
+  const hiddenDiv = document.createElement('div');
+  hiddenDiv.setAttribute('id', 'nevysha_hidden_div');
+  hiddenDiv.setAttribute('style', 'display: none;');
+  document.querySelector('body').appendChild(hiddenDiv);
 
   //manage text2img tab
   const nevysha_magic = (bundle) => {
@@ -1253,10 +1467,16 @@ const onLoad = (done) => {
     addScrollable(bundle);
     tweakExtraNetworks(bundle);
     addExtraNetworksBtn(bundle);
+
+    const {prefix} = bundle;
+    //click to fetch html tab
+    document.querySelector(`button#${prefix}_extra_networks`).click();
   }
 
   nevysha_magic({prefix: "txt2img"});
   nevysha_magic({prefix: "img2img"});
+
+  setButtonVisibilityFromCurrentTab(get_uiCurrentTabContent().id);
 
   //general
   tweakButtonsIcons();
@@ -1289,8 +1509,23 @@ const onLoad = (done) => {
   //make settings draggable
   makeSettingsDraggable();
 
+  //load /assets/index-eff6a2cc.js
+  loadCozyNestImageBrowserSubmodule();
+
   done();
 };
+
+async function loadCozyNestImageBrowserSubmodule() {
+  try {
+    const jsModule = await fetch(`file=extensions/Cozy-Nest/cozy-nest-image-browser/assets/index.js?t=${Date.now()}`);
+    eval(await jsModule.text());
+    console.log("cozy-nest-image-browser submodule loaded successfully");
+  }
+  catch (err) {
+    // handle any errors that occur during the import process
+    console.error("Failed to load cozy-nest-image-browser submodule", err);
+  }
+}
 
 document.addEventListener("DOMContentLoaded", async function() {
 
@@ -1353,7 +1588,9 @@ document.addEventListener("DOMContentLoaded", async function() {
   // Create a new observer instance
   let step = 0;
   //get last loaded time. If null or zero, set it to 15000ms
-  const lastLoadingTimeSaved = SimpleTimer.last(COZY_NEST_GRADIO_LOAD_DURATION)
+  //since last update, I have to click on extra network button to load the HTML. That's why I add 2000ms (:
+  //the clean way would be to set a small timeout before removing the mutation observer but, eh, I'm lazy atm
+  const lastLoadingTimeSaved = SimpleTimer.last(COZY_NEST_GRADIO_LOAD_DURATION) + 2000
   const lastLoadingTime = lastLoadingTimeSaved ? lastLoadingTimeSaved : 15000
   //observer to update loading percentage
   const observer = new MutationObserver(function(mutations) {
@@ -1384,7 +1621,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
   try {
     // dynamically import jQuery library
-    await loadJQuery();
+    await jsDynamicLoad('file=extensions/Cozy-Nest/assets/jquery-3.6.4.min.js');
 
     // jQuery is now loaded and ready to use
     console.log("jQuery library loaded successfully");
@@ -1393,6 +1630,19 @@ document.addEventListener("DOMContentLoaded", async function() {
     // handle any errors that occur during the import process
     console.error("Failed to load jQuery library", err);
   }
+
+  try {
+    await jsDynamicLoad('file=extensions/Cozy-Nest/assets/jquery-ui.min.js');
+    // jquery-ui is now loaded and ready to use
+    console.log("jquery-ui library loaded successfully");
+  }
+  catch (err) {
+    // handle any errors that occur during the import process
+    console.error("Failed to load jquery-ui library", err);
+  }
+
+  setupPopupInstanceInfo();
+  setupErrorHandling();
 
   // load showdown library
   $.getScript("file=extensions/Cozy-Nest/assets/showdown-1.9.1.min.js", function() {
@@ -1403,21 +1653,108 @@ document.addEventListener("DOMContentLoaded", async function() {
     console.log("nevysha-ui.js: Loading done!");
     //remove #nevysha-loading from DOM
     observer.disconnect();
-    document.querySelector("#nevysha-loading-wrap").remove();
+
+    //wait for one second to let gradio finish request...
+    setTimeout(() => document.querySelector("#nevysha-loading-wrap").remove(), 2000);
 
     SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
     SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
   });
 });
 
+function setupPopupInstanceInfo() {
+  const dialogHtml =
+    `
+    <div id="dialog-message" title="🥺 Woops - Cozy Nest Error ?" style="display:none;">
+      <p class="cozynest-error-tips">Want to report an issue ? Screenshot me and post me on <a href="https://github.com/Nevysha/Cozy-Nest">Github</a></p>
+      <fieldset>
+        <legend>Instance info</legend>
+        <div class="versions cozyerror" id="cozynest-error-instance-info"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Extensions</legend>
+        <div class="cozyerror" id="cozynest-error-extentions"></div>
+      </fieldset>
+      <div id="cozy_nest_error_handling_display"></div>
+      <div id="cozy_nest_error_handling_display_stack" /></div>
+    </div>
+    `
+  document.querySelector('body').insertAdjacentHTML('beforeend', dialogHtml);
+}
+
+function populateInstanceInfoDialog() {
+  ///reset those
+  document.querySelector('#cozy_nest_error_handling_display').innerHTML = '';
+  document.querySelector('#cozy_nest_error_handling_display_stack').innerHTML = '';
+  document.querySelector('#cozy_nest_error_handling_display_stack').setAttribute('style', 'display: none;');
+
+  //gather instance info
+  document.querySelector('#cozynest-error-instance-info').innerHTML = document.querySelector('.versions').innerHTML
+    //add browser info
+    + `<br><br>Browser: <span>${navigator.userAgent}</span>`
+    //add window size
+    + `<br><br>Window size: <span>${window.innerWidth}x${window.innerHeight}</span>`
+  document.querySelector('#cozynest-error-extentions').innerHTML = document.querySelector('#tabs_extensions').querySelector('#extensions').parentElement.innerHTML;
+  //for each tab row, check the first td input and hide the row if it's not checked
+  document.querySelector('#cozynest-error-extentions > table').querySelectorAll('tr').forEach(row => {
+    if (!row.querySelector('td')) return;
+    if (!row.querySelector('td').querySelector('label > input').checked) {
+      row.setAttribute('style', 'display: none;')
+    }
+    //disable input
+    else {
+      row.querySelector('td').querySelector('label > input').setAttribute('disabled', 'disabled')
+    }
+  })
+}
+
+function showInstanceInfoDialog() {
+  $("#dialog-message").dialog({
+    modal: true,
+    width: window.innerWidth - 100,
+    height: window.innerHeight - 100,
+    buttons: {
+      Ok: function () {
+        $(this).dialog("close");
+      }
+    }
+  });
+}
+
+/**
+ * Called from gradio generated code
+ */
+function gatherInfoAndShowDialog() {
+  populateInstanceInfoDialog();
+  showInstanceInfoDialog();
+}
+
+function setupErrorHandling() {
+
+  //set a global error handler
+  window.addEventListener('error', function ({message, filename , lineno, colno, error }) {
+
+    // get setting_nevyui_errorPopup checkbox value
+    const errorPopup = document.querySelector('#setting_nevyui_errorPopup').checked;
+    if (!errorPopup) return;
+
+    // Handle the error here
+    populateInstanceInfoDialog();
+    document.querySelector('#cozy_nest_error_handling_display').innerHTML = `An error occurred: ${message} at ${filename } line ${lineno} column ${colno}`;
+    document.querySelector('#cozy_nest_error_handling_display_stack').innerHTML = error.stack;
+    document.querySelector('#cozy_nest_error_handling_display_stack').setAttribute('style', 'display: block;');
+    showInstanceInfoDialog();
+  });
+}
+
 /**
  * While jQuery has not been loaded we have to manually handle script load the old way
  * @returns {Promise<unknown>}
  */
-function loadJQuery() {
+function jsDynamicLoad(src) {
   return new Promise(function(resolve, reject) {
     const script = document.createElement('script');
-    script.src = 'file=extensions/Cozy-Nest/assets/jquery-3.6.4.min.js';
+    script.src = src;
 
     script.onload = function() {
       resolve();
@@ -1485,8 +1822,7 @@ class SimpleTimer {
 let COZY_NEST_CONFIG;
 
 async function fetchCozyNestConfig() {
-  const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?${Date.now()}`);
-  if (response.ok) {
+  const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?t=${Date.now()}`);  if (response.ok) {
     COZY_NEST_CONFIG = await response.json();
     //save in local storage
     localStorage.setItem('COZY_NEST_CONFIG', JSON.stringify(COZY_NEST_CONFIG));
@@ -1514,6 +1850,24 @@ async function fetchCozyNestConfig() {
 
   // Append the link element to the document head
   document.head.appendChild(googleFontsLink);
+
+  // Cozy-Nest-Image-Browser link
+  const cozyNestImageBrowserLink = document.createElement('link');
+  cozyNestImageBrowserLink.rel = 'stylesheet';
+  cozyNestImageBrowserLink.type = 'text/css';
+  cozyNestImageBrowserLink.href = `file=extensions/Cozy-Nest/cozy-nest-image-browser/assets/index.css?t=${Date.now()}`;
+
+  // Append the link element to the document head
+  document.head.appendChild(cozyNestImageBrowserLink);
+
+  // JQuery UI link
+  const jqueryUiLink = document.createElement('link');
+  jqueryUiLink.rel = 'stylesheet';
+  jqueryUiLink.type = 'text/css';
+  jqueryUiLink.href = `file=extensions/Cozy-Nest/assets/jquery-ui.css?t=${Date.now()}`;
+
+  // Append the link element to the document head
+  document.head.appendChild(jqueryUiLink);
 
   // fetch file=extensions/Cozy-Nest/nevyui_settings.json. add Date to avoid cache
   await fetchCozyNestConfig();

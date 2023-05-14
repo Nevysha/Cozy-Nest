@@ -886,6 +886,16 @@ button.secondary, button.primary {
     margin: 15px -10px 0 -10px;
 }
 
+.slide-right-browser-panel > .vertical-line-wrapper {
+    position: absolute;
+}
+
+.slide-right-browser-panel > .slide-right-browser-panel-container {
+    flex: 1;
+    padding: 10px;
+    margin-left: 15px;
+}
+
 .vertical-line {
     width: 2px !important;
     max-width: 2px !important;
@@ -951,11 +961,13 @@ canvas.nevysha {
 }
 
 #txt2img_extra_networks_nevysha_wrapper > .vertical-line-wrapper,
-#img2img_extra_networks_nevysha_wrapper > .vertical-line-wrapper {
+#img2img_extra_networks_nevysha_wrapper > .vertical-line-wrapper,
+.slide-right-browser-panel > .vertical-line-wrapper {
     z-index: 9999;
     margin: 15px 0 0 5px;
 }
-.nevysha-extra-network-btn {
+
+.nevysha-right-button-wrapper {
     position: fixed;
     right: 0;
     top: calc(75px + var(--nevysha-menu-fix-top-height-less));
@@ -963,11 +975,27 @@ canvas.nevysha {
     height: calc(100vh - (100px + var(--nevysha-menu-fix-top-height-less)));
     width: 25px;
     min-width: 25px !important;
+    display: flex;
+    flex-direction: column;
 }
-.nevysha-extra-network-btn > div, .nevysha-extra-network-floating-btn > div {
+.nevysha-right-button-wrapper > button {
+    flex: 1;
+    min-height: auto !important;
+    max-height: none !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.nevysha-right-button-wrapper > button > div, .nevysha-extra-network-floating-btn > div {
     /*write the text vertically*/
     writing-mode: vertical-rl;
+    width: 25px;
+    min-width: 25px !important;
 }
+
 .nevysha-extra-network-floating-btn {
     height: 100px;
     position: absolute;
@@ -986,6 +1014,18 @@ canvas.nevysha {
     text-overflow: ellipsis;
     width: 100%;
     display: block;
+}
+.slide-right-browser-panel {
+    position: fixed;
+    z-index: 9999;
+    background-color: var(--block-background-fill) !important;
+    width: 75vw;
+    right: 0;
+    height: calc(100% - (100px + var(--nevysha-menu-fix-top-height-less)));
+    top: calc(75px + var(--nevysha-menu-fix-top-height-less));
+    padding-right: 15px;
+    display: flex;
+    flex-direction: row;
 }
 
 #settings_nevyui {
@@ -1148,6 +1188,11 @@ canvas.nevysha {
     letter-spacing: 0.00938em;
     word-wrap: break-word;
     padding: 0 10px;
+}
+.markdown-body > h1 {
+    font-size: medium;
+    color: var(--body-text-color);
+    margin-top: 30px;
 }
 .markdown-body > h2 {
     font-size: 1.4em;
@@ -1359,6 +1404,70 @@ canvas.nevysha {
     background-color: var(--background-fill-primary) !important;
 }
 
+:root {
+    --error-handler-white: #eeeeee;
+}
+#dialog-message {
+    font-size: 12px;
+}
+.ui-dialog-title {
+    color: var(--error-handler-white);
+}
+#cozy_nest_error_handling_display {
+    color: var(--error-handler-white);
+}
+#cozy_nest_error_handling_display_stack {
+    color: red;
+    font-weight: bold;
+    font-family: monospace;
+    white-space: pre-wrap;
+    background-color: #222222;
+    padding: 25px;
+    border-radius: 3px;
+    border-color: red;
+}
+#cozynest-error-extentions > table > tbody > tr > td > a {
+    color: var(--error-handler-white);
+    font-style: italic;
+}
+#dialog-message > fieldset {
+    color: var(--error-handler-white);
+    margin-bottom: 40px;
+}
+#cozynest-error-instance-info > a {
+    color: cyan !important;
+    text-decoration: underline;
+    font-weight: bold;
+}
+.cozynest-error-tips {
+    font-weight: bold;
+    color: var(--error-handler-white);
+    background-color: #d57411;
+    padding: 10px;
+    font-size: 15px;
+}
+.cozynest-error-tips > a {
+    color: cyan;
+    text-decoration: underline;
+    font-weight: bold;
+}
+.ui-dialog {
+    background-color: #101010;
+    border: none;
+}
+.ui-dialog-titlebar, .ui-dialog-buttonpane {
+    background-color: black;
+    border: none;
+    color: var(--error-handler-white);
+}
+.ui-button {
+    background-color: #222222;
+    border: none;
+    color: var(--error-handler-white);
+}
+.ui-button:hover, .ui-widget.ui-widget-content {
+    border: none;
+}
 
 /*Small Cards*/
 
@@ -1375,3 +1484,40 @@ canvas.nevysha {
 .actions .name { max-height:3.3em; overflow:auto; }
 .actions .name:hover, .actions a:hover {filter: brightness(1.3);}
 .actions .name::-webkit-scrollbar {display:none;}
+
+/*Image Browser*/
+.blocInfo, textarea {
+    display: block;
+    position: relative;
+    outline: none!important;
+    box-shadow: var(--input-shadow);
+    border: var(--input-border-width) solid var(--input-border-color);
+    border-color: var(--input-border-color)!important;
+    border-radius: var(--input-radius)!important;
+    background: var(--input-background-fill)!important;
+    background-color: var(--input-background-fill)!important;
+    width: 100%;
+    color: var(--body-text-color)!important;
+    font-weight: var(--input-text-weight)!important;
+    font-size: var(--input-text-size)!important;
+    line-height: var(--line-sm)!important;
+    font-family: monospace!important;
+}
+
+/*Fix for generation info size*/
+
+.infotext {
+    max-height: 200px;
+    overflow-y: auto;
+}
+.infotext::-webkit-scrollbar {
+    width: 5px;
+}
+
+.infotext::-webkit-scrollbar-thumb {
+    background-color: var(--ae-primary-color);
+    border-radius: 20px;
+}
+.infotext::-webkit-scrollbar-track {
+    background-color: transparent;
+}
