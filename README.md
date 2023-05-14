@@ -53,8 +53,11 @@ It's made by being a bit hacky on the DOM to tweaks Gradio default features and 
 # Installation
 1) Open your SD-Webui
 2) Goto Extension Tab
-3) add Extenion by pasting this URL, since this extension is not public in the repository, yet
+3) add Extenion by pasting this URL
    https://github.com/Nevysha/Cozy-Nest
+
+Or search for Cozy Nest in the extension tab 
+(you'll have to check ads because of my ko-fi link inside the extension).
 
 # Looks
 
