@@ -811,6 +811,7 @@ const makeSettingsDraggable = () => {
 }
 
 function observeElementAdded(targetSelector, callback) {
+  console.log('CozyNest: observeElementAdded', targetSelector);
   // Create a new MutationObserver instance
   const observer = new MutationObserver(function(mutationsList) {
     for (const mutation of mutationsList) {
@@ -899,13 +900,9 @@ function tweakExtraNetworks({prefix}) {
               () => {
                 // hide it after the animation is done
                 extraNetworkGradioWrapper.style.display = 'none';
-                // extraNetworks.style.display = 'none';
               });
         }
       }
-
-      //click the base button to show the extra network
-      document.querySelector(`button#${prefix}_extra_networks`).click();
 
       if (document.querySelector(`#${prefix}_textual_inversion_cards`)) {
         closure();
@@ -1456,6 +1453,12 @@ const onLoad = (done) => {
     setButtonVisibilityFromCurrentTab(get_uiCurrentTabContent().id);
   });
 
+  //create a hidden div to contains some container while loading
+  const hiddenDiv = document.createElement('div');
+  hiddenDiv.setAttribute('id', 'nevysha_hidden_div');
+  hiddenDiv.setAttribute('style', 'display: none;');
+  document.querySelector('body').appendChild(hiddenDiv);
+
   //manage text2img tab
   const nevysha_magic = (bundle) => {
     wrapSettings(bundle);
@@ -1464,6 +1467,10 @@ const onLoad = (done) => {
     addScrollable(bundle);
     tweakExtraNetworks(bundle);
     addExtraNetworksBtn(bundle);
+
+    const {prefix} = bundle;
+    //click to fetch html tab
+    document.querySelector(`button#${prefix}_extra_networks`).click();
   }
 
   nevysha_magic({prefix: "txt2img"});
@@ -1581,7 +1588,9 @@ document.addEventListener("DOMContentLoaded", async function() {
   // Create a new observer instance
   let step = 0;
   //get last loaded time. If null or zero, set it to 15000ms
-  const lastLoadingTimeSaved = SimpleTimer.last(COZY_NEST_GRADIO_LOAD_DURATION)
+  //since last update, I have to click on extra network button to load the HTML. That's why I add 2000ms (:
+  //the clean way would be to set a small timeout before removing the mutation observer but, eh, I'm lazy atm
+  const lastLoadingTimeSaved = SimpleTimer.last(COZY_NEST_GRADIO_LOAD_DURATION) + 2000
   const lastLoadingTime = lastLoadingTimeSaved ? lastLoadingTimeSaved : 15000
   //observer to update loading percentage
   const observer = new MutationObserver(function(mutations) {
@@ -1644,7 +1653,9 @@ document.addEventListener("DOMContentLoaded", async function() {
     console.log("nevysha-ui.js: Loading done!");
     //remove #nevysha-loading from DOM
     observer.disconnect();
-    document.querySelector("#nevysha-loading-wrap").remove();
+
+    //wait for one second to let gradio finish request...
+    setTimeout(() => document.querySelector("#nevysha-loading-wrap").remove(), 2000);
 
     SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
     SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
