@@ -1550,6 +1550,12 @@ ul.options::-webkit-scrollbar-thumb {
 button:hover {
     filter: brightness(1.2) !important;
 }
+.nevysha-button:hover {
+    filter: brightness(1.2) !important;
+}
 body.nevysha-light button:hover {
+    filter: brightness(0.95) !important
+}
+body.nevysha-light .nevysha-button:hover {
     filter: brightness(0.95) !important
 }

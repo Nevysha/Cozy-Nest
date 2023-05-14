@@ -780,20 +780,20 @@ const makeSettingsDraggable = () => {
 
   // create draggable icon
   const draggableAnchorIcon = document.createElement('div');
-  draggableAnchorIcon.classList.add('nevysha-draggable-anchor-icon');
+  draggableAnchorIcon.classList.add('nevysha-draggable-anchor-icon', 'nevysha-button');
   //add a drag icon
   draggableAnchorIcon.innerHTML = svg_draggable_anchor;
   // add the anchor to the start of the draggable div
   draggableSettings.insertBefore(draggableAnchorIcon, draggableSettings.firstChild);
   // create a blank div above the svg icon to catch for mousedown events
   const draggableAnchor = document.createElement('div');
-  draggableAnchor.classList.add('nevysha-draggable-anchor');
+  draggableAnchor.classList.add('nevysha-draggable-anchor', 'nevysha-button');
   // add the anchor to the start of the draggable div
   draggableSettings.insertBefore(draggableAnchor, draggableSettings.firstChild);
 
   //add close button
   const settingCloseButton = document.createElement('div');
-  settingCloseButton.classList.add('nevysha-draggable-anchor', 'nevysha-draggable-anchor-icon', 'nevysha-setting-close-button');
+  settingCloseButton.classList.add('nevysha-draggable-anchor', 'nevysha-draggable-anchor-icon', 'nevysha-setting-close-button', 'nevysha-button');
   settingCloseButton.innerHTML = 'Close';
   settingCloseButton.style.left = '50px';
   settingCloseButton.style.top = '2px';
