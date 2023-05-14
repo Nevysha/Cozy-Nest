@@ -4,6 +4,10 @@
 
 From a1111 5ab7f213 commit to the 1.2.0 release (b08500ce atm).  
 
+## Minor changes & fixes in 2.0.1
+
+- [x] 
+
 ## New features in 2.0.0
 
 - [x]  Fully integrated Image Browser **IN BETA**. Lots of bugs and missing features. Please be kind with Github issues.

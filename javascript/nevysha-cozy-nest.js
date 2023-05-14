@@ -567,11 +567,19 @@ async function loadVersionData() {
   current_version_data.number = parseInt(current_version_data.version.replace(/\./g, ''))
   remote_version_data.number = parseInt(remote_version_data.version.replace(/\./g, ''))
 
+  let remote_patchnote = await (await fetch(`https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/PATCHNOTE.md?t=${new Date()}`)).text();
   //insert "Patchnote" title div
-  const patchnoteTitle = `<div class="nevysha-tabnav nevysha-tabnav-settings"><h2 class="nevysha-tabnav-title">Patchnote [${remote_version_data.version}]</h2></div>`;
+  let patchnoteTitle = `<div class="nevysha-tabnav nevysha-tabnav-settings"><h2 class="nevysha-tabnav-title">Patchnote [${remote_version_data.version}]</h2></div>`;
+  //if local version si higher than remote version, fetch from local file (for dev purpose)
+  if (current_version_data.number > remote_version_data.number) {
+    remote_patchnote = await (await fetch(`file=extensions/Cozy-Nest/PATCHNOTE.md?t=${new Date()}`)).text();
+    patchnoteTitle = `<div class="nevysha-tabnav nevysha-tabnav-settings"><h2 class="nevysha-tabnav-title">Patchnote [${current_version_data.version}_DEV]</h2></div>`;
+  }
+
+
   document.querySelector("#nevyui_update_info_panel").insertAdjacentHTML('beforeend', patchnoteTitle);
 
-  let remote_patchnote = await (await fetch(`https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/PATCHNOTE.md?${new Date()}`)).text();
+
 
   //regex to replace [x] with a checkmark
   const regex = /\[x\]/g;
