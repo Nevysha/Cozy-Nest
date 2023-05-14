@@ -4,6 +4,10 @@
 
 From a1111 5ab7f213 commit to the 1.2.0 release (b08500ce atm).  
 
+## Minor changes & fixes in 2.0.3
+
+- [x] "Send to" buttons are opening right side drawer panels rather than swapping tabs #75
+
 ## Minor changes & fixes in 2.0.2
 
 - [x] Cozy Nest error popup should now only be displayed if filename contains Cozy Nest

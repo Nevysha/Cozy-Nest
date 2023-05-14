@@ -1053,7 +1053,8 @@ function addExtraNetworksBtn({prefix}) {
   extraNetworksBtn.innerHTML = '<div>Extra Networks</div>';
   //click the original button to close the extra network
   extraNetworksBtn.addEventListener('click', (e) => {
-   window.extraNetworkHandler[prefix]();
+    if (!e.isTrusted) return
+    window.extraNetworkHandler[prefix]();
   });
 
   //add button to the begining of the wrapper div
