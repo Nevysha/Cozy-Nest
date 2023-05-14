@@ -144,24 +144,7 @@ def serv_img_browser_socket(server_port=3333, auto_search_port=True):
             print(f"CozyNest: Port {server_port} is already in use. Searching for a free port.")
             server_port += 1
 
-    outdir_txt2img_samples = shared.opts.data['outdir_txt2img_samples']
-    outdir_img2img_samples = shared.opts.data['outdir_img2img_samples']
-    outdir_extras_samples = shared.opts.data['outdir_extras_samples']
-
-    base_dir = scripts.basedir()
-    # check if outdir_txt2img_samples is a relative path
-    if not os.path.isabs(outdir_txt2img_samples):
-        outdir_txt2img_samples = os.path.normpath(os.path.join(base_dir, outdir_txt2img_samples))
-    if not os.path.isabs(outdir_img2img_samples):
-        outdir_img2img_samples = os.path.normpath(os.path.join(base_dir, outdir_img2img_samples))
-    if not os.path.isabs(outdir_extras_samples):
-        outdir_extras_samples = os.path.normpath(os.path.join(base_dir, outdir_extras_samples))
-
-    images_folders = [
-        outdir_txt2img_samples,
-        outdir_img2img_samples,
-        outdir_extras_samples,
-    ]
+    images_folders = output_folder_array()
 
     try:
         parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -173,6 +156,26 @@ def serv_img_browser_socket(server_port=3333, auto_search_port=True):
     except Exception as e:
         print("CozyNest: Error while starting socket server")
         print(e)
+
+
+def output_folder_array():
+    outdir_txt2img_samples = shared.opts.data['outdir_txt2img_samples']
+    outdir_img2img_samples = shared.opts.data['outdir_img2img_samples']
+    outdir_extras_samples = shared.opts.data['outdir_extras_samples']
+    base_dir = scripts.basedir()
+    # check if outdir_txt2img_samples is a relative path
+    if not os.path.isabs(outdir_txt2img_samples):
+        outdir_txt2img_samples = os.path.normpath(os.path.join(base_dir, outdir_txt2img_samples))
+    if not os.path.isabs(outdir_img2img_samples):
+        outdir_img2img_samples = os.path.normpath(os.path.join(base_dir, outdir_img2img_samples))
+    if not os.path.isabs(outdir_extras_samples):
+        outdir_extras_samples = os.path.normpath(os.path.join(base_dir, outdir_extras_samples))
+    images_folders = [
+        outdir_txt2img_samples,
+        outdir_img2img_samples,
+        outdir_extras_samples,
+    ]
+    return images_folders
 
 
 def start_server_in_dedicated_process(_images_folders, server_port):
@@ -231,6 +234,11 @@ def on_ui_tabs():
             path = os.path.normpath(os.path.join(base_dir, gen_params.filename))
         else:
             path = gen_params.filename
+
+        images_folders = output_folder_array()
+        # check if the image is in one of the output folders
+        if not any([path.startswith(folder) for folder in images_folders]):
+            return
 
         asyncio.run(send_to_socket({
             'what': 'image_saved',
