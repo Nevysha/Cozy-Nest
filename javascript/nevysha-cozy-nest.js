@@ -1749,7 +1749,7 @@ function setupErrorHandling() {
   window.addEventListener('error', function ({message, filename , lineno, colno, error }) {
 
     // get setting_nevyui_errorPopup checkbox value
-    const errorPopup = document.querySelector('#setting_nevyui_errorPopup').checked;
+    const errorPopup = document.querySelector('#setting_nevyui_errorPopup').querySelector("input").checked;
     if (!errorPopup) return;
 
     // Handle the error here
@@ -1836,7 +1836,8 @@ class SimpleTimer {
 let COZY_NEST_CONFIG;
 
 async function fetchCozyNestConfig() {
-  const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?t=${Date.now()}`);  if (response.ok) {
+  const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?t=${Date.now()}`);
+  if (response.ok) {
     COZY_NEST_CONFIG = await response.json();
     //save in local storage
     localStorage.setItem('COZY_NEST_CONFIG', JSON.stringify(COZY_NEST_CONFIG));

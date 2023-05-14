@@ -44,7 +44,8 @@ def gradio_save_settings(main_menu_position,
                          accent_color,
                          card_height,
                          card_width,
-                         error_popup):
+                         error_popup,
+                         disable_image_browser, ):
     settings = {
         'main_menu_position': main_menu_position,
         'quicksettings_position': quicksettings_position,
@@ -56,6 +57,7 @@ def gradio_save_settings(main_menu_position,
         'card_height': card_height,
         'card_width': card_width,
         'error_popup': error_popup,
+        'disable_image_browser': disable_image_browser,
     }
 
     save_settings(settings)
@@ -95,6 +97,7 @@ def get_default_settings():
         'card_height': '8',
         'card_width': '13',
         'error_popup': True,
+        'disable_image_browser': True,
     }
 
 
@@ -186,8 +189,17 @@ def on_ui_tabs():
     config = get_dict_from_config()
     # merge default settings with user settings
     config = {**get_default_settings(), **config}
+    # save the merged settings
+    save_settings(config)
 
-    server_port = serv_img_browser_socket()
+    # check if the user has disabled the image browser
+    disable_image_browser_value = config.get('disable_image_browser')
+
+    server_port = None
+    if not disable_image_browser_value:
+        server_port = serv_img_browser_socket()
+    else:
+        print("CozyNest: Image browser is disabled. To enable it, go to the CozyNest settings.")
 
     async def send_to_socket(data):
         async with websockets.connect(f'ws://localhost:{server_port}') as websocket:
@@ -218,7 +230,8 @@ def on_ui_tabs():
             'data': get_exif(path),
         }))
 
-    script_callbacks.on_image_saved(on_image_saved)
+    if not disable_image_browser_value:
+        script_callbacks.on_image_saved(on_image_saved)
 
     with gr.Blocks(analytics_enabled=False) as ui:
 
@@ -245,9 +258,15 @@ def on_ui_tabs():
                           " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
                           "<p class='nevysha-emphasis'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
 
-            # error popup checkbox
-            error_popup = gr.Checkbox(value=config.get('error_popup'), label="Display information dialog on Cozy Nest error", elem_id="setting_nevyui_errorPopup", interactive=True)
+            # disable_image_browser
+            disable_image_browser = gr.Checkbox(value=config.get('disable_image_browser'),
+                                                label="Disable image browser (requires reload UI)",
+                                                elem_id="setting_nevyui_disableImageBrowser", interactive=True)
 
+            # error popup checkbox
+            error_popup = gr.Checkbox(value=config.get('error_popup'),
+                                      label="Display information dialog on Cozy Nest error",
+                                      elem_id="setting_nevyui_errorPopup", interactive=True)
 
             # main menu
             main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position",
@@ -299,7 +318,8 @@ def on_ui_tabs():
                     accent_color,
                     card_height,
                     card_width,
-                    error_popup
+                    error_popup,
+                    disable_image_browser
                 ], outputs=[])
 
                 btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)",
