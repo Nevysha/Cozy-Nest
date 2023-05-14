@@ -1610,7 +1610,10 @@ body.nevysha-light .nevysha-button:hover {
     min-height: 45px;
     padding: 10px;
 }
-.nevysha-enhanced-prompt-field-bracket {
+:root {
+    --nevysha-enhanced-prompt-standalone-token-color: #948c6f;
+}
+.nevysha-enhanced-prompt-field-token {
     font-weight:bold;
     font-size: 1.2em;
 }
