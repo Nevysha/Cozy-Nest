@@ -567,11 +567,19 @@ async function loadVersionData() {
   current_version_data.number = parseInt(current_version_data.version.replace(/\./g, ''))
   remote_version_data.number = parseInt(remote_version_data.version.replace(/\./g, ''))
 
+  let remote_patchnote = await (await fetch(`https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/PATCHNOTE.md?t=${new Date()}`)).text();
   //insert "Patchnote" title div
-  const patchnoteTitle = `<div class="nevysha-tabnav nevysha-tabnav-settings"><h2 class="nevysha-tabnav-title">Patchnote [${remote_version_data.version}]</h2></div>`;
+  let patchnoteTitle = `<div class="nevysha-tabnav nevysha-tabnav-settings"><h2 class="nevysha-tabnav-title">Patchnote [${remote_version_data.version}]</h2></div>`;
+  //if local version si higher than remote version, fetch from local file (for dev purpose)
+  if (current_version_data.number > remote_version_data.number) {
+    remote_patchnote = await (await fetch(`file=extensions/Cozy-Nest/PATCHNOTE.md?t=${new Date()}`)).text();
+    patchnoteTitle = `<div class="nevysha-tabnav nevysha-tabnav-settings"><h2 class="nevysha-tabnav-title">Patchnote [${current_version_data.version}_DEV]</h2></div>`;
+  }
+
+
   document.querySelector("#nevyui_update_info_panel").insertAdjacentHTML('beforeend', patchnoteTitle);
 
-  let remote_patchnote = await (await fetch(`https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/PATCHNOTE.md?${new Date()}`)).text();
+
 
   //regex to replace [x] with a checkmark
   const regex = /\[x\]/g;
@@ -851,42 +859,27 @@ function tweakExtraNetworks({prefix}) {
 
       function closure() {
 
+        //tweak height
+        const $cards_html = $('div[id$="_cards_html"]');
+        $cards_html.css('height', `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`);
+        $cards_html.css('display', 'flex');
+
+        //add classes : 'nevysha', 'nevysha-scrollable'
+        const $cards = $('div[id$="_cards"]');
+        $cards.css('height', '100%')
+        $cards.addClass('nevysha');
+        $cards.addClass('nevysha-scrollable');
+
+        const $subdirs = $('div[id$="_subdirs"]');
+        $subdirs.css('height', '100%');
+        $subdirs.css('overflow', 'scroll');
+        $subdirs.css('margin-right', '10px');
+        $subdirs.css('max-width', 'min(33%, 250px)');
+        $subdirs.addClass('nevysha');
+        $subdirs.addClass('nevysha-scrollable');
+
         let shown = extraNetworkGradioWrapper.style.display === 'flex';
         if (!shown) {
-
-          //I'm lazy
-          document.querySelector(`#${prefix}_textual_inversion_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
-          document.querySelector(`#${prefix}_textual_inversion_cards`).classList.add('nevysha', 'nevysha-scrollable')
-
-          document.querySelector(`#${prefix}_hypernetworks_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
-          document.querySelector(`#${prefix}_hypernetworks_cards`).classList.add('nevysha', 'nevysha-scrollable')
-
-          document.querySelector(`#${prefix}_checkpoints_cards`).style.height = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`;
-          document.querySelector(`#${prefix}_checkpoints_cards`).classList.add('nevysha', 'nevysha-scrollable')
-
-          // Lora folder list is loaded async? Can't get its offsetHeight normally.
-          // Using a MutationObserver to wait for it to be loaded (and because I suck at CSS)
-          // Select the element to be observed
-          const targetNode = extraNetworkGradioWrapper;
-
-          // Options for the observer (which mutations to observe)
-          const config = { attributes: true, childList: true, subtree: true };
-
-          // Function to be called when mutations are observed
-          const callback = function(mutationsList, observer) {
-            let subdirOffsetHeight = document.querySelector(`#${prefix}_lora_subdirs`).offsetHeight;
-            if (subdirOffsetHeight <= 0) return;
-            document.querySelector(`#${prefix}_lora_cards`).style.height
-                = `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100 - subdirOffsetHeight}px`;
-            document.querySelector(`#${prefix}_lora_cards`).classList.add('nevysha', 'nevysha-scrollable')
-            observer.disconnect()
-          };
-
-          // Create a new observer instance
-          const observer = new MutationObserver(callback);
-
-          // Start observing the target element for configured mutations
-          observer.observe(targetNode, config);
 
           //show the extra network
           extraNetworkGradioWrapper.style.display = 'flex';
@@ -1027,7 +1020,7 @@ function addExtraNetworksBtn({prefix}) {
   extraNetworksBtn.innerHTML = '<div>Extra Networks</div>';
   //click the original button to close the extra network
   extraNetworksBtn.addEventListener('click', (e) => {
-    window.extraNetworkHandler[prefix]();
+   window.extraNetworkHandler[prefix]();
   });
 
   //add button to the begining of the wrapper div
@@ -1748,7 +1741,7 @@ function setupErrorHandling() {
   window.addEventListener('error', function ({message, filename , lineno, colno, error }) {
 
     // get setting_nevyui_errorPopup checkbox value
-    const errorPopup = document.querySelector('#setting_nevyui_errorPopup').checked;
+    const errorPopup = document.querySelector('#setting_nevyui_errorPopup').querySelector("input").checked;
     if (!errorPopup) return;
 
     // Handle the error here
@@ -1835,7 +1828,8 @@ class SimpleTimer {
 let COZY_NEST_CONFIG;
 
 async function fetchCozyNestConfig() {
-  const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?t=${Date.now()}`);  if (response.ok) {
+  const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?t=${Date.now()}`);
+  if (response.ok) {
     COZY_NEST_CONFIG = await response.json();
     //save in local storage
     localStorage.setItem('COZY_NEST_CONFIG', JSON.stringify(COZY_NEST_CONFIG));
@@ -1912,4 +1906,9 @@ const dummyControlNetBloc = () => {
     const clone = parent.cloneNode(true);
     parent.parentElement.insertBefore(clone, parent);
   }
+}
+
+const dummySubdirs = () => {
+  const $subdirs = $('#txt2img_lora_subdirs');
+  $subdirs.append($subdirs.html());
 }

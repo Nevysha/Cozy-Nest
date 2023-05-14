@@ -966,6 +966,12 @@ canvas.nevysha {
     z-index: 9999;
     margin: 15px 0 0 5px;
 }
+/*div[id$="_extra_tabs"] {*/
+/*    flex: 1 !important;*/
+/*    height: 100% !important;*/
+/*    display: flex !important;*/
+/*    flex-direction: column !important;*/
+/*}*/
 
 .nevysha-right-button-wrapper {
     position: fixed;

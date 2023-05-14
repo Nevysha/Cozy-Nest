@@ -8800,6 +8800,43 @@ function Browser(props) {
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { id: "loadMoreThreshold", className: "hackyOffPageElement" })
   ] });
 }
+function MockImageBrowser() {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Column, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "cnib-title", children: [
+        "Cozy Nest Image Browser ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "beta-emphasis", children: "beta" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Row, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+          "The WebSocket is currently ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "connexionStatus", style: { color: "red" }, children: "Closed" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            className: "nevysha lg primary gradio-button btn",
+            style: { marginLeft: "20px", width: "410px" },
+            disabled: true,
+            children: "Image browser is disabled. To enable it, go to the CozyNest settings."
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "textarea",
+        {
+          "data-testid": "textbox",
+          placeholder: "Search anything : Prompt, Size, Model, ...",
+          rows: "1",
+          spellCheck: "false",
+          "data-gramm": "false",
+          disabled: true
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Browser, { imagesRef: [] }, 0)
+  ] });
+}
 let _DEV = false;
 (function() {
   if (window.location.href.includes("file=extensions/Cozy-Nest/cozy-nest-image-browser")) {
@@ -8831,7 +8868,12 @@ const serverPort = (() => {
     return 3333;
   }
 })();
+const config = JSON.parse(localStorage.getItem("COZY_NEST_CONFIG"));
+const disable_image_browser = config["disable_image_browser"];
 function App() {
+  if (disable_image_browser) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(MockImageBrowser, {}) });
+  }
   const [socketUrl, setSocketUrl] = reactExports.useState(`ws://localhost:${serverPort}`);
   const [messageHistory, setMessageHistory] = reactExports.useState([]);
   const [images, setImages] = reactExports.useState([]);
@@ -8841,7 +8883,7 @@ function App() {
   const { sendMessage, lastMessage, readyState, getWebSocket } = useWebSocket(
     socketUrl,
     {
-      shouldReconnect: () => true,
+      shouldReconnect: () => disable_image_browser,
       reconnectAttempts: 10,
       reconnectInterval: 3e3
     }
