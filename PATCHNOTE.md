@@ -9,13 +9,12 @@
 
 ## Issues fixed
 
-- [x]  Laggy Extra Network tab opening (still a bit laggy, but better)
+- [x]  Laggy Extra Network tab opening
 - [x]  crash when loading without setting file saved
 - [x]  Fix Drag and drop image
 
 ## Known Issue
 
-- [ ]  Laggy Extra Network tab opening. a1111 changed the way Extra network are loaded and they can't be tweaked as before in the last update
 - [ ]  Partial compatibility with Firefox and Opera GX
 - [ ]  Most tweak will not support a live window resize
 - [ ]  Some user report a missing scrollbar in Extra network tab
