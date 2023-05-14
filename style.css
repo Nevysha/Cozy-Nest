@@ -120,7 +120,7 @@
     --border-color-accent: var(--neutral-600);
     --border-color-primary: var(--neutral-700);
     --link-text-color-active: var(--secondary-500);
-    --link-text-color-hover: var(--secondary-400);
+    --link-text-color-hover: var(--ae-primary-color);
     --link-text-color-visited: var(--secondary-600);
     --body-text-color-subdued: var(--neutral-400);
     --shadow-drop: rgba(0,0,0,0.05) 0px 1px 2px 0px;
@@ -302,6 +302,8 @@
     --neutral-800: var(--nevysha-light-dark);
     --neutral-900: var(--nevysha-light-dark);
     --neutral-950: var(--nevysha-light-dark);
+
+    --link-text-color-hover: var(--ae-primary-color);
 
     --ae-slider-bg-overlay: repeating-linear-gradient( 90deg, transparent, transparent max(3px, calc(0.671141% - 2px)), var(--ae-input-border-color) max(3px, calc(0.671141% - 2px)), var(--ae-input-border-color) max(4px, calc(0.671141% + 0px)) );
     --ae-subgroup-input-bg-color: hsl(225deg 6% 13%);
@@ -1530,4 +1532,7 @@ canvas.nevysha {
 
 button:hover {
     filter: brightness(1.2) !important;
+}
+body.nevysha-light button:hover {
+    filter: brightness(0.95) !important
 }

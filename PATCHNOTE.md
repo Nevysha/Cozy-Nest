@@ -4,8 +4,10 @@
 
 From a1111 5ab7f213 commit to the 1.2.0 release (b08500ce atm).  
 
-## Minor changes & fixes in 2.0.1
+## Minor changes & fixes in 2.0.2
 
+- [x] Fix image browser crash if metadata are not formatted as expected (although metadata display may display "Error parsing metadata")
+- [x] Fix Download image link hidden on hover
 - [x] Fix: Grid image appear in Image browser after batch gen
 - [x] Fix: Some user report a missing scrollbar in Extra network tab
 - [x] Fix: image browser spamming console
@@ -31,6 +33,7 @@ From a1111 5ab7f213 commit to the 1.2.0 release (b08500ce atm).
 
 ## Known Issue
 
+- [ ]  Metadata display in image browser may display "Error parsing metadata"
 - [ ]  Partial compatibility with Firefox and Opera GX
 - [ ]  Most tweak will not support a live window resize
 - [ ]  Some user report a missing scrollbar in Extra network tab
