@@ -1379,7 +1379,20 @@ async function sendToPipe(where, elemImgFrom) {
   // Dispatch the drop event on the target element
   inputTo.dispatchEvent(dropEvent);
 
-  //wait a bit and click #nevysha-send-to-button > button#txt2img_tab
+  //ensure navigation to the dedicated tab
+  if (where === 'txt2img') {
+    document.querySelector('#tabs > div.tab-nav').querySelector('#txtimg').click();
+  }
+  else if (where === 'img2img') {
+    document.querySelector('#tabs > div.tab-nav').querySelector('#imgimg').click();
+    document.querySelectorAll('#mode_img2img > div > button')[0].click();
+  }
+  else if (where === 'inpainting') {
+    document.querySelector('#tabs > div.tab-nav').querySelector('#imgimg').click();
+    document.querySelectorAll('#mode_img2img > div > button')[2].click();
+  }
+
+  //wait a bit for the gradio loading to end and click #nevysha-send-to-button > button#txt2img_tab
   setTimeout(() => {
     let clicker;
     if (where === 'txt2img') {
