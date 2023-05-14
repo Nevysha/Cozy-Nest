@@ -1530,6 +1530,23 @@ canvas.nevysha {
     background-color: transparent;
 }
 
+ul.options {
+    max-height: 300px !important;
+    overflow-y: auto;
+}
+ul.options::-webkit-scrollbar {
+    width: 5px;
+}
+
+ul.options::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+ul.options::-webkit-scrollbar-thumb {
+    background-color: var(--ae-primary-color);
+    border-radius: 20px;
+}
+
 button:hover {
     filter: brightness(1.2) !important;
 }
