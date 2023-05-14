@@ -645,7 +645,7 @@ async function loadVersionData() {
 
   const converter = new showdown.Converter();
 
-  const article = `<article class="markdown-body">${converter.makeHtml(remote_patchnote)}</article>`
+  const article = `<article class="markdown-body nevysha nevysha-scrollable">${converter.makeHtml(remote_patchnote)}</article>`
   document.querySelector('#nevyui_update_info_panel').insertAdjacentHTML('beforeend', article)
 
   //create a div that will contain info related to version compliance
