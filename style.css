@@ -360,6 +360,9 @@
 .gradio-dropdown ul.options li.item.selected {
     background-color: var(--ae-primary-color) !important;
 }
+.gradio-dropdown ul.options li.item:hover {
+    background-color: var(--color-accent);
+}
 .progressDiv .progress{
     background: var(--ae-primary-color) !important;;
 }
