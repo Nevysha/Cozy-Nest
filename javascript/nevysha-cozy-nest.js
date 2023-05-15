@@ -1469,23 +1469,27 @@ function createNevyshaMagicPrompt() {
   //create a div to hold the prompt
   const nevyshaMagicPromptHTML =
       `
-        <div class="nevysha-enhanced-prompt-field" 
-            id='nevysha-enhanced-prompt-field' 
-          >
-            <div class="prompt" spellcheck="false" contenteditable="true"></div>
+        <div>
+          <input type="text" id="nevysha-enhanced-prompt-buffer" placeholder="BUFFER" style="background-color: #1c1c1c;"/>
+          <div class="nevysha-enhanced-prompt-field" 
+              id='nevysha-enhanced-prompt-field' 
+            >
+              <div class="prompt" spellcheck="false" contenteditable="true"></div>
+          </div>
         </div>
       `;
   //append at the beginning
   document.querySelector('#txt2img_toprow').insertAdjacentHTML('afterbegin', nevyshaMagicPromptHTML);
 
   const nevyshaMagicPrompt = document.querySelector('#nevysha-enhanced-prompt-field > .prompt')
+  const nevyshaMagicPromptBuffer = document.querySelector('#nevysha-enhanced-prompt-buffer')
 
   //set MutationObserver to #nevysha-enhanced-prompt-field > .prompt to color matching brackets
   // Create a new MutationObserver instance
   const observer = new MutationObserver((mutationsList, observer) => {
     // Handle the mutations
     // Call the function to color the matching brackets
-    observer.disconnect()
+    unwatch();
     colorMatchingBrackets(nevyshaMagicPrompt);
   });
 
@@ -1495,51 +1499,72 @@ function createNevyshaMagicPrompt() {
     subtree: true
   };
 
-  // Start observing the target node
-  observer.observe(nevyshaMagicPrompt, observerConfig);
 
+  const watch = () => {
+    console.log('watching')
+    observer.observe(nevyshaMagicPrompt, observerConfig);
+  }
+  const unwatch = () => {
+    console.log('unwatching')
+    observer.disconnect();
+  }
+  // Start observing the target node
+  watch();
+
+  nevyshaMagicPromptBuffer.addEventListener('input', (e) => {
+    unwatch();
+    console.log(e)
+    if (e.inputType  === 'insertText') {
+      const newChar = e.target.value;
+      nevyshaMagicPrompt.innerHTML = nevyshaMagicPrompt.innerHTML + onNewChar(newChar);
+      e.target.value = '';
+    }
+    watch();
+  });
+
+  const stack = [];
+  const colors = {};
+  const openBrackets = ['(', '<'];
+  const closeBrackets = [')', '>'];
+  const standaloneTokens = [',', ':', ';', '.' ];
   function colorMatchingBrackets(selector) {
     const div = selector;
     const content = div.innerText;
     let buffer = '';
 
-    const openBrackets = ['(', '<'];
-    const closeBrackets = [')', '>'];
-    const standaloneTokens = [',', ':', ';', '.' ];
-
-    const stack = [];
-    const colors = {};
-
     for (let i = 0; i < content.length; i++) {
       const char = content[i];
 
-      if (openBrackets.includes(char)) {
-        const color = getRandomColor();
-        colors[char] = color;
-        stack.push({ char, color });
-        buffer += `<span class="nevysha-enhanced-prompt-field-token bracket" style="color: ${color};">${char}</span>`;
-      }
-      else if (closeBrackets.includes(char)) {
-        const lastBracket = stack.pop();
-        if (lastBracket && lastBracket.char === getMatchingBracket(char)) {
-          const color = lastBracket.color;
-          buffer += `<span class="nevysha-enhanced-prompt-field-token bracket" style="color: ${color};">${char}</span>`;
-          if (stack.length === 0) {
-            buffer += '<br>';
-          }
-        }
-      }
-      else if (standaloneTokens.includes(char)) {
-        buffer += `<span class="nevysha-enhanced-prompt-field-token standalone" 
-                        style="color: var(--nevysha-enhanced-prompt-standalone-token-color)">${char}</span>`;
-      }
-      else {
-        buffer += char;
-      }
+      buffer += onNewChar(char);
     }
 
     div.innerHTML = buffer;
-    observer.observe(nevyshaMagicPrompt, observerConfig); //reconnect the observer
+    watch() //reconnect the observer
+  }
+
+  function onNewChar(char) {
+    let toAppend = '';
+    if (openBrackets.includes(char)) {
+      const color = getRandomColor();
+      colors[char] = color;
+      stack.push({char, color});
+      toAppend += `<span class="nevysha-enhanced-prompt-field-token bracket" style="color: ${color};">${char}</span>`;
+    } else if (closeBrackets.includes(char)) {
+      const lastBracket = stack.pop();
+      if (lastBracket && lastBracket.char === getMatchingBracket(char)) {
+        const color = lastBracket.color;
+        toAppend += `<span class="nevysha-enhanced-prompt-field-token bracket" style="color: ${color};">${char}</span>`;
+        if (stack.length === 0) {
+          toAppend += '<br>';
+        }
+      }
+    } else if (standaloneTokens.includes(char)) {
+      toAppend += `<span class="nevysha-enhanced-prompt-field-token standalone" 
+                        style="color: var(--nevysha-enhanced-prompt-standalone-token-color)">${char}</span>`;
+    } else {
+      toAppend += char;
+    }
+    return toAppend;
   }
 
   function getRandomColor() {
