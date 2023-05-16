@@ -931,7 +931,7 @@ function tweakExtraNetworks({prefix}) {
 
         //add classes : 'nevysha', 'nevysha-scrollable'
         const $cards = $('div[id$="_cards"]');
-        $cards.css('height', '100%')
+        // $cards.css('height', '100%')
         $cards.addClass('nevysha');
         $cards.addClass('nevysha-scrollable');
 
@@ -1905,6 +1905,18 @@ async function fetchCozyNestConfig() {
 
 (async () => {
 
+  //check if the param CozyNest=No is present in the url
+  const urlParams = new URLSearchParams(window.location.search);
+  const cozyNestParam = urlParams.get('CozyNest');
+  if (cozyNestParam === "No") {
+    console.log("Cozy Nest disabled by url param")
+    //remove the css with Cozy-Nest in the url
+    document.querySelectorAll('link').forEach(link => {
+      if (link.href.includes("Cozy-Nest")) link.remove()
+    })
+    return
+  }
+
   SimpleTimer.time(COZY_NEST_GRADIO_LOAD_DURATION);
 
   // Create a new link element and set its attributes
@@ -1978,4 +1990,20 @@ const dummyControlNetBloc = () => {
 const dummySubdirs = () => {
   const $subdirs = $('#txt2img_lora_subdirs');
   $subdirs.append($subdirs.html());
+}
+
+const selectize = () => {
+  //get everything inside the txt2img_lora_subdirs
+  const $subdirs = $('#txt2img_lora_subdirs');
+
+  //get all children of the txt2img_lora_subdirs and transform them into options
+  let newNode = '<input list="txt2img_lora_subdirs"><datalist id="txt2img_lora_subdirs">'
+  $subdirs.children().each(function() {
+    $(this).css('display', 'none');
+    newNode += `<option value="${this.innerText}">`;
+  });
+  newNode += '</datalist>';
+
+  //move the children of $subdirs into the datalist
+  $('#txt2img_lora_subdirs').append(newNode);
 }
