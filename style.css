@@ -1157,7 +1157,8 @@ canvas.nevysha {
     z-index: 1;
 }
 .gradio-container.app.menu-fix-top {
-    padding-top: 25px !important;
+    padding-top: 0 !important;
+    height: 100%;
 }
 
 #tab_nevyui > div {

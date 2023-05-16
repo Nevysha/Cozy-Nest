@@ -428,6 +428,8 @@ function applyCozyNestConfig() {
       document.querySelector(':root').style.setProperty('--nevysha-margin-left', `0`);
       document.querySelector(':root').style.setProperty('--nevysha-menu-fix-top-height-less', `25px`);
 
+      recalcOffsetFromMenuHeight();
+
       //centered or not
       const isCenteredChecked = document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top_centered]").checked;
       if (isCenteredChecked) {
@@ -1464,6 +1466,17 @@ async function sendToPipe(where, elemImgFrom) {
   }, 1000)
 }
 
+const recalcOffsetFromMenuHeight = () => {
+  const menu = document.querySelector('.tab-nav.nevysha-tabnav')
+
+  const $app = $('.gradio-container.app');
+
+  const menuHeight = menu.offsetHeight;
+
+  $app.attr('style', `${$app.attr('style')} padding-top: ${menuHeight}px !important;`);
+  document.querySelector(':root').style.setProperty('--nevysha-menu-fix-top-height-less', `${menuHeight +2}px`);
+}
+
 const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
@@ -1517,6 +1530,7 @@ const onLoad = (done) => {
   //create a wrapper div on the right for slidable panels
   createRightWrapperDiv();
   onUiTabChange(() => {
+    console.log(get_uiCurrentTabContent().id)
     setButtonVisibilityFromCurrentTab(get_uiCurrentTabContent().id);
   });
 
@@ -1554,6 +1568,7 @@ const onLoad = (done) => {
 
   //load settings
   applyCozyNestConfig();
+  recalcOffsetFromMenuHeight();
 
   //add tab wrapper
   addTabWrapper();
