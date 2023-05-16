@@ -934,10 +934,6 @@ function tweakExtraNetworks({prefix}) {
         $cards.addClass('nevysha-scrollable');
 
         const $subdirs = $('div[id$="_subdirs"]');
-        $subdirs.css('height', '100%');
-        $subdirs.css('overflow', 'scroll');
-        $subdirs.css('margin-right', '10px');
-        $subdirs.css('max-width', 'min(33%, 250px)');
         $subdirs.addClass('nevysha');
         $subdirs.addClass('nevysha-scrollable');
 

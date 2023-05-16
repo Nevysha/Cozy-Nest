@@ -1054,6 +1054,15 @@ canvas.nevysha {
     flex-direction: row;
 }
 
+.extra-network-subdirs {
+    overflow: scroll;
+    margin-right: 10px;
+    min-height: 50px;
+    max-height: 150px;
+    /*height: 100%;*/ /* Originally from cozy-nest.js: $subdirs.css('height', '100%'); */
+    /*max-width: min(33%, 250px);*/ /* $subdirs.css('max-width', 'min(33%, 250px)'); */
+}
+
 #settings_nevyui {
 
 }
