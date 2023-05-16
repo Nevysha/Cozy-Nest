@@ -1089,6 +1089,9 @@ function addExtraNetworksBtn({prefix}) {
   const rightPanBtnWrapper = document.querySelector(`div#right_button_wrapper`);
   rightPanBtnWrapper.insertBefore(extraNetworksBtn, rightPanBtnWrapper.firstChild);
 
+  if (prefix === 'img2img') {
+    document.querySelector(`#${prefix}_extra_networks_right_button`).style.display = 'none';
+  }
 }
 
 const addTabWrapper = () => {
@@ -1532,22 +1535,23 @@ const onLoad = (done) => {
 
   //manage text2img tab
   const nevysha_magic = (bundle) => {
-    wrapSettings(bundle);
-    wrapDataGenerationInfo(bundle);
-    addDraggable(bundle);
-    addScrollable(bundle);
-    tweakExtraNetworks(bundle);
-    addExtraNetworksBtn(bundle);
 
     const {prefix} = bundle;
     //click to fetch html tab
     document.querySelector(`button#${prefix}_extra_networks`).click();
+
+    setTimeout(() => {
+      wrapSettings(bundle);
+      wrapDataGenerationInfo(bundle);
+      addDraggable(bundle);
+      addScrollable(bundle);
+      tweakExtraNetworks(bundle);
+      addExtraNetworksBtn(bundle);
+    }, 500)
   }
 
   nevysha_magic({prefix: "txt2img"});
   nevysha_magic({prefix: "img2img"});
-
-  setButtonVisibilityFromCurrentTab(get_uiCurrentTabContent().id);
 
   //general
   tweakButtonsIcons();
