@@ -360,6 +360,9 @@
 .gradio-dropdown ul.options li.item.selected {
     background-color: var(--ae-primary-color) !important;
 }
+.gradio-dropdown ul.options li.item:hover {
+    background-color: var(--color-accent);
+}
 .progressDiv .progress{
     background: var(--ae-primary-color) !important;;
 }
@@ -1049,6 +1052,14 @@ canvas.nevysha {
     padding-right: 15px;
     display: flex;
     flex-direction: row;
+}
+.extra-network-subdirs {
+    overflow: scroll;
+    margin-right: 10px;
+    min-height: 50px;
+    max-height: 150px;
+    /*height: 100%;*/ /* Originally from cozy-nest.js: $subdirs.css('height', '100%'); */
+    /*max-width: min(33%, 250px);*/ /* $subdirs.css('max-width', 'min(33%, 250px)'); */
 }
 
 #settings_nevyui {
