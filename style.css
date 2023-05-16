@@ -353,6 +353,11 @@
     --main-tabs-background-color: #e5e5e585;
 }
 
+/*css trick for perf ?*/
+#kofi_nevysha_support {
+    transform: rotateZ(360deg);
+}
+
 .gradio-button.secondary-down:hover {
     background: var(--button-secondary-background-fill-hover);
     color: var(--button-secondary-text-color-hover);
@@ -417,6 +422,7 @@ input[type="number"]::-webkit-inner-spin-button::after {
 
 .gradio-container.app {
     padding: 2px !important;
+    transform: rotateZ(360deg)
 }
 
 input[type=range] {
