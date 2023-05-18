@@ -4,6 +4,10 @@
 
 From a1111 5ab7f213 commit to the 1.2.0 release (b08500ce atm).  
 
+## Minor changes & fixes in 2.0.6
+
+- [x] Fix : Add a max height for quicksettings size.
+
 ## Minor changes & fixes in 2.0.5
 
 - [x] Fix for menu and quicksettings size. Should be more consistent now, but still buggy with too many quicksettings.
