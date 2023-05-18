@@ -1525,15 +1525,6 @@ const recalcOffsetFromMenuHeight = () => {
     }
   }
 
-
-  console.log(window.troubleshootSize)
-
-  //TODO => #tabs css
-  //     display: block;
-  //     position: fixed;
-  //     top: 102px;
-  //     width: 100vw;
-
 }
 
 const onLoad = (done) => {
