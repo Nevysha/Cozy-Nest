@@ -1,13 +1,15 @@
 :root {
     /*override by code when applying settings*/
     --nevysha-margin-left: 175px;
-    --nevysha-menu-fix-top-height-less: 1px;
     --ae-primary-color: rgb(92, 175, 214);
     --nevysha-gradiant-1: rgb(101,0,94);
     --nevysha-text-md: 12px;
     --nevysha-color-from-luminance: black;
     --extra-network-card-width: 13em;
     --extra-network-card-height: 8em;
+
+    --menu-top-height: 1px;
+    --main-container-height: 1px;
 }
 :root, .dark {
     /*--nevysha-gradiant-1: #8777a1;*/
@@ -492,8 +494,9 @@ input[type=range]::-webkit-slider-thumb {
     background-color: var(--main-tabs-background-color);
     border: none;
     border-radius: 0;
-    height: calc(100vh - (100px + var(--nevysha-menu-fix-top-height-less)));
     overflow-y: auto;
+    height: var(--main-container-height);
+    padding: 0 10px;
 }
 #tabs > .nevysha.tabitem::-webkit-scrollbar {
     width: 5px;
@@ -975,8 +978,8 @@ canvas.nevysha {
     background-color: var(--block-background-fill) !important;
     width: 75vw;
     right: 0;
-    height: calc(100% - (100px + var(--nevysha-menu-fix-top-height-less)));
-    top: calc(75px + var(--nevysha-menu-fix-top-height-less));
+    height: calc(100% - (100px + var(--menu-top-height)));
+    top: calc(75px + var(--menu-top-height));
     padding-right: 15px;
 }
 #txt2img_extra_networks_nevysha_wrapper,
@@ -1002,9 +1005,9 @@ canvas.nevysha {
 .nevysha-right-button-wrapper {
     position: fixed;
     right: 0;
-    top: calc(75px + var(--nevysha-menu-fix-top-height-less));
+    top: calc(75px + var(--menu-top-height));
     z-index: 999;
-    height: calc(100vh - (100px + var(--nevysha-menu-fix-top-height-less)));
+    height: calc(100vh - (100px + var(--menu-top-height)));
     width: 25px;
     min-width: 25px !important;
     display: flex;
@@ -1053,8 +1056,8 @@ canvas.nevysha {
     background-color: var(--block-background-fill) !important;
     width: 75vw;
     right: 0;
-    height: calc(100% - (100px + var(--nevysha-menu-fix-top-height-less)));
-    top: calc(75px + var(--nevysha-menu-fix-top-height-less));
+    height: calc(100% - (100px + var(--menu-top-height)));
+    top: calc(75px + var(--menu-top-height));
     padding-right: 15px;
     display: flex;
     flex-direction: row;
@@ -1205,10 +1208,11 @@ input[type="number"] {
 }
 .gradio-container.app {
     z-index: 1;
+    height: 100vh !important;
 }
 .gradio-container.app.menu-fix-top {
     padding-top: 0 !important;
-    height: 100%;
+    padding-bottom: 20px !important;
 }
 
 #tab_nevyui > div {
