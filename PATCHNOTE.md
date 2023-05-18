@@ -4,6 +4,10 @@
 
 From a1111 5ab7f213 commit to the 1.2.0 release (b08500ce atm).  
 
+## Minor changes & fixes in 2.0.5
+
+- [x] Fix for menu and quicksettings size. Should be more consistent now, but still buggy with too many quicksettings.
+
 ## Minor changes & fixes in 2.0.4
 
 - [x] Simplify extra network cards/thumb display - should work better. I know that a lots of work still remain to be done on this part but code need a cleanup before.

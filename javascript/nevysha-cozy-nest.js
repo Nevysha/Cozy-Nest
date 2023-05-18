@@ -393,6 +393,7 @@ function applyCozyNestConfig() {
   const setFontSize = () => {
     const fontSize = document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").value;
     document.querySelector(':root').style.setProperty('--nevysha-text-md', `${fontSize}px`);
+    recalcOffsetFromMenuHeight()
   }
   setFontSize()
   document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").addEventListener("change", setFontSize)
@@ -426,26 +427,28 @@ function applyCozyNestConfig() {
       document.querySelector(".gradio-container.app").classList.add("menu-fix-top")
       document.querySelector("#nevysha-btn-menu-wrapper")?.classList.add("menu-fix-top")
       document.querySelector(':root').style.setProperty('--nevysha-margin-left', `0`);
-      document.querySelector(':root').style.setProperty('--nevysha-menu-fix-top-height-less', `25px`);
-
-      recalcOffsetFromMenuHeight();
+      document.querySelector(':root').style.setProperty('--menu-top-height', `25px`);
 
       //centered or not
       const isCenteredChecked = document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top_centered]").checked;
       if (isCenteredChecked) {
+        COZY_NEST_CONFIG.main_menu_position = "top_centered";
         document.querySelector(".nevysha.nevysha-tabnav").classList.add("center-menu-items")
       } else {
+        COZY_NEST_CONFIG.main_menu_position = "top";
         document.querySelector(".nevysha.nevysha-tabnav").classList.remove("center-menu-items")
       }
     }
     //left mode
     else {
+      COZY_NEST_CONFIG.main_menu_position = "left";
       document.querySelector(".nevysha.nevysha-tabnav").classList.remove("menu-fix-top")
       document.querySelector(".gradio-container.app").classList.remove("menu-fix-top")
       document.querySelector("#nevysha-btn-menu-wrapper")?.classList.remove("menu-fix-top")
       document.querySelector(':root').style.setProperty('--nevysha-margin-left', `175px`);
-      document.querySelector(':root').style.setProperty('--nevysha-menu-fix-top-height-less', `1px`);
+      document.querySelector(':root').style.setProperty('--menu-top-height', `1px`);
     }
+    recalcOffsetFromMenuHeight()
   }
   menuPosition()
   document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=left]").addEventListener("change", menuPosition)
@@ -1465,15 +1468,72 @@ async function sendToPipe(where, elemImgFrom) {
   }, 1000)
 }
 
+window.troubleshootSize = {}
+
 const recalcOffsetFromMenuHeight = () => {
-  const menu = document.querySelector('.tab-nav.nevysha-tabnav')
+  let menuHeight = 0;
 
-  const $app = $('.gradio-container.app');
+  const tabs = document.getElementById('tabs');
 
-  const menuHeight = menu.offsetHeight;
+  const footer = document.querySelector('#footer #footer');
 
-  $app.attr('style', `${$app.attr('style')} padding-top: ${menuHeight}px !important;`);
-  document.querySelector(':root').style.setProperty('--nevysha-menu-fix-top-height-less', `${menuHeight +2}px`);
+  // //get value of the css var var(--layout-gap);
+  // const layoutGap = getComputedStyle(document.documentElement).getPropertyValue('--layout-gap');
+  // //remove the px
+  // const layoutGapValue = parseInt(layoutGap.substring(0, layoutGap.length - 2));
+
+  if (COZY_NEST_CONFIG.main_menu_position !== 'left') {
+    const menu = document.querySelector('.tab-nav.nevysha-tabnav')
+
+    menuHeight = menu.offsetHeight + 2;
+    document.querySelector(':root').style.setProperty('--menu-top-height', `${menuHeight}px`);
+    const $app = $('.gradio-container.app');
+    $app.attr('style', `${$app.attr('style')} padding-top: ${menuHeight}px !important;`);
+
+    const rect = tabs.getBoundingClientRect();
+    const tabsTop = rect.top;
+
+    document.querySelector(':root').style.setProperty('--main-container-height', `${window.innerHeight - (tabsTop + footer.offsetHeight)}px`);
+
+    window.troubleshootSize = {
+      menuHeight,
+      footerHeight: footer.offsetHeight,
+      tabsTop,
+      WindowInnerHeight: window.innerHeight,
+      bodyHeight: window.innerHeight - (tabsTop + footer.offsetHeight),
+      'main-container-height': `${window.innerHeight - (tabsTop + footer.offsetHeight)}px`,
+    }
+  }
+  else {
+    document.querySelector(':root').style.setProperty('--menu-top-height', `1px`);
+
+    const $app = $('.gradio-container.app');
+    $app.attr('style', `${$app.attr('style')} padding-top: ${menuHeight}px !important;`);
+
+    const rect = tabs.getBoundingClientRect();
+    const tabsTop = rect.top;
+
+    document.querySelector(':root').style.setProperty('--main-container-height', `${window.innerHeight - (tabsTop + footer.offsetHeight)}px`);
+
+    window.troubleshootSize = {
+      menuHeight,
+      footerHeight: footer.offsetHeight,
+      tabsTop,
+      WindowInnerHeight: window.innerHeight,
+      bodyHeight: window.innerHeight - (tabsTop + footer.offsetHeight),
+      'main-container-height': `${window.innerHeight - (tabsTop + footer.offsetHeight)}px`,
+    }
+  }
+
+
+  console.log(window.troubleshootSize)
+
+  //TODO => #tabs css
+  //     display: block;
+  //     position: fixed;
+  //     top: 102px;
+  //     width: 100vw;
+
 }
 
 const onLoad = (done) => {
