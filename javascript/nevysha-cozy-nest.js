@@ -634,10 +634,7 @@ async function loadVersionData() {
     patchnoteTitle = `<div class="nevysha-tabnav nevysha-tabnav-settings"><h2 class="nevysha-tabnav-title">Patchnote [${current_version_data.version}_DEV]</h2></div>`;
   }
 
-
   document.querySelector("#nevyui_update_info_panel").insertAdjacentHTML('beforeend', patchnoteTitle);
-
-
 
   //regex to replace [x] with a checkmark
   const regex = /\[x\]/g;
@@ -778,16 +775,6 @@ const tweakNevyUiSettings = () => {
         $("#nevyui_sh_options_panel").slideDown();
       }
       shown = !shown;
-    });
-    //when shown is true, hide it on click outside
-    document.addEventListener("click", (e) => {
-      if (shown && !e.target.closest("#nevyui_sh_options_panel") && !e.target.closest("#nevyui_sh_options")) {
-        //cancel event
-        e.preventDefault();
-        e.stopPropagation();
-        $("#nevyui_sh_options_panel").slideUp();
-        shown = false;
-      }
     });
   })();
 

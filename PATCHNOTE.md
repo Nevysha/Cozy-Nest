@@ -2,7 +2,11 @@
 
 ## Compatibility
 
-From a1111 5ab7f213 commit to the 1.2.0 release (b08500ce atm).  
+From a1111 5ab7f213 commit to the 1.2.1 release.  
+
+## Minor changes & fixes in 2.0.8
+
+- [x] Remove the "click outside to close" behavior of the settings panel. It was causing some issue with others extensions. 
 
 ## Minor changes & fixes in 2.0.7
 
