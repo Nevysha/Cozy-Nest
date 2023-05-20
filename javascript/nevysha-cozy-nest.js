@@ -1514,6 +1514,67 @@ const recalcOffsetFromMenuHeight = () => {
 
 }
 
+function addOptionsObserver() {
+  // Select the target node
+  const targetNode = document.body;
+
+  function recalcOptionsMaxHeight(addedNode) {
+    const options = addedNode;
+
+    options.style.position = 'fixed';
+
+    //look for a parent with class "gradio-dropdown"
+    const parent = options.parentElement;
+
+    options.style.width = parent.offsetWidth + 'px';
+
+    //check if the parent is near the top or bottom of the window
+    const parentRect = parent.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // Calculate the distance of the element from the top and bottom of the window
+    const distanceFromTop = parentRect.top;
+    const distanceFromBottom = windowHeight - parentRect.bottom;
+
+    // Compare the distances and determine the position
+    if (distanceFromTop < distanceFromBottom) {
+      //closer to the top
+      options.style.top = (parentRect.top + parentRect.height) + 'px';
+
+    } else {
+      //closer to the bottom
+      options.style.bottom = (window.innerHeight - parentRect.top) + 'px';
+
+    }
+
+
+  }
+
+  // Create a function to be called when mutations are observed
+  const mutationCallback = function (mutationsList, observer) {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'childList') {
+        // Check if a new element with class "options" is added
+        for (const addedNode of mutation.addedNodes) {
+          if (addedNode.nodeType === 1 && addedNode.classList.contains('options')) {
+            // Call your desired function when a new element is added
+            recalcOptionsMaxHeight(addedNode);
+          }
+        }
+      }
+    }
+  };
+
+  // Create a new observer instance
+  const observer = new MutationObserver(mutationCallback);
+
+  // Configure the observer to only look for childList changes
+  const config = { childList: true, subtree: true };
+
+  // Start observing the target node for mutations
+  observer.observe(targetNode, config);
+}
+
 const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
@@ -1622,6 +1683,9 @@ const onLoad = (done) => {
 
   //make settings draggable
   makeSettingsDraggable();
+
+  //add observer for .options resize
+  addOptionsObserver();
 
   //load /assets/index-eff6a2cc.js
   loadCozyNestImageBrowserSubmodule();
