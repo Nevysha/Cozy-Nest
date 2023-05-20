@@ -52,7 +52,15 @@ async def start_server(images_folders, server_port, stopper):
 
                 # decode the received data as json
                 data = json.loads(data)
-                res = await process(data)
+                try:
+                    res = await process(data)
+                except Exception as e:
+                    print(f"CozyNestSocket: Error while processing data: {e}")
+                    res = json.dumps({
+                        'what': 'error',
+                        'data': 'None',
+                        'error': str(e)
+                    })
 
                 # Send a response back to the client
                 if res:

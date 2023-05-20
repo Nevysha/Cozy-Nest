@@ -1400,6 +1400,14 @@ function setButtonVisibilityFromCurrentTab(id) {
   }
 }
 
+function errorPipe(data) {
+  populateInstanceInfoDialog();
+  document.querySelector('#cozy_nest_error_handling_display').innerHTML = `An error in socket handler`;
+  document.querySelector('#cozy_nest_error_handling_display_stack').innerHTML = data.error;
+  document.querySelector('#cozy_nest_error_handling_display_stack').setAttribute('style', 'display: block;');
+  showInstanceInfoDialog();
+}
+
 async function sendToPipe(where, elemImgFrom) {
 
   class FakeDataTransfer {

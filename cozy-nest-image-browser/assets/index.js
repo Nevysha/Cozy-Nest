@@ -8918,6 +8918,11 @@ function App() {
   reactExports.useEffect(() => {
     if (lastMessage !== null) {
       const data = JSON.parse(lastMessage.data);
+      if (data.error) {
+        if (window.errorPipe) {
+          window.errorPipe(data);
+        }
+      }
       if (data.what === "images") {
         if (data.images.length === 0) {
           console.warn("Received empty images array from socket");
