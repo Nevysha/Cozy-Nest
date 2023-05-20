@@ -1599,7 +1599,7 @@ input[type="number"] {
 
 ul.options {
     overflow-y: auto;
-    z-index: 3;
+    z-index: 303;
     border: 1px solid var(--ae-input-border-color);
 }
 ul.options::-webkit-scrollbar {
