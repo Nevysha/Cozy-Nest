@@ -703,6 +703,17 @@ async function loadVersionData() {
     document.getElementsByClassName("versions")[0].innerHTML += '⠀•⠀Cozy Nest:⠀<span style="color: #f9e02d; text-decoration: underline;" title="Nevysha\'s Cozy Nest Update Available! Latest version: v' + remote_version_data.version + '.\nView update info in the top-right corner for more details.">v' + current_version_data.version + '</span>';
   }
 
+  //add close button
+  const closeBtn = `<button class="nevysha-btn-menu lg primary gradio-button nevysha generate-button" id="nevyui_update_info_close_btn" title="Close">Close</button>`;
+  document.querySelector('#nevysha-version-info').insertAdjacentHTML('afterbegin', closeBtn)
+  document.querySelector('#nevyui_update_info_close_btn').addEventListener('click', (e) => {
+    //prevent default behavior
+    e.preventDefault();
+    e.stopPropagation();
+
+    document.querySelector('#nevyui_update_info').click();
+  });
+
 }
 
 const tweakNevyUiSettings = () => {
