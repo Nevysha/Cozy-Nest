@@ -1149,6 +1149,10 @@ input[type="number"] {
     display: flex;
     justify-content: space-between;
 }
+.nevysha-version-info-text{
+    flex: 1;
+    margin-left: 10px !important;
+}
 #nevysha-rename-important-msg {
     background-color: #9b0505;
     color: white;
