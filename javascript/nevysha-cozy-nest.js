@@ -1220,7 +1220,9 @@ const addTabWrapper = () => {
 
   function addHandlerToTab(tab) {
     //skip the tabWrapper
-    if (tab.id) {
+    if (tab.id
+      // below : some tabs have no inner text, skip them
+      || !tab.innerText) {
       return;
     }
 
