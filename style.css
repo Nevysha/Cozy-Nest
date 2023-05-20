@@ -1598,8 +1598,9 @@ input[type="number"] {
 }
 
 ul.options {
-    max-height: 300px !important;
     overflow-y: auto;
+    z-index: 3;
+    border: 1px solid var(--ae-input-border-color);
 }
 ul.options::-webkit-scrollbar {
     width: 5px;
