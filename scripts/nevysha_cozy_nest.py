@@ -198,116 +198,41 @@ def start_server_in_dedicated_process(_images_folders, server_port):
 
 
 def gradio_img_browser_tab(config, server_port):
+
+    # TODO add settings (maybe in a tab) for the image browser
+    #  - chose port number
+    #  - chose folders to scrap (may be multiple)
+    #  - chose if the server should be started automatically
+
     with gr.Column(elem_id="img_browser_main_block"):
-        gr.Textbox(value="http://localhost:" + str(server_port), label="Image browser URL", readonly=True)
+        # disable_image_browser
+        disable_image_browser = gr.Checkbox(value=config.get('disable_image_browser'),
+                                            label="Disable image browser (Reload UI required)",
+                                            elem_id="setting_nevyui_disableImageBrowser", interactive=True)
+
+        server_default_port = gr.Textbox(value=str(server_port), label="Socket port for image browser", interactive=True)
+        auto_search_port = gr.Checkbox(value=True, label="Auto search port", elem_id="setting_nevyui_autoSearchPort",
+                                        interactive=True)
+
+        auto_start_server = gr.Checkbox(value=True, label="Auto start server", elem_id="setting_nevyui_autoStartServer",
+                                        interactive=True)
+
+        fetch_output_folder_from_a1111_settings = gr.Checkbox(
+            value=True, label="Fetch output folder from a1111 settings", elem_id="setting_nevyui_fetchOutputFolderFromA1111Settings",
+                                        interactive=True)
+
+    return [
+        disable_image_browser,
+        server_default_port,
+        auto_search_port,
+        auto_start_server,
+        fetch_output_folder_from_a1111_settings]
 
 
-def on_ui_tabs():
-    # shared options
-    config = get_dict_from_config()
-    # merge default settings with user settings
-    config = {**get_default_settings(), **config}
-    # save the merged settings
-    save_settings(config)
-
-    # check if the user has disabled the image browser
-    disable_image_browser_value = config.get('disable_image_browser')
-
-    server_port = None
-    if not disable_image_browser_value:
-        server_port = serv_img_browser_socket()
-    else:
-        print("CozyNest: Image browser is disabled. To enable it, go to the CozyNest settings.")
-
-    async def send_to_socket(data):
-        async with websockets.connect(f'ws://localhost:{server_port}') as websocket:
-            try:
-                while True:
-                    # Send data to the server
-                    data = json.dumps(data).encode('utf-8')
-                    await websocket.send(data)
-
-                    # Receive response from the server
-                    await websocket.recv()
-                    websocket.close()
-                    break
-
-            except websockets.exceptions.ConnectionClosed:
-                pass
-
-    def on_image_saved(gen_params: script_callbacks.ImageSaveParams):
-        base_dir = scripts.basedir()
-
-        if not os.path.isabs(gen_params.filename):
-            path = os.path.normpath(os.path.join(base_dir, gen_params.filename))
-        else:
-            path = gen_params.filename
-
-        images_folders = output_folder_array()
-        # check if the image is in one of the output folders
-        if not any([path.startswith(folder) for folder in images_folders]):
-            return
-
-        asyncio.run(send_to_socket({
-            'what': 'image_saved',
-            'data': get_exif(path),
-        }))
-
-    if not disable_image_browser_value:
-        script_callbacks.on_image_saved(on_image_saved)
-
-    with gr.Blocks(analytics_enabled=False) as ui:
-
-        # TODO add settings (maybe in a tab) for the image browser
-        #  - chose port number
-        #  - chose folders to scrap (may be multiple)
-        #  - chose if the server should be started automatically
-
-        # check if user is on the old repo name and display a warning
-        if EXTENSION_TECHNICAL_NAME != 'Cozy-Nest':
-            gr.HTML(value="<div class='nevysha nevysha-warning'>"
-                          "<p id='nevysha-rename-important-msg' class='nevysha-emphasis important'>WARNING : This extension has been renamed to Cozy Nest to avoid confusion with an other tool. "
-                          "Please update to the latest version by following "
-                          "<a href='https://github.com/Nevysha/Cozy-Nest/wiki/How-to-switch-to-renamed-repository-Cozy-Nest'>these instructions</a></p>")
-
-        # header
-        gr.HTML(value="<div class='nevysha settings-nevyui-top'>"
-                      "<p class='nevysha-reporting'>Found a bug or want to ask for a feature ? Please "
-                      "<a onClick='gatherInfoAndShowDialog();return false;' href='_blank'>click here to gather relevant info</a>"
-                      " then use <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
-                      " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
-                      "<p class='nevysha-emphasis'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
-
-        with gr.Tabs(id="cozy_nest_settings_tabs", elem_id="cozy_nest_settings_tabs"):
-            with gr.TabItem(label="Main Settings", elem_id="cozy_nest_settings_tab"):
-                accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width, disable_image_browser, disable_waves_and_gradiant, error_popup, font_size, main_menu_position, quicksettings_position, waves_color \
-                    = gradio_main_tab(config, server_port)
-            with gr.TabItem(label="Image Browser Settings", elem_id="cozy_nest_img_browser_settings_tab"):
-                gradio_img_browser_tab(config, server_port)
-
-        ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
-                      disable_image_browser, disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
-                      quicksettings_position, waves_color)
-
-        # hidden field to store some useful data and trigger some server actions (like "send to" txt2img,...)
-        gradio_hidden_field(server_port)
-
-        # footer
-        gr.HTML(value="<div class='nevysha settings-nevyui-bottom'>"
-                      "  <p class='info'>Made by Nevysha with luv</p>"
-                      "</div>", elem_id="nevyui_footer_wrapper")
-
-    return [(ui, "Nevysha Cozy Nest", "nevyui")]
-
-
-def gradio_main_tab(config, server_port):
+def gradio_main_tab(config):
     with gr.Column(elem_id="nevyui-ui-block"):
 
         with gr.Row():
-            # disable_image_browser
-            disable_image_browser = gr.Checkbox(value=config.get('disable_image_browser'),
-                                                label="Disable image browser (requires reload UI)",
-                                                elem_id="setting_nevyui_disableImageBrowser", interactive=True)
 
             # error popup checkbox
             error_popup = gr.Checkbox(value=config.get('error_popup'),
@@ -356,14 +281,24 @@ def gradio_main_tab(config, server_port):
             gr.HTML(
                 value="<div id='nevysha-dummy-feedback' class='nevysha nevysha-feedback' style='display:none;' />")
 
-        return accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,disable_image_browser, disable_waves_and_gradiant, error_popup, font_size, main_menu_position, quicksettings_position, waves_color
-
-
+        return [
+            accent_color,
+            accent_generate_button,
+            bg_gradiant_color,
+            card_height,
+            card_width,
+            disable_waves_and_gradiant,
+            error_popup,
+            font_size,
+            main_menu_position,
+            quicksettings_position,
+            waves_color
+        ]
 
 
 def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
-                  disable_image_browser, disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
-                  quicksettings_position, waves_color):
+                  disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
+                  quicksettings_position, waves_color, disable_image_browser):
     with gr.Row():
         btn_save = gr.Button(value="Save", elem_id="nevyui_sh_options_submit",
                              elem_classes="nevyui_apply_settings")
@@ -436,6 +371,116 @@ def gradio_hidden_field(server_port):
                     paste_button=button, tabname=tabname, source_text_component=generation_info,
                     source_image_component=image,
                 ))
+
+
+def on_ui_tabs():
+    # shared options
+    config = get_dict_from_config()
+    # merge default settings with user settings
+    config = {**get_default_settings(), **config}
+    # save the merged settings
+    save_settings(config)
+
+    # check if the user has disabled the image browser
+    disable_image_browser_value = config.get('disable_image_browser')
+
+    server_port = None
+    if not disable_image_browser_value:
+        server_port = serv_img_browser_socket()
+    else:
+        print("CozyNest: Image browser is disabled. To enable it, go to the CozyNest settings.")
+
+    async def send_to_socket(data):
+        async with websockets.connect(f'ws://localhost:{server_port}') as websocket:
+            try:
+                while True:
+                    # Send data to the server
+                    data = json.dumps(data).encode('utf-8')
+                    await websocket.send(data)
+
+                    # Receive response from the server
+                    await websocket.recv()
+                    websocket.close()
+                    break
+
+            except websockets.exceptions.ConnectionClosed:
+                pass
+
+    def on_image_saved(gen_params: script_callbacks.ImageSaveParams):
+        base_dir = scripts.basedir()
+
+        if not os.path.isabs(gen_params.filename):
+            path = os.path.normpath(os.path.join(base_dir, gen_params.filename))
+        else:
+            path = gen_params.filename
+
+        images_folders = output_folder_array()
+        # check if the image is in one of the output folders
+        if not any([path.startswith(folder) for folder in images_folders]):
+            return
+
+        asyncio.run(send_to_socket({
+            'what': 'image_saved',
+            'data': get_exif(path),
+        }))
+
+    if not disable_image_browser_value:
+        script_callbacks.on_image_saved(on_image_saved)
+
+    with gr.Blocks(analytics_enabled=False) as ui:
+
+        # check if user is on the old repo name and display a warning
+        if EXTENSION_TECHNICAL_NAME != 'Cozy-Nest':
+            gr.HTML(value="<div class='nevysha nevysha-warning'>"
+                          "<p id='nevysha-rename-important-msg' class='nevysha-emphasis important'>WARNING : This extension has been renamed to Cozy Nest to avoid confusion with an other tool. "
+                          "Please update to the latest version by following "
+                          "<a href='https://github.com/Nevysha/Cozy-Nest/wiki/How-to-switch-to-renamed-repository-Cozy-Nest'>these instructions</a></p>")
+
+        # header
+        gr.HTML(value="<div class='nevysha settings-nevyui-top'>"
+                      "<p class='nevysha-reporting'>Found a bug or want to ask for a feature ? Please "
+                      "<a onClick='gatherInfoAndShowDialog();return false;' href='_blank'>click here to gather relevant info</a>"
+                      " then use <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
+                      " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
+                      "<p class='nevysha-emphasis'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
+
+        with gr.Tabs(id="cozy_nest_settings_tabs", elem_id="cozy_nest_settings_tabs"):
+            with gr.TabItem(label="Main Settings", elem_id="cozy_nest_settings_tab"):
+                [
+                    accent_color,
+                    accent_generate_button,
+                    bg_gradiant_color,
+                    card_height,
+                    card_width,
+                    disable_waves_and_gradiant,
+                    error_popup,
+                    font_size,
+                    main_menu_position,
+                    quicksettings_position,
+                    waves_color
+                ] = gradio_main_tab(config)
+            with gr.TabItem(label="Image Browser Settings", elem_id="cozy_nest_img_browser_settings_tab"):
+                [
+                    disable_image_browser,
+                    server_default_port,
+                    auto_search_port,
+                    auto_start_server,
+                    fetch_output_folder_from_a1111_settings
+                ] = gradio_img_browser_tab(config, server_port)
+
+        ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
+                      disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
+                      quicksettings_position, waves_color, disable_image_browser)
+
+        # hidden field to store some useful data and trigger some server actions (like "send to" txt2img,...)
+        gradio_hidden_field(server_port)
+
+        # footer
+        gr.HTML(value="<div class='nevysha settings-nevyui-bottom'>"
+                      "  <p class='info'>Made by Nevysha with luv</p>"
+                      "</div>", elem_id="nevyui_footer_wrapper")
+
+    return [(ui, "Nevysha Cozy Nest", "nevyui")]
 
 
 script_callbacks.on_ui_tabs(on_ui_tabs)
