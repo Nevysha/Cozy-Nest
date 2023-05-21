@@ -52,7 +52,7 @@
 
     --nevysha-dark: #1c1c1c;
     --nevysha-light-dark: #292a2e;
-    --nevysha-white: #caccce;
+    --nevysha-white: #6b7280;
     --nevysha-input-border-color: hsl(214deg 5% 30%);
 
     --nevysha-color2: #f0a6caff;
@@ -134,7 +134,7 @@
     --block-title-text-color: var(--neutral-200);
     --checkbox-background-color-selected: var(--secondary-600);
     --checkbox-border-color-focus: var(--secondary-500);
-    --checkbox-border-color-selected: var(--secondary-600);
+    --checkbox-border-color-selected: var(--checkbox-border-color);
     --checkbox-label-background-fill: linear-gradient(to top, var(--neutral-900), var(--neutral-800));
     --checkbox-label-background-fill-hover: linear-gradient(to top, var(--neutral-900), var(--neutral-800));
     --error-background-fill: var(--background-fill-primary);
@@ -474,6 +474,7 @@ input[type=range]::-webkit-slider-thumb {
 .nevysha.nevysha-tabnav > .selected {
     background-color: var(--tab-nav-background-color-selected) !important;
     border-top: 2px solid var(--ae-primary-color);
+    border-radius: 0;
 }
 
 .nevysha.nevysha-tabnav > button {
@@ -1107,18 +1108,32 @@ input[type="number"] {
 #settings_nevyui {
 
 }
-.nevysha.settings-nevyui-top > h2 {
-    font-size: 1.4em;
-    color: var(--body-text-color);
+#nevyui-ui-block > * {
+
+}
+.nevysha.settings-nevyui-title {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    text-align: center;
+}
+.nevysha.settings-nevyui-title > h2 {
+    font-size: 1.8em;
+    color: var(--ae-primary-color);
+    font-family: "Caveat", sans-serif;
+}
+.nevysha.settings-nevyui-title > .subtitle {
+    font-size: 10px;
+    font-style: italic;
 }
 .nevysha.settings-nevyui-top > .info {
     color: var(--body-text-color);
-    margin-bottom: 30px;
+    margin-bottom: 5px;
     font-style: italic;
 }
 .nevysha-reporting {
     color: var(--body-text-color) !important;
-    margin: 15px 0 15px 0;
+    margin: 15px 0 15px 0 !important;
     border-left: 4px solid var(--ae-primary-color);
     padding-left: 5px;
     font-size: 1.2em;
@@ -1126,6 +1141,9 @@ input[type="number"] {
 .nevysha.settings-nevyui-top > .nevysha-reporting > a {
     color: var(--ae-primary-color);
     text-decoration: underline;
+}
+#cozy_nest_settings_tabs .block {
+    background-color: transparent;
 }
 .nevysha-emphasis {
     font-size: 1.1em;
@@ -1170,6 +1188,23 @@ input[type="number"] {
 .nevysha.settings-nevyui-bottom > p {
     font-size: 0.8em;
     color: var(--body-text-color);
+}
+#cozy_nest_settings_tabs {
+    background-color: var(--tab-nav-background-color-selected);
+}
+#cozy_nest_settings_tabs > .tabitem {
+    overflow-y: auto;
+    max-height: 40%;
+}
+#cozy_nest_settings_tabs > .tab-nav {
+    background-color: var(--tab-nav-background-color);
+}
+#cozy_nest_settings_tabs > .tab-nav > * {
+    border-radius: 0;
+}
+#cozy_nest_settings_tabs > .tab-nav > .selected {
+    background-color: var(--tab-nav-background-color-selected) !important;
+    border-top: 2px solid var(--ae-primary-color);
 }
 
 .nevysha-draggable-anchor-icon {

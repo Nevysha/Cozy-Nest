@@ -745,6 +745,14 @@ const tweakNevyUiSettings = () => {
   //put tab_nevyui inside the panel
   document.querySelector("#nevyui_sh_options_panel").appendChild(document.querySelector("#tab_nevyui"));
 
+  //add title
+  const title = `
+        <div class="nevysha settings-nevyui-title">
+            <h2>Nevysha's Cozy Nest</h2>
+            <span class="subtitle">Find your cozy spot on Auto1111's webui</span>
+          </div>`;
+  document.querySelector("#nevyui_sh_options_panel").insertAdjacentHTML("afterbegin", title);
+
   //add an event listener on #nevyui_sh_options_submit to briefly show a message when the user clicks on it
   document.querySelector("#nevyui_sh_options_submit").addEventListener("click", (e) => {
     //cancel event
@@ -1654,8 +1662,10 @@ const onLoad = (done) => {
   //add nevysha css class to tabnav
   document.querySelectorAll('#tabs > div.tab-nav').forEach(tabnav => tabnav.setAttribute('class', `${tabnav.getAttribute('class')} nevysha nevysha-tabnav`))
   document.querySelectorAll('input[type="number"]').forEach(input => input.setAttribute('class', `${input.getAttribute('class')} nevysha`))
-  //add .nevysha-scrollable to each .extra-network-cards
+  //add .nevysha-scrollable to some elem
   document.querySelectorAll('.extra-network-cards').forEach(elem => elem.setAttribute('class', `${elem.getAttribute('class')} nevysha nevysha-scrollable`))
+  document.querySelectorAll('#cozy_nest_settings_tabs > .tabitem').forEach(elem => elem.classList.add('nevysha', 'nevysha-scrollable'))
+
   document.querySelector('#nevyui_sh_options_start_socket').setAttribute('style', 'display: none;')
   //hide "send to" panel in settings
   //this panel is used to transfert image data into tab

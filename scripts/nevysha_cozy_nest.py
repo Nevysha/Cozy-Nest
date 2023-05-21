@@ -197,6 +197,11 @@ def start_server_in_dedicated_process(_images_folders, server_port):
     script_callbacks.on_before_reload(stop_server)
 
 
+def gradio_img_browser_tab(config, server_port):
+    with gr.Column(elem_id="img_browser_main_block"):
+        gr.Textbox(value="http://localhost:" + str(server_port), label="Image browser URL", readonly=True)
+
+
 def on_ui_tabs():
     # shared options
     config = get_dict_from_config()
@@ -258,156 +263,179 @@ def on_ui_tabs():
         #  - chose folders to scrap (may be multiple)
         #  - chose if the server should be started automatically
 
-        with gr.Column(elem_id="nevyui-ui-block"):
+        # check if user is on the old repo name and display a warning
+        if EXTENSION_TECHNICAL_NAME != 'Cozy-Nest':
+            gr.HTML(value="<div class='nevysha nevysha-warning'>"
+                          "<p id='nevysha-rename-important-msg' class='nevysha-emphasis important'>WARNING : This extension has been renamed to Cozy Nest to avoid confusion with an other tool. "
+                          "Please update to the latest version by following "
+                          "<a href='https://github.com/Nevysha/Cozy-Nest/wiki/How-to-switch-to-renamed-repository-Cozy-Nest'>these instructions</a></p>")
 
-            # check if user is on the old repo name and display a warning
-            if EXTENSION_TECHNICAL_NAME != 'Cozy-Nest':
-                gr.HTML(value="<div class='nevysha nevysha-warning'>"
-                              "<p id='nevysha-rename-important-msg' class='nevysha-emphasis important'>WARNING : This extension has been renamed to Cozy Nest to avoid confusion with an other tool. "
-                              "Please update to the latest version by following "
-                              "<a href='https://github.com/Nevysha/Cozy-Nest/wiki/How-to-switch-to-renamed-repository-Cozy-Nest'>these instructions</a></p>")
+        # header
+        gr.HTML(value="<div class='nevysha settings-nevyui-top'>"
+                      "<p class='nevysha-reporting'>Found a bug or want to ask for a feature ? Please "
+                      "<a onClick='gatherInfoAndShowDialog();return false;' href='_blank'>click here to gather relevant info</a>"
+                      " then use <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
+                      " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
+                      "<p class='nevysha-emphasis'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
 
-            # header
-            gr.HTML(value="<div class='nevysha settings-nevyui-top'><h2>Nevysha's Cozy Nest</h2>"
-                          "<p class='info'>Find your cozy spot on Auto1111's webui</p>"
-                          "<p class='nevysha-reporting'>Found a bug or want to ask for a feature ? Please "
-                          "<a onClick='gatherInfoAndShowDialog();return false;' href='_blank'>click here to gather relevant info</a>"
-                          " then use <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
-                          " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
-                          "<p class='nevysha-emphasis'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
+        with gr.Tabs(id="cozy_nest_settings_tabs", elem_id="cozy_nest_settings_tabs"):
+            with gr.TabItem(label="Main Settings", elem_id="cozy_nest_settings_tab"):
+                accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width, disable_image_browser, disable_waves_and_gradiant, error_popup, font_size, main_menu_position, quicksettings_position, waves_color \
+                    = gradio_main_tab(config, server_port)
+            with gr.TabItem(label="Image Browser Settings", elem_id="cozy_nest_img_browser_settings_tab"):
+                gradio_img_browser_tab(config, server_port)
 
-            with gr.Row():
-                # disable_image_browser
-                disable_image_browser = gr.Checkbox(value=config.get('disable_image_browser'),
-                                                    label="Disable image browser (requires reload UI)",
-                                                    elem_id="setting_nevyui_disableImageBrowser", interactive=True)
+        ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
+                      disable_image_browser, disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
+                      quicksettings_position, waves_color)
 
-                # error popup checkbox
-                error_popup = gr.Checkbox(value=config.get('error_popup'),
-                                          label="Display information dialog on Cozy Nest error",
-                                          elem_id="setting_nevyui_errorPopup", interactive=True)
+        # hidden field to store some useful data and trigger some server actions (like "send to" txt2img,...)
+        gradio_hidden_field(server_port)
 
-                # disable waves and gradiant bg
-                disable_waves_and_gradiant = gr.Checkbox(value=config.get('disable_waves_and_gradiant'),
-                                                         label="Disable waves and gradiant background",
-                                                         elem_id="setting_nevyui_disableWavesAndGradiant", interactive=True)
-
-            # main menu
-            main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position",
-                                          choices=['left', 'top', 'top_centered'],
-                                          elem_id="setting_nevyui_menuPosition", interactive=True)
-            quicksettings_position = gr.Radio(value=config.get('quicksettings_position'),
-                                              label="Quicksettings position",
-                                              choices=['left', 'split', 'centered'],
-                                              elem_id="setting_nevyui_quicksettingsPosition", interactive=True)
-            accent_generate_button = gr.Checkbox(value=config.get('accent_generate_button'),
-                                                 label="Accent Generate Button",
-                                                 elem_id="setting_nevyui_accentGenerateButton", interactive=True)
-
-            with gr.Row():
-                font_size = gr.Slider(value=config.get('font_size'), label="Font size", minimum=10, maximum=18, step=1,
-                                      elem_id="setting_nevyui_fontSize", interactive=True)
-                card_height = gr.Slider(value=config.get('card_height'), label="Extra network card height", minimum=5,
-                                        maximum=20, step=1, elem_id="setting_nevyui_cardHeight", interactive=True)
-                card_width = gr.Slider(value=config.get('card_width'), label="Extra network card width", minimum=5,
-                                       maximum=20, step=1, elem_id="setting_nevyui_cardWidth", interactive=True)
-
-            with gr.Row():
-                waves_color = gr.ColorPicker(value=config.get('waves_color'), label="Waves color",
-                                             elem_id="setting_nevyui_waveColor", interactive=True)
-                bg_gradiant_color = gr.ColorPicker(value=config.get('bg_gradiant_color'),
-                                                   label="Background gradiant color",
-                                                   elem_id="setting_nevyui_bgGradiantColor", interactive=True)
-                accent_color = gr.ColorPicker(value=config.get('accent_color'), label="Accent color",
-                                              elem_id="setting_nevyui_accentColor", interactive=True)
-
-            with gr.Row(elem_id='nevysha-saved-feedback-wrapper'):
-                gr.HTML(
-                    value="<div id='nevysha-saved-feedback' class='nevysha nevysha-feedback' style='display:none;'>Saved !</div>")
-                gr.HTML(
-                    value="<div id='nevysha-reset-feedback' class='nevysha nevysha-feedback' style='display:none;'>Reset !</div>")
-                gr.HTML(
-                    value="<div id='nevysha-dummy-feedback' class='nevysha nevysha-feedback' style='display:none;' />")
-
-            with gr.Row():
-                btn_save = gr.Button(value="Save", elem_id="nevyui_sh_options_submit",
-                                     elem_classes="nevyui_apply_settings")
-                btn_save.click(gradio_save_settings, inputs=[
-                    main_menu_position,
-                    quicksettings_position,
-                    accent_generate_button,
-                    font_size,
-                    waves_color,
-                    bg_gradiant_color,
-                    accent_color,
-                    card_height,
-                    card_width,
-                    error_popup,
-                    disable_image_browser,
-                    disable_waves_and_gradiant
-                ], outputs=[])
-
-                btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)",
-                                      elem_id="nevyui_sh_options_reset", elem_classes="nevyui_apply_settings")
-                # restore default settings
-                btn_reset.click(reset_settings)
-
-                btn_reload = gr.Button(value="Reload UI", elem_id="nevyui_sh_options_reset",
-                                       elem_classes="nevyui_apply_settings")
-                # reload the page
-                btn_reload.click(
-                    fn=request_restart,
-                    _js='restart_reload',
-                    inputs=[],
-                    outputs=[], )
-
-                # start socket server
-                btn_start = gr.Button(value="Start Socket Server", elem_id="nevyui_sh_options_start_socket",
-                                      elem_classes="nevyui_apply_settings")
-                btn_start.click(
-                    fn=serv_img_browser_socket,
-                    inputs=[],
-                    outputs=[], )
-
-            # add button to trigger git pull
-            btn_update = gr.Button(value="Update", elem_id="nevyui_sh_options_update", visible=False, )
-            btn_update.click(
-                fn=update,
-                inputs=[],
-                outputs=[], )
-
-            # text with port number
-            gr.Textbox(elem_id='cnib_socket_server_port', value=f"{server_port}", label="Server port READONLY",
-                       readonly=True, visible=False)
-
-            with gr.Row(elem_id='nevysha-send-to'):
-                html = gr.HTML()
-                generation_info = gr.Textbox(visible=False, elem_id="nevysha_pnginfo_generation_info")
-                html2 = gr.HTML()
-                image = gr.Image(elem_id="nevysha_pnginfo_image", label="Source", source="upload", interactive=True,
-                                 type="pil")
-                image.change(
-                    fn=call_queue.wrap_gradio_call(modules.extras.run_pnginfo),
-                    inputs=[image],
-                    outputs=[html, generation_info, html2],
-                )
-                with gr.Row(elem_id='nevysha-send-to-button'):
-                    buttons = modules.generation_parameters_copypaste.create_buttons(
-                        ["txt2img", "img2img", "inpaint", "extras"])
-
-                for tabname, button in buttons.items():
-                    modules.generation_parameters_copypaste.register_paste_params_button(
-                        modules.generation_parameters_copypaste.ParamBinding(
-                            paste_button=button, tabname=tabname, source_text_component=generation_info,
-                            source_image_component=image,
-                        ))
-
-            # footer
-            gr.HTML(value="<div class='nevysha settings-nevyui-bottom'>"
-                          "  <p class='info'>Made by Nevysha with luv</p>"
-                          "</div>", elem_id="nevyui_footer_wrapper")
+        # footer
+        gr.HTML(value="<div class='nevysha settings-nevyui-bottom'>"
+                      "  <p class='info'>Made by Nevysha with luv</p>"
+                      "</div>", elem_id="nevyui_footer_wrapper")
 
     return [(ui, "Nevysha Cozy Nest", "nevyui")]
+
+
+def gradio_main_tab(config, server_port):
+    with gr.Column(elem_id="nevyui-ui-block"):
+
+        with gr.Row():
+            # disable_image_browser
+            disable_image_browser = gr.Checkbox(value=config.get('disable_image_browser'),
+                                                label="Disable image browser (requires reload UI)",
+                                                elem_id="setting_nevyui_disableImageBrowser", interactive=True)
+
+            # error popup checkbox
+            error_popup = gr.Checkbox(value=config.get('error_popup'),
+                                      label="Display information dialog on Cozy Nest error",
+                                      elem_id="setting_nevyui_errorPopup", interactive=True)
+
+            # disable waves and gradiant bg
+            disable_waves_and_gradiant = gr.Checkbox(value=config.get('disable_waves_and_gradiant'),
+                                                     label="Disable waves and gradiant background",
+                                                     elem_id="setting_nevyui_disableWavesAndGradiant", interactive=True)
+
+        # main menu
+        main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position",
+                                      choices=['left', 'top', 'top_centered'],
+                                      elem_id="setting_nevyui_menuPosition", interactive=True)
+        quicksettings_position = gr.Radio(value=config.get('quicksettings_position'),
+                                          label="Quicksettings position",
+                                          choices=['left', 'split', 'centered'],
+                                          elem_id="setting_nevyui_quicksettingsPosition", interactive=True)
+        accent_generate_button = gr.Checkbox(value=config.get('accent_generate_button'),
+                                             label="Accent Generate Button",
+                                             elem_id="setting_nevyui_accentGenerateButton", interactive=True)
+
+        with gr.Row():
+            font_size = gr.Slider(value=config.get('font_size'), label="Font size", minimum=10, maximum=18, step=1,
+                                  elem_id="setting_nevyui_fontSize", interactive=True)
+            card_height = gr.Slider(value=config.get('card_height'), label="Extra network card height", minimum=5,
+                                    maximum=20, step=1, elem_id="setting_nevyui_cardHeight", interactive=True)
+            card_width = gr.Slider(value=config.get('card_width'), label="Extra network card width", minimum=5,
+                                   maximum=20, step=1, elem_id="setting_nevyui_cardWidth", interactive=True)
+
+        with gr.Row():
+            waves_color = gr.ColorPicker(value=config.get('waves_color'), label="Waves color",
+                                         elem_id="setting_nevyui_waveColor", interactive=True)
+            bg_gradiant_color = gr.ColorPicker(value=config.get('bg_gradiant_color'),
+                                               label="Background gradiant color",
+                                               elem_id="setting_nevyui_bgGradiantColor", interactive=True)
+            accent_color = gr.ColorPicker(value=config.get('accent_color'), label="Accent color",
+                                          elem_id="setting_nevyui_accentColor", interactive=True)
+
+        with gr.Row(elem_id='nevysha-saved-feedback-wrapper'):
+            gr.HTML(
+                value="<div id='nevysha-saved-feedback' class='nevysha nevysha-feedback' style='display:none;'>Saved !</div>")
+            gr.HTML(
+                value="<div id='nevysha-reset-feedback' class='nevysha nevysha-feedback' style='display:none;'>Reset !</div>")
+            gr.HTML(
+                value="<div id='nevysha-dummy-feedback' class='nevysha nevysha-feedback' style='display:none;' />")
+
+        return accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,disable_image_browser, disable_waves_and_gradiant, error_popup, font_size, main_menu_position, quicksettings_position, waves_color
+
+
+
+
+def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
+                  disable_image_browser, disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
+                  quicksettings_position, waves_color):
+    with gr.Row():
+        btn_save = gr.Button(value="Save", elem_id="nevyui_sh_options_submit",
+                             elem_classes="nevyui_apply_settings")
+        btn_save.click(gradio_save_settings, inputs=[
+            main_menu_position,
+            quicksettings_position,
+            accent_generate_button,
+            font_size,
+            waves_color,
+            bg_gradiant_color,
+            accent_color,
+            card_height,
+            card_width,
+            error_popup,
+            disable_image_browser,
+            disable_waves_and_gradiant
+        ], outputs=[])
+
+        btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)",
+                              elem_id="nevyui_sh_options_reset", elem_classes="nevyui_apply_settings")
+        # restore default settings
+        btn_reset.click(reset_settings)
+
+        btn_reload = gr.Button(value="Reload UI", elem_id="nevyui_sh_options_reset",
+                               elem_classes="nevyui_apply_settings")
+        # reload the page
+        btn_reload.click(
+            fn=request_restart,
+            _js='restart_reload',
+            inputs=[],
+            outputs=[], )
+
+        # start socket server
+        btn_start = gr.Button(value="Start Socket Server", elem_id="nevyui_sh_options_start_socket",
+                              elem_classes="nevyui_apply_settings")
+        btn_start.click(
+            fn=serv_img_browser_socket,
+            inputs=[],
+            outputs=[], )
+    # add button to trigger git pull
+    btn_update = gr.Button(value="Update", elem_id="nevyui_sh_options_update", visible=False, )
+    btn_update.click(
+        fn=update,
+        inputs=[],
+        outputs=[], )
+
+
+def gradio_hidden_field(server_port):
+    # text with port number
+    gr.Textbox(elem_id='cnib_socket_server_port', value=f"{server_port}", label="Server port READONLY",
+               readonly=True, visible=False)
+    with gr.Row(elem_id='nevysha-send-to'):
+        html = gr.HTML()
+        generation_info = gr.Textbox(visible=False, elem_id="nevysha_pnginfo_generation_info")
+        html2 = gr.HTML()
+        image = gr.Image(elem_id="nevysha_pnginfo_image", label="Source", source="upload", interactive=True,
+                         type="pil")
+        image.change(
+            fn=call_queue.wrap_gradio_call(modules.extras.run_pnginfo),
+            inputs=[image],
+            outputs=[html, generation_info, html2],
+        )
+        with gr.Row(elem_id='nevysha-send-to-button'):
+            buttons = modules.generation_parameters_copypaste.create_buttons(
+                ["txt2img", "img2img", "inpaint", "extras"])
+
+        for tabname, button in buttons.items():
+            modules.generation_parameters_copypaste.register_paste_params_button(
+                modules.generation_parameters_copypaste.ParamBinding(
+                    paste_button=button, tabname=tabname, source_text_component=generation_info,
+                    source_image_component=image,
+                ))
 
 
 script_callbacks.on_ui_tabs(on_ui_tabs)
