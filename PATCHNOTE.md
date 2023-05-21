@@ -4,6 +4,13 @@
 
 From a1111 5ab7f213 commit to the 1.2.1 release.  
 
+## Minor changes & fixes in 2.0.9
+
+- [x] Using the builtin png info to get image generation data in image browser
+- [x] Add error handling and display for image browser
+- [x] Fix : prevent error if a tab button made by an extension does not have inner text
+- [x] Add close button to Cozy Nest update panel
+
 ## Minor changes & fixes in 2.0.8
 
 - [x] Remove the "click outside to close" behavior of the settings panel. It was causing some issue with others extensions. 

@@ -8633,11 +8633,11 @@ const safeExifSplit = (fn) => {
 };
 function CozyImageInfo(props) {
   const date = new Date(props.image.metadata.date * 1e3).toISOString().replace(/T/, " ").replace(/\..+/, "");
-  const model = safeExifSplit(() => props.image.metadata.exif.parameters.split("Model: ")[1].split(",")[0]);
-  const size = safeExifSplit(() => props.image.metadata.exif.parameters.split("Size: ")[1].split(",")[0]);
-  const seed = safeExifSplit(() => props.image.metadata.exif.parameters.split("Seed: ")[1].split(",")[0]);
-  const steps = safeExifSplit(() => props.image.metadata.exif.parameters.split("Steps: ")[1].split(",")[0]);
-  const sampler = safeExifSplit(() => props.image.metadata.exif.parameters.split("Sampler: ")[1].split(",")[0]);
+  const model = safeExifSplit(() => props.image.metadata.exif.split("Model: ")[1].split(",")[0]);
+  const size = safeExifSplit(() => props.image.metadata.exif.split("Size: ")[1].split(",")[0]);
+  const seed = safeExifSplit(() => props.image.metadata.exif.split("Seed: ")[1].split(",")[0]);
+  const steps = safeExifSplit(() => props.image.metadata.exif.split("Steps: ")[1].split(",")[0]);
+  const sampler = safeExifSplit(() => props.image.metadata.exif.split("Sampler: ")[1].split(",")[0]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "image-info", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("table", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tbody", { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
@@ -8670,13 +8670,13 @@ function CozyImageInfo(props) {
 }
 function CozyFullImageInfo(props) {
   const date = new Date(props.image.metadata.date * 1e3).toISOString().replace(/T/, " ").replace(/\..+/, "");
-  const model = safeExifSplit(() => props.image.metadata.exif.parameters.split("Model: ")[1].split(",")[0]);
-  const size = safeExifSplit(() => props.image.metadata.exif.parameters.split("Size: ")[1].split(",")[0]);
-  const seed = safeExifSplit(() => props.image.metadata.exif.parameters.split("Seed: ")[1].split(",")[0]);
-  const steps = safeExifSplit(() => props.image.metadata.exif.parameters.split("Steps: ")[1].split(",")[0]);
-  const sampler = safeExifSplit(() => props.image.metadata.exif.parameters.split("Sampler: ")[1].split(",")[0]);
-  const modelHash = safeExifSplit(() => props.image.metadata.exif.parameters.split("Model hash: ")[1].split(",")[0]);
-  let formattedAll = props.image.metadata.exif.parameters;
+  const model = safeExifSplit(() => props.image.metadata.exif.split("Model: ")[1].split(",")[0]);
+  const size = safeExifSplit(() => props.image.metadata.exif.split("Size: ")[1].split(",")[0]);
+  const seed = safeExifSplit(() => props.image.metadata.exif.split("Seed: ")[1].split(",")[0]);
+  const steps = safeExifSplit(() => props.image.metadata.exif.split("Steps: ")[1].split(",")[0]);
+  const sampler = safeExifSplit(() => props.image.metadata.exif.split("Sampler: ")[1].split(",")[0]);
+  const modelHash = safeExifSplit(() => props.image.metadata.exif.split("Model hash: ")[1].split(",")[0]);
+  let formattedAll = props.image.metadata.exif;
   formattedAll = formattedAll.replace(/\n/g, "<br>");
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "image-info", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -8875,8 +8875,12 @@ const serverPort = (() => {
     return 3333;
   }
 })();
-const config = JSON.parse(localStorage.getItem("COZY_NEST_CONFIG"));
-const disable_image_browser = config["disable_image_browser"];
+let config;
+let disable_image_browser;
+if (!_DEV) {
+  config = JSON.parse(localStorage.getItem("COZY_NEST_CONFIG"));
+  disable_image_browser = config["disable_image_browser"];
+}
 function App() {
   if (disable_image_browser) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(MockImageBrowser, {}) });

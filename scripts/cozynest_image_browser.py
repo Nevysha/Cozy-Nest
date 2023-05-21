@@ -7,18 +7,19 @@ import threading
 from PIL import Image
 from PIL.ExifTags import TAGS
 from modules import script_callbacks
+import modules.extras
+import modules.images
 import websockets
 from websockets.server import serve
 
 
 def get_exif(path):
-    exif = {}
+    allExif = {}
     try:
         image = Image.open(path)
-        info = image.info
-        for tag, value in info.items():
-            decoded = TAGS.get(tag, tag)
-            exif[decoded] = value
+        # info = image.info
+        (_, allExif, allExif_html) = modules.extras.run_pnginfo(image)
+        image.close()
     except Exception as e:
         print(f"CozyNestSocket: Error while getting exif data: {e}")
         pass
@@ -26,7 +27,7 @@ def get_exif(path):
         'path': path,
         'metadata': {
             'date': os.path.getmtime(path),
-            'exif': exif
+            'exif': allExif,
         }
     }
     return img
