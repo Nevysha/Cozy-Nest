@@ -223,19 +223,9 @@ def gradio_img_browser_tab(config, server_port):
                                             interactive=True)
 
         # Add a text block to display each folder from output_folder_array()
-        for folder in output_folder_array():
-            with gr.Row():
-                gr.Textbox(value=folder, label="Output folder", interactive=True)
-                gr.Button(value="Open folder")
-                # delete folder button
-                # TODO handle delete folder
-                gr.Button(value="Delete folder")
+        with gr.Blocks():
+            gr.HTML(f"<div id='nevysha_settings_output_folder_blocks'></div>")
 
-        # Add an empty text block to add a new folder
-        with gr.Row():
-            gr.Textbox(value="", label="Output folder", interactive=True)
-            # TODO handle add folder
-            gr.Button(value="Add folder")
 
     return [
         disable_image_browser,
