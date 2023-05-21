@@ -8,6 +8,8 @@ import threading
 
 import gradio as gr
 import modules
+from typing import Any
+from fastapi import FastAPI, Response, Request
 import websockets
 from PIL import Image
 from PIL.ExifTags import TAGS
@@ -50,8 +52,8 @@ def gradio_save_settings(main_menu_position,
                          server_default_port,
                          auto_search_port,
                          auto_start_server,
-                         fetch_output_folder_from_a1111_settings,
-                         img_browser_folders_block_lists):
+                         fetch_output_folder_from_a1111_settings
+                         ):
     settings = {
         'main_menu_position': main_menu_position,
         'quicksettings_position': quicksettings_position,
@@ -69,7 +71,6 @@ def gradio_save_settings(main_menu_position,
         'auto_search_port': auto_search_port,
         'auto_start_server': auto_start_server,
         'fetch_output_folder_from_a1111_settings': fetch_output_folder_from_a1111_settings,
-        'img_browser_folders_block_lists': img_browser_folders_block_lists,
     }
 
     save_settings(settings)
@@ -239,15 +240,14 @@ def gradio_img_browser_tab(config, server_port):
 
         # Add a text block to display each folder from output_folder_array()
         with gr.Blocks(elem_id="img_browser_folders_block"):
-            img_browser_folders_block_lists = gr.Textbox(value=json.dumps(output_folder_array()), label="Output folder", elem_id="img_browser_folders_block_lists", interactive=True)
+            gr.Textbox(value=json.dumps(output_folder_array()), label="Output folder", elem_id="img_browser_folders_block_lists", interactive=True)
 
     return [
         disable_image_browser,
         server_default_port,
         auto_search_port,
         auto_start_server,
-        fetch_output_folder_from_a1111_settings,
-        img_browser_folders_block_lists]
+        fetch_output_folder_from_a1111_settings]
 
 
 def gradio_main_tab(config):
@@ -322,8 +322,7 @@ def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_
                   quicksettings_position, waves_color, disable_image_browser, server_default_port,
                   auto_search_port,
                   auto_start_server,
-                  fetch_output_folder_from_a1111_settings,
-                  img_browser_folders_block_lists):
+                  fetch_output_folder_from_a1111_settings):
     with gr.Row():
         btn_save = gr.Button(value="Save", elem_id="nevyui_sh_options_submit",
                              elem_classes="nevyui_apply_settings")
@@ -343,8 +342,7 @@ def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_
             server_default_port,
             auto_search_port,
             auto_start_server,
-            fetch_output_folder_from_a1111_settings,
-            img_browser_folders_block_lists
+            fetch_output_folder_from_a1111_settings
         ], outputs=[])
 
         btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)",
@@ -495,8 +493,7 @@ def on_ui_tabs():
                     server_default_port,
                     auto_search_port,
                     auto_start_server,
-                    fetch_output_folder_from_a1111_settings,
-                    img_browser_folders_block_lists
+                    fetch_output_folder_from_a1111_settings
                 ] = gradio_img_browser_tab(config, server_port)
 
         ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
@@ -504,8 +501,7 @@ def on_ui_tabs():
                       quicksettings_position, waves_color, disable_image_browser, server_default_port,
                       auto_search_port,
                       auto_start_server,
-                      fetch_output_folder_from_a1111_settings,
-                      img_browser_folders_block_lists)
+                      fetch_output_folder_from_a1111_settings)
 
         # hidden field to store some useful data and trigger some server actions (like "send to" txt2img,...)
         gradio_hidden_field(server_port)
@@ -518,4 +514,27 @@ def on_ui_tabs():
     return [(ui, "Nevysha Cozy Nest", "nevyui")]
 
 
+def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
+    @app.post("/cozy-nest/config")
+    async def save_config(request: Request):
+        # Access POST parameters
+        data = await request.json()
+        print(data)  # Assuming the POST data is in JSON format
+
+        # shared options
+        config = get_dict_from_config()
+        # merge default settings with user settings
+        config = {**get_default_settings(), **config}
+
+        # TODO handle save so gradio save does not erase our save
+        config['img_browser_folders_block_lists'] = data['img_browser_folders_block_lists']
+        save_settings(config)
+
+        # Process the POST data and return a response
+        # ...
+
+        return {"message": "Config saved successfully"}
+
+
 script_callbacks.on_ui_tabs(on_ui_tabs)
+script_callbacks.on_app_started(cozy_nest_api)

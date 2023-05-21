@@ -857,6 +857,32 @@ const tweakNevyUiSettings = () => {
 
     //show the message with a smooth animation using jquery
     $("#nevysha-saved-feedback").fadeIn();
+
+    try {
+      const jsonFolders = JSON.parse(document.querySelector('#img_browser_folders_block_lists textarea').value);
+      //send config data with POST to /cozy-nest/config
+      const config = {
+        "img_browser_folders_block_lists": jsonFolders,
+      }
+      fetch('/cozy-nest/config', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(config)
+      }).then(response => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          throw new Error('Something went wrong on api server!');
+        }
+      })
+    }
+    catch (e) {
+      console.log(e);
+    }
+
+
     //hide the message after 1.5 second
     setTimeout(() => {
           $("#nevysha-saved-feedback").fadeOut();
