@@ -676,11 +676,8 @@ async function loadVersionData() {
     }, 5000);
   });
 
-  //in current_version_data.version and remote_version_data.version, replace string version to int
-  current_version_data.number = parseInt(current_version_data.version.replace(/\./g, ''))
-  remote_version_data.number = parseInt(remote_version_data.version.replace(/\./g, ''))
   //compare versions and display info
-  if (current_version_data.number >= remote_version_data.number) {
+  if (isUpToDate(current_version_data.version, remote_version_data.version)) {
     //versions are the same
     const p = `<p class="nevysha-version-info-text">You are up to date! (installed: v${current_version_data.version})</p>`
     //add p to the beginning of nevysha-version-info
@@ -714,6 +711,24 @@ async function loadVersionData() {
     document.querySelector('#nevyui_update_info').click();
   });
 
+}
+
+function isUpToDate(current, remote) {
+  const v1 = current.split('.');
+  const v2 = remote.split('.');
+
+  for (let i = 0; i < Math.max(v1.length, v2.length); i++) {
+    const num1 = parseInt(v1[i]) || 0;
+    const num2 = parseInt(v2[i]) || 0;
+
+    if (num1 < num2) {
+      return false;
+    } else if (num1 > num2) {
+      return true;
+    }
+  }
+
+  return true;  // Both versions are equal
 }
 
 const tweakNevyUiSettings = () => {
