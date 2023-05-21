@@ -1237,8 +1237,32 @@ input[type="number"] {
     height: 35px;
 }
 
+#img_browser_main_block {
+    gap:0;
+}
+#img_browser_main_block > .gradio-row {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-content: flex-start;
+    justify-content: flex-start;
+    align-items: flex-end;
+    width: 100%;
+    gap: 0;
+}
+#img_browser_main_block button {
+    flex: none;
+    min-width: unset;
+    width: 50px;
+    margin: 10px 0;
+}
+#img_browser_main_block .form {
+    width: 85%;
+    flex: none;
+}
 
-/*fix menu to top*/
+
+    /*fix menu to top*/
 .nevysha.nevysha-tabnav.menu-fix-top{
     position: fixed;
     flex-direction: row;

@@ -210,16 +210,32 @@ def gradio_img_browser_tab(config, server_port):
                                             label="Disable image browser (Reload UI required)",
                                             elem_id="setting_nevyui_disableImageBrowser", interactive=True)
 
-        server_default_port = gr.Textbox(value=str(server_port), label="Socket port for image browser", interactive=True)
-        auto_search_port = gr.Checkbox(value=True, label="Auto search port", elem_id="setting_nevyui_autoSearchPort",
-                                        interactive=True)
+        with gr.Row():
+            server_default_port = gr.Textbox(value=str(server_port), label="Socket port for image browser", interactive=True)
+            auto_search_port = gr.Checkbox(value=True, label="Auto search port", elem_id="setting_nevyui_autoSearchPort",
+                                            interactive=True)
 
-        auto_start_server = gr.Checkbox(value=True, label="Auto start server", elem_id="setting_nevyui_autoStartServer",
-                                        interactive=True)
+            auto_start_server = gr.Checkbox(value=True, label="Auto start server", elem_id="setting_nevyui_autoStartServer",
+                                            interactive=True)
 
-        fetch_output_folder_from_a1111_settings = gr.Checkbox(
-            value=True, label="Fetch output folder from a1111 settings", elem_id="setting_nevyui_fetchOutputFolderFromA1111Settings",
-                                        interactive=True)
+            fetch_output_folder_from_a1111_settings = gr.Checkbox(
+                value=True, label="Fetch output folder from a1111 settings", elem_id="setting_nevyui_fetchOutputFolderFromA1111Settings",
+                                            interactive=True)
+
+        # Add a text block to display each folder from output_folder_array()
+        for folder in output_folder_array():
+            with gr.Row():
+                gr.Textbox(value=folder, label="Output folder", interactive=True)
+                gr.Button(value="Open folder")
+                # delete folder button
+                # TODO handle delete folder
+                gr.Button(value="Delete folder")
+
+        # Add an empty text block to add a new folder
+        with gr.Row():
+            gr.Textbox(value="", label="Output folder", interactive=True)
+            # TODO handle add folder
+            gr.Button(value="Add folder")
 
     return [
         disable_image_browser,
