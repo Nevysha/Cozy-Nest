@@ -1268,6 +1268,7 @@ input[type="number"] {
     width: max(800px, 50vw);
     z-index: 9999;
     background-color: var(--block-background-fill);
+    border: 1px solid var(--ae-input-border-color)
 }
 .nevysha-btn-menu-wrapper {
     display: flex;
