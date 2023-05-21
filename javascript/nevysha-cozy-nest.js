@@ -730,6 +730,103 @@ function isUpToDate(current, remote) {
   return true;  // Both versions are equal
 }
 
+function createFolderListComponent() {
+  // create component to add and remove folders to scrap for images browser
+  const componentContainer = document.querySelector('#img_browser_folders_block_lists').parentElement;
+  const textarea = document.querySelector('#img_browser_folders_block_lists textarea');
+  componentContainer.classList.remove('hidden')
+
+  function updateList(foldersList) {
+    document.querySelectorAll('.nevysha-image-browser-folder-container').forEach(el => el.remove());
+    textarea.value = JSON.stringify(foldersList);
+
+    //throw change event to update textarea
+    textarea.dispatchEvent(new Event('change'));
+    textarea.dispatchEvent(new Event('blur'));
+
+    parseAndDisplayFolderSettings();
+  }
+
+  function parseAndDisplayFolderSettings() {
+    const forldersListJson = textarea.value;
+    const foldersList = JSON.parse(forldersListJson);
+
+    for (const folderIndex in foldersList) {
+      const folder = foldersList[folderIndex];
+      const imageBrowserFolderContainer = document.createElement('div');
+      imageBrowserFolderContainer.classList.add('nevysha-image-browser-folder-container');
+      componentContainer.appendChild(imageBrowserFolderContainer);
+
+      //input for path
+      const imageBrowserFolder = document.createElement('textarea');
+      imageBrowserFolder.classList.add('nevysha-image-browser-folder');
+      imageBrowserFolder.value = folder;
+      imageBrowserFolderContainer.appendChild(imageBrowserFolder);
+
+      //button to remove folder
+      const imageBrowserFolderRemoveBtn = document.createElement('button');
+      imageBrowserFolderRemoveBtn.classList.add('nevysha-image-browser-folder-btn');
+      imageBrowserFolderRemoveBtn.innerHTML = 'Remove';
+      imageBrowserFolderRemoveBtn.addEventListener('click', (e) => {
+        //prevent default behavior
+        e.preventDefault();
+        e.stopPropagation();
+
+        //remove from list using index
+        foldersList.splice(folderIndex, 1);
+        updateList(foldersList);
+
+      });
+      imageBrowserFolderContainer.appendChild(imageBrowserFolderRemoveBtn);
+
+    }
+
+    //add a last empty one to add a new folder
+    const imageBrowserFolderContainer = document.createElement('div');
+    imageBrowserFolderContainer.classList.add('nevysha-image-browser-folder-container');
+    componentContainer.appendChild(imageBrowserFolderContainer);
+
+    //input for path
+    const imageBrowserFolder = document.createElement('textarea');
+    imageBrowserFolder.classList.add('nevysha-image-browser-folder');
+    imageBrowserFolder.setAttribute("placeholder", 'Paste a folder path here...');
+    imageBrowserFolderContainer.appendChild(imageBrowserFolder);
+
+    //button to remove folder
+    const imageBrowserFolderAddBtn = document.createElement('button');
+    imageBrowserFolderAddBtn.classList.add('nevysha-image-browser-folder-btn');
+    imageBrowserFolderAddBtn.innerHTML = 'Add';
+    imageBrowserFolderAddBtn.addEventListener('click', (e) => {
+      //prevent default behavior
+      e.preventDefault();
+      e.stopPropagation();
+
+      const folder = imageBrowserFolder.value;
+      if (folder.length <= 0) {
+        window.alert("Please enter a folder path to add.");
+        return;
+      }
+
+      const foldersListJson = textarea.value;
+      const foldersList = JSON.parse(foldersListJson);
+
+      //check if folder already exists
+      if (foldersList.includes(folder)) {
+        window.alert("This folder is already in the list.");
+        return;
+      }
+
+      foldersList.push(folder);
+
+      updateList(foldersList);
+
+    });
+    imageBrowserFolderContainer.appendChild(imageBrowserFolderAddBtn);
+  }
+
+  parseAndDisplayFolderSettings();
+}
+
 const tweakNevyUiSettings = () => {
   // select button element with "Nevysha Cozy Nest" as its content
   const nevySettingstabMenu = $('#tabs > div > button:contains("Nevysha Cozy Nest")');
@@ -842,6 +939,9 @@ const tweakNevyUiSettings = () => {
       }
     });
   })();
+
+  createFolderListComponent();
+
 
 }
 

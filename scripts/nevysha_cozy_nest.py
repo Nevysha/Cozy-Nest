@@ -46,7 +46,12 @@ def gradio_save_settings(main_menu_position,
                          card_width,
                          error_popup,
                          disable_image_browser,
-                         disable_waves_and_gradiant):
+                         disable_waves_and_gradiant,
+                         server_default_port,
+                         auto_search_port,
+                         auto_start_server,
+                         fetch_output_folder_from_a1111_settings,
+                         img_browser_folders_block_lists):
     settings = {
         'main_menu_position': main_menu_position,
         'quicksettings_position': quicksettings_position,
@@ -60,6 +65,11 @@ def gradio_save_settings(main_menu_position,
         'error_popup': error_popup,
         'disable_image_browser': disable_image_browser,
         'disable_waves_and_gradiant': disable_waves_and_gradiant,
+        'server_default_port': server_default_port,
+        'auto_search_port': auto_search_port,
+        'auto_start_server': auto_start_server,
+        'fetch_output_folder_from_a1111_settings': fetch_output_folder_from_a1111_settings,
+        'img_browser_folders_block_lists': img_browser_folders_block_lists,
     }
 
     save_settings(settings)
@@ -101,6 +111,11 @@ def get_default_settings():
         'error_popup': True,
         'disable_image_browser': True,
         'disable_waves_and_gradiant': False,
+        'server_default_port': 3333,
+        'auto_search_port': True,
+        'auto_start_server': True,
+        'fetch_output_folder_from_a1111_settings': True,
+        'img_browser_folders_block_lists': [],
     }
 
 
@@ -223,16 +238,16 @@ def gradio_img_browser_tab(config, server_port):
                                             interactive=True)
 
         # Add a text block to display each folder from output_folder_array()
-        with gr.Blocks():
-            gr.HTML(f"<div id='nevysha_settings_output_folder_blocks'></div>")
-
+        with gr.Blocks(elem_id="img_browser_folders_block"):
+            img_browser_folders_block_lists = gr.Textbox(value=json.dumps(output_folder_array()), label="Output folder", elem_id="img_browser_folders_block_lists", interactive=True)
 
     return [
         disable_image_browser,
         server_default_port,
         auto_search_port,
         auto_start_server,
-        fetch_output_folder_from_a1111_settings]
+        fetch_output_folder_from_a1111_settings,
+        img_browser_folders_block_lists]
 
 
 def gradio_main_tab(config):
@@ -304,7 +319,11 @@ def gradio_main_tab(config):
 
 def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
                   disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
-                  quicksettings_position, waves_color, disable_image_browser):
+                  quicksettings_position, waves_color, disable_image_browser, server_default_port,
+                  auto_search_port,
+                  auto_start_server,
+                  fetch_output_folder_from_a1111_settings,
+                  img_browser_folders_block_lists):
     with gr.Row():
         btn_save = gr.Button(value="Save", elem_id="nevyui_sh_options_submit",
                              elem_classes="nevyui_apply_settings")
@@ -320,7 +339,12 @@ def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_
             card_width,
             error_popup,
             disable_image_browser,
-            disable_waves_and_gradiant
+            disable_waves_and_gradiant,
+            server_default_port,
+            auto_search_port,
+            auto_start_server,
+            fetch_output_folder_from_a1111_settings,
+            img_browser_folders_block_lists
         ], outputs=[])
 
         btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)",
@@ -448,7 +472,7 @@ def on_ui_tabs():
                       "<a onClick='gatherInfoAndShowDialog();return false;' href='_blank'>click here to gather relevant info</a>"
                       " then use <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
                       " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
-                      "<p class='nevysha-emphasis'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
+                      "<p class='nevysha-emphasis'>WARNING : Some visual settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
 
         with gr.Tabs(id="cozy_nest_settings_tabs", elem_id="cozy_nest_settings_tabs"):
             with gr.TabItem(label="Main Settings", elem_id="cozy_nest_settings_tab"):
@@ -471,12 +495,17 @@ def on_ui_tabs():
                     server_default_port,
                     auto_search_port,
                     auto_start_server,
-                    fetch_output_folder_from_a1111_settings
+                    fetch_output_folder_from_a1111_settings,
+                    img_browser_folders_block_lists
                 ] = gradio_img_browser_tab(config, server_port)
 
         ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
                       disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
-                      quicksettings_position, waves_color, disable_image_browser)
+                      quicksettings_position, waves_color, disable_image_browser, server_default_port,
+                      auto_search_port,
+                      auto_start_server,
+                      fetch_output_folder_from_a1111_settings,
+                      img_browser_folders_block_lists)
 
         # hidden field to store some useful data and trigger some server actions (like "send to" txt2img,...)
         gradio_hidden_field(server_port)

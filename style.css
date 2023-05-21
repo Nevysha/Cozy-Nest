@@ -1194,7 +1194,7 @@ input[type="number"] {
 }
 #cozy_nest_settings_tabs > .tabitem {
     overflow-y: auto;
-    max-height: 40%;
+    max-height: 40vh;
 }
 #cozy_nest_settings_tabs > .tab-nav {
     background-color: var(--tab-nav-background-color);
@@ -1240,25 +1240,31 @@ input[type="number"] {
 #img_browser_main_block {
     gap:0;
 }
-#img_browser_main_block > .gradio-row {
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    align-content: flex-start;
-    justify-content: flex-start;
-    align-items: flex-end;
-    width: 100%;
-    gap: 0;
-}
-#img_browser_main_block button {
-    flex: none;
-    min-width: unset;
-    width: 50px;
-    margin: 10px 0;
-}
 #img_browser_main_block .form {
-    width: 85%;
-    flex: none;
+    align-items: center;
+}
+textarea.nevysha-image-browser-folder {
+    display: block;
+    position: relative;
+    outline: none!important;
+    box-shadow: var(--input-shadow);
+    border: var(--input-border-width) solid var(--input-border-color);
+    resize: none;
+}
+.img_browser_folders_block_lists > label > textarea {
+    display: none;
+}
+.nevysha-image-browser-folder-container {
+    display: flex;
+    flex-direction: row;
+}
+.nevysha-image-browser-folder-btn {
+    border: 1px solid var(--ae-input-border-color) !important;
+    border-radius: var(--ae-panel-border-radius) !important;
+    background: var(--ae-input-bg-color) !important;
+    color: var(--ae-input-color) !important;
+    padding: 0 10px !important;
+    min-width: 60px;
 }
 
 
