@@ -1498,7 +1498,7 @@ const recalcOffsetFromMenuHeight = () => {
 
   const tabs = document.getElementById('tabs');
 
-  const footer = document.querySelector('#footer #footer');
+  const footer = document.querySelector('footer');
 
   // //get value of the css var var(--layout-gap);
   // const layoutGap = getComputedStyle(document.documentElement).getPropertyValue('--layout-gap');
