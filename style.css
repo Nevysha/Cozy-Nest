@@ -1212,7 +1212,7 @@ input[type="number"] {
     position: relative;
     top: 2px;
     left: 2px;
-    width: 40px;
+    width: 60px;
     height: 35px;
     display: flex;
     align-content: center;
@@ -1233,7 +1233,7 @@ input[type="number"] {
     left: 0;
     cursor: pointer;
     z-index: 9999;
-    width: 40px;
+    width: 60px;
     height: 35px;
 }
 
