@@ -14,7 +14,7 @@ Tested in Chrome, should work in Firefox with minor bug. I plan to fix it later.
 
 User reported that it works on Vlad's fork of sd-webui, although I haven't tested it myself.
 
-Features:
+## Features:
 - [x]  Fully integrated Image Browser **IN BETA**. Lots of bugs and missing features. Please be kind with Github issues.
    - [x]  Send to txt2img / img2img / …
    - [x]  Clean memory for image not visible (unload them / replace with dummy div) clean filteredImages and loadedImage Array
@@ -44,6 +44,14 @@ Features:
 - [x]  Extra Networks left sided tab.
 - [x]  Close Extra Network tab with escape key
 - [x]  Fetch version from a desicated json file hosted directly in the repo to an easier view of update of Cozy Nest.
+
+## Known Issue
+
+- [ ]  Metadata display in image browser may display "Error parsing metadata"
+- [ ]  Partial compatibility with Firefox and Opera GX
+- [ ]  Most tweak will not support a live window resize (nor F11 to go fullscreen)
+- [ ]  Some user report a missing scrollbar in Extra network tab
+- [ ]  Some user report an crash when attempting to open Extra Network tab
 
 It's made by being a bit hacky on the DOM to tweaks Gradio default features and existing css of Auto1111. It will probably break with each update of auto1111, but I'll try to keep it up to date.
 
