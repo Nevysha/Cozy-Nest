@@ -237,7 +237,7 @@ def gradio_img_browser_tab(config):
                                             interactive=True, visible=False)
 
             fetch_output_folder_from_a1111_settings = gr.Checkbox(
-                value=config.get('fetch_output_folder_from_a1111_settings'), label="Fetch output folder from a1111 settings", elem_id="setting_nevyui_fetchOutputFolderFromA1111Settings",
+                value=config.get('fetch_output_folder_from_a1111_settings'), label="Fetch output folder from a1111 settings (Reload needed to enable)", elem_id="setting_nevyui_fetchOutputFolderFromA1111Settings",
                                             interactive=True)
 
         # Add a text block to display each folder from output_folder_array()
@@ -414,8 +414,14 @@ def on_ui_tabs():
     # check if cnib_output_folder is empty and/or need to be fetched from a1111 settings
     cnib_output_folder = config.get('cnib_output_folder')
     is_empty = cnib_output_folder == []
-    if (not cnib_output_folder or is_empty) and config.get('fetch_output_folder_from_a1111_settings'):
-        config['cnib_output_folder'] = output_folder_array()
+    if not cnib_output_folder or is_empty:
+        cnib_output_folder = []
+
+    if config.get('fetch_output_folder_from_a1111_settings'):
+        # merge cnib_output_folder output_folder_array()
+        cnib_output_folder = cnib_output_folder + list(set(output_folder_array()) - set(cnib_output_folder))
+
+    config['cnib_output_folder'] = cnib_output_folder
 
     # save the merged settings
     save_settings(config)
