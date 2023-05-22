@@ -75,8 +75,10 @@ def gradio_save_settings(main_menu_position,
 
     current_config = get_dict_from_config()
 
-    if current_config['img_browser_folders_block_lists']:
-        settings['img_browser_folders_block_lists'] = current_config['img_browser_folders_block_lists']
+    if current_config['cnib_output_folder']:
+        settings['cnib_output_folder'] = current_config['cnib_output_folder']
+    else:
+        settings['cnib_output_folder'] = []
 
     save_settings(settings)
 
@@ -121,7 +123,7 @@ def get_default_settings():
         'auto_search_port': True,
         'auto_start_server': True,
         'fetch_output_folder_from_a1111_settings': True,
-        'img_browser_folders_block_lists': [],
+        'cnib_output_folder': [],
     }
 
 
@@ -159,21 +161,23 @@ def is_port_free(port):
         sock.close()
 
 
-def serv_img_browser_socket(server_port=3333, auto_search_port=True):
+def serv_img_browser_socket(server_port=3333, auto_search_port=True, cnib_output_folder=None):
+    if cnib_output_folder is None or cnib_output_folder == []:
+        print("CozyNest: No output folder specified for image browser. Aborting.")
+        return
+
     # check if port is free
     if auto_search_port:
         while not is_port_free(server_port) and server_port < 64000:
             print(f"CozyNest: Port {server_port} is already in use. Searching for a free port.")
             server_port += 1
 
-    images_folders = output_folder_array()
-
     try:
         parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         # add the CozyNest extension to the sys.path.
         sys.path.append(parent_dir)
         # start the server in a separate process
-        start_server_in_dedicated_process(images_folders, server_port)
+        start_server_in_dedicated_process(cnib_output_folder, server_port)
         return server_port
     except Exception as e:
         print("CozyNest: Error while starting socket server")
@@ -239,7 +243,7 @@ def gradio_img_browser_tab(config):
         # Add a text block to display each folder from output_folder_array()
         with gr.Blocks(elem_id="img_browser_folders_block"):
             # TODO refactor to remove this as it's no longer managed through gradio
-            gr.Textbox(value=json.dumps(output_folder_array()), label="Output folder", elem_id="img_browser_folders_block_lists", interactive=True, visible=False)
+            gr.Textbox(value=json.dumps(config.get('cnib_output_folder')), label="Output folder", elem_id="cnib_output_folder", interactive=True, visible=False)
 
     return [
         disable_image_browser,
@@ -406,6 +410,13 @@ def on_ui_tabs():
     config = get_dict_from_config()
     # merge default settings with user settings
     config = {**get_default_settings(), **config}
+
+    # check if cnib_output_folder is empty and/or need to be fetched from a1111 settings
+    cnib_output_folder = config.get('cnib_output_folder')
+    is_empty = cnib_output_folder == []
+    if (not cnib_output_folder or is_empty) and config.get('fetch_output_folder_from_a1111_settings'):
+        config['cnib_output_folder'] = output_folder_array()
+
     # save the merged settings
     save_settings(config)
 
@@ -416,7 +427,11 @@ def on_ui_tabs():
 
     server_port = None
     if not disable_image_browser_value and auto_start_server:
-        server_port = serv_img_browser_socket(config.get('server_default_port'), config.get('auto_search_port'))
+        server_port = serv_img_browser_socket(
+            config.get('server_default_port'), 
+            config.get('auto_search_port'),
+            config.get('cnib_output_folder')
+        )
     else:
         print("CozyNest: Image browser is disabled. To enable it, go to the CozyNest settings.")
 
@@ -526,7 +541,7 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
         config = get_dict_from_config()
         # merge default settings with user settings
         config = {**get_default_settings(), **config,
-                  'img_browser_folders_block_lists': data['img_browser_folders_block_lists']}
+                  'cnib_output_folder': data['cnib_output_folder']}
 
         save_settings(config)
 

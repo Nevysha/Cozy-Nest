@@ -732,8 +732,8 @@ function isUpToDate(current, remote) {
 
 function createFolderListComponent() {
   // create component to add and remove folders to scrap for images browser
-  const componentContainer = document.querySelector('#img_browser_folders_block_lists').parentElement;
-  const textarea = document.querySelector('#img_browser_folders_block_lists textarea');
+  const componentContainer = document.querySelector('#cnib_output_folder').parentElement;
+  const textarea = document.querySelector('#cnib_output_folder textarea');
   componentContainer.classList.remove('hidden')
 
   function updateList(foldersList) {
@@ -761,6 +761,7 @@ function createFolderListComponent() {
       const imageBrowserFolder = document.createElement('textarea');
       imageBrowserFolder.classList.add('nevysha-image-browser-folder');
       imageBrowserFolder.value = folder;
+      imageBrowserFolder.setAttribute('enabled', 'false');
       imageBrowserFolderContainer.appendChild(imageBrowserFolder);
 
       //button to remove folder
@@ -859,10 +860,10 @@ const tweakNevyUiSettings = () => {
     $("#nevysha-saved-feedback").fadeIn();
 
     try {
-      const jsonFolders = JSON.parse(document.querySelector('#img_browser_folders_block_lists textarea').value);
+      const jsonFolders = JSON.parse(document.querySelector('#cnib_output_folder textarea').value);
       //send config data with POST to /cozy-nest/config
       const config = {
-        "img_browser_folders_block_lists": jsonFolders,
+        "cnib_output_folder": jsonFolders,
       }
       fetch('/cozy-nest/config', {
         method: 'POST',

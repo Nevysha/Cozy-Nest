@@ -1251,7 +1251,7 @@ textarea.nevysha-image-browser-folder {
     border: var(--input-border-width) solid var(--input-border-color);
     resize: none;
 }
-.img_browser_folders_block_lists > label > textarea {
+#cnib_output_folder > label > textarea {
     display: none;
 }
 .nevysha-image-browser-folder-container {
