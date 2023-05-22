@@ -4,6 +4,14 @@
 
 From a1111 5ab7f213 commit to the 1.2.1 release.  
 
+## New features in 2.1.0
+
+- [x] Settings panel for image browser
+  - [x] Chose default socket port
+  - [x] Enable/disable auto search for free port
+  - [x] Enable/disable auto fetch for output folder from a1111 settings
+  - [x] Add/Remove custom output folder
+
 ## Minor changes & fixes in 2.0.9
 
 - [x] Using the builtin png info to get image generation data in image browser
