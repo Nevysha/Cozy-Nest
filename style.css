@@ -1194,7 +1194,7 @@ input[type="number"] {
 }
 #cozy_nest_settings_tabs > .tabitem {
     overflow-y: auto;
-    max-height: 40vh;
+    height: 40vh;
 }
 #cozy_nest_settings_tabs > .tab-nav {
     background-color: var(--tab-nav-background-color);
