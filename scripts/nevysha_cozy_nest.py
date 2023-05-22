@@ -1,5 +1,6 @@
 import asyncio
 import json
+import mimetypes
 import os
 import socket
 import subprocess
@@ -11,8 +12,6 @@ import modules
 from typing import Any
 from fastapi import FastAPI, Response, Request
 import websockets
-from PIL import Image
-from PIL.ExifTags import TAGS
 from modules import script_callbacks, shared, call_queue, scripts
 
 from scripts.cozynest_image_browser import start_server, get_exif
@@ -552,6 +551,25 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
         save_settings(config)
 
         return {"message": "Config saved successfully"}
+
+    @app.get("/cozy-nest/image")
+    async def get_image(path: str):
+        # Open the file in binary mode
+        try:
+            with open(path, "rb") as file:
+                contents = file.read()
+
+            # Get the MIME type of the file
+            content_type, _ = mimetypes.guess_type(path)
+
+            # Create a response with the file contents and appropriate content type
+            response = Response(content=contents, media_type=content_type)
+            response.headers["Content-Disposition"] = f'attachment; filename="{path}"'
+
+            return response
+
+        except FileNotFoundError:
+            return Response(status_code=404, content="File not found")
 
 
 script_callbacks.on_ui_tabs(on_ui_tabs)

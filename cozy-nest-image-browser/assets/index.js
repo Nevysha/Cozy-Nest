@@ -8677,7 +8677,11 @@ function CozyFullImageInfo(props) {
   const sampler = safeExifSplit(() => props.image.metadata.exif.split("Sampler: ")[1].split(",")[0]);
   const modelHash = safeExifSplit(() => props.image.metadata.exif.split("Model hash: ")[1].split(",")[0]);
   let formattedAll = props.image.metadata.exif;
-  formattedAll = formattedAll.replace(/\n/g, "<br>");
+  try {
+    formattedAll = formattedAll.replace(/\n/g, "<br>");
+  } catch (ignored) {
+    formattedAll = "No metadata found";
+  }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "image-info", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       "button",
@@ -8751,7 +8755,7 @@ function CozyImage(props) {
       "img",
       {
         className: "cozy-nest-thumbnail",
-        src: `${baseUrl}:${gradioPort}/file=${props.image.path}`,
+        src: `${baseUrl}:${gradioPort}/cozy-nest/image?path=${props.image.path}`,
         alt: "image",
         ref: imgRef
       }
@@ -8762,7 +8766,7 @@ function CozyImage(props) {
         "img",
         {
           className: "cozy-nest-thumbnail",
-          src: `${baseUrl}:${gradioPort}/file=${props.image.path}`,
+          src: `${baseUrl}:${gradioPort}/cozy-nest/image?path=${props.image.path}`,
           alt: "image"
         }
       ) }),
@@ -8872,7 +8876,7 @@ const serverPort = (() => {
     return document.querySelector("#cnib_socket_server_port > label > textarea").value;
   } catch (e) {
     console.warn("cnib_socket_server_port not found in main gradio app");
-    return 3333;
+    return 3337;
   }
 })();
 let config;
