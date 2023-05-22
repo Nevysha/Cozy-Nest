@@ -409,7 +409,7 @@ function applyCozyNestConfig() {
 
   //card width
   const setCardWidth = () => {
-      const cardWidth = document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=number]").value;
+    const cardWidth = document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=number]").value;
     document.querySelector(':root').style.setProperty('--extra-network-card-width', `${cardWidth}em`);
   }
   setCardWidth()

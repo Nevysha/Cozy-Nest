@@ -73,6 +73,11 @@ def gradio_save_settings(main_menu_position,
         'fetch_output_folder_from_a1111_settings': fetch_output_folder_from_a1111_settings,
     }
 
+    current_config = get_dict_from_config()
+
+    if current_config['img_browser_folders_block_lists']:
+        settings['img_browser_folders_block_lists'] = current_config['img_browser_folders_block_lists']
+
     save_settings(settings)
 
 
@@ -157,8 +162,6 @@ def is_port_free(port):
 def serv_img_browser_socket(server_port=3333, auto_search_port=True):
     # check if port is free
     if auto_search_port:
-        # search for a free port
-        server_port = 3333
         while not is_port_free(server_port) and server_port < 64000:
             print(f"CozyNest: Port {server_port} is already in use. Searching for a free port.")
             server_port += 1
@@ -213,12 +216,7 @@ def start_server_in_dedicated_process(_images_folders, server_port):
     script_callbacks.on_before_reload(stop_server)
 
 
-def gradio_img_browser_tab(config, server_port):
-
-    # TODO add settings (maybe in a tab) for the image browser
-    #  - chose port number
-    #  - chose folders to scrap (may be multiple)
-    #  - chose if the server should be started automatically
+def gradio_img_browser_tab(config):
 
     with gr.Column(elem_id="img_browser_main_block"):
         # disable_image_browser
@@ -227,20 +225,21 @@ def gradio_img_browser_tab(config, server_port):
                                             elem_id="setting_nevyui_disableImageBrowser", interactive=True)
 
         with gr.Row():
-            server_default_port = gr.Textbox(value=str(server_port), label="Socket port for image browser", interactive=True)
+            server_default_port = gr.Number(value=config.get('server_default_port'), label="Socket port for image browser", interactive=True, precision=0)
             auto_search_port = gr.Checkbox(value=True, label="Auto search port", elem_id="setting_nevyui_autoSearchPort",
                                             interactive=True)
 
-            auto_start_server = gr.Checkbox(value=True, label="Auto start server", elem_id="setting_nevyui_autoStartServer",
-                                            interactive=True)
+            auto_start_server = gr.Checkbox(value=config.get('auto_start_server'), label="Auto start server", elem_id="setting_nevyui_autoStartServer",
+                                            interactive=True, visible=False)
 
             fetch_output_folder_from_a1111_settings = gr.Checkbox(
-                value=True, label="Fetch output folder from a1111 settings", elem_id="setting_nevyui_fetchOutputFolderFromA1111Settings",
+                value=config.get('fetch_output_folder_from_a1111_settings'), label="Fetch output folder from a1111 settings", elem_id="setting_nevyui_fetchOutputFolderFromA1111Settings",
                                             interactive=True)
 
         # Add a text block to display each folder from output_folder_array()
         with gr.Blocks(elem_id="img_browser_folders_block"):
-            gr.Textbox(value=json.dumps(output_folder_array()), label="Output folder", elem_id="img_browser_folders_block_lists", interactive=True)
+            # TODO refactor to remove this as it's no longer managed through gradio
+            gr.Textbox(value=json.dumps(output_folder_array()), label="Output folder", elem_id="img_browser_folders_block_lists", interactive=True, visible=False)
 
     return [
         disable_image_browser,
@@ -293,14 +292,6 @@ def gradio_main_tab(config):
                                                elem_id="setting_nevyui_bgGradiantColor", interactive=True)
             accent_color = gr.ColorPicker(value=config.get('accent_color'), label="Accent color",
                                           elem_id="setting_nevyui_accentColor", interactive=True)
-
-        with gr.Row(elem_id='nevysha-saved-feedback-wrapper'):
-            gr.HTML(
-                value="<div id='nevysha-saved-feedback' class='nevysha nevysha-feedback' style='display:none;'>Saved !</div>")
-            gr.HTML(
-                value="<div id='nevysha-reset-feedback' class='nevysha nevysha-feedback' style='display:none;'>Reset !</div>")
-            gr.HTML(
-                value="<div id='nevysha-dummy-feedback' class='nevysha nevysha-feedback' style='display:none;' />")
 
         return [
             accent_color,
@@ -366,6 +357,15 @@ def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_
             fn=serv_img_browser_socket,
             inputs=[],
             outputs=[], )
+
+    with gr.Row(elem_id='nevysha-saved-feedback-wrapper'):
+        gr.HTML(
+            value="<div id='nevysha-saved-feedback' class='nevysha nevysha-feedback' style='display:none;'>Saved !</div>")
+        gr.HTML(
+            value="<div id='nevysha-reset-feedback' class='nevysha nevysha-feedback' style='display:none;'>Reset !</div>")
+        gr.HTML(
+            value="<div id='nevysha-dummy-feedback' class='nevysha nevysha-feedback' style='display:none;' />")
+
     # add button to trigger git pull
     btn_update = gr.Button(value="Update", elem_id="nevyui_sh_options_update", visible=False, )
     btn_update.click(
@@ -412,9 +412,11 @@ def on_ui_tabs():
     # check if the user has disabled the image browser
     disable_image_browser_value = config.get('disable_image_browser')
 
+    auto_start_server = config.get('auto_start_server')
+
     server_port = None
-    if not disable_image_browser_value:
-        server_port = serv_img_browser_socket()
+    if not disable_image_browser_value and auto_start_server:
+        server_port = serv_img_browser_socket(config.get('server_default_port'), config.get('auto_search_port'))
     else:
         print("CozyNest: Image browser is disabled. To enable it, go to the CozyNest settings.")
 
@@ -494,7 +496,7 @@ def on_ui_tabs():
                     auto_search_port,
                     auto_start_server,
                     fetch_output_folder_from_a1111_settings
-                ] = gradio_img_browser_tab(config, server_port)
+                ] = gradio_img_browser_tab(config)
 
         ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
                       disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
@@ -519,19 +521,14 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
     async def save_config(request: Request):
         # Access POST parameters
         data = await request.json()
-        print(data)  # Assuming the POST data is in JSON format
 
         # shared options
         config = get_dict_from_config()
         # merge default settings with user settings
-        config = {**get_default_settings(), **config}
+        config = {**get_default_settings(), **config,
+                  'img_browser_folders_block_lists': data['img_browser_folders_block_lists']}
 
-        # TODO handle save so gradio save does not erase our save
-        config['img_browser_folders_block_lists'] = data['img_browser_folders_block_lists']
         save_settings(config)
-
-        # Process the POST data and return a response
-        # ...
 
         return {"message": "Config saved successfully"}
 
