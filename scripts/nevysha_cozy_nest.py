@@ -11,6 +11,7 @@ import gradio as gr
 import modules
 from typing import Any
 from fastapi import FastAPI, Response, Request
+from fastapi.staticfiles import StaticFiles
 import websockets
 from modules import script_callbacks, shared, call_queue, scripts
 
@@ -220,7 +221,6 @@ def start_server_in_dedicated_process(_images_folders, server_port):
 
 
 def gradio_img_browser_tab(config):
-
     with gr.Column(elem_id="img_browser_main_block"):
         # disable_image_browser
         disable_image_browser = gr.Checkbox(value=config.get('disable_image_browser'),
@@ -228,21 +228,27 @@ def gradio_img_browser_tab(config):
                                             elem_id="setting_nevyui_disableImageBrowser", interactive=True)
 
         with gr.Row():
-            server_default_port = gr.Number(value=config.get('server_default_port'), label="Socket port for image browser", interactive=True, precision=0)
-            auto_search_port = gr.Checkbox(value=True, label="Auto search port", elem_id="setting_nevyui_autoSearchPort",
-                                            interactive=True)
+            server_default_port = gr.Number(value=config.get('server_default_port'),
+                                            label="Socket port for image browser", interactive=True, precision=0)
+            auto_search_port = gr.Checkbox(value=True, label="Auto search port",
+                                           elem_id="setting_nevyui_autoSearchPort",
+                                           interactive=True)
 
-            auto_start_server = gr.Checkbox(value=config.get('auto_start_server'), label="Auto start server", elem_id="setting_nevyui_autoStartServer",
+            auto_start_server = gr.Checkbox(value=config.get('auto_start_server'), label="Auto start server",
+                                            elem_id="setting_nevyui_autoStartServer",
                                             interactive=True, visible=False)
 
             fetch_output_folder_from_a1111_settings = gr.Checkbox(
-                value=config.get('fetch_output_folder_from_a1111_settings'), label="Fetch output folder from a1111 settings (Reload needed to enable)", elem_id="setting_nevyui_fetchOutputFolderFromA1111Settings",
-                                            interactive=True)
+                value=config.get('fetch_output_folder_from_a1111_settings'),
+                label="Fetch output folder from a1111 settings (Reload needed to enable)",
+                elem_id="setting_nevyui_fetchOutputFolderFromA1111Settings",
+                interactive=True)
 
         # Add a text block to display each folder from output_folder_array()
         with gr.Blocks(elem_id="img_browser_folders_block"):
             # TODO refactor to remove this as it's no longer managed through gradio
-            gr.Textbox(value=json.dumps(config.get('cnib_output_folder')), label="Output folder", elem_id="cnib_output_folder", interactive=True, visible=False)
+            gr.Textbox(value=json.dumps(config.get('cnib_output_folder')), label="Output folder",
+                       elem_id="cnib_output_folder", interactive=True, visible=False)
 
     return [
         disable_image_browser,
@@ -254,9 +260,7 @@ def gradio_img_browser_tab(config):
 
 def gradio_main_tab(config):
     with gr.Column(elem_id="nevyui-ui-block"):
-
         with gr.Row():
-
             # error popup checkbox
             error_popup = gr.Checkbox(value=config.get('error_popup'),
                                       label="Display information dialog on Cozy Nest error",
@@ -433,7 +437,7 @@ def on_ui_tabs():
     server_port = None
     if not disable_image_browser_value and auto_start_server:
         server_port = serv_img_browser_socket(
-            config.get('server_default_port'), 
+            config.get('server_default_port'),
             config.get('auto_search_port'),
             config.get('cnib_output_folder')
         )
@@ -536,7 +540,16 @@ def on_ui_tabs():
     return [(ui, "Nevysha Cozy Nest", "nevyui")]
 
 
+cwd = os.path.normpath(os.path.join(__file__, "../../"))
+
+
 def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
+    app.mount(
+        "/cozy-nest-client/",
+        StaticFiles(directory=f"{cwd}/client/"),
+        name="cozy-nest-client",
+    )
+
     @app.post("/cozy-nest/config")
     async def save_config(request: Request):
         # Access POST parameters
