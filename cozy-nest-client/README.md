@@ -1,6 +1,6 @@
 # Cozy Nest Client
 
-**![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) If you are looking for the Automatic1111's webui extension, please look [HERE](https://github.com/Nevysha/Cozy-Nest). This repo host the source code of Cozy Nest client.**
+**![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) f you are looking for the Automatic1111's webui extension, please look [HERE](https://github.com/Nevysha/Cozy-Nest). This folder is for non-built source code of Cozy Nest client.**
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G2L55CD)
 
