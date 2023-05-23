@@ -89,6 +89,9 @@ Or search for Cozy Nest in the extension tab
 
 # Contribution
 
+As you may have notice, most of the JS source here are minified. I'm using Vite to bundle the extension.
+The source code is available [HERE](https://github.com/Nevysha/cozy-nest-client)
+
 My roadmap is available here : [Notion Roadmap](https://exclusive-drink-8c5.notion.site/Nevysha-Cozy-Nest-f95f333908f0406f990ed603b424780c).
 Please note that this is the draft I use to keep track of suggestions, issue, or idea that I get. I'm not sure I'll implement everything.
 
