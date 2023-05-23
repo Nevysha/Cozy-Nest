@@ -1,5 +1,6 @@
 import asyncio
 import json
+import mimetypes
 import os
 import socket
 import subprocess
@@ -8,9 +9,10 @@ import threading
 
 import gradio as gr
 import modules
+from typing import Any
+from fastapi import FastAPI, Response, Request
+from fastapi.staticfiles import StaticFiles
 import websockets
-from PIL import Image
-from PIL.ExifTags import TAGS
 from modules import script_callbacks, shared, call_queue, scripts
 
 from scripts.cozynest_image_browser import start_server, get_exif
@@ -46,7 +48,12 @@ def gradio_save_settings(main_menu_position,
                          card_width,
                          error_popup,
                          disable_image_browser,
-                         disable_waves_and_gradiant):
+                         disable_waves_and_gradiant,
+                         server_default_port,
+                         auto_search_port,
+                         auto_start_server,
+                         fetch_output_folder_from_a1111_settings
+                         ):
     settings = {
         'main_menu_position': main_menu_position,
         'quicksettings_position': quicksettings_position,
@@ -60,7 +67,18 @@ def gradio_save_settings(main_menu_position,
         'error_popup': error_popup,
         'disable_image_browser': disable_image_browser,
         'disable_waves_and_gradiant': disable_waves_and_gradiant,
+        'server_default_port': server_default_port,
+        'auto_search_port': auto_search_port,
+        'auto_start_server': auto_start_server,
+        'fetch_output_folder_from_a1111_settings': fetch_output_folder_from_a1111_settings,
     }
+
+    current_config = get_dict_from_config()
+
+    if current_config['cnib_output_folder']:
+        settings['cnib_output_folder'] = current_config['cnib_output_folder']
+    else:
+        settings['cnib_output_folder'] = []
 
     save_settings(settings)
 
@@ -101,6 +119,11 @@ def get_default_settings():
         'error_popup': True,
         'disable_image_browser': True,
         'disable_waves_and_gradiant': False,
+        'server_default_port': 3333,
+        'auto_search_port': True,
+        'auto_start_server': True,
+        'fetch_output_folder_from_a1111_settings': True,
+        'cnib_output_folder': [],
     }
 
 
@@ -138,23 +161,23 @@ def is_port_free(port):
         sock.close()
 
 
-def serv_img_browser_socket(server_port=3333, auto_search_port=True):
+def serv_img_browser_socket(server_port=3333, auto_search_port=True, cnib_output_folder=None):
+    if cnib_output_folder is None or cnib_output_folder == []:
+        print("CozyNest: No output folder specified for image browser. Aborting.")
+        return
+
     # check if port is free
     if auto_search_port:
-        # search for a free port
-        server_port = 3333
         while not is_port_free(server_port) and server_port < 64000:
             print(f"CozyNest: Port {server_port} is already in use. Searching for a free port.")
             server_port += 1
-
-    images_folders = output_folder_array()
 
     try:
         parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         # add the CozyNest extension to the sys.path.
         sys.path.append(parent_dir)
         # start the server in a separate process
-        start_server_in_dedicated_process(images_folders, server_port)
+        start_server_in_dedicated_process(cnib_output_folder, server_port)
         return server_port
     except Exception as e:
         print("CozyNest: Error while starting socket server")
@@ -197,20 +220,227 @@ def start_server_in_dedicated_process(_images_folders, server_port):
     script_callbacks.on_before_reload(stop_server)
 
 
+def gradio_img_browser_tab(config):
+    with gr.Column(elem_id="img_browser_main_block"):
+        # disable_image_browser
+        disable_image_browser = gr.Checkbox(value=config.get('disable_image_browser'),
+                                            label="Disable image browser (Reload UI required)",
+                                            elem_id="setting_nevyui_disableImageBrowser", interactive=True)
+
+        with gr.Row():
+            server_default_port = gr.Number(value=config.get('server_default_port'),
+                                            label="Socket port for image browser", interactive=True, precision=0)
+            auto_search_port = gr.Checkbox(value=True, label="Auto search port",
+                                           elem_id="setting_nevyui_autoSearchPort",
+                                           interactive=True)
+
+            auto_start_server = gr.Checkbox(value=config.get('auto_start_server'), label="Auto start server",
+                                            elem_id="setting_nevyui_autoStartServer",
+                                            interactive=True, visible=False)
+
+            fetch_output_folder_from_a1111_settings = gr.Checkbox(
+                value=config.get('fetch_output_folder_from_a1111_settings'),
+                label="Fetch output folder from a1111 settings (Reload needed to enable)",
+                elem_id="setting_nevyui_fetchOutputFolderFromA1111Settings",
+                interactive=True)
+
+        # Add a text block to display each folder from output_folder_array()
+        with gr.Blocks(elem_id="img_browser_folders_block"):
+            # TODO refactor to remove this as it's no longer managed through gradio
+            gr.Textbox(value=json.dumps(config.get('cnib_output_folder')), label="Output folder",
+                       elem_id="cnib_output_folder", interactive=True, visible=False)
+
+    return [
+        disable_image_browser,
+        server_default_port,
+        auto_search_port,
+        auto_start_server,
+        fetch_output_folder_from_a1111_settings]
+
+
+def gradio_main_tab(config):
+    with gr.Column(elem_id="nevyui-ui-block"):
+        with gr.Row():
+            # error popup checkbox
+            error_popup = gr.Checkbox(value=config.get('error_popup'),
+                                      label="Display information dialog on Cozy Nest error",
+                                      elem_id="setting_nevyui_errorPopup", interactive=True)
+
+            # disable waves and gradiant bg
+            disable_waves_and_gradiant = gr.Checkbox(value=config.get('disable_waves_and_gradiant'),
+                                                     label="Disable waves and gradiant background",
+                                                     elem_id="setting_nevyui_disableWavesAndGradiant", interactive=True)
+
+        # main menu
+        main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position",
+                                      choices=['left', 'top', 'top_centered'],
+                                      elem_id="setting_nevyui_menuPosition", interactive=True)
+        quicksettings_position = gr.Radio(value=config.get('quicksettings_position'),
+                                          label="Quicksettings position",
+                                          choices=['left', 'split', 'centered'],
+                                          elem_id="setting_nevyui_quicksettingsPosition", interactive=True)
+        accent_generate_button = gr.Checkbox(value=config.get('accent_generate_button'),
+                                             label="Accent Generate Button",
+                                             elem_id="setting_nevyui_accentGenerateButton", interactive=True)
+
+        with gr.Row():
+            font_size = gr.Slider(value=config.get('font_size'), label="Font size", minimum=10, maximum=18, step=1,
+                                  elem_id="setting_nevyui_fontSize", interactive=True)
+            card_height = gr.Slider(value=config.get('card_height'), label="Extra network card height", minimum=5,
+                                    maximum=20, step=1, elem_id="setting_nevyui_cardHeight", interactive=True)
+            card_width = gr.Slider(value=config.get('card_width'), label="Extra network card width", minimum=5,
+                                   maximum=20, step=1, elem_id="setting_nevyui_cardWidth", interactive=True)
+
+        with gr.Row():
+            waves_color = gr.ColorPicker(value=config.get('waves_color'), label="Waves color",
+                                         elem_id="setting_nevyui_waveColor", interactive=True)
+            bg_gradiant_color = gr.ColorPicker(value=config.get('bg_gradiant_color'),
+                                               label="Background gradiant color",
+                                               elem_id="setting_nevyui_bgGradiantColor", interactive=True)
+            accent_color = gr.ColorPicker(value=config.get('accent_color'), label="Accent color",
+                                          elem_id="setting_nevyui_accentColor", interactive=True)
+
+        return [
+            accent_color,
+            accent_generate_button,
+            bg_gradiant_color,
+            card_height,
+            card_width,
+            disable_waves_and_gradiant,
+            error_popup,
+            font_size,
+            main_menu_position,
+            quicksettings_position,
+            waves_color
+        ]
+
+
+def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
+                  disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
+                  quicksettings_position, waves_color, disable_image_browser, server_default_port,
+                  auto_search_port,
+                  auto_start_server,
+                  fetch_output_folder_from_a1111_settings):
+    with gr.Row():
+        btn_save = gr.Button(value="Save", elem_id="nevyui_sh_options_submit",
+                             elem_classes="nevyui_apply_settings")
+        btn_save.click(gradio_save_settings, inputs=[
+            main_menu_position,
+            quicksettings_position,
+            accent_generate_button,
+            font_size,
+            waves_color,
+            bg_gradiant_color,
+            accent_color,
+            card_height,
+            card_width,
+            error_popup,
+            disable_image_browser,
+            disable_waves_and_gradiant,
+            server_default_port,
+            auto_search_port,
+            auto_start_server,
+            fetch_output_folder_from_a1111_settings
+        ], outputs=[])
+
+        btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)",
+                              elem_id="nevyui_sh_options_reset", elem_classes="nevyui_apply_settings")
+        # restore default settings
+        btn_reset.click(reset_settings)
+
+        btn_reload = gr.Button(value="Reload UI", elem_id="nevyui_sh_options_reset",
+                               elem_classes="nevyui_apply_settings")
+        # reload the page
+        btn_reload.click(
+            fn=request_restart,
+            _js='restart_reload',
+            inputs=[],
+            outputs=[], )
+
+        # start socket server
+        btn_start = gr.Button(value="Start Socket Server", elem_id="nevyui_sh_options_start_socket",
+                              elem_classes="nevyui_apply_settings")
+        btn_start.click(
+            fn=serv_img_browser_socket,
+            inputs=[],
+            outputs=[], )
+
+    with gr.Row(elem_id='nevysha-saved-feedback-wrapper'):
+        gr.HTML(
+            value="<div id='nevysha-saved-feedback' class='nevysha nevysha-feedback' style='display:none;'>Saved !</div>")
+        gr.HTML(
+            value="<div id='nevysha-reset-feedback' class='nevysha nevysha-feedback' style='display:none;'>Reset !</div>")
+        gr.HTML(
+            value="<div id='nevysha-dummy-feedback' class='nevysha nevysha-feedback' style='display:none;' />")
+
+    # add button to trigger git pull
+    btn_update = gr.Button(value="Update", elem_id="nevyui_sh_options_update", visible=False, )
+    btn_update.click(
+        fn=update,
+        inputs=[],
+        outputs=[], )
+
+
+def gradio_hidden_field(server_port):
+    # text with port number
+    gr.Textbox(elem_id='cnib_socket_server_port', value=f"{server_port}", label="Server port READONLY",
+               readonly=True, visible=False)
+    with gr.Row(elem_id='nevysha-send-to'):
+        html = gr.HTML()
+        generation_info = gr.Textbox(visible=False, elem_id="nevysha_pnginfo_generation_info")
+        html2 = gr.HTML()
+        image = gr.Image(elem_id="nevysha_pnginfo_image", label="Source", source="upload", interactive=True,
+                         type="pil")
+        image.change(
+            fn=call_queue.wrap_gradio_call(modules.extras.run_pnginfo),
+            inputs=[image],
+            outputs=[html, generation_info, html2],
+        )
+        with gr.Row(elem_id='nevysha-send-to-button'):
+            buttons = modules.generation_parameters_copypaste.create_buttons(
+                ["txt2img", "img2img", "inpaint", "extras"])
+
+        for tabname, button in buttons.items():
+            modules.generation_parameters_copypaste.register_paste_params_button(
+                modules.generation_parameters_copypaste.ParamBinding(
+                    paste_button=button, tabname=tabname, source_text_component=generation_info,
+                    source_image_component=image,
+                ))
+
+
 def on_ui_tabs():
     # shared options
     config = get_dict_from_config()
     # merge default settings with user settings
     config = {**get_default_settings(), **config}
+
+    # check if cnib_output_folder is empty and/or need to be fetched from a1111 settings
+    cnib_output_folder = config.get('cnib_output_folder')
+    is_empty = cnib_output_folder == []
+    if not cnib_output_folder or is_empty:
+        cnib_output_folder = []
+
+    if config.get('fetch_output_folder_from_a1111_settings'):
+        # merge cnib_output_folder output_folder_array()
+        cnib_output_folder = cnib_output_folder + list(set(output_folder_array()) - set(cnib_output_folder))
+
+    config['cnib_output_folder'] = cnib_output_folder
+
     # save the merged settings
     save_settings(config)
 
     # check if the user has disabled the image browser
     disable_image_browser_value = config.get('disable_image_browser')
 
+    auto_start_server = config.get('auto_start_server')
+
     server_port = None
-    if not disable_image_browser_value:
-        server_port = serv_img_browser_socket()
+    if not disable_image_browser_value and auto_start_server:
+        server_port = serv_img_browser_socket(
+            config.get('server_default_port'),
+            config.get('auto_search_port'),
+            config.get('cnib_output_folder')
+        )
     else:
         print("CozyNest: Image browser is disabled. To enable it, go to the CozyNest settings.")
 
@@ -253,161 +483,107 @@ def on_ui_tabs():
 
     with gr.Blocks(analytics_enabled=False) as ui:
 
-        # TODO add settings (maybe in a tab) for the image browser
-        #  - chose port number
-        #  - chose folders to scrap (may be multiple)
-        #  - chose if the server should be started automatically
+        # check if user is on the old repo name and display a warning
+        if EXTENSION_TECHNICAL_NAME != 'Cozy-Nest':
+            gr.HTML(value="<div class='nevysha nevysha-warning'>"
+                          "<p id='nevysha-rename-important-msg' class='nevysha-emphasis important'>WARNING : This extension has been renamed to Cozy Nest to avoid confusion with an other tool. "
+                          "Please update to the latest version by following "
+                          "<a href='https://github.com/Nevysha/Cozy-Nest/wiki/How-to-switch-to-renamed-repository-Cozy-Nest'>these instructions</a></p>")
 
-        with gr.Column(elem_id="nevyui-ui-block"):
+        # header
+        gr.HTML(value="<div class='nevysha settings-nevyui-top'>"
+                      "<p class='nevysha-reporting'>Found a bug or want to ask for a feature ? Please "
+                      "<a onClick='gatherInfoAndShowDialog();return false;' href='_blank'>click here to gather relevant info</a>"
+                      " then use <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
+                      " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
+                      "<p class='nevysha-emphasis'>WARNING : Some visual settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
 
-            # check if user is on the old repo name and display a warning
-            if EXTENSION_TECHNICAL_NAME != 'Cozy-Nest':
-                gr.HTML(value="<div class='nevysha nevysha-warning'>"
-                              "<p id='nevysha-rename-important-msg' class='nevysha-emphasis important'>WARNING : This extension has been renamed to Cozy Nest to avoid confusion with an other tool. "
-                              "Please update to the latest version by following "
-                              "<a href='https://github.com/Nevysha/Cozy-Nest/wiki/How-to-switch-to-renamed-repository-Cozy-Nest'>these instructions</a></p>")
-
-            # header
-            gr.HTML(value="<div class='nevysha settings-nevyui-top'><h2>Nevysha's Cozy Nest</h2>"
-                          "<p class='info'>Find your cozy spot on Auto1111's webui</p>"
-                          "<p class='nevysha-reporting'>Found a bug or want to ask for a feature ? Please "
-                          "<a onClick='gatherInfoAndShowDialog();return false;' href='_blank'>click here to gather relevant info</a>"
-                          " then use <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
-                          " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
-                          "<p class='nevysha-emphasis'>WARNING : Settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
-
-            with gr.Row():
-                # disable_image_browser
-                disable_image_browser = gr.Checkbox(value=config.get('disable_image_browser'),
-                                                    label="Disable image browser (requires reload UI)",
-                                                    elem_id="setting_nevyui_disableImageBrowser", interactive=True)
-
-                # error popup checkbox
-                error_popup = gr.Checkbox(value=config.get('error_popup'),
-                                          label="Display information dialog on Cozy Nest error",
-                                          elem_id="setting_nevyui_errorPopup", interactive=True)
-
-                # disable waves and gradiant bg
-                disable_waves_and_gradiant = gr.Checkbox(value=config.get('disable_waves_and_gradiant'),
-                                                         label="Disable waves and gradiant background",
-                                                         elem_id="setting_nevyui_disableWavesAndGradiant", interactive=True)
-
-            # main menu
-            main_menu_position = gr.Radio(value=config.get('main_menu_position'), label="Main menu position",
-                                          choices=['left', 'top', 'top_centered'],
-                                          elem_id="setting_nevyui_menuPosition", interactive=True)
-            quicksettings_position = gr.Radio(value=config.get('quicksettings_position'),
-                                              label="Quicksettings position",
-                                              choices=['left', 'split', 'centered'],
-                                              elem_id="setting_nevyui_quicksettingsPosition", interactive=True)
-            accent_generate_button = gr.Checkbox(value=config.get('accent_generate_button'),
-                                                 label="Accent Generate Button",
-                                                 elem_id="setting_nevyui_accentGenerateButton", interactive=True)
-
-            with gr.Row():
-                font_size = gr.Slider(value=config.get('font_size'), label="Font size", minimum=10, maximum=18, step=1,
-                                      elem_id="setting_nevyui_fontSize", interactive=True)
-                card_height = gr.Slider(value=config.get('card_height'), label="Extra network card height", minimum=5,
-                                        maximum=20, step=1, elem_id="setting_nevyui_cardHeight", interactive=True)
-                card_width = gr.Slider(value=config.get('card_width'), label="Extra network card width", minimum=5,
-                                       maximum=20, step=1, elem_id="setting_nevyui_cardWidth", interactive=True)
-
-            with gr.Row():
-                waves_color = gr.ColorPicker(value=config.get('waves_color'), label="Waves color",
-                                             elem_id="setting_nevyui_waveColor", interactive=True)
-                bg_gradiant_color = gr.ColorPicker(value=config.get('bg_gradiant_color'),
-                                                   label="Background gradiant color",
-                                                   elem_id="setting_nevyui_bgGradiantColor", interactive=True)
-                accent_color = gr.ColorPicker(value=config.get('accent_color'), label="Accent color",
-                                              elem_id="setting_nevyui_accentColor", interactive=True)
-
-            with gr.Row(elem_id='nevysha-saved-feedback-wrapper'):
-                gr.HTML(
-                    value="<div id='nevysha-saved-feedback' class='nevysha nevysha-feedback' style='display:none;'>Saved !</div>")
-                gr.HTML(
-                    value="<div id='nevysha-reset-feedback' class='nevysha nevysha-feedback' style='display:none;'>Reset !</div>")
-                gr.HTML(
-                    value="<div id='nevysha-dummy-feedback' class='nevysha nevysha-feedback' style='display:none;' />")
-
-            with gr.Row():
-                btn_save = gr.Button(value="Save", elem_id="nevyui_sh_options_submit",
-                                     elem_classes="nevyui_apply_settings")
-                btn_save.click(gradio_save_settings, inputs=[
-                    main_menu_position,
-                    quicksettings_position,
-                    accent_generate_button,
-                    font_size,
-                    waves_color,
-                    bg_gradiant_color,
+        with gr.Tabs(id="cozy_nest_settings_tabs", elem_id="cozy_nest_settings_tabs"):
+            with gr.TabItem(label="Main Settings", elem_id="cozy_nest_settings_tab"):
+                [
                     accent_color,
+                    accent_generate_button,
+                    bg_gradiant_color,
                     card_height,
                     card_width,
+                    disable_waves_and_gradiant,
                     error_popup,
+                    font_size,
+                    main_menu_position,
+                    quicksettings_position,
+                    waves_color
+                ] = gradio_main_tab(config)
+            with gr.TabItem(label="Image Browser Settings", elem_id="cozy_nest_img_browser_settings_tab"):
+                [
                     disable_image_browser,
-                    disable_waves_and_gradiant
-                ], outputs=[])
+                    server_default_port,
+                    auto_search_port,
+                    auto_start_server,
+                    fetch_output_folder_from_a1111_settings
+                ] = gradio_img_browser_tab(config)
 
-                btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)",
-                                      elem_id="nevyui_sh_options_reset", elem_classes="nevyui_apply_settings")
-                # restore default settings
-                btn_reset.click(reset_settings)
+        ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
+                      disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
+                      quicksettings_position, waves_color, disable_image_browser, server_default_port,
+                      auto_search_port,
+                      auto_start_server,
+                      fetch_output_folder_from_a1111_settings)
 
-                btn_reload = gr.Button(value="Reload UI", elem_id="nevyui_sh_options_reset",
-                                       elem_classes="nevyui_apply_settings")
-                # reload the page
-                btn_reload.click(
-                    fn=request_restart,
-                    _js='restart_reload',
-                    inputs=[],
-                    outputs=[], )
+        # hidden field to store some useful data and trigger some server actions (like "send to" txt2img,...)
+        gradio_hidden_field(server_port)
 
-                # start socket server
-                btn_start = gr.Button(value="Start Socket Server", elem_id="nevyui_sh_options_start_socket",
-                                      elem_classes="nevyui_apply_settings")
-                btn_start.click(
-                    fn=serv_img_browser_socket,
-                    inputs=[],
-                    outputs=[], )
-
-            # add button to trigger git pull
-            btn_update = gr.Button(value="Update", elem_id="nevyui_sh_options_update", visible=False, )
-            btn_update.click(
-                fn=update,
-                inputs=[],
-                outputs=[], )
-
-            # text with port number
-            gr.Textbox(elem_id='cnib_socket_server_port', value=f"{server_port}", label="Server port READONLY",
-                       readonly=True, visible=False)
-
-            with gr.Row(elem_id='nevysha-send-to'):
-                html = gr.HTML()
-                generation_info = gr.Textbox(visible=False, elem_id="nevysha_pnginfo_generation_info")
-                html2 = gr.HTML()
-                image = gr.Image(elem_id="nevysha_pnginfo_image", label="Source", source="upload", interactive=True,
-                                 type="pil")
-                image.change(
-                    fn=call_queue.wrap_gradio_call(modules.extras.run_pnginfo),
-                    inputs=[image],
-                    outputs=[html, generation_info, html2],
-                )
-                with gr.Row(elem_id='nevysha-send-to-button'):
-                    buttons = modules.generation_parameters_copypaste.create_buttons(
-                        ["txt2img", "img2img", "inpaint", "extras"])
-
-                for tabname, button in buttons.items():
-                    modules.generation_parameters_copypaste.register_paste_params_button(
-                        modules.generation_parameters_copypaste.ParamBinding(
-                            paste_button=button, tabname=tabname, source_text_component=generation_info,
-                            source_image_component=image,
-                        ))
-
-            # footer
-            gr.HTML(value="<div class='nevysha settings-nevyui-bottom'>"
-                          "  <p class='info'>Made by Nevysha with luv</p>"
-                          "</div>", elem_id="nevyui_footer_wrapper")
+        # footer
+        gr.HTML(value="<div class='nevysha settings-nevyui-bottom'>"
+                      "  <p class='info'>Made by Nevysha with luv</p>"
+                      "</div>", elem_id="nevyui_footer_wrapper")
 
     return [(ui, "Nevysha Cozy Nest", "nevyui")]
 
 
+cwd = os.path.normpath(os.path.join(__file__, "../../"))
+
+
+def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
+    app.mount(
+        "/cozy-nest-client/",
+        StaticFiles(directory=f"{cwd}/client/"),
+        name="cozy-nest-client",
+    )
+
+    @app.post("/cozy-nest/config")
+    async def save_config(request: Request):
+        # Access POST parameters
+        data = await request.json()
+
+        # shared options
+        config = get_dict_from_config()
+        # merge default settings with user settings
+        config = {**get_default_settings(), **config,
+                  'cnib_output_folder': data['cnib_output_folder']}
+
+        save_settings(config)
+
+        return {"message": "Config saved successfully"}
+
+    @app.get("/cozy-nest/image")
+    async def get_image(path: str):
+        # Open the file in binary mode
+        try:
+            with open(path, "rb") as file:
+                contents = file.read()
+
+            # Get the MIME type of the file
+            content_type, _ = mimetypes.guess_type(path)
+
+            # Create a response with the file contents and appropriate content type
+            response = Response(content=contents, media_type=content_type)
+            response.headers["Content-Disposition"] = f'attachment; filename="{path}"'
+
+            return response
+
+        except FileNotFoundError:
+            return Response(status_code=404, content="File not found")
+
+
 script_callbacks.on_ui_tabs(on_ui_tabs)
+script_callbacks.on_app_started(cozy_nest_api)
