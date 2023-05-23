@@ -11,6 +11,8 @@ From a1111 5ab7f213 commit to the 1.2.1 release.
     - [x]  Enable/disable auto search for free port
     - [x]  Enable/disable auto fetch for output folder from a1111 settings
     - [x]  Add/Remove custom output folder
+   
+- [x]  Code has been refactored to use a module builder (Vite). Refactoring is still in progress in the long run. But it should help to stabilize the code base.
 
 ## Minor changes & fixes in 2.0.9
 
