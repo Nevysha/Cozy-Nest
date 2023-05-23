@@ -4,6 +4,10 @@
 
 From a1111 5ab7f213 commit to the 1.2.1 release.  
 
+## New features in 2.1.1
+
+- [x]  Fix bug for image with special characters in their name (like "+")
+
 ## New features in 2.1.0
 
 - [x]  Settings panel for image browser
