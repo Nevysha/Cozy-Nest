@@ -8750,12 +8750,16 @@ function CozyImage(props) {
       return;
     setShowModal(true);
   }
+  function getSrc() {
+    const sanitizedPath = encodeURIComponent(props.image.path);
+    return `${baseUrl}:${gradioPort}/cozy-nest/image?path=${sanitizedPath}`;
+  }
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { id: `img_${props.index}`, className: "image", ref: _me, children: onScreen ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "image-wrapper", onClick: openModal, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       "img",
       {
         className: "cozy-nest-thumbnail",
-        src: `${baseUrl}:${gradioPort}/cozy-nest/image?path=${props.image.path}`,
+        src: getSrc(),
         alt: "image",
         ref: imgRef
       }
@@ -8766,7 +8770,7 @@ function CozyImage(props) {
         "img",
         {
           className: "cozy-nest-thumbnail",
-          src: `${baseUrl}:${gradioPort}/cozy-nest/image?path=${props.image.path}`,
+          src: getSrc(),
           alt: "image"
         }
       ) }),
