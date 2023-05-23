@@ -40,7 +40,8 @@ Cozy Nest is a UI extension for Automatic's sd-webui. Inspired by [anapnoe](http
 - [x]  Fetch version from a desicated json file hosted directly in the repo to an easier view of update of Cozy Nest.
 
 <hr>
-**![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) I won't support mobile usage. Although you can use Cozy Nest on your desktop and add `CozyNest=No` in the URL when using webui from your mobile.**
+
+![](https://placehold.co/15x15/f03c15/f03c15.png) **I won't support mobile usage. Although you can use Cozy Nest on your desktop and add `CozyNest=No` in the URL when using webui from your mobile.**
 
 Tested in Chrome, should work in Firefox with minor bug. I plan to fix it later. 
 
