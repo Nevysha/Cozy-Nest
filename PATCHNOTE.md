@@ -1,8 +1,7 @@
-# Add to push this update a bit sooner than expected due to a1111 1.2.0 update. Enjoy the new image browser!
-
 ## Compatibility
 
-From a1111 5ab7f213 commit to the 1.2.1 release.  
+ - From a1111 5ab7f213 commit to the 1.2.1 release.  
+ - Vlad's fork from commit beff89ba
 
 ## Minor changes & fixes in 2.1.2
 
