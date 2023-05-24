@@ -6,6 +6,7 @@
 ## Minor changes & fixes in 2.1.3
 
 - [x]  Fix for default "send to" button
+- [x]  Fix image browser search
 - [x]  Fix for troubleshot dialog with Vlad's fork
 
 ## Minor changes & fixes in 2.1.2
