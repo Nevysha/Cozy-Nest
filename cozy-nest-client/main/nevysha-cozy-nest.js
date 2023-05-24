@@ -1624,8 +1624,8 @@ const onLoad = (done) => {
   // check for gradio theme (vlad's fork)
   if (document.querySelector('#setting_gradio_theme input')) {
     const gradioTheme = document.querySelector('#setting_gradio_theme input').value
-    if (gradioTheme !== 'gradio/default') {
-      alert('Cozy Nest may not be compatible with this theme. Please switch to the default theme. You can do this by going to the settings tab and selecting "gradio/default" from the dropdown menu under "User interface > UI theme".')
+    if (gradioTheme !== 'gradio/default' && gradioTheme !== '' && gradioTheme !== 'Default') {
+      alert('Cozy Nest may not be compatible with this theme. Please switch to the default theme. You can do this by going to the settings tab and selecting "gradio/default" or "Default" from the dropdown menu under "User interface > UI theme".')
     }
   }
 
