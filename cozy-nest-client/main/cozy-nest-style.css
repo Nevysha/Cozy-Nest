@@ -1618,6 +1618,10 @@ textarea.nevysha-image-browser-folder {
     color: var(--error-handler-white);
     margin-bottom: 40px;
 }
+#dialog-message > fieldset.extensions-list {
+    height: 100%;
+    overflow-y: auto;
+}
 #cozynest-error-instance-info > a {
     color: cyan !important;
     text-decoration: underline;

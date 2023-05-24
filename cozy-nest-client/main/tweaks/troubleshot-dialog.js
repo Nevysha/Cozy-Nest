@@ -15,7 +15,7 @@ export function setupPopupInstanceInfo() {
           <legend>Instance info</legend>
           <div class="versions cozyerror" id="cozynest-error-instance-info"></div>
         </fieldset>
-        <fieldset>
+        <fieldset class="extensions-list">
           <legend>Extensions</legend>
           <div class="cozyerror" id="cozynest-error-extentions"></div>
         </fieldset>
@@ -43,12 +43,20 @@ export function populateInstanceInfoDialog() {
   //for each tab row, check the first td input and hide the row if it's not checked
   document.querySelector('#cozynest-error-extentions > table').querySelectorAll('tr').forEach(row => {
     if (!row.querySelector('td')) return;
-    if (!row.querySelector('td').querySelector('label > input').checked) {
+
+    let checkbox = row.querySelector('td').querySelector('label > input');
+    if (!checkbox) {
+      //Vlad's fork
+      checkbox = row.querySelector('td').querySelector('input')
+      row.querySelector('button')?.setAttribute('disabled', 'disabled')
+    }
+
+    if (!checkbox.checked) {
       row.setAttribute('style', 'display: none;')
     }
     //disable input
     else {
-      row.querySelector('td').querySelector('label > input').setAttribute('disabled', 'disabled')
+      checkbox.setAttribute('disabled', 'disabled')
     }
   })
 }
