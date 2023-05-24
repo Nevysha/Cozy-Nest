@@ -4,7 +4,7 @@ window.$ = window.jQuery = $;
 
 import SimpleTimer from "./SimpleTimer.js";
 import {getTheme, isUpToDate, getLuminance} from './cozy-utils.js';
-import {COZY_NEST_DOM_TWEAK_LOAD_DURATION, COZY_NEST_GRADIO_LOAD_DURATION, SETTINGS_MIN_WIDTH, RESULT_MIN_WIDTH} from "./Constants.js";
+import {COZY_NEST_DOM_TWEAK_LOAD_DURATION, COZY_NEST_GRADIO_LOAD_DURATION, SETTINGS_MIN_WIDTH, RESULT_MIN_WIDTH, ANIMATION_SPEED} from "./Constants.js";
 import Loading from "./Loading.js";
 
 import {waves, svg_magic_wand, svg_update_info} from "./svg.js";
@@ -364,6 +364,19 @@ function applyCozyNestConfig() {
   document.querySelector("#setting_nevyui_quicksettingsPosition")
       .querySelectorAll("input[type=radio]").forEach((input) => input.addEventListener("change", setQuicksettingPosition))
 
+  //enable/disable the sfw mode
+  const setSfwSettings = () => {
+    const isSfwChecked = document.querySelector("#setting_nevyui_sfwMode").querySelector("input[type=checkbox]").checked;
+    if (isSfwChecked) {
+      document.querySelector('body').classList.add("nsfw");
+    }
+    else {
+      document.querySelector('body').classList.remove("nsfw");
+    }
+  }
+  setSfwSettings()
+  document.querySelector("#setting_nevyui_sfwMode").querySelector("input[type=checkbox]").addEventListener("change", setSfwSettings)
+
 }
 
 function tweakAWQ() {
@@ -450,7 +463,7 @@ const addCozyNestCustomBtn = () => {
   //add kofi image :blush:
   const kofiImg = document.createElement('button')
   kofiImg.id = 'kofi_nevysha_support'
-  kofiImg.innerHTML = `<img height="15" src="${kofiCup}" alt="Consider a donation on ko-fi! :3">`
+  kofiImg.innerHTML = `<img id="kofi_nevysha_support_img" height="15" src="${kofiCup}" alt="Consider a donation on ko-fi! :3">`
   kofiImg.title = "Consider a donation on ko-fi! :3"
   nevySettingstabMenuWrapper.insertAdjacentElement('beforeend', kofiImg);
 
@@ -472,12 +485,6 @@ const addCozyNestCustomBtn = () => {
   //add event listener to the button
   kofiImg.addEventListener("click", () => {
     toggleKofiPanel();
-  });
-  //close the panel when clicking outside
-  document.addEventListener("click", (e) => {
-    if (kofiImgIsVisible && !e.target.closest("#kofi_nevysha_support")) {
-        toggleKofiPanel();
-    }
   });
 
   //fetch version_data.json
@@ -778,9 +785,9 @@ const tweakNevyUiSettings = () => {
 
       //toggle the panel with a slide animation using jquery
       if (shown) {
-        $("#nevyui_sh_options_panel").slideUp();
+        $("#nevyui_sh_options_panel").slideUp(ANIMATION_SPEED);
       } else {
-        $("#nevyui_sh_options_panel").slideDown();
+        $("#nevyui_sh_options_panel").slideDown(ANIMATION_SPEED);
       }
       shown = !shown;
     });
@@ -800,27 +807,15 @@ const tweakNevyUiSettings = () => {
 
       //toggle the panel with a slide animation using jquery
       if (shown) {
-        $("#nevyui_update_info_panel").slideUp();
+        $("#nevyui_update_info_panel").slideUp(ANIMATION_SPEED);
       } else {
-        $("#nevyui_update_info_panel").slideDown();
+        $("#nevyui_update_info_panel").slideDown(ANIMATION_SPEED);
       }
       shown = !shown;
-    });
-    //when shown is true, hide it on click outside
-    document.addEventListener("click", (e) => {
-      if (shown && !e.target.closest("#nevyui_update_info_panel") && !e.target.closest("#nevyui_update_info") && !e.target.id === "#nevyui_sh_options_update") {
-        //cancel event
-        e.preventDefault();
-        e.stopPropagation();
-        $("#nevyui_update_info_panel").slideUp();
-        shown = false;
-      }
     });
   })();
 
   createFolderListComponent();
-
-
 }
 
 const makeSettingsDraggable = () => {
@@ -946,12 +941,12 @@ function tweakExtraNetworks({prefix}) {
           //show the extra network
           extraNetworkGradioWrapper.style.display = 'flex';
           extraNetworkGradioWrapper.style.marginRight = `-${extraNetworkGradioWrapper.offsetWidth}px`;
-          $(extraNetworkGradioWrapper).animate({"margin-right": `+=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
+          $(extraNetworkGradioWrapper).animate({"margin-right": `+=${extraNetworkGradioWrapper.offsetWidth}`}, ANIMATION_SPEED);
         } else {
           //hide the extra network
           $(extraNetworkGradioWrapper).animate({
                 "margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`},
-              350,
+              ANIMATION_SPEED,
               () => {
                 // hide it after the animation is done
                 extraNetworkGradioWrapper.style.display = 'none';
@@ -972,7 +967,7 @@ function tweakExtraNetworks({prefix}) {
     document.addEventListener('keydown', (e) => {
       let shown = extraNetworkGradioWrapper.style.display === 'flex';
       if (e.key === 'Escape' && shown) {
-        $(extraNetworkGradioWrapper).animate({"margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`}, 350, () => {
+        $(extraNetworkGradioWrapper).animate({"margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`}, ANIMATION_SPEED, () => {
           extraNetworkGradioWrapper.style.display = 'none';
         });
       }
@@ -1289,7 +1284,7 @@ function createRightWrapperDiv() {
   rightPanBtnWrapper.setAttribute('id', `right_button_wrapper`);
   rightPanBtnWrapper.classList.add('nevysha', 'nevysha-right-button-wrapper');
   //add button to the begining of the tab
-  tab.insertBefore(rightPanBtnWrapper, tab.firstChild);
+  tab.insertAdjacentElement('beforeend', rightPanBtnWrapper);
 
   //add a button for image browser
   const cozyImgBrowserBtn = document.createElement('button');
@@ -1375,10 +1370,10 @@ function createRightWrapperDiv() {
     if (panel.style.display === 'none') {
       panel.style.display = 'flex'
       panel.style.marginRight = `-${panel.offsetWidth}px`;
-      $(panel).animate({"margin-right": `+=${panel.offsetWidth}`}, 350);
+      $(panel).animate({"margin-right": `+=${panel.offsetWidth}`}, ANIMATION_SPEED);
     }
     else {
-      $(panel).animate({"margin-right": `-=${panel.offsetWidth}`}, 350, () => {
+      $(panel).animate({"margin-right": `-=${panel.offsetWidth}`}, ANIMATION_SPEED, () => {
         panel.style.display = 'none'
       });
     }
@@ -1602,6 +1597,18 @@ const onloadSafe = (done) => {
   // }
 }
 
+function fixSendToButton() {
+  function closure(selector) {
+    document.querySelectorAll(selector).forEach((el) => {
+      el.addEventListener('click', () => {
+        setTimeout(() => CozyLogger.log('blep'), 200);
+      });
+    })
+  }
+  closure('button#img2img_tab')
+
+}
+
 const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
@@ -1720,6 +1727,9 @@ const onLoad = (done) => {
 
   //make settings draggable
   makeSettingsDraggable();
+
+  //fix "send to" button
+  fixSendToButton();
 
   //add observer for .options resize
   addOptionsObserver();

@@ -1618,6 +1618,10 @@ textarea.nevysha-image-browser-folder {
     color: var(--error-handler-white);
     margin-bottom: 40px;
 }
+#dialog-message > fieldset.extensions-list {
+    height: 100%;
+    overflow-y: auto;
+}
 #cozynest-error-instance-info > a {
     color: cyan !important;
     text-decoration: underline;
@@ -1746,4 +1750,11 @@ body.nevysha-light .nevysha-button:hover {
 .nevysha-enhanced-prompt-field-bracket {
     font-weight:bold;
     font-size: 1.2em;
+}
+
+body.nsfw img:not([id='kofi_nevysha_support_img']) {
+    filter: blur(20px);
+}
+body.nsfw .infoModal > .image-wrapper > img {
+    filter: blur(50px);
 }
