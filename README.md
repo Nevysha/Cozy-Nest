@@ -45,7 +45,7 @@ Cozy Nest is a UI extension for Automatic's sd-webui. Inspired by [anapnoe](http
 
 Tested in Chrome, should work in Firefox with minor bug. I plan to fix it later. 
 
-User reported that it works on Vlad's fork of sd-webui, although I haven't tested it myself and I'm not actively supporting it atm.
+Should work on Vlad's fork as of commit beff89ba
 
 ## Known Issue
 
