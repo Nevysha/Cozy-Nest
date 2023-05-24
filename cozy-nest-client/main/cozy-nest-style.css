@@ -1752,6 +1752,10 @@ body.nevysha-light .nevysha-button:hover {
     font-size: 1.2em;
 }
 
+#kofi_nevysha_support_img {
+    display: none;
+}
+
 body.nsfw img:not([id='kofi_nevysha_support_img']) {
     filter: blur(20px);
 }
