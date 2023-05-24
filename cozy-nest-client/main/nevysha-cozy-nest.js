@@ -330,6 +330,7 @@ function applyCozyNestConfig() {
     //left mode
     else {
       COZY_NEST_CONFIG.main_menu_position = "left";
+      document.querySelector(".nevysha.nevysha-tabnav").classList.remove("center-menu-items")
       document.querySelector(".nevysha.nevysha-tabnav").classList.remove("menu-fix-top")
       document.querySelector(".gradio-container.app").classList.remove("menu-fix-top")
       document.querySelector("#nevysha-btn-menu-wrapper")?.classList.remove("menu-fix-top")
