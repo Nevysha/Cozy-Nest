@@ -8958,7 +8958,7 @@ function App() {
   reactExports.useEffect(() => {
     if (searchStr !== "") {
       const filteredImages2 = images.filter((image) => {
-        if (image.metadata.exif.parameters.includes(searchStr)) {
+        if (image.metadata.exif.includes(searchStr)) {
           console.log(`path: ${image.path}`);
           return true;
         } else
