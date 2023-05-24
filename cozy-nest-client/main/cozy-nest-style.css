@@ -471,6 +471,9 @@ input[type=range]::-webkit-slider-thumb {
 .nevysha.nevysha-tabnav.center-menu-items {
     justify-content: center;
 }
+.nevysha.nevysha-tabnav.center-menu-items > button:nth-child(1) {
+    margin-left:auto;
+}
 .nevysha.nevysha-tabnav > .selected {
     background-color: var(--tab-nav-background-color-selected) !important;
     border-top: 2px solid var(--ae-primary-color);
@@ -1752,7 +1755,7 @@ body.nevysha-light .nevysha-button:hover {
     font-size: 1.2em;
 }
 
-#kofi_nevysha_support_img {
+#kofi_nevysha_support, #kofi_nevysha_support_img {
     display: none;
 }
 
