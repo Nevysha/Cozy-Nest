@@ -364,6 +364,19 @@ function applyCozyNestConfig() {
   document.querySelector("#setting_nevyui_quicksettingsPosition")
       .querySelectorAll("input[type=radio]").forEach((input) => input.addEventListener("change", setQuicksettingPosition))
 
+  //enable/disable the sfw mode
+  const setSfwSettings = () => {
+    const isSfwChecked = document.querySelector("#setting_nevyui_sfwMode").querySelector("input[type=checkbox]").checked;
+    if (isSfwChecked) {
+      document.querySelector('body').classList.add("nsfw");
+    }
+    else {
+      document.querySelector('body').classList.remove("nsfw");
+    }
+  }
+  setSfwSettings()
+  document.querySelector("#setting_nevyui_sfwMode").querySelector("input[type=checkbox]").addEventListener("change", setSfwSettings)
+
 }
 
 function tweakAWQ() {
@@ -450,7 +463,7 @@ const addCozyNestCustomBtn = () => {
   //add kofi image :blush:
   const kofiImg = document.createElement('button')
   kofiImg.id = 'kofi_nevysha_support'
-  kofiImg.innerHTML = `<img height="15" src="${kofiCup}" alt="Consider a donation on ko-fi! :3">`
+  kofiImg.innerHTML = `<img id="kofi_nevysha_support_img" height="15" src="${kofiCup}" alt="Consider a donation on ko-fi! :3">`
   kofiImg.title = "Consider a donation on ko-fi! :3"
   nevySettingstabMenuWrapper.insertAdjacentElement('beforeend', kofiImg);
 
@@ -803,8 +816,6 @@ const tweakNevyUiSettings = () => {
   })();
 
   createFolderListComponent();
-
-
 }
 
 const makeSettingsDraggable = () => {

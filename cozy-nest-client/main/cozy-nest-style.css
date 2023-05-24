@@ -1751,3 +1751,10 @@ body.nevysha-light .nevysha-button:hover {
     font-weight:bold;
     font-size: 1.2em;
 }
+
+body.nsfw img:not([id='kofi_nevysha_support_img']) {
+    filter: blur(20px);
+}
+body.nsfw .infoModal > .image-wrapper > img {
+    filter: blur(50px);
+}

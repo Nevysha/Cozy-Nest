@@ -52,7 +52,8 @@ def gradio_save_settings(main_menu_position,
                          server_default_port,
                          auto_search_port,
                          auto_start_server,
-                         fetch_output_folder_from_a1111_settings
+                         fetch_output_folder_from_a1111_settings,
+                         sfw_mode,
                          ):
     settings = {
         'main_menu_position': main_menu_position,
@@ -71,6 +72,7 @@ def gradio_save_settings(main_menu_position,
         'auto_search_port': auto_search_port,
         'auto_start_server': auto_start_server,
         'fetch_output_folder_from_a1111_settings': fetch_output_folder_from_a1111_settings,
+        'sfw_mode': sfw_mode,
     }
 
     current_config = get_dict_from_config()
@@ -124,6 +126,7 @@ def get_default_settings():
         'auto_start_server': True,
         'fetch_output_folder_from_a1111_settings': True,
         'cnib_output_folder': [],
+        'sfw_mode': False,
     }
 
 
@@ -300,6 +303,10 @@ def gradio_main_tab(config):
             accent_color = gr.ColorPicker(value=config.get('accent_color'), label="Accent color",
                                           elem_id="setting_nevyui_accentColor", interactive=True)
 
+        sfw_mode = gr.Checkbox(value=config.get('sfw_mode'),
+                                             label="SFW mode 👀 (blur all images)",
+                                             elem_id="setting_nevyui_sfwMode", interactive=True)
+
         return [
             accent_color,
             accent_generate_button,
@@ -311,7 +318,8 @@ def gradio_main_tab(config):
             font_size,
             main_menu_position,
             quicksettings_position,
-            waves_color
+            waves_color,
+            sfw_mode,
         ]
 
 
@@ -320,7 +328,7 @@ def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_
                   quicksettings_position, waves_color, disable_image_browser, server_default_port,
                   auto_search_port,
                   auto_start_server,
-                  fetch_output_folder_from_a1111_settings):
+                  fetch_output_folder_from_a1111_settings, sfw_mode):
     with gr.Row():
         btn_save = gr.Button(value="Save", elem_id="nevyui_sh_options_submit",
                              elem_classes="nevyui_apply_settings")
@@ -340,7 +348,8 @@ def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_
             server_default_port,
             auto_search_port,
             auto_start_server,
-            fetch_output_folder_from_a1111_settings
+            fetch_output_folder_from_a1111_settings,
+            sfw_mode,
         ], outputs=[])
 
         btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)",
@@ -511,7 +520,8 @@ def on_ui_tabs():
                     font_size,
                     main_menu_position,
                     quicksettings_position,
-                    waves_color
+                    waves_color,
+                    sfw_mode
                 ] = gradio_main_tab(config)
             with gr.TabItem(label="Image Browser Settings", elem_id="cozy_nest_img_browser_settings_tab"):
                 [
@@ -519,7 +529,7 @@ def on_ui_tabs():
                     server_default_port,
                     auto_search_port,
                     auto_start_server,
-                    fetch_output_folder_from_a1111_settings
+                    fetch_output_folder_from_a1111_settings,
                 ] = gradio_img_browser_tab(config)
 
         ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
@@ -527,7 +537,7 @@ def on_ui_tabs():
                       quicksettings_position, waves_color, disable_image_browser, server_default_port,
                       auto_search_port,
                       auto_start_server,
-                      fetch_output_folder_from_a1111_settings)
+                      fetch_output_folder_from_a1111_settings, sfw_mode)
 
         # hidden field to store some useful data and trigger some server actions (like "send to" txt2img,...)
         gradio_hidden_field(server_port)
