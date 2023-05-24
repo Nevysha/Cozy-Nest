@@ -3,6 +3,15 @@
  - From a1111 5ab7f213 commit to the 1.2.1 release.  
  - Vlad's fork from commit beff89ba
 
+## Minor changes & fixes in 2.1.3
+
+- [x]  Fix for default "send to" button
+- [x]  Fix image browser search
+- [x]  SFW settings to blur all images in the UI 👀
+- [x]  Removed console spam from image browser
+- [x]  Faster animation for settings, update and side panels
+- [x]  Fix for troubleshot dialog with Vlad's fork
+
 ## Minor changes & fixes in 2.1.2
 
 - [x]  Fix for Vlad's fork compatibility

@@ -8741,8 +8741,6 @@ function CozyImage(props) {
     }
   }, [viewPort]);
   function toggleModal() {
-    console.log("close modal");
-    console.log(`showModal: ${showModal}`);
     setShowModal(!showModal);
   }
   function openModal() {
@@ -8916,7 +8914,6 @@ function App() {
   );
   const reconnect = () => {
     if (readyState === dist.ReadyState.OPEN) {
-      console.log("already connected");
       return;
     }
     setSocketUrl(socketUrl + "?t=" + Date.now());
@@ -8958,8 +8955,7 @@ function App() {
   reactExports.useEffect(() => {
     if (searchStr !== "") {
       const filteredImages2 = images.filter((image) => {
-        if (image.metadata.exif.parameters.includes(searchStr)) {
-          console.log(`path: ${image.path}`);
+        if (image.metadata.exif.includes(searchStr)) {
           return true;
         } else
           return false;
