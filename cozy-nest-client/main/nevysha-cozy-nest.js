@@ -1474,6 +1474,13 @@ const recalcOffsetFromMenuHeight = () => {
   const tabs = document.getElementById('tabs');
 
   const footer = document.querySelector('#footer #footer');
+  let footerHeight;
+  if (!footer) {
+    footerHeight = 0;
+  }
+  else {
+    footerHeight = footer.offsetHeight;
+  }
 
   // //get value of the css var var(--layout-gap);
   // const layoutGap = getComputedStyle(document.documentElement).getPropertyValue('--layout-gap');
@@ -1491,15 +1498,15 @@ const recalcOffsetFromMenuHeight = () => {
     const rect = tabs.getBoundingClientRect();
     const tabsTop = rect.top;
 
-    document.querySelector(':root').style.setProperty('--main-container-height', `${window.innerHeight - (tabsTop + footer.offsetHeight)}px`);
+    document.querySelector(':root').style.setProperty('--main-container-height', `${window.innerHeight - (tabsTop + footerHeight)}px`);
 
     window.troubleshootSize = {
       menuHeight,
-      footerHeight: footer.offsetHeight,
+      footerHeight: footerHeight,
       tabsTop,
       WindowInnerHeight: window.innerHeight,
-      bodyHeight: window.innerHeight - (tabsTop + footer.offsetHeight),
-      'main-container-height': `${window.innerHeight - (tabsTop + footer.offsetHeight)}px`,
+      bodyHeight: window.innerHeight - (tabsTop + footerHeight),
+      'main-container-height': `${window.innerHeight - (tabsTop + footerHeight)}px`,
     }
   }
   else {
@@ -1511,15 +1518,15 @@ const recalcOffsetFromMenuHeight = () => {
     const rect = tabs.getBoundingClientRect();
     const tabsTop = rect.top;
 
-    document.querySelector(':root').style.setProperty('--main-container-height', `${window.innerHeight - (tabsTop + footer.offsetHeight)}px`);
+    document.querySelector(':root').style.setProperty('--main-container-height', `${window.innerHeight - (tabsTop + footerHeight)}px`);
 
     window.troubleshootSize = {
       menuHeight,
-      footerHeight: footer.offsetHeight,
+      footerHeight: footerHeight,
       tabsTop,
       WindowInnerHeight: window.innerHeight,
-      bodyHeight: window.innerHeight - (tabsTop + footer.offsetHeight),
-      'main-container-height': `${window.innerHeight - (tabsTop + footer.offsetHeight)}px`,
+      bodyHeight: window.innerHeight - (tabsTop + footerHeight),
+      'main-container-height': `${window.innerHeight - (tabsTop + footerHeight)}px`,
     }
   }
 
@@ -1613,6 +1620,14 @@ const onLoad = (done) => {
 
   // log time for onLoad execution after gradio has loaded
   SimpleTimer.time(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
+
+  // check for gradio theme (vlad's fork)
+  if (document.querySelector('#setting_gradio_theme input')) {
+    const gradioTheme = document.querySelector('#setting_gradio_theme input').value
+    if (gradioTheme !== 'gradio/default') {
+      alert('Cozy Nest may not be compatible with this theme. Please switch to the default theme. You can do this by going to the settings tab and selecting "gradio/default" from the dropdown menu under "User interface > UI theme".')
+    }
+  }
 
   //add quicksettings_gap after checkpoint reload button
   // Select the target element
