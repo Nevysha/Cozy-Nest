@@ -4,7 +4,7 @@ window.$ = window.jQuery = $;
 
 import SimpleTimer from "./SimpleTimer.js";
 import {getTheme, isUpToDate, getLuminance} from './cozy-utils.js';
-import {COZY_NEST_DOM_TWEAK_LOAD_DURATION, COZY_NEST_GRADIO_LOAD_DURATION, SETTINGS_MIN_WIDTH, RESULT_MIN_WIDTH} from "./Constants.js";
+import {COZY_NEST_DOM_TWEAK_LOAD_DURATION, COZY_NEST_GRADIO_LOAD_DURATION, SETTINGS_MIN_WIDTH, RESULT_MIN_WIDTH, ANIMATION_SPEED} from "./Constants.js";
 import Loading from "./Loading.js";
 
 import {waves, svg_magic_wand, svg_update_info} from "./svg.js";
@@ -785,9 +785,9 @@ const tweakNevyUiSettings = () => {
 
       //toggle the panel with a slide animation using jquery
       if (shown) {
-        $("#nevyui_sh_options_panel").slideUp();
+        $("#nevyui_sh_options_panel").slideUp(ANIMATION_SPEED);
       } else {
-        $("#nevyui_sh_options_panel").slideDown();
+        $("#nevyui_sh_options_panel").slideDown(ANIMATION_SPEED);
       }
       shown = !shown;
     });
@@ -807,9 +807,9 @@ const tweakNevyUiSettings = () => {
 
       //toggle the panel with a slide animation using jquery
       if (shown) {
-        $("#nevyui_update_info_panel").slideUp();
+        $("#nevyui_update_info_panel").slideUp(ANIMATION_SPEED);
       } else {
-        $("#nevyui_update_info_panel").slideDown();
+        $("#nevyui_update_info_panel").slideDown(ANIMATION_SPEED);
       }
       shown = !shown;
     });
@@ -941,12 +941,12 @@ function tweakExtraNetworks({prefix}) {
           //show the extra network
           extraNetworkGradioWrapper.style.display = 'flex';
           extraNetworkGradioWrapper.style.marginRight = `-${extraNetworkGradioWrapper.offsetWidth}px`;
-          $(extraNetworkGradioWrapper).animate({"margin-right": `+=${extraNetworkGradioWrapper.offsetWidth}`}, 350);
+          $(extraNetworkGradioWrapper).animate({"margin-right": `+=${extraNetworkGradioWrapper.offsetWidth}`}, ANIMATION_SPEED);
         } else {
           //hide the extra network
           $(extraNetworkGradioWrapper).animate({
                 "margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`},
-              350,
+              ANIMATION_SPEED,
               () => {
                 // hide it after the animation is done
                 extraNetworkGradioWrapper.style.display = 'none';
@@ -967,7 +967,7 @@ function tweakExtraNetworks({prefix}) {
     document.addEventListener('keydown', (e) => {
       let shown = extraNetworkGradioWrapper.style.display === 'flex';
       if (e.key === 'Escape' && shown) {
-        $(extraNetworkGradioWrapper).animate({"margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`}, 350, () => {
+        $(extraNetworkGradioWrapper).animate({"margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`}, ANIMATION_SPEED, () => {
           extraNetworkGradioWrapper.style.display = 'none';
         });
       }
@@ -1370,10 +1370,10 @@ function createRightWrapperDiv() {
     if (panel.style.display === 'none') {
       panel.style.display = 'flex'
       panel.style.marginRight = `-${panel.offsetWidth}px`;
-      $(panel).animate({"margin-right": `+=${panel.offsetWidth}`}, 350);
+      $(panel).animate({"margin-right": `+=${panel.offsetWidth}`}, ANIMATION_SPEED);
     }
     else {
-      $(panel).animate({"margin-right": `-=${panel.offsetWidth}`}, 350, () => {
+      $(panel).animate({"margin-right": `-=${panel.offsetWidth}`}, ANIMATION_SPEED, () => {
         panel.style.display = 'none'
       });
     }

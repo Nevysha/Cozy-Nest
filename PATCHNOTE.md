@@ -8,6 +8,11 @@
 - [x]  Fix for default "send to" button
 - [x]  Fix image browser search
 - [x]  SFW settings to blur all images in the UI
+
+- [x]  Very minor fix and changes
+   - [x]  Removed console spam from image browser
+   - [x]  Faster animation for settings, update and side panels
+
 - [x]  Fix for troubleshot dialog with Vlad's fork
 
 ## Minor changes & fixes in 2.1.2
