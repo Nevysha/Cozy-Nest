@@ -473,12 +473,6 @@ const addCozyNestCustomBtn = () => {
   kofiImg.addEventListener("click", () => {
     toggleKofiPanel();
   });
-  //close the panel when clicking outside
-  document.addEventListener("click", (e) => {
-    if (kofiImgIsVisible && !e.target.closest("#kofi_nevysha_support")) {
-        toggleKofiPanel();
-    }
-  });
 
   //fetch version_data.json
   loadVersionData().then(ignored => ignored)
@@ -805,16 +799,6 @@ const tweakNevyUiSettings = () => {
         $("#nevyui_update_info_panel").slideDown();
       }
       shown = !shown;
-    });
-    //when shown is true, hide it on click outside
-    document.addEventListener("click", (e) => {
-      if (shown && !e.target.closest("#nevyui_update_info_panel") && !e.target.closest("#nevyui_update_info") && !e.target.id === "#nevyui_sh_options_update") {
-        //cancel event
-        e.preventDefault();
-        e.stopPropagation();
-        $("#nevyui_update_info_panel").slideUp();
-        shown = false;
-      }
     });
   })();
 
@@ -1289,7 +1273,7 @@ function createRightWrapperDiv() {
   rightPanBtnWrapper.setAttribute('id', `right_button_wrapper`);
   rightPanBtnWrapper.classList.add('nevysha', 'nevysha-right-button-wrapper');
   //add button to the begining of the tab
-  tab.insertBefore(rightPanBtnWrapper, tab.firstChild);
+  tab.insertAdjacentElement('beforeend', rightPanBtnWrapper);
 
   //add a button for image browser
   const cozyImgBrowserBtn = document.createElement('button');
@@ -1602,6 +1586,18 @@ const onloadSafe = (done) => {
   // }
 }
 
+function fixSendToButton() {
+  function closure(selector) {
+    document.querySelectorAll(selector).forEach((el) => {
+      el.addEventListener('click', () => {
+        setTimeout(() => CozyLogger.log('blep'), 200);
+      });
+    })
+  }
+  closure('button#img2img_tab')
+
+}
+
 const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
@@ -1720,6 +1716,9 @@ const onLoad = (done) => {
 
   //make settings draggable
   makeSettingsDraggable();
+
+  //fix "send to" button
+  fixSendToButton();
 
   //add observer for .options resize
   addOptionsObserver();
