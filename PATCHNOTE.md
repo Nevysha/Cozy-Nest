@@ -4,6 +4,10 @@
 
 From a1111 5ab7f213 commit to the 1.2.1 release.  
 
+## Minor changes & fixes in 2.1.2
+
+- [x]  Fix for Vlad's fork compatibility
+
 ## Minor changes & fixes in 2.1.1
 
 - [x]  Fix bug for image with special characters in their name (like "+")
