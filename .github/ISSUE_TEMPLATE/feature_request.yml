@@ -1,0 +1,12 @@
+name: Feature request
+description: Suggest an idea for Cozy-Nest
+title: "[Feature]: "
+labels: ["enhancement"]
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature description
+      description: Describe the feature in a clear and simple way
+      value: "I would like to see..."
