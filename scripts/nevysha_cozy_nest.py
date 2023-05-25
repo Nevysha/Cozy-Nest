@@ -491,14 +491,6 @@ def on_ui_tabs():
         script_callbacks.on_image_saved(on_image_saved)
 
     with gr.Blocks(analytics_enabled=False) as ui:
-
-        # check if user is on the old repo name and display a warning
-        if EXTENSION_TECHNICAL_NAME != 'Cozy-Nest':
-            gr.HTML(value="<div class='nevysha nevysha-warning'>"
-                          "<p id='nevysha-rename-important-msg' class='nevysha-emphasis important'>WARNING : This extension has been renamed to Cozy Nest to avoid confusion with an other tool. "
-                          "Please update to the latest version by following "
-                          "<a href='https://github.com/Nevysha/Cozy-Nest/wiki/How-to-switch-to-renamed-repository-Cozy-Nest'>these instructions</a></p>")
-
         # header
         gr.HTML(value="<div class='nevysha settings-nevyui-top'>"
                       "<p class='nevysha-reporting'>Found a bug or want to ask for a feature ? Please "

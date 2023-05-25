@@ -1174,16 +1174,7 @@ input[type="number"] {
     flex: 1;
     margin-left: 10px !important;
 }
-#nevysha-rename-important-msg {
-    background-color: #9b0505;
-    color: white;
-    padding: 5px;
-    border-radius: 2px;
-}
-#nevysha-rename-important-msg > a {
-    color: var(--ae-primary-color);
-    text-decoration: underline;
-}
+
 .nevysha.settings-nevyui-bottom {
     position: absolute;
     bottom: 0;
