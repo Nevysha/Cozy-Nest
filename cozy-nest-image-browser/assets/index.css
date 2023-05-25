@@ -125,14 +125,7 @@ textarea {
     color: #e32f4e;
     /* left: 5px; */
     top: 5px;
-}
-
-/*img {*/
-/*    filter: blur(20px);*/
-/*}*/
-/*.infoModal > .image-wrapper > img {*/
-/*    filter: blur(50px);*/
-/*}*/:root {
+}:root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;

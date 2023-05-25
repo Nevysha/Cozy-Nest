@@ -1174,16 +1174,7 @@ input[type="number"] {
     flex: 1;
     margin-left: 10px !important;
 }
-#nevysha-rename-important-msg {
-    background-color: #9b0505;
-    color: white;
-    padding: 5px;
-    border-radius: 2px;
-}
-#nevysha-rename-important-msg > a {
-    color: var(--ae-primary-color);
-    text-decoration: underline;
-}
+
 .nevysha.settings-nevyui-bottom {
     position: absolute;
     bottom: 0;
@@ -1757,6 +1748,23 @@ body.nevysha-light .nevysha-button:hover {
 
 #kofi_nevysha_support, #kofi_nevysha_support_img {
     display: none;
+}
+
+[id$="_gallery_clear_button"] {
+    position: absolute;
+    top: 3px;
+    right: 10px;
+    z-index: 30;
+    background-color: var(--block-background-fill);
+}
+[id$="_gallery_clear_button"] > svg {
+    height: 15px;
+    width: 15px;
+    fill: var(--body-text-color);
+}
+
+#cozynest_others_settings_header > p:nth-child(1) {
+    font-style: italic;
 }
 
 body.nsfw img:not([id='kofi_nevysha_support_img']) {

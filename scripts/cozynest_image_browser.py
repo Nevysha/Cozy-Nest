@@ -21,7 +21,7 @@ def get_exif(path):
         (_, allExif, allExif_html) = modules.extras.run_pnginfo(image)
         image.close()
     except Exception as e:
-        print(f"CozyNestSocket: Error while getting exif data: {e}")
+        print(f"CozyNestSocket: WARNING cannot get exif data for image {path}")
         pass
     img = {
         'path': path,
