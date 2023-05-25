@@ -1765,3 +1765,6 @@ body.nsfw img:not([id='kofi_nevysha_support_img']) {
 body.nsfw .infoModal > .image-wrapper > img {
     filter: blur(50px);
 }
+body.nsfw .card {
+    filter: blur(10px);
+}
