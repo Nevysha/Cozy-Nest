@@ -17,6 +17,7 @@ import {
   showInstanceInfoDialog
 } from "./tweaks/troubleshot-dialog.js";
 import {CozyLogger} from "./CozyLogger.js";
+import clearGeneratedImage from './tweaks/clear-generated-image.js'
 
 
 const addDraggable = ({prefix}) => {
@@ -1685,6 +1686,8 @@ const onLoad = (done) => {
     addScrollable(bundle);
     tweakExtraNetworks(bundle);
     addExtraNetworksBtn(bundle);
+    //add a clear button to generated image
+    clearGeneratedImage(bundle);
   }
 
   document.querySelector(`button#txt2img_extra_networks`).click();

@@ -1759,6 +1759,19 @@ body.nevysha-light .nevysha-button:hover {
     display: none;
 }
 
+[id$="_gallery_clear_button"] {
+    position: absolute;
+    top: 3px;
+    right: 10px;
+    z-index: 30;
+    background-color: var(--block-background-fill);
+}
+[id$="_gallery_clear_button"] > svg {
+    height: 15px;
+    width: 15px;
+    fill: var(--body-text-color);
+}
+
 body.nsfw img:not([id='kofi_nevysha_support_img']) {
     filter: blur(20px);
 }

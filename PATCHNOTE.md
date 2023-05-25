@@ -5,6 +5,7 @@
 
 ## Minor changes & fixes in 2.1.4
 
+- [x]  Add a "clear" button to txt2img and img2img gallery
 - [x]  Fix CozyNest=No not working
 
 ## Minor changes & fixes in 2.1.3
