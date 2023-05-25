@@ -7,12 +7,20 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report!
+        ## Thanks for taking the time to fill out this bug report! Please include as much information as possible, including screenshots, logs, and steps to reproduce the issue.
+  - type: markdown
+    attributes:
+      value: |
+        Don't forget to include the troubleshooting info. To get them, follow these steps:
+        1. Open Cozy-Nest
+        2. Click on the magic wand icon in the top right corner
+        3. Click the link "click here to gather relevant info"
+        4. Paste the screenshot bellow along with your issue description.
   - type: textarea
     id: what-happened
     attributes:
       label: What happened?
-      description: Also tell us, what did you expect to happen?
+      description: Please include troubleshooting info from Cozy-Nest. You can paste image directly inside the form bellow. Also tell us, what did you expect to happen.
       placeholder: Tell us what you see!
       value: "A bug happened!"
     validations:
