@@ -38,8 +38,8 @@ body:
         - Safari
         - Microsoft Edge
         - Something else (please specify)
-      validations:
-        required: true
+    validations:
+      required: true
   - type: textarea
     id: additional-info
     attributes:
