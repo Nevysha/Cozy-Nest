@@ -1675,7 +1675,10 @@ const onLoad = (done) => {
   createRightWrapperDiv();
   onUiTabChange(() => {
     CozyLogger.log("onUiTabChange", get_uiCurrentTabContent().id);
-    setButtonVisibilityFromCurrentTab(get_uiCurrentTabContent().id);
+
+    if (COZY_NEST_CONFIG.enable_extra_network_tweaks) {
+      setButtonVisibilityFromCurrentTab(get_uiCurrentTabContent().id);
+    }
   });
 
   //manage text2img tab
@@ -1684,14 +1687,20 @@ const onLoad = (done) => {
     wrapDataGenerationInfo(bundle);
     addDraggable(bundle);
     addScrollable(bundle);
-    tweakExtraNetworks(bundle);
-    addExtraNetworksBtn(bundle);
+
+    if (COZY_NEST_CONFIG.enable_extra_network_tweaks) {
+      tweakExtraNetworks(bundle);
+      addExtraNetworksBtn(bundle);
+    }
+
     //add a clear button to generated image
     clearGeneratedImage(bundle);
   }
 
-  document.querySelector(`button#txt2img_extra_networks`).click();
-  document.querySelector(`button#img2img_extra_networks`).click();
+  if (COZY_NEST_CONFIG.enable_extra_network_tweaks) {
+    document.querySelector(`button#txt2img_extra_networks`).click();
+    document.querySelector(`button#img2img_extra_networks`).click();
+  }
   setTimeout(() => {
     nevysha_magic({prefix: "txt2img"});
     nevysha_magic({prefix: "img2img"});
@@ -1828,6 +1837,7 @@ async function fetchCozyNestConfig() {
     COZY_NEST_CONFIG = await response.json();
     //save in local storage
     localStorage.setItem('COZY_NEST_CONFIG', JSON.stringify(COZY_NEST_CONFIG));
+    window.COZY_NEST_CONFIG = COZY_NEST_CONFIG;
   }
 }
 

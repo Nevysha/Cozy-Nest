@@ -2,6 +2,12 @@ import {CozyLogger} from "../CozyLogger.js";
 import {xmark} from "../svg.js";
 
 export default function clearGeneratedImage({prefix}) {
+
+  if (!COZY_NEST_CONFIG.enable_clear_button) {
+    CozyLogger.log('Clear button is disabled')
+    return
+  }
+
   const gallery = document.querySelector(`#${prefix}_gallery`);
 
   // Function to be called when a child with class 'empty' is removed

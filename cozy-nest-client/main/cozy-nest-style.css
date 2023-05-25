@@ -1763,6 +1763,10 @@ body.nevysha-light .nevysha-button:hover {
     fill: var(--body-text-color);
 }
 
+#cozynest_others_settings_header > p:nth-child(1) {
+    font-style: italic;
+}
+
 body.nsfw img:not([id='kofi_nevysha_support_img']) {
     filter: blur(20px);
 }

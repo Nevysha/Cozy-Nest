@@ -54,6 +54,8 @@ def gradio_save_settings(main_menu_position,
                          auto_start_server,
                          fetch_output_folder_from_a1111_settings,
                          sfw_mode,
+                         enable_clear_button,
+                         enable_extra_network_tweaks,
                          ):
     settings = {
         'main_menu_position': main_menu_position,
@@ -73,6 +75,8 @@ def gradio_save_settings(main_menu_position,
         'auto_start_server': auto_start_server,
         'fetch_output_folder_from_a1111_settings': fetch_output_folder_from_a1111_settings,
         'sfw_mode': sfw_mode,
+        'enable_clear_button': enable_clear_button,
+        'enable_extra_network_tweaks': enable_extra_network_tweaks,
     }
 
     current_config = get_dict_from_config()
@@ -127,6 +131,8 @@ def get_default_settings():
         'fetch_output_folder_from_a1111_settings': True,
         'cnib_output_folder': [],
         'sfw_mode': False,
+        'enable_clear_button': True,
+        'enable_extra_network_tweaks': True,
     }
 
 
@@ -328,7 +334,7 @@ def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_
                   quicksettings_position, waves_color, disable_image_browser, server_default_port,
                   auto_search_port,
                   auto_start_server,
-                  fetch_output_folder_from_a1111_settings, sfw_mode):
+                  fetch_output_folder_from_a1111_settings, sfw_mode, enable_clear_button, enable_extra_network_tweaks):
     with gr.Row():
         btn_save = gr.Button(value="Save", elem_id="nevyui_sh_options_submit",
                              elem_classes="nevyui_apply_settings")
@@ -350,6 +356,8 @@ def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_
             auto_start_server,
             fetch_output_folder_from_a1111_settings,
             sfw_mode,
+            enable_clear_button,
+            enable_extra_network_tweaks,
         ], outputs=[])
 
         btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)",
@@ -523,13 +531,19 @@ def on_ui_tabs():
                     auto_start_server,
                     fetch_output_folder_from_a1111_settings,
                 ] = gradio_img_browser_tab(config)
+            with gr.TabItem(label="Others", elem_id="cozy_nest_others_settings_tab"):
+                with gr.Column():
+                    [
+                        enable_clear_button,
+                        enable_extra_network_tweaks
+                    ] = gradio_others_settings(config)
 
         ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
                       disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
                       quicksettings_position, waves_color, disable_image_browser, server_default_port,
                       auto_search_port,
                       auto_start_server,
-                      fetch_output_folder_from_a1111_settings, sfw_mode)
+                      fetch_output_folder_from_a1111_settings, sfw_mode, enable_clear_button, enable_extra_network_tweaks)
 
         # hidden field to store some useful data and trigger some server actions (like "send to" txt2img,...)
         gradio_hidden_field(server_port)
@@ -540,6 +554,21 @@ def on_ui_tabs():
                       "</div>", elem_id="nevyui_footer_wrapper")
 
     return [(ui, "Nevysha Cozy Nest", "nevyui")]
+
+
+def gradio_others_settings(config):
+    gr.HTML(value="<div id='cozynest_others_settings_header'>"
+                  "<p>Those settings are heavy on DOM modification and might conflict with some others extensions</p>"
+                  "<p>Reload UI needed to apply</p>"
+                  "</div>")
+
+    enable_clear_button = gr.Checkbox(label="Enable clear gallery button in txt2img and img2img tabs",
+                                      value=config.get('enable_clear_button'), elem_id="cozynest_various_clearbtn")
+    enable_extra_network_tweaks = gr.Checkbox(label="Enable extra network tweaks",
+                                              value=config.get('enable_extra_network_tweaks'),
+                                              elem_id="cozynest_various_extra_network_tweaks")
+
+    return [enable_clear_button, enable_extra_network_tweaks]
 
 
 cwd = os.path.normpath(os.path.join(__file__, "../../"))
