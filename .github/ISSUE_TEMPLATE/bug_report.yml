@@ -12,6 +12,7 @@ body:
   - type: markdown
     attributes:
       value: |
+        **Please note that Cozy-Nest is quite hacky and experimental, so it's not uncommon to see bugs and compatibility issues with others extensions.**
         Don't forget to include the troubleshooting info. To get them, follow these steps:
         1. Open Cozy-Nest
         2. Click on the magic wand icon in the top right corner
