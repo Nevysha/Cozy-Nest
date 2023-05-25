@@ -3,6 +3,10 @@
  - From a1111 5ab7f213 commit to the 1.2.1 release.  
  - Vlad's fork from commit beff89ba
 
+## Minor changes & fixes in 2.1.4
+
+- [x]  Fix CozyNest=No not working
+
 ## Minor changes & fixes in 2.1.3
 
 - [x]  Fix for default "send to" button
