@@ -13,6 +13,10 @@ body:
     attributes:
       value: |
         **Please note that Cozy-Nest is quite hacky and experimental, so it's not uncommon to see bugs and compatibility issues with others extensions.**
+        If possible, please try to reproduce the issue with only Cozy-Nest enabled, or specify the extension having compatibility issues.
+  - type: markdown
+    attributes:
+      value: |
         Don't forget to include the troubleshooting info. To get them, follow these steps:
         1. Open Cozy-Nest
         2. Click on the magic wand icon in the top right corner
