@@ -277,7 +277,7 @@ def gradio_main_tab(config):
 
             # disable waves and gradiant bg
             disable_waves_and_gradiant = gr.Checkbox(value=config.get('disable_waves_and_gradiant'),
-                                                     label="Disable waves and gradiant background",
+                                                     label="Disable waves and gradiant background animations",
                                                      elem_id="setting_nevyui_disableWavesAndGradiant", interactive=True)
 
         # main menu

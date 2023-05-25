@@ -233,16 +233,14 @@ function applyCozyNestConfig() {
     const $waves = $('.wave');
     const $body = $('body');
     if (disableWavesAndGradiant) {
-      $waves.css('display', 'none');
       $waves.css('animation', 'none');
-      $body.css('background', 'var(--nevysha-gradiant-2)');
       $body.css('animation', 'none');
+      $body.css('background-position', '75% 75%')
     }
     else {
-      $waves.css('display', '');
       $waves.css('animation', '');
-      $body.css('background', '');
       $body.css('animation', '');
+      $body.css('background-position', '')
     }
 
   }

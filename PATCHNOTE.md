@@ -6,6 +6,7 @@
 ## Minor changes & fixes in 2.1.4
 
 - [x]  Add a "clear" button to txt2img and img2img gallery
+- [x]  When background and waves animation are disabled they now remain visible but static
 - [x]  Settings to enable/disable extra networks tweaks
 - [x]  Settings to enable/disable clear gallery button tweaks
 - [x]  Fix CozyNest=No not working
