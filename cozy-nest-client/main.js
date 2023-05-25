@@ -2,9 +2,7 @@ import 'animate.css';
 import '@fontsource-variable/caveat';
 
 import sheet from './main/cozy-nest-style.css?inline' assert { type: 'css' };
-const styleSheet = new CSSStyleSheet();
-styleSheet.replaceSync(sheet);
-document.adoptedStyleSheets = [styleSheet];
+
 
 import {
   dummyLoraCard, dummyControlNetBloc, dummySubdirs
@@ -32,6 +30,10 @@ import {CozyLogger} from "./main/CozyLogger.js";
     })
     return
   }
+
+  const styleSheet = new CSSStyleSheet();
+  styleSheet.replaceSync(sheet);
+  document.adoptedStyleSheets = [styleSheet];
 
   SimpleTimer.time(COZY_NEST_GRADIO_LOAD_DURATION);
 
