@@ -1679,23 +1679,20 @@ const onLoad = (done) => {
 
   //manage text2img tab
   const nevysha_magic = (bundle) => {
-
-    const {prefix} = bundle;
-    //click to fetch html tab
-    document.querySelector(`button#${prefix}_extra_networks`).click();
-
-    setTimeout(() => {
-      wrapSettings(bundle);
-      wrapDataGenerationInfo(bundle);
-      addDraggable(bundle);
-      addScrollable(bundle);
-      tweakExtraNetworks(bundle);
-      addExtraNetworksBtn(bundle);
-    }, 500)
+    wrapSettings(bundle);
+    wrapDataGenerationInfo(bundle);
+    addDraggable(bundle);
+    addScrollable(bundle);
+    tweakExtraNetworks(bundle);
+    addExtraNetworksBtn(bundle);
   }
 
-  nevysha_magic({prefix: "txt2img"});
-  nevysha_magic({prefix: "img2img"});
+  document.querySelector(`button#txt2img_extra_networks`).click();
+  document.querySelector(`button#img2img_extra_networks`).click();
+  setTimeout(() => {
+    nevysha_magic({prefix: "txt2img"});
+    nevysha_magic({prefix: "img2img"});
+  }, 500)
 
   //general
   tweakButtonsIcons();
