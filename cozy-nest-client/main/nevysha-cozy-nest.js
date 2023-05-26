@@ -4,14 +4,7 @@ window.$ = window.jQuery = $;
 
 import SimpleTimer from "./SimpleTimer.js";
 import {getTheme, isUpToDate, getLuminance} from './cozy-utils.js';
-import {
-  COZY_NEST_DOM_TWEAK_LOAD_DURATION,
-  COZY_NEST_GRADIO_LOAD_DURATION,
-  SETTINGS_MIN_WIDTH,
-  RESULT_MIN_WIDTH,
-  ANIMATION_SPEED,
-  WEBUI_UNKNOWN, WEBUI_SDNEXT, WEBUI_A1111
-} from "./Constants.js";
+import {COZY_NEST_DOM_TWEAK_LOAD_DURATION, COZY_NEST_GRADIO_LOAD_DURATION, SETTINGS_MIN_WIDTH, RESULT_MIN_WIDTH, ANIMATION_SPEED} from "./Constants.js";
 import Loading from "./Loading.js";
 
 import {waves, svg_magic_wand, svg_update_info} from "./svg.js";
@@ -25,7 +18,6 @@ import {
 } from "./tweaks/troubleshot-dialog.js";
 import {CozyLogger} from "./CozyLogger.js";
 import clearGeneratedImage from './tweaks/clear-generated-image.js'
-import {createAlertDiv, showAlert} from "./tweaks/cozy-alert.js";
 
 
 const addDraggable = ({prefix}) => {
@@ -1750,8 +1742,6 @@ const onLoad = (done) => {
   //add observer for .options resize
   addOptionsObserver();
 
-  createAlertDiv();
-
   //load /assets/index-eff6a2cc.js
   loadCozyNestImageBrowserSubmodule();
 
@@ -1811,12 +1801,6 @@ export default  async function cozyNestLoader() {
 
     SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
     SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
-
-    if (shouldDisplaySDNextWarning)
-      showAlert(
-          "Warning",
-          "Cozy Nest detected that you are using SD.Next and running Cozy Nest for the first time. To ensure compatibility, please restart the server."
-          )
   });
 };
 window.cozyNestLoader = cozyNestLoader;
@@ -1844,35 +1828,11 @@ function setupErrorHandling() {
 }
 
 let COZY_NEST_CONFIG;
-let shouldDisplaySDNextWarning = false;
 
 async function fetchCozyNestConfig() {
   const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?t=${Date.now()}`);
   if (response.ok) {
     COZY_NEST_CONFIG = await response.json();
-
-    if (COZY_NEST_CONFIG.webui === WEBUI_UNKNOWN) {
-      CozyLogger.log("Cozy Nest webui is UNKNOWN. Trying to detect it.")
-      //check for meta tag to verify if we are in SD.Next
-      const metaTitle = document.querySelector('meta[property="og:title"]')?.getAttribute('content');
-      if (metaTitle && metaTitle === WEBUI_SDNEXT) {
-        COZY_NEST_CONFIG.webui = WEBUI_SDNEXT;
-        shouldDisplaySDNextWarning = true;
-      }
-      else {
-        COZY_NEST_CONFIG.webui = WEBUI_A1111;
-      }
-
-      await fetch('/cozy-nest/config', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(COZY_NEST_CONFIG)
-      })
-    }
-    CozyLogger.log(`Cozy Nest webui is ${COZY_NEST_CONFIG.webui}`)
-
     //save in local storage
     localStorage.setItem('COZY_NEST_CONFIG', JSON.stringify(COZY_NEST_CONFIG));
     window.COZY_NEST_CONFIG = COZY_NEST_CONFIG;
