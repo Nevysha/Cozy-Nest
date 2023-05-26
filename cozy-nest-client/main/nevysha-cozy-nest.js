@@ -1851,7 +1851,7 @@ async function fetchCozyNestConfig() {
   if (response.ok) {
     COZY_NEST_CONFIG = await response.json();
 
-    // we try to determine the webui. This should have been made during startup but we need a fallback
+    // we try to determine the webui. This should have been made during startup, but we need a fallback
     // because this function is not available before a recent commit of sd.next
     if (COZY_NEST_CONFIG.webui === WEBUI_UNKNOWN) {
       CozyLogger.log("Cozy Nest webui is UNKNOWN. Trying to detect it.")
