@@ -526,7 +526,8 @@ def on_ui_tabs():
                       "<p class='nevysha-reporting'>Found a bug or want to ask for a feature ? Please "
                       "<a onClick='gatherInfoAndShowDialog();return false;' href='_blank'>click here to gather relevant info</a>"
                       " then use <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
-                      " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
+                      " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a>. "
+                      "You can also join this <a href='https://discord.gg/yppzDXjT7S'>discord server</a> to discuss about Cozy Nest</p>"
                       "<p class='nevysha-emphasis'>WARNING : Some visual settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
 
         with gr.Tabs(id="cozy_nest_settings_tabs", elem_id="cozy_nest_settings_tabs"):

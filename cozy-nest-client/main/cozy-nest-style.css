@@ -1139,7 +1139,6 @@ input[type="number"] {
     margin: 15px 0 15px 0 !important;
     border-left: 4px solid var(--ae-primary-color);
     padding-left: 5px;
-    font-size: 1.2em;
 }
 .nevysha.settings-nevyui-top > .nevysha-reporting > a {
     color: var(--ae-primary-color);
@@ -1149,7 +1148,6 @@ input[type="number"] {
     background-color: transparent;
 }
 .nevysha-emphasis {
-    font-size: 1.1em;
     margin-top: 5px;
     font-weight: bold;
     background-color: var(--ae-primary-color);
@@ -1188,7 +1186,7 @@ input[type="number"] {
 }
 #cozy_nest_settings_tabs > .tabitem {
     overflow-y: auto;
-    height: 40vh;
+    height: 520px;
 }
 #cozy_nest_settings_tabs > .tab-nav {
     background-color: var(--tab-nav-background-color);
