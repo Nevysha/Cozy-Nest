@@ -4,12 +4,21 @@ window.$ = window.jQuery = $;
 
 import SimpleTimer from "./SimpleTimer.js";
 import {getTheme, isUpToDate, getLuminance} from './cozy-utils.js';
-import {COZY_NEST_DOM_TWEAK_LOAD_DURATION, COZY_NEST_GRADIO_LOAD_DURATION, SETTINGS_MIN_WIDTH, RESULT_MIN_WIDTH, ANIMATION_SPEED} from "./Constants.js";
+import {
+  COZY_NEST_DOM_TWEAK_LOAD_DURATION,
+  COZY_NEST_GRADIO_LOAD_DURATION,
+  SETTINGS_MIN_WIDTH,
+  RESULT_MIN_WIDTH,
+  ANIMATION_SPEED,
+  WEBUI_UNKNOWN, WEBUI_SDNEXT, WEBUI_A1111
+} from "./Constants.js";
 import Loading from "./Loading.js";
 
 import {waves, svg_magic_wand, svg_update_info} from "./svg.js";
-import {applyAccentColor, applyBgGradiantColor, applyWavesColor
-  , wrapDataGenerationInfo, wrapSettings, createVerticalLineComp} from "./tweaks/various-tweaks.js";
+import {
+  applyAccentColor, applyBgGradiantColor, applyWavesColor
+  , wrapDataGenerationInfo, wrapSettings, createVerticalLineComp, applyFontColor
+} from "./tweaks/various-tweaks.js";
 import kofiCup from './kofi-cup-border.png'
 import {
   setupPopupInstanceInfo,
@@ -18,6 +27,7 @@ import {
 } from "./tweaks/troubleshot-dialog.js";
 import {CozyLogger} from "./CozyLogger.js";
 import clearGeneratedImage from './tweaks/clear-generated-image.js'
+import {createAlertDiv, showAlert} from "./tweaks/cozy-alert.js";
 
 
 const addDraggable = ({prefix}) => {
@@ -218,6 +228,21 @@ function applyCozyNestConfig() {
   }
   setWaveColor()
   document.querySelector("#setting_nevyui_waveColor").querySelector("input").addEventListener("change", setWaveColor)
+
+  //font color
+  const fontColorInput =
+      getTheme() === "dark" ?
+        document.querySelector("#setting_nevyui_fontColor").querySelector("input") :
+        document.querySelector("#setting_nevyui_fontColorLight").querySelector("input")
+  //remove hidden css class of parent.parent
+  fontColorInput.parentElement.parentElement.style.display = "block";
+  const setFontColor = () => {
+    const hexColor = fontColorInput.value;
+    if (!hexColor) return;
+    applyFontColor(hexColor);
+  }
+  setFontColor()
+  fontColorInput.addEventListener("change", setFontColor)
 
   //background gradient
   const setGradientColor = () => {
@@ -496,15 +521,11 @@ async function loadVersionData() {
   const current_version_data = await (await fetch(`file=extensions/Cozy-Nest/version_data.json?${new Date()}`)).json()
   const remote_version_data = await (await fetch(`https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/version_data.json?${new Date()}`)).json()
 
-  //in current_version_data.version and remote_version_data.version, replace string version to int
-  current_version_data.number = parseInt(current_version_data.version.replace(/\./g, ''))
-  remote_version_data.number = parseInt(remote_version_data.version.replace(/\./g, ''))
-
   let remote_patchnote = await (await fetch(`https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/PATCHNOTE.md?t=${new Date()}`)).text();
   //insert "Patchnote" title div
   let patchnoteTitle = `<div class="nevysha-tabnav nevysha-tabnav-settings"><h2 class="nevysha-tabnav-title">Patchnote [${remote_version_data.version}]</h2></div>`;
   //if local version si higher than remote version, fetch from local file (for dev purpose)
-  if (current_version_data.number > remote_version_data.number) {
+  if (import.meta.env.VITE_CONTEXT === 'DEV' && isUpToDate(current_version_data.version, remote_version_data.version)) {
     remote_patchnote = await (await fetch(`file=extensions/Cozy-Nest/PATCHNOTE.md?t=${new Date()}`)).text();
     patchnoteTitle = `<div class="nevysha-tabnav nevysha-tabnav-settings"><h2 class="nevysha-tabnav-title">Patchnote [${current_version_data.version}_DEV]</h2></div>`;
   }
@@ -662,7 +683,7 @@ function createFolderListComponent() {
 
       const folder = imageBrowserFolder.value;
       if (folder.length <= 0) {
-        window.alert("Please enter a folder path to add.");
+        showAlert('Warning',"Please enter a folder path to add.");
         return;
       }
 
@@ -671,7 +692,7 @@ function createFolderListComponent() {
 
       //check if folder already exists
       if (foldersList.includes(folder)) {
-        window.alert("This folder is already in the list.");
+        showAlert('Warning',"This folder is already in the list.");
         return;
       }
 
@@ -738,7 +759,7 @@ const tweakNevyUiSettings = () => {
       })
     }
     catch (e) {
-      CozyLogger.log(e);
+      CozyLogger.debug(e);
     }
 
 
@@ -1471,16 +1492,14 @@ const recalcOffsetFromMenuHeight = () => {
   const footer = document.querySelector('#footer #footer');
   let footerHeight;
   if (!footer) {
-    footerHeight = 0;
+    if (COZY_NEST_CONFIG.webui === WEBUI_SDNEXT)
+      footerHeight = 5;
+    else
+      footerHeight = 0;
   }
   else {
     footerHeight = footer.offsetHeight;
   }
-
-  // //get value of the css var var(--layout-gap);
-  // const layoutGap = getComputedStyle(document.documentElement).getPropertyValue('--layout-gap');
-  // //remove the px
-  // const layoutGapValue = parseInt(layoutGap.substring(0, layoutGap.length - 2));
 
   if (COZY_NEST_CONFIG.main_menu_position !== 'left') {
     const menu = document.querySelector('.tab-nav.nevysha-tabnav')
@@ -1597,16 +1616,8 @@ const onloadSafe = (done) => {
   // }
 }
 
-function fixSendToButton() {
-  function closure(selector) {
-    document.querySelectorAll(selector).forEach((el) => {
-      el.addEventListener('click', () => {
-        setTimeout(() => CozyLogger.log('blep'), 200);
-      });
-    })
-  }
-  closure('button#img2img_tab')
-
+function tweakForSDNext() {
+  document.querySelector('#setting_nevyui_fetchOutputFolderFromA1111Settings').style.display = 'none';
 }
 
 const onLoad = (done) => {
@@ -1632,7 +1643,7 @@ const onLoad = (done) => {
   if (document.querySelector('#setting_gradio_theme input')) {
     const gradioTheme = document.querySelector('#setting_gradio_theme input').value
     if (gradioTheme !== 'gradio/default' && gradioTheme !== '' && gradioTheme !== 'Default') {
-      alert('Cozy Nest may not be compatible with this theme. Please switch to the default theme. You can do this by going to the settings tab and selecting "gradio/default" or "Default" from the dropdown menu under "User interface > UI theme".')
+      showAlert('Warning','Cozy Nest may not be compatible with this theme. Please switch to the default theme. You can do this by going to the settings tab and selecting "gradio/default" or "Default" from the dropdown menu under "User interface > UI theme".')
     }
   }
 
@@ -1672,7 +1683,7 @@ const onLoad = (done) => {
   //create a wrapper div on the right for slidable panels
   createRightWrapperDiv();
   onUiTabChange(() => {
-    CozyLogger.log("onUiTabChange", get_uiCurrentTabContent().id);
+    CozyLogger.debug("onUiTabChange", get_uiCurrentTabContent().id);
 
     if (COZY_NEST_CONFIG.enable_extra_network_tweaks) {
       setButtonVisibilityFromCurrentTab(get_uiCurrentTabContent().id);
@@ -1736,11 +1747,12 @@ const onLoad = (done) => {
   //make settings draggable
   makeSettingsDraggable();
 
-  //fix "send to" button
-  fixSendToButton();
-
   //add observer for .options resize
   addOptionsObserver();
+
+  if (COZY_NEST_CONFIG.webui === WEBUI_SDNEXT) {
+    tweakForSDNext();
+  }
 
   //load /assets/index-eff6a2cc.js
   loadCozyNestImageBrowserSubmodule();
@@ -1767,6 +1779,32 @@ async function loadCozyNestImageBrowserSubmodule() {
   }
 }
 
+async function detectWebuiContext() {
+  // we try to determine the webui. This should have been made during startup, but we need a fallback
+  // because this function is not available before a recent commit of sd.next
+  if (COZY_NEST_CONFIG.webui === WEBUI_UNKNOWN) {
+    CozyLogger.debug("webui is UNKNOWN. Trying to detect it.")
+    //check for meta tag to verify if we are in SD.Next
+    const metaTitle = document.querySelector('meta[property="og:title"]')?.getAttribute('content');
+    if (metaTitle && metaTitle === WEBUI_SDNEXT) {
+      COZY_NEST_CONFIG.webui = WEBUI_SDNEXT;
+      shouldDisplaySDNextWarning = true;
+    }
+    else {
+      COZY_NEST_CONFIG.webui = WEBUI_A1111;
+    }
+
+    await fetch('/cozy-nest/config', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(COZY_NEST_CONFIG)
+    })
+  }
+  CozyLogger.debug(`webui is ${COZY_NEST_CONFIG.webui}`)
+}
+
 /**
  * Need to be called after the page and the script is loaded
  * either from main.js for Dev or from the loader in the extension folder
@@ -1778,7 +1816,7 @@ export default  async function cozyNestLoader() {
   const urlParams = new URLSearchParams(window.location.search);
   const cozyNestParam = urlParams.get('CozyNest');
   if (cozyNestParam === "No") {
-    CozyLogger.log("Cozy Nest disabled by url param")
+    CozyLogger.log("disabled by url param")
     //remove the css with Cozy-Nest in the url
     document.querySelectorAll('link').forEach(link => {
       if (link.href.includes("Cozy-Nest")) link.remove()
@@ -1788,19 +1826,27 @@ export default  async function cozyNestLoader() {
 
   // fetch file=extensions/Cozy-Nest/nevyui_settings.json. add Date to avoid cache
   await fetchCozyNestConfig();
+  await detectWebuiContext();
 
   Loading.start();
 
+  createAlertDiv();
   setupPopupInstanceInfo();
   setupErrorHandling();
 
   onloadSafe(() => {
-    CozyLogger.log(`Cozy Nest running.`);
+    CozyLogger.log(`running.`);
     //remove #nevysha-loading from DOM
     Loading.stop();
 
     SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
     SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
+
+    if (shouldDisplaySDNextWarning)
+      showAlert(
+          "Warning",
+          "Cozy Nest detected that you are using SD.Next and running Cozy Nest for the first time. To ensure compatibility, please restart the server."
+          )
   });
 };
 window.cozyNestLoader = cozyNestLoader;
@@ -1828,11 +1874,13 @@ function setupErrorHandling() {
 }
 
 let COZY_NEST_CONFIG;
+let shouldDisplaySDNextWarning = false;
 
 async function fetchCozyNestConfig() {
   const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?t=${Date.now()}`);
   if (response.ok) {
     COZY_NEST_CONFIG = await response.json();
+
     //save in local storage
     localStorage.setItem('COZY_NEST_CONFIG', JSON.stringify(COZY_NEST_CONFIG));
     window.COZY_NEST_CONFIG = COZY_NEST_CONFIG;

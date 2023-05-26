@@ -39,6 +39,8 @@ export function populateInstanceInfoDialog() {
     + `<br><br>Browser: <span>${navigator.userAgent}</span>`
     //add window size
     + `<br><br>Window size: <span>${window.innerWidth}x${window.innerHeight}</span>`
+    //add webui
+    + `<br><br>WebUI: <span>${COZY_NEST_CONFIG.webui}</span>`
   document.querySelector('#cozynest-error-extentions').innerHTML = document.querySelector('#tabs_extensions').querySelector('#extensions').parentElement.innerHTML;
   //for each tab row, check the first td input and hide the row if it's not checked
   document.querySelector('#cozynest-error-extentions > table').querySelectorAll('tr').forEach(row => {

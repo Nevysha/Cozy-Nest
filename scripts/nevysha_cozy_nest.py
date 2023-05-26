@@ -41,6 +41,8 @@ def gradio_save_settings(main_menu_position,
                          quicksettings_position,
                          accent_generate_button,
                          font_size,
+                         font_color,
+                         font_color_light,
                          waves_color,
                          bg_gradiant_color,
                          accent_color,
@@ -62,6 +64,8 @@ def gradio_save_settings(main_menu_position,
         'quicksettings_position': quicksettings_position,
         'accent_generate_button': accent_generate_button,
         'font_size': font_size,
+        'font_color': font_color,
+        'font_color_light': font_color_light,
         'waves_color': waves_color,
         'bg_gradiant_color': bg_gradiant_color,
         'accent_color': accent_color,
@@ -85,6 +89,15 @@ def gradio_save_settings(main_menu_position,
         settings['cnib_output_folder'] = current_config['cnib_output_folder']
     else:
         settings['cnib_output_folder'] = []
+
+    if current_config['disable_image_browser']:
+        settings['disable_image_browser'] = current_config['disable_image_browser']
+
+    if current_config['fetch_output_folder_from_a1111_settings']:
+        settings['fetch_output_folder_from_a1111_settings'] = current_config['fetch_output_folder_from_a1111_settings']
+
+    if current_config['webui']:
+        settings['webui'] = current_config['webui']
 
     save_settings(settings)
 
@@ -117,6 +130,8 @@ def get_default_settings():
         'accent_generate_button': False,
         'font_size': 12,
         'quicksettings_position': 'split',
+        'font_color': '#d4d4d4',
+        'font_color_light': rgb_to_hex(71, 71, 71),
         'waves_color': rgb_to_hex(94, 26, 145),
         'bg_gradiant_color': rgb_to_hex(101, 0, 94),
         'accent_color': rgb_to_hex(92, 175, 214),
@@ -133,6 +148,7 @@ def get_default_settings():
         'sfw_mode': False,
         'enable_clear_button': True,
         'enable_extra_network_tweaks': True,
+        'webui': 'unknown'
     }
 
 
@@ -144,6 +160,13 @@ def reset_settings():
 def request_restart():
     shared.state.interrupt()
     shared.state.need_restart = True
+    try:
+        # check if modules.shared has restart_server function
+        if hasattr(modules.shared, 'restart_server'):
+            # restart server (if it exists
+            modules.shared.restart_server(restart=True)
+    except:
+        pass
 
 
 def update():
@@ -301,6 +324,12 @@ def gradio_main_tab(config):
                                    maximum=20, step=1, elem_id="setting_nevyui_cardWidth", interactive=True)
 
         with gr.Row():
+            font_color = gr.ColorPicker(value=config.get('font_color'), label="Font color",
+                                         elem_id="setting_nevyui_fontColor", interactive=True, visible=False)
+
+            font_color_light = gr.ColorPicker(value=config.get('font_color_light'), label="Font color",
+                                              elem_id="setting_nevyui_fontColorLight", interactive=True, visible=False)
+
             waves_color = gr.ColorPicker(value=config.get('waves_color'), label="Waves color",
                                          elem_id="setting_nevyui_waveColor", interactive=True)
             bg_gradiant_color = gr.ColorPicker(value=config.get('bg_gradiant_color'),
@@ -310,8 +339,8 @@ def gradio_main_tab(config):
                                           elem_id="setting_nevyui_accentColor", interactive=True)
 
         sfw_mode = gr.Checkbox(value=config.get('sfw_mode'),
-                                             label="SFW mode 👀 (blur all images)",
-                                             elem_id="setting_nevyui_sfwMode", interactive=True)
+                               label="SFW mode 👀 (blur all images)",
+                               elem_id="setting_nevyui_sfwMode", interactive=True)
 
         return [
             accent_color,
@@ -324,6 +353,8 @@ def gradio_main_tab(config):
             font_size,
             main_menu_position,
             quicksettings_position,
+            font_color,
+            font_color_light,
             waves_color,
             sfw_mode,
         ]
@@ -331,7 +362,7 @@ def gradio_main_tab(config):
 
 def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
                   disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
-                  quicksettings_position, waves_color, disable_image_browser, server_default_port,
+                  quicksettings_position, font_color, font_color_light, waves_color, disable_image_browser, server_default_port,
                   auto_search_port,
                   auto_start_server,
                   fetch_output_folder_from_a1111_settings, sfw_mode, enable_clear_button, enable_extra_network_tweaks):
@@ -343,6 +374,8 @@ def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_
             quicksettings_position,
             accent_generate_button,
             font_size,
+            font_color,
+            font_color_light,
             waves_color,
             bg_gradiant_color,
             accent_color,
@@ -426,10 +459,21 @@ def gradio_hidden_field(server_port):
 
 
 def on_ui_tabs():
+
     # shared options
     config = get_dict_from_config()
     # merge default settings with user settings
     config = {**get_default_settings(), **config}
+
+    if config['webui'] == 'unknown' and hasattr(shared, 'get_version'):
+        version = shared.get_version()
+        # check if the 'app' is 'sd.next'
+        if version['app'] == 'sd.next':
+            config['webui'] = 'sd.next'
+            config['fetch_output_folder_from_a1111_settings'] = False
+        else:
+            config['webui'] = 'auto1111'
+        save_settings(config)
 
     # check if cnib_output_folder is empty and/or need to be fetched from a1111 settings
     cnib_output_folder = config.get('cnib_output_folder')
@@ -504,7 +548,8 @@ def on_ui_tabs():
                       "<p class='nevysha-reporting'>Found a bug or want to ask for a feature ? Please "
                       "<a onClick='gatherInfoAndShowDialog();return false;' href='_blank'>click here to gather relevant info</a>"
                       " then use <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
-                      " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a></p>"
+                      " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a>. "
+                      "You can also join this <a href='https://discord.gg/yppzDXjT7S'>discord server</a> to discuss about Cozy Nest</p>"
                       "<p class='nevysha-emphasis'>WARNING : Some visual settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
 
         with gr.Tabs(id="cozy_nest_settings_tabs", elem_id="cozy_nest_settings_tabs"):
@@ -520,6 +565,8 @@ def on_ui_tabs():
                     font_size,
                     main_menu_position,
                     quicksettings_position,
+                    font_color,
+                    font_color_light,
                     waves_color,
                     sfw_mode
                 ] = gradio_main_tab(config)
@@ -540,10 +587,11 @@ def on_ui_tabs():
 
         ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
                       disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
-                      quicksettings_position, waves_color, disable_image_browser, server_default_port,
+                      quicksettings_position, font_color, font_color_light, waves_color, disable_image_browser, server_default_port,
                       auto_search_port,
                       auto_start_server,
-                      fetch_output_folder_from_a1111_settings, sfw_mode, enable_clear_button, enable_extra_network_tweaks)
+                      fetch_output_folder_from_a1111_settings, sfw_mode, enable_clear_button,
+                      enable_extra_network_tweaks)
 
         # hidden field to store some useful data and trigger some server actions (like "send to" txt2img,...)
         gradio_hidden_field(server_port)
@@ -590,7 +638,7 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
         config = get_dict_from_config()
         # merge default settings with user settings
         config = {**get_default_settings(), **config,
-                  'cnib_output_folder': data['cnib_output_folder']}
+                  **data}
 
         save_settings(config)
 

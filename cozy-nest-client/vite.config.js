@@ -17,7 +17,9 @@ export default defineConfig({
       name: 'route-default-to-index',
       configureServer: (server) => {
         server.middlewares.use(async (_req, res, next) => {
-          if (_req.originalUrl === '/cozy-nest-client' || _req.originalUrl === '/cozy-nest-client?__theme=dark') {
+          if (_req.originalUrl === '/cozy-nest-client'
+              || _req.originalUrl === '/cozy-nest-client?__theme=dark'
+              || _req.originalUrl === '/cozy-nest-client?__theme=light') {
 
             let updatedResponse =await (await fetch('http://127.0.0.1:7860/')).text()
 

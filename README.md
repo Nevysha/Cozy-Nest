@@ -8,6 +8,12 @@ _Find your cozy spot on Auto1111's webui_
 
 Cozy Nest is a UI extension for Automatic's sd-webui. Inspired by [anapnoe](https://github.com/anapnoe/stable-diffusion-webui-ux)'s work
 
+## Compatibility
+
+- From Automatic1111's webui `5ab7f213` commit to the 1.2.1 release.
+- SD.Next (Vlad's fork) from commit `beff89ba`
+- Will work best on latest version of both as I'm only testing on latest version.
+
 ## Features:
 - [x]  Fully integrated Image Browser **IN BETA**. Lots of bugs and missing features. Please be kind with Github issues.
    - [x]  Send to txt2img / img2img / …
@@ -43,9 +49,7 @@ Cozy Nest is a UI extension for Automatic's sd-webui. Inspired by [anapnoe](http
 
 ![](https://placehold.co/15x15/f03c15/f03c15.png) **I won't support mobile usage. Although you can use Cozy Nest on your desktop and add `CozyNest=No` in the URL when using webui from your mobile.**
 
-Tested in Chrome, should work in Firefox with minor bug. I plan to fix it later. 
-
-Should work on Vlad's fork as of commit beff89ba
+Tested in Chrome, should work in Firefox with minor bug. I plan to fix it later.
 
 ## Known Issue
 

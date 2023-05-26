@@ -2,7 +2,7 @@
 
   //check if url contains cozy-nest-client. If yes, stop here cause we are in dev mode
   if (window.location.href.includes("cozy-nest-client")) {
-    console.log("CozyNest: a1111 loader in dev mode")
+    console.log("CozyNest: extension loader in dev mode")
     return
   }
 
