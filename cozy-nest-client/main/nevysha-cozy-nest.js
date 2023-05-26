@@ -230,14 +230,19 @@ function applyCozyNestConfig() {
   document.querySelector("#setting_nevyui_waveColor").querySelector("input").addEventListener("change", setWaveColor)
 
   //font color
-  //TODO default font color for light theme
+  const fontColorInput =
+      getTheme() === "dark" ?
+        document.querySelector("#setting_nevyui_fontColor").querySelector("input") :
+        document.querySelector("#setting_nevyui_fontColorLight").querySelector("input")
+  //remove hidden css class of parent.parent
+  fontColorInput.parentElement.parentElement.style.display = "block";
   const setFontColor = () => {
-    const hexColor = document.querySelector("#setting_nevyui_fontColor")?.querySelector("input").value;
+    const hexColor = fontColorInput.value;
     if (!hexColor) return;
     applyFontColor(hexColor);
   }
   setFontColor()
-  document.querySelector("#setting_nevyui_fontColor").querySelector("input").addEventListener("change", setFontColor)
+  fontColorInput.addEventListener("change", setFontColor)
 
   //background gradient
   const setGradientColor = () => {

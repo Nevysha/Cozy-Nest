@@ -7,8 +7,9 @@
     --nevysha-color-from-luminance: black;
     --extra-network-card-width: 13em;
     --extra-network-card-height: 8em;
-    --nevysha-font-color: #CACCCE;
+    --nevysha-font-color: #d4d4d4;
 
+    --nevysha-font-color-subdued: #9ca3af;
     --menu-top-height: 1px;
     --main-container-height: 1px;
 }
@@ -126,7 +127,7 @@
     --link-text-color-active: var(--secondary-500);
     --link-text-color-hover: var(--ae-primary-color);
     --link-text-color-visited: var(--secondary-600);
-    --body-text-color-subdued: var(--neutral-400);
+    --body-text-color-subdued: var(--nevysha-font-color-subdued);
     --shadow-drop: rgba(0,0,0,0.05) 0px 1px 2px 0px;
     --shadow-drop-lg: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     --shadow-inset: rgba(0,0,0,0.05) 0px 2px 4px 0px inset;
@@ -168,7 +169,7 @@
     --shadow-spread: 1px;
     --block-border-color: var(--border-color-primary);
     --block_border_width: None;
-    --block-info-text-color: var(--body-text-color-subdued);
+    --block-info-text-color: var(--nevysha-font-color-subdued);
     --block-label-background-fill: var(--background-fill-secondary);
 
     --block_label_border_width: None;
@@ -326,7 +327,7 @@
     --checkbox-label-text-color-selected: var(--checkbox-label-text-color);
     --background-fill-secondary: var(--neutral-900);
     --panel-background-fill: var(--background-fill-secondary);
-    --body-text-color-subdued: var(--neutral-400);
+    --body-text-color-subdued: var(--nevysha-font-color-subdued);
     --block-label-text-color: var(--neutral-200);
     --button-secondary-text-color: var(--nevysha-white);
     --button-secondary-text-color-hover: var(--button-secondary-text-color);
@@ -337,7 +338,7 @@
     --body-background-fill: rgba(255, 255, 255, 0) !important;
     --tab-nav-background-color: var(--nevysha-light-dark);
     --tab-nav-background-color-selected: var(--nevysha-dark);
-    --border-color-primary: #7a7a7a;
+    --border-color-primary: #acacac;
     --input-border-color: var(--border-color-primary);
     --block-border-color: var(--border-color-primary);
     --input-border-color-focus: var(--ae-primary-color);

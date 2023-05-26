@@ -6,6 +6,7 @@
 
 ## Minor changes & fixes in 2.1.5
 
+- [x]  Font color settings added (and auto calculate subdued color)
 - [x]  Cozy Nest should detect more easily if it is running on a1111 or SD Next (Vlad's fork)
 - [x]  Few tweaks for SD Next
 
