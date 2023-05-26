@@ -1,4 +1,4 @@
-import cozyNestLoader from "./nevysha-cozy-nest.js";
+import cozyNestModuleLoader from "./nevysha-cozy-nest.js";
 
 export class CozyLogger {
 

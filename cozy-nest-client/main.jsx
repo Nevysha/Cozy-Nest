@@ -13,10 +13,17 @@ window.CozyTools = {
   dummySubdirs
 }
 
-import cozyNestLoader from './main/nevysha-cozy-nest.js'
+import cozyNestModuleLoader from './main/nevysha-cozy-nest.js'
 import SimpleTimer from "./main/SimpleTimer.js";
 import {COZY_NEST_GRADIO_LOAD_DURATION} from "./main/Constants.js";
 import {CozyLogger} from "./main/CozyLogger.js";
+import {startCozyNestImageBrowser} from "./image-browser/src/main.jsx";
+
+export default function cozyNestLoader()  {
+  cozyNestModuleLoader()
+  startCozyNestImageBrowser();
+}
+window.cozyNestLoader = cozyNestLoader;
 
 (async () => {
   //check if the param CozyNest=No is present in the url
@@ -36,15 +43,6 @@ import {CozyLogger} from "./main/CozyLogger.js";
   document.adoptedStyleSheets = [styleSheet];
 
   SimpleTimer.time(COZY_NEST_GRADIO_LOAD_DURATION);
-
-  // Cozy-Nest-Image-Browser link
-  const cozyNestImageBrowserLink = document.createElement('link');
-  cozyNestImageBrowserLink.rel = 'stylesheet';
-  cozyNestImageBrowserLink.type = 'text/css';
-  cozyNestImageBrowserLink.href = `file=extensions/Cozy-Nest/cozy-nest-image-browser/assets/index.css?t=${Date.now()}`;
-
-  // Append the link element to the document head
-  document.head.appendChild(cozyNestImageBrowserLink);
 
   if (import.meta.env.VITE_CONTEXT === 'DEV') {
     CozyLogger.debug('DEV MODE');

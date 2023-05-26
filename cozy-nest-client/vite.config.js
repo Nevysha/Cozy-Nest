@@ -23,8 +23,12 @@ export default defineConfig({
 
             let updatedResponse =await (await fetch('http://127.0.0.1:7860/')).text()
 
+            const toAdd = `
+                <script type="module" src="/cozy-nest-client/main.jsx"></script>
+               `
+
             // replace </body> with </body><script type="module" src="/main.js"></script>
-            updatedResponse = updatedResponse.replace('</body>', '</body><script type="module" src="/cozy-nest-client/main.js"></script>')
+            updatedResponse = updatedResponse.replace('</body>', `</body>${toAdd}`)
 
             // Set the modified response
             res.statusCode = 200;

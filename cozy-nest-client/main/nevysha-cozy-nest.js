@@ -1754,9 +1754,6 @@ const onLoad = (done) => {
     tweakForSDNext();
   }
 
-  //load /assets/index-eff6a2cc.js
-  loadCozyNestImageBrowserSubmodule();
-
   /* --------------- TWEAK SOME EXTENSION --------------- */
   //if AWQ-container is present in COZY_NEST_CONFIG.extensions array from localStorage, tweak AWQ
   if (COZY_NEST_CONFIG.extensions
@@ -1767,17 +1764,6 @@ const onLoad = (done) => {
 
   done();
 };
-
-async function loadCozyNestImageBrowserSubmodule() {
-  try {
-    const jsModule = await fetch(`file=extensions/Cozy-Nest/cozy-nest-image-browser/assets/index.js?t=${Date.now()}`);
-    eval(await jsModule.text());
-  }
-  catch (err) {
-    // handle any errors that occur during the import process
-    console.error("Failed to load cozy-nest-image-browser submodule", err);
-  }
-}
 
 async function detectWebuiContext() {
   // we try to determine the webui. This should have been made during startup, but we need a fallback
@@ -1810,7 +1796,7 @@ async function detectWebuiContext() {
  * either from main.js for Dev or from the loader in the extension folder
  * @returns {Promise<void>}
  */
-export default  async function cozyNestLoader() {
+export default  async function cozyNestModuleLoader() {
 
   //check if the param CozyNest=No is present in the url
   const urlParams = new URLSearchParams(window.location.search);
@@ -1849,7 +1835,7 @@ export default  async function cozyNestLoader() {
           )
   });
 };
-window.cozyNestLoader = cozyNestLoader;
+window.cozyNestModuleLoader = cozyNestModuleLoader;
 
 
 function setupErrorHandling() {
