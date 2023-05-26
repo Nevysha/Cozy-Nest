@@ -666,7 +666,7 @@ function createFolderListComponent() {
 
       const folder = imageBrowserFolder.value;
       if (folder.length <= 0) {
-        window.alert("Please enter a folder path to add.");
+        showAlert('Warning',"Please enter a folder path to add.");
         return;
       }
 
@@ -675,7 +675,7 @@ function createFolderListComponent() {
 
       //check if folder already exists
       if (foldersList.includes(folder)) {
-        window.alert("This folder is already in the list.");
+        showAlert('Warning',"This folder is already in the list.");
         return;
       }
 
@@ -1626,7 +1626,7 @@ const onLoad = (done) => {
   if (document.querySelector('#setting_gradio_theme input')) {
     const gradioTheme = document.querySelector('#setting_gradio_theme input').value
     if (gradioTheme !== 'gradio/default' && gradioTheme !== '' && gradioTheme !== 'Default') {
-      alert('Cozy Nest may not be compatible with this theme. Please switch to the default theme. You can do this by going to the settings tab and selecting "gradio/default" or "Default" from the dropdown menu under "User interface > UI theme".')
+      showAlert('Warning','Cozy Nest may not be compatible with this theme. Please switch to the default theme. You can do this by going to the settings tab and selecting "gradio/default" or "Default" from the dropdown menu under "User interface > UI theme".')
     }
   }
 
