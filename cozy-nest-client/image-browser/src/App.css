@@ -62,6 +62,7 @@
     border: 1px solid var(--ae-input-border-color);
     background: var(--ae-input-bg-color);
     color: var(--ae-input-color);
+    gap: 5px;
 }
 
 .infoModal {

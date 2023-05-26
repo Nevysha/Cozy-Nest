@@ -1,7 +1,7 @@
 //base url without port
-import * as PropTypes from "prop-types";
 import React, {useEffect, useRef, useState} from "react";
-import {Row} from "./App.jsx";
+import {Button, Row} from "./App.jsx";
+import Tags from "./Tags.jsx";
 
 const baseUrl = window.location.href.split(":")[0] + ":" + window.location.href.split(":")[1]
 const gradioPort = 7860
@@ -144,6 +144,9 @@ function CozyFullImageInfo(props) {
         onClick={() => props.closeModal()}>
         Close
       </button>
+      <Row>
+        <Tags/>
+      </Row>
       <table>
         <tbody>
         <tr><td>Date: </td><td>{date}</td></tr>

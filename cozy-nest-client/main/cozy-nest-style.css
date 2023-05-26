@@ -930,6 +930,9 @@ button.secondary, button.primary {
     padding: 10px;
     margin-left: 15px;
 }
+#cozy_img_browser_panel {
+    border: 1px solid var(--ae-input-border-color) !important;
+}
 
 .vertical-line {
     width: 2px !important;
@@ -987,6 +990,7 @@ canvas.nevysha {
     height: calc(100% - (100px + var(--menu-top-height)));
     top: calc(75px + var(--menu-top-height));
     padding-right: 15px;
+    border: 1px solid var(--ae-input-border-color) !important;
 }
 #txt2img_extra_networks_nevysha_wrapper,
 #img2img_extra_networks_nevysha_wrapper {

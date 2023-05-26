@@ -1,8 +1,14 @@
 import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    react({
+      babel: {
+        plugins: ['@babel/plugin-syntax-import-assertions'],
+      },
+    }),
     {
       name: "configure-response-headers",
       configureServer: (server) => {
@@ -24,6 +30,7 @@ export default defineConfig({
             let updatedResponse =await (await fetch('http://127.0.0.1:7860/')).text()
 
             const toAdd = `
+                <script type="module" src="/cozy-nest-client/main/_dev.js"></script>
                 <script type="module" src="/cozy-nest-client/main.jsx"></script>
                `
 

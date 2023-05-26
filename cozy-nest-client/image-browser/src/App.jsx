@@ -4,6 +4,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import Browser from "./Browser.jsx";
 import {MockImageBrowser} from "./MockImageBrowser.jsx";
 import {CozyLogger} from "../../main/CozyLogger.js";
+import Tags from "./Tags.jsx";
 
 //component to wrap flex row
 export function Row(props) {
@@ -17,6 +18,13 @@ export function Column(props) {
   return <div className="flex-column">
     {props.children}
   </div>
+}
+
+export function Button(props) {
+  return <button
+      {...props}
+      className="nevysha lg primary gradio-button btn"
+      >{props.children}</button>
 }
 
 const config = JSON.parse(localStorage.getItem('COZY_NEST_CONFIG'))
@@ -169,13 +177,15 @@ function App() {
           </button>
         </Row>
 
-        <textarea data-testid="textbox"
-                  placeholder="Search anything : Prompt, Size, Model, ..."
-                  rows="1"
-                  spellCheck="false"
-                  data-gramm="false"
-                  onChange={(e) => setSearchStr(e.target.value)}/>
-
+        <Row>
+          <textarea data-testid="textbox"
+                    placeholder="Search anything : Prompt, Size, Model, ..."
+                    rows="1"
+                    spellCheck="false"
+                    data-gramm="false"
+                    onChange={(e) => setSearchStr(e.target.value)}/>
+          <Tags />
+        </Row>
 
       </Column>
       <Browser key={0} imagesRef={filteredImages}/>
