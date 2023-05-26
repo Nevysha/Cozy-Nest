@@ -90,15 +90,6 @@ def gradio_save_settings(main_menu_position,
     else:
         settings['cnib_output_folder'] = []
 
-    if current_config['disable_image_browser']:
-        settings['disable_image_browser'] = current_config['disable_image_browser']
-
-    if current_config['fetch_output_folder_from_a1111_settings']:
-        settings['fetch_output_folder_from_a1111_settings'] = current_config['fetch_output_folder_from_a1111_settings']
-
-    if current_config['webui']:
-        settings['webui'] = current_config['webui']
-
     save_settings(settings)
 
 

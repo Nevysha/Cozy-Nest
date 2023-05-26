@@ -4,6 +4,10 @@
 - SD.Next (Vlad's fork) from commit `beff89ba`
 - Will work best on latest version of both as I'm only testing on latest version.
 
+## Minor changes & fixes in 2.1.6
+
+- [x]  Some settings were not saved properly
+
 ## Minor changes & fixes in 2.1.5
 
 - [x]  Font color settings added (and auto calculate subdued color)
