@@ -1,7 +1,8 @@
 //base url without port
 import React, {useEffect, useRef, useState} from "react";
-import {Button, Row} from "./App.jsx";
+import {Button, Column, Row} from "./App.jsx";
 import Tags from "./Tags.jsx";
+import * as PropTypes from "prop-types";
 
 const baseUrl = window.location.href.split(":")[0] + ":" + window.location.href.split(":")[1]
 const gradioPort = 7860
@@ -21,15 +22,12 @@ function SendTo(props) {
   }
 
   return <Row>
-    <button className="nevysha lg primary gradio-button btn"
-            onClick={(e) => sendToPipe(e, 'txt2img')}
-    >txt2img</button>
-    <button className="nevysha lg primary gradio-button btn"
-            onClick={(e) => sendToPipe(e, 'img2img')}
-    >img2img</button>
-    <button className="nevysha lg primary gradio-button btn"
-            onClick={(e) => sendToPipe(e, 'inpainting')}
-    >inpainting</button>
+    <Button onClick={(e) => sendToPipe(e, 'txt2img')}
+    >txt2img</Button>
+    <Button onClick={(e) => sendToPipe(e, 'img2img')}
+    >img2img</Button>
+    <Button onClick={(e) => sendToPipe(e, 'inpainting')}
+    >inpainting</Button>
   </Row>;
 }
 
@@ -40,6 +38,20 @@ const safeExifSplit = (fn) => {
       return 'Error parsing metadata'
     }
 }
+
+function Controls(props) {
+  return (
+    <Column style={{height: "100%", justifyContent: "space-between"}}>
+      <SendTo imgRef={props.imgRef}/>
+      <Row>
+        <Button>Delete</Button>
+        <Button>Edit Exif</Button>
+      </Row>
+    </Column>
+  );
+}
+
+Controls.propTypes = {imgRef: PropTypes.any};
 
 function CozyImageInfo(props) {
 
@@ -87,7 +99,7 @@ function CozyImageInfo(props) {
         </tr>
         </tbody>
       </table>
-      <SendTo imgRef={props.imgRef}/>
+      <Controls imgRef={props.imgRef}/>
     </div>
   );
 }
@@ -159,7 +171,7 @@ function CozyFullImageInfo(props) {
         </tbody>
       </table>
       <div className="blocInfo" dangerouslySetInnerHTML={{__html: formattedAll}} />
-      <SendTo imgRef={props.imgRef}/>
+      <Controls imgRef={props.imgRef}/>
     </div>
   );
 }

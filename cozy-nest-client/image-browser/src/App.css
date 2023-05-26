@@ -16,6 +16,7 @@
 .flex-row {
     display: flex;
     flex-direction: row;
+    width: 100%;
 }
 .browser {
     height: 100%;
@@ -126,4 +127,8 @@ textarea {
     color: #e32f4e;
     /* left: 5px; */
     top: 5px;
+}
+
+.cnib-button {
+    width: 100%;
 }

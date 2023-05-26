@@ -8,14 +8,18 @@ import Tags from "./Tags.jsx";
 
 //component to wrap flex row
 export function Row(props) {
-  return <div className="flex-row">
+  return <div
+    {...props}
+    className="flex-row">
     {props.children}
   </div>
 }
 
 //component to wrap flex column
 export function Column(props) {
-  return <div className="flex-column">
+  return <div
+    {...props}
+    className="flex-column">
     {props.children}
   </div>
 }
@@ -23,7 +27,7 @@ export function Column(props) {
 export function Button(props) {
   return <button
       {...props}
-      className="nevysha lg primary gradio-button btn"
+      className="nevysha lg primary gradio-button btn cnib-button"
       >{props.children}</button>
 }
 
