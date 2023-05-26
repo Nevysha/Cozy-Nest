@@ -86,9 +86,6 @@ def gradio_save_settings(main_menu_position,
     else:
         settings['cnib_output_folder'] = []
 
-    if current_config['webui']:
-        settings['webui'] = current_config['webui']
-
     save_settings(settings)
 
 
@@ -136,7 +133,6 @@ def get_default_settings():
         'sfw_mode': False,
         'enable_clear_button': True,
         'enable_extra_network_tweaks': True,
-        'webui': 'unknown'
     }
 
 
@@ -148,13 +144,6 @@ def reset_settings():
 def request_restart():
     shared.state.interrupt()
     shared.state.need_restart = True
-    try:
-        # check if modules.shared has restart_server function
-        if hasattr(modules.shared, 'restart_server'):
-            # restart server (if it exists
-            modules.shared.restart_server(restart=True)
-    except:
-        pass
 
 
 def update():
@@ -321,8 +310,8 @@ def gradio_main_tab(config):
                                           elem_id="setting_nevyui_accentColor", interactive=True)
 
         sfw_mode = gr.Checkbox(value=config.get('sfw_mode'),
-                               label="SFW mode 👀 (blur all images)",
-                               elem_id="setting_nevyui_sfwMode", interactive=True)
+                                             label="SFW mode 👀 (blur all images)",
+                                             elem_id="setting_nevyui_sfwMode", interactive=True)
 
         return [
             accent_color,
@@ -437,20 +426,10 @@ def gradio_hidden_field(server_port):
 
 
 def on_ui_tabs():
-
     # shared options
     config = get_dict_from_config()
     # merge default settings with user settings
     config = {**get_default_settings(), **config}
-
-    if config['webui'] == 'unknown' and hasattr(shared, 'get_version'):
-        version = shared.get_version()
-        # check if the 'app' is 'sd.next'
-        if version['app'] == 'sd.next':
-            config['webui'] = 'sd.next'
-        else:
-            config['webui'] = 'auto1111'
-        save_settings(config)
 
     # check if cnib_output_folder is empty and/or need to be fetched from a1111 settings
     cnib_output_folder = config.get('cnib_output_folder')
@@ -564,8 +543,7 @@ def on_ui_tabs():
                       quicksettings_position, waves_color, disable_image_browser, server_default_port,
                       auto_search_port,
                       auto_start_server,
-                      fetch_output_folder_from_a1111_settings, sfw_mode, enable_clear_button,
-                      enable_extra_network_tweaks)
+                      fetch_output_folder_from_a1111_settings, sfw_mode, enable_clear_button, enable_extra_network_tweaks)
 
         # hidden field to store some useful data and trigger some server actions (like "send to" txt2img,...)
         gradio_hidden_field(server_port)
@@ -612,7 +590,7 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
         config = get_dict_from_config()
         # merge default settings with user settings
         config = {**get_default_settings(), **config,
-                  **data}
+                  'cnib_output_folder': data['cnib_output_folder']}
 
         save_settings(config)
 
