@@ -7,6 +7,11 @@ export function applyWavesColor(hexColor) {
   })
 }
 
+export function applyFontColor(hexColor) {
+  const rgbColor = hexToRgb(hexColor);
+  document.querySelector(':root').style.setProperty('--nevysha-font-color', `rgb(${rgbColor})`);
+}
+
 export function applyBgGradiantColor(hexColor) {
   const rgbColor = hexToRgb(hexColor);
   document.querySelector(':root').style.setProperty('--nevysha-gradiant-1', `rgb(${rgbColor})`);

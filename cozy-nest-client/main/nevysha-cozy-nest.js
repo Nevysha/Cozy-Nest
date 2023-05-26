@@ -15,8 +15,10 @@ import {
 import Loading from "./Loading.js";
 
 import {waves, svg_magic_wand, svg_update_info} from "./svg.js";
-import {applyAccentColor, applyBgGradiantColor, applyWavesColor
-  , wrapDataGenerationInfo, wrapSettings, createVerticalLineComp} from "./tweaks/various-tweaks.js";
+import {
+  applyAccentColor, applyBgGradiantColor, applyWavesColor
+  , wrapDataGenerationInfo, wrapSettings, createVerticalLineComp, applyFontColor
+} from "./tweaks/various-tweaks.js";
 import kofiCup from './kofi-cup-border.png'
 import {
   setupPopupInstanceInfo,
@@ -226,6 +228,16 @@ function applyCozyNestConfig() {
   }
   setWaveColor()
   document.querySelector("#setting_nevyui_waveColor").querySelector("input").addEventListener("change", setWaveColor)
+
+  //font color
+  //TODO default font color for light theme
+  const setFontColor = () => {
+    const hexColor = document.querySelector("#setting_nevyui_fontColor")?.querySelector("input").value;
+    if (!hexColor) return;
+    applyFontColor(hexColor);
+  }
+  setFontColor()
+  document.querySelector("#setting_nevyui_fontColor").querySelector("input").addEventListener("change", setFontColor)
 
   //background gradient
   const setGradientColor = () => {

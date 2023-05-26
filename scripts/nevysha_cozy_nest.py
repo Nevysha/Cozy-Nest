@@ -41,6 +41,7 @@ def gradio_save_settings(main_menu_position,
                          quicksettings_position,
                          accent_generate_button,
                          font_size,
+                         font_color,
                          waves_color,
                          bg_gradiant_color,
                          accent_color,
@@ -62,6 +63,7 @@ def gradio_save_settings(main_menu_position,
         'quicksettings_position': quicksettings_position,
         'accent_generate_button': accent_generate_button,
         'font_size': font_size,
+        'font_color': font_color,
         'waves_color': waves_color,
         'bg_gradiant_color': bg_gradiant_color,
         'accent_color': accent_color,
@@ -120,6 +122,7 @@ def get_default_settings():
         'accent_generate_button': False,
         'font_size': 12,
         'quicksettings_position': 'split',
+        'font_color': '#CACCCE',
         'waves_color': rgb_to_hex(94, 26, 145),
         'bg_gradiant_color': rgb_to_hex(101, 0, 94),
         'accent_color': rgb_to_hex(92, 175, 214),
@@ -312,6 +315,8 @@ def gradio_main_tab(config):
                                    maximum=20, step=1, elem_id="setting_nevyui_cardWidth", interactive=True)
 
         with gr.Row():
+            font_color = gr.ColorPicker(value=config.get('font_color'), label="Font color",
+                                         elem_id="setting_nevyui_fontColor", interactive=True)
             waves_color = gr.ColorPicker(value=config.get('waves_color'), label="Waves color",
                                          elem_id="setting_nevyui_waveColor", interactive=True)
             bg_gradiant_color = gr.ColorPicker(value=config.get('bg_gradiant_color'),
@@ -335,6 +340,7 @@ def gradio_main_tab(config):
             font_size,
             main_menu_position,
             quicksettings_position,
+            font_color,
             waves_color,
             sfw_mode,
         ]
@@ -342,7 +348,7 @@ def gradio_main_tab(config):
 
 def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
                   disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
-                  quicksettings_position, waves_color, disable_image_browser, server_default_port,
+                  quicksettings_position, font_color, waves_color, disable_image_browser, server_default_port,
                   auto_search_port,
                   auto_start_server,
                   fetch_output_folder_from_a1111_settings, sfw_mode, enable_clear_button, enable_extra_network_tweaks):
@@ -354,6 +360,7 @@ def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_
             quicksettings_position,
             accent_generate_button,
             font_size,
+            font_color,
             waves_color,
             bg_gradiant_color,
             accent_color,
@@ -543,6 +550,7 @@ def on_ui_tabs():
                     font_size,
                     main_menu_position,
                     quicksettings_position,
+                    font_color,
                     waves_color,
                     sfw_mode
                 ] = gradio_main_tab(config)
@@ -563,7 +571,7 @@ def on_ui_tabs():
 
         ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
                       disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
-                      quicksettings_position, waves_color, disable_image_browser, server_default_port,
+                      quicksettings_position, font_color, waves_color, disable_image_browser, server_default_port,
                       auto_search_port,
                       auto_start_server,
                       fetch_output_folder_from_a1111_settings, sfw_mode, enable_clear_button,

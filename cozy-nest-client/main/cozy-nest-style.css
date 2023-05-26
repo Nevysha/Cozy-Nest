@@ -7,6 +7,7 @@
     --nevysha-color-from-luminance: black;
     --extra-network-card-width: 13em;
     --extra-network-card-height: 8em;
+    --nevysha-font-color: #CACCCE;
 
     --menu-top-height: 1px;
     --main-container-height: 1px;
@@ -48,11 +49,11 @@
     --checkbox-background-color: var(--nevysha-dark);
 
     --button-border-width: 0px;
-    --tabmenu-button-color: #ffffff;
+    --tabmenu-button-color: var(--nevysha-font-color);
 
     --nevysha-dark: #1c1c1c;
     --nevysha-light-dark: #292a2e;
-    --nevysha-white: #6b7280;
+    --nevysha-white: var(--nevysha-font-color);
     --nevysha-input-border-color: hsl(214deg 5% 30%);
 
     --nevysha-color2: #f0a6caff;
@@ -68,7 +69,8 @@
     --ae-input-border-color: hsl(214deg 5% 30%);
     --ae-panel-border-radius: 0px;
     --ae-input-bg-color: hsl(225deg 6% 13%);
-    --ae-input-color: hsl(210deg 4% 80%);
+    --ae-input-color: var(--nevysha-font-color);
+    --block-title-text-color: var(--nevysha-font-color);
 
     --primary-50: var(--nevysha-color4);
     --primary-100: var(--nevysha-color4);
@@ -113,10 +115,10 @@
     --checkbox-border-color-hover: var(--ae-primary-color);
     --color-accent: var(--ae-primary-color);
     --link-text-color: var(--nevysha-white);
+    --body-text-color: var(--nevysha-font-color);
 
 
     /*default dark*/
-    --body-text-color: var(--neutral-100);
     --color-accent-soft: var(--neutral-700);
     --background-fill-secondary: var(--neutral-900);
     --border-color-accent: var(--neutral-600);
@@ -131,7 +133,6 @@
     --block-background-fill: var(--neutral-800);
     --block-label-border-color: var(--nevysha-input-border-color);
     --block-label-text-color: var(--neutral-200);
-    --block-title-text-color: var(--neutral-200);
     --checkbox-background-color-selected: var(--secondary-600);
     --checkbox-border-color-focus: var(--secondary-500);
     --checkbox-border-color-selected: var(--checkbox-border-color);
@@ -160,7 +161,7 @@
     --button-primary-text-color: white;
     --button-primary-text-color-hover: var(--button-primary-text-color);
     --button-secondary-border-color: var(--neutral-600);
-    --button-secondary-text-color: white;
+    --button-secondary-text-color: var(--nevysha-font-color);
     --button-secondary-text-color-hover: var(--button-secondary-text-color);
 
 
@@ -292,7 +293,7 @@
 .nevysha-light {
     --nevysha-gradiant-2: #fefefe;
 
-    --nevysha-white: #000000;
+    --nevysha-white: var(--nevysha-font-color);
     --nevysha-dark: #fefefe;
     --nevysha-light-dark: #efefef;
     --neutral-50: var(--nevysha-white);
@@ -351,7 +352,7 @@
     /*--border-color-primary: var(--neutral-700);*/
     --block-background-fill: var(--neutral-800);
     --secondary-text-color: var(--nevysha-white);
-    --block-title-text-color: var(--neutral-100);
+    --block-title-text-color: var(--nevysha-font-color);
     --main-tabs-background-color: #e5e5e585;
 }
 
