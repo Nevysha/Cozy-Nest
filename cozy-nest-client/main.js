@@ -47,7 +47,7 @@ import {CozyLogger} from "./main/CozyLogger.js";
   document.head.appendChild(cozyNestImageBrowserLink);
 
   if (import.meta.env.VITE_CONTEXT === 'DEV') {
-    CozyLogger.log('CozyNest: DEV MODE');
+    CozyLogger.debug('DEV MODE');
     document.addEventListener("DOMContentLoaded", function() {
       cozyNestLoader();
     })

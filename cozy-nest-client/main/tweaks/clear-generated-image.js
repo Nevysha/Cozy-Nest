@@ -4,7 +4,7 @@ import {xmark} from "../svg.js";
 export default function clearGeneratedImage({prefix}) {
 
   if (!COZY_NEST_CONFIG.enable_clear_button) {
-    CozyLogger.log('Clear button is disabled')
+    CozyLogger.debug('Clear button is disabled')
     return
   }
 

@@ -46,6 +46,25 @@ export const getLuminance = (hexcolor) => {
   return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
 }
 
+const COLOR_BRIGHTNESS_FACTOR = 0.75;
+export const getSubduedFontColor = (hexCode) => {
+  // Remove the '#' symbol if present
+  hexCode = hexCode.replace('#', '');
+
+  // Convert the hex code to RGB values
+  const red = parseInt(hexCode.substr(0, 2), 16);
+  const green = parseInt(hexCode.substr(2, 2), 16);
+  const blue = parseInt(hexCode.substr(4, 2), 16);
+
+  // Decrease the brightness by reducing the RGB values
+  const decreasedRed = Math.floor(red * COLOR_BRIGHTNESS_FACTOR);
+  const decreasedGreen = Math.floor(green * COLOR_BRIGHTNESS_FACTOR);
+  const decreasedBlue = Math.floor(blue * COLOR_BRIGHTNESS_FACTOR);
+
+  // Convert the decreased RGB values back to hex
+  return `rgb(${decreasedRed},${decreasedGreen},${decreasedBlue})`;
+}
+
 //dummy method
 export const dummyLoraCard = () => {
   const container = document.querySelector("#txt2img_lora_cards");

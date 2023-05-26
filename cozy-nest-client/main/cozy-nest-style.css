@@ -7,7 +7,9 @@
     --nevysha-color-from-luminance: black;
     --extra-network-card-width: 13em;
     --extra-network-card-height: 8em;
+    --nevysha-font-color: #d4d4d4;
 
+    --nevysha-font-color-subdued: #9ca3af;
     --menu-top-height: 1px;
     --main-container-height: 1px;
 }
@@ -48,11 +50,11 @@
     --checkbox-background-color: var(--nevysha-dark);
 
     --button-border-width: 0px;
-    --tabmenu-button-color: #ffffff;
+    --tabmenu-button-color: var(--nevysha-font-color);
 
     --nevysha-dark: #1c1c1c;
     --nevysha-light-dark: #292a2e;
-    --nevysha-white: #6b7280;
+    --nevysha-white: var(--nevysha-font-color);
     --nevysha-input-border-color: hsl(214deg 5% 30%);
 
     --nevysha-color2: #f0a6caff;
@@ -68,7 +70,8 @@
     --ae-input-border-color: hsl(214deg 5% 30%);
     --ae-panel-border-radius: 0px;
     --ae-input-bg-color: hsl(225deg 6% 13%);
-    --ae-input-color: hsl(210deg 4% 80%);
+    --ae-input-color: var(--nevysha-font-color);
+    --block-title-text-color: var(--nevysha-font-color);
 
     --primary-50: var(--nevysha-color4);
     --primary-100: var(--nevysha-color4);
@@ -113,10 +116,10 @@
     --checkbox-border-color-hover: var(--ae-primary-color);
     --color-accent: var(--ae-primary-color);
     --link-text-color: var(--nevysha-white);
+    --body-text-color: var(--nevysha-font-color);
 
 
     /*default dark*/
-    --body-text-color: var(--neutral-100);
     --color-accent-soft: var(--neutral-700);
     --background-fill-secondary: var(--neutral-900);
     --border-color-accent: var(--neutral-600);
@@ -124,14 +127,13 @@
     --link-text-color-active: var(--secondary-500);
     --link-text-color-hover: var(--ae-primary-color);
     --link-text-color-visited: var(--secondary-600);
-    --body-text-color-subdued: var(--neutral-400);
+    --body-text-color-subdued: var(--nevysha-font-color-subdued);
     --shadow-drop: rgba(0,0,0,0.05) 0px 1px 2px 0px;
     --shadow-drop-lg: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     --shadow-inset: rgba(0,0,0,0.05) 0px 2px 4px 0px inset;
     --block-background-fill: var(--neutral-800);
     --block-label-border-color: var(--nevysha-input-border-color);
     --block-label-text-color: var(--neutral-200);
-    --block-title-text-color: var(--neutral-200);
     --checkbox-background-color-selected: var(--secondary-600);
     --checkbox-border-color-focus: var(--secondary-500);
     --checkbox-border-color-selected: var(--checkbox-border-color);
@@ -160,14 +162,14 @@
     --button-primary-text-color: white;
     --button-primary-text-color-hover: var(--button-primary-text-color);
     --button-secondary-border-color: var(--neutral-600);
-    --button-secondary-text-color: white;
+    --button-secondary-text-color: var(--nevysha-font-color);
     --button-secondary-text-color-hover: var(--button-secondary-text-color);
 
 
     --shadow-spread: 1px;
     --block-border-color: var(--border-color-primary);
     --block_border_width: None;
-    --block-info-text-color: var(--body-text-color-subdued);
+    --block-info-text-color: var(--nevysha-font-color-subdued);
     --block-label-background-fill: var(--background-fill-secondary);
 
     --block_label_border_width: None;
@@ -292,7 +294,7 @@
 .nevysha-light {
     --nevysha-gradiant-2: #fefefe;
 
-    --nevysha-white: #000000;
+    --nevysha-white: var(--nevysha-font-color);
     --nevysha-dark: #fefefe;
     --nevysha-light-dark: #efefef;
     --neutral-50: var(--nevysha-white);
@@ -325,7 +327,7 @@
     --checkbox-label-text-color-selected: var(--checkbox-label-text-color);
     --background-fill-secondary: var(--neutral-900);
     --panel-background-fill: var(--background-fill-secondary);
-    --body-text-color-subdued: var(--neutral-400);
+    --body-text-color-subdued: var(--nevysha-font-color-subdued);
     --block-label-text-color: var(--neutral-200);
     --button-secondary-text-color: var(--nevysha-white);
     --button-secondary-text-color-hover: var(--button-secondary-text-color);
@@ -336,7 +338,7 @@
     --body-background-fill: rgba(255, 255, 255, 0) !important;
     --tab-nav-background-color: var(--nevysha-light-dark);
     --tab-nav-background-color-selected: var(--nevysha-dark);
-    --border-color-primary: #7a7a7a;
+    --border-color-primary: #acacac;
     --input-border-color: var(--border-color-primary);
     --block-border-color: var(--border-color-primary);
     --input-border-color-focus: var(--ae-primary-color);
@@ -351,7 +353,7 @@
     /*--border-color-primary: var(--neutral-700);*/
     --block-background-fill: var(--neutral-800);
     --secondary-text-color: var(--nevysha-white);
-    --block-title-text-color: var(--neutral-100);
+    --block-title-text-color: var(--nevysha-font-color);
     --main-tabs-background-color: #e5e5e585;
 }
 
@@ -1139,7 +1141,6 @@ input[type="number"] {
     margin: 15px 0 15px 0 !important;
     border-left: 4px solid var(--ae-primary-color);
     padding-left: 5px;
-    font-size: 1.2em;
 }
 .nevysha.settings-nevyui-top > .nevysha-reporting > a {
     color: var(--ae-primary-color);
@@ -1149,7 +1150,6 @@ input[type="number"] {
     background-color: transparent;
 }
 .nevysha-emphasis {
-    font-size: 1.1em;
     margin-top: 5px;
     font-weight: bold;
     background-color: var(--ae-primary-color);
@@ -1188,15 +1188,28 @@ input[type="number"] {
 }
 #cozy_nest_settings_tabs > .tabitem {
     overflow-y: auto;
-    height: 40vh;
+    height: 520px;
 }
 #cozy_nest_settings_tabs > .tab-nav {
     background-color: var(--tab-nav-background-color);
 }
-#cozy_nest_settings_tabs > .tab-nav > * {
+.tab-nav > * {
     border-radius: 0;
 }
 #cozy_nest_settings_tabs > .tab-nav > .selected {
+    background-color: var(--tab-nav-background-color-selected) !important;
+    border-top: 2px solid var(--ae-primary-color);
+}
+[id$="_extra_tabs"] {
+    background-color: var(--tab-nav-background-color-selected);
+}
+[id$="_extra_tabs"] > .tabitem {
+    background-color: var(--tab-nav-background-color-selected) !important;
+}
+[id$="_extra_tabs"] > .tab-nav {
+    background-color: var(--tab-nav-background-color);
+}
+[id$="_extra_tabs"] > .tab-nav > .selected {
     background-color: var(--tab-nav-background-color-selected) !important;
     border-top: 2px solid var(--ae-primary-color);
 }
@@ -1562,7 +1575,7 @@ textarea.nevysha-image-browser-folder {
 :root {
     --error-handler-white: #eeeeee;
 }
-#dialog-message-wrap {
+#dialog-message-wrap, #cozy-alert-wrap {
     font-size: 12px;
     position: fixed;
     z-index: 1000;
@@ -1587,6 +1600,29 @@ textarea.nevysha-image-browser-folder {
 }
 #dialog-message > .header > h1 {
     font-size: 1.5em;
+}
+#cozy-alert-wrap > div {
+    height: fit-content;
+    width: auto;
+    margin: auto;
+    background-color: var(--nevysha-gradiant-2);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--ae-input-border-color);
+    color: var(--nevysha-font-color);
+}
+#cozy-alert-wrap > div > .header {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+#cozy-alert-title {
+    font-size: 1.5em;
+    margin: 0 auto;
+}
+#cozy-alert-close {
+    margin: auto;
 }
 .ui-dialog-title {
     color: var(--error-handler-white);

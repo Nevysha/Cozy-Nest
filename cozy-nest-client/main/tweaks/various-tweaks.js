@@ -1,10 +1,16 @@
-import {getLuminance, hexToRgb} from "../cozy-utils.js";
+import {getLuminance, getSubduedFontColor, hexToRgb} from "../cozy-utils.js";
 
 export function applyWavesColor(hexColor) {
   const rgbColor = hexToRgb(hexColor);
   document.querySelectorAll(".wave").forEach((wave) => {
     wave.setAttribute("style", `background: rgb(${rgbColor} / 16%)`);
   })
+}
+
+export function applyFontColor(hexColor) {
+  const rgbColor = hexToRgb(hexColor);
+  document.querySelector(':root').style.setProperty('--nevysha-font-color', `rgb(${rgbColor})`);
+  document.querySelector(':root').style.setProperty('--nevysha-font-color-subdued', getSubduedFontColor(hexColor));
 }
 
 export function applyBgGradiantColor(hexColor) {

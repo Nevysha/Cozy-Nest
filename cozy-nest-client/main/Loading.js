@@ -2,7 +2,7 @@ import {getTheme} from "./cozy-utils.js";
 import SimpleTimer from "./SimpleTimer.js";
 import {COZY_NEST_GRADIO_LOAD_DURATION} from "./Constants.js";
 import {waves, loading_roll} from "./svg.js";
-import {applyAccentColor, applyBgGradiantColor, applyWavesColor} from "./tweaks/various-tweaks.js";
+import {applyAccentColor, applyBgGradiantColor, applyWavesColor, applyFontColor} from "./tweaks/various-tweaks.js";
 
 export default class Loading {
 
@@ -96,11 +96,12 @@ export default class Loading {
     //get config from local storage COZY_NEST_CONFIG
     let config = JSON.parse(localStorage.getItem("COZY_NEST_CONFIG"))
     //merge with dummy config to avoid warning
-    config = {...{waves_color: "#ffffff", bg_gradiant_color: "#ffffff", accent_color: "#ffffff"}, ...config}
+    config = {...{waves_color: "#ffffff", bg_gradiant_color: "#ffffff", accent_color: "#ffffff", font_color:"#ffffff", font_color_light:"#000000"}, ...config}
 
     applyWavesColor(config.waves_color)
     applyBgGradiantColor(config.bg_gradiant_color);
     applyAccentColor(config.accent_color, config.accent_color);
+    applyFontColor(getTheme() === "light" ? config.font_color_light : config.font_color);
   }
 
 }
