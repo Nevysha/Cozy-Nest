@@ -1,7 +1,13 @@
 ## Compatibility
 
- - From a1111 5ab7f213 commit to the 1.2.1 release.  
- - Vlad's fork from commit beff89ba
+- From Automatic1111's webui `5ab7f213` commit to the 1.2.1 release.
+- SD.Next (Vlad's fork) from commit `beff89ba`
+- Will work best on latest version of both as I'm only testing on latest version.
+
+## Minor changes & fixes in 2.1.5
+
+- [x]  Cozy Nest should detect more easily if it is running on a1111 or SD Next (Vlad's fork)
+- [x]  Few tweaks for SD Next
 
 ## Minor changes & fixes in 2.1.4
 

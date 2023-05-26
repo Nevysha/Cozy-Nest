@@ -18,10 +18,14 @@ export class CozyLogger {
     CozyLogger._instance.enabled = false;
   }
 
-  static log(...args) {
+  static debug(...args) {
     if (CozyLogger._instance.enabled) {
-      console.log(...args);
+      console.log('CozyNest:DEBUG:',...args);
     }
+  }
+
+  static log(...args) {
+    console.log('CozyNest:',...args);
   }
 
   constructor(enabled) {

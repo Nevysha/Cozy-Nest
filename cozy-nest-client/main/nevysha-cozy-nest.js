@@ -504,15 +504,11 @@ async function loadVersionData() {
   const current_version_data = await (await fetch(`file=extensions/Cozy-Nest/version_data.json?${new Date()}`)).json()
   const remote_version_data = await (await fetch(`https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/version_data.json?${new Date()}`)).json()
 
-  //in current_version_data.version and remote_version_data.version, replace string version to int
-  current_version_data.number = parseInt(current_version_data.version.replace(/\./g, ''))
-  remote_version_data.number = parseInt(remote_version_data.version.replace(/\./g, ''))
-
   let remote_patchnote = await (await fetch(`https://raw.githubusercontent.com/Nevysha/Cozy-Nest/main/PATCHNOTE.md?t=${new Date()}`)).text();
   //insert "Patchnote" title div
   let patchnoteTitle = `<div class="nevysha-tabnav nevysha-tabnav-settings"><h2 class="nevysha-tabnav-title">Patchnote [${remote_version_data.version}]</h2></div>`;
   //if local version si higher than remote version, fetch from local file (for dev purpose)
-  if (current_version_data.number > remote_version_data.number) {
+  if (import.meta.env.VITE_CONTEXT === 'DEV' && isUpToDate(current_version_data.version, remote_version_data.version)) {
     remote_patchnote = await (await fetch(`file=extensions/Cozy-Nest/PATCHNOTE.md?t=${new Date()}`)).text();
     patchnoteTitle = `<div class="nevysha-tabnav nevysha-tabnav-settings"><h2 class="nevysha-tabnav-title">Patchnote [${current_version_data.version}_DEV]</h2></div>`;
   }
@@ -746,7 +742,7 @@ const tweakNevyUiSettings = () => {
       })
     }
     catch (e) {
-      CozyLogger.log(e);
+      CozyLogger.debug(e);
     }
 
 
@@ -1479,16 +1475,14 @@ const recalcOffsetFromMenuHeight = () => {
   const footer = document.querySelector('#footer #footer');
   let footerHeight;
   if (!footer) {
-    footerHeight = 0;
+    if (COZY_NEST_CONFIG.webui === WEBUI_SDNEXT)
+      footerHeight = 5;
+    else
+      footerHeight = 0;
   }
   else {
     footerHeight = footer.offsetHeight;
   }
-
-  // //get value of the css var var(--layout-gap);
-  // const layoutGap = getComputedStyle(document.documentElement).getPropertyValue('--layout-gap');
-  // //remove the px
-  // const layoutGapValue = parseInt(layoutGap.substring(0, layoutGap.length - 2));
 
   if (COZY_NEST_CONFIG.main_menu_position !== 'left') {
     const menu = document.querySelector('.tab-nav.nevysha-tabnav')
@@ -1605,18 +1599,6 @@ const onloadSafe = (done) => {
   // }
 }
 
-function fixSendToButton() {
-  function closure(selector) {
-    document.querySelectorAll(selector).forEach((el) => {
-      el.addEventListener('click', () => {
-        setTimeout(() => CozyLogger.log('blep'), 200);
-      });
-    })
-  }
-  closure('button#img2img_tab')
-
-}
-
 function tweakForSDNext() {
   document.querySelector('#setting_nevyui_fetchOutputFolderFromA1111Settings').style.display = 'none';
 }
@@ -1684,7 +1666,7 @@ const onLoad = (done) => {
   //create a wrapper div on the right for slidable panels
   createRightWrapperDiv();
   onUiTabChange(() => {
-    CozyLogger.log("onUiTabChange", get_uiCurrentTabContent().id);
+    CozyLogger.debug("onUiTabChange", get_uiCurrentTabContent().id);
 
     if (COZY_NEST_CONFIG.enable_extra_network_tweaks) {
       setButtonVisibilityFromCurrentTab(get_uiCurrentTabContent().id);
@@ -1748,9 +1730,6 @@ const onLoad = (done) => {
   //make settings draggable
   makeSettingsDraggable();
 
-  //fix "send to" button
-  fixSendToButton();
-
   //add observer for .options resize
   addOptionsObserver();
 
@@ -1789,7 +1768,7 @@ async function detectWebuiContext() {
   // we try to determine the webui. This should have been made during startup, but we need a fallback
   // because this function is not available before a recent commit of sd.next
   if (COZY_NEST_CONFIG.webui === WEBUI_UNKNOWN) {
-    CozyLogger.log("Cozy Nest webui is UNKNOWN. Trying to detect it.")
+    CozyLogger.debug("webui is UNKNOWN. Trying to detect it.")
     //check for meta tag to verify if we are in SD.Next
     const metaTitle = document.querySelector('meta[property="og:title"]')?.getAttribute('content');
     if (metaTitle && metaTitle === WEBUI_SDNEXT) {
@@ -1808,7 +1787,7 @@ async function detectWebuiContext() {
       body: JSON.stringify(COZY_NEST_CONFIG)
     })
   }
-  CozyLogger.log(`Cozy Nest webui is ${COZY_NEST_CONFIG.webui}`)
+  CozyLogger.debug(`webui is ${COZY_NEST_CONFIG.webui}`)
 }
 
 /**
@@ -1822,7 +1801,7 @@ export default  async function cozyNestLoader() {
   const urlParams = new URLSearchParams(window.location.search);
   const cozyNestParam = urlParams.get('CozyNest');
   if (cozyNestParam === "No") {
-    CozyLogger.log("Cozy Nest disabled by url param")
+    CozyLogger.log("disabled by url param")
     //remove the css with Cozy-Nest in the url
     document.querySelectorAll('link').forEach(link => {
       if (link.href.includes("Cozy-Nest")) link.remove()
@@ -1840,7 +1819,7 @@ export default  async function cozyNestLoader() {
   setupErrorHandling();
 
   onloadSafe(() => {
-    CozyLogger.log(`Cozy Nest running.`);
+    CozyLogger.log(`running.`);
     //remove #nevysha-loading from DOM
     Loading.stop();
 
