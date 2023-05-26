@@ -1610,6 +1610,7 @@ textarea.nevysha-image-browser-folder {
     display: flex;
     flex-direction: column;
     border: 1px solid var(--ae-input-border-color);
+    color: var(--nevysha-font-color);
 }
 #cozy-alert-wrap > div > .header {
     display: flex;
