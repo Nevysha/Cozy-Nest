@@ -1617,6 +1617,10 @@ function fixSendToButton() {
 
 }
 
+function tweakForSDNext() {
+  document.querySelector('#setting_nevyui_fetchOutputFolderFromA1111Settings').style.display = 'none';
+}
+
 const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
@@ -1752,6 +1756,10 @@ const onLoad = (done) => {
 
   createAlertDiv();
 
+  if (COZY_NEST_CONFIG.webui === WEBUI_SDNEXT) {
+    tweakForSDNext();
+  }
+
   //load /assets/index-eff6a2cc.js
   loadCozyNestImageBrowserSubmodule();
 
@@ -1777,6 +1785,32 @@ async function loadCozyNestImageBrowserSubmodule() {
   }
 }
 
+async function detectWebuiContext() {
+  // we try to determine the webui. This should have been made during startup, but we need a fallback
+  // because this function is not available before a recent commit of sd.next
+  if (COZY_NEST_CONFIG.webui === WEBUI_UNKNOWN) {
+    CozyLogger.log("Cozy Nest webui is UNKNOWN. Trying to detect it.")
+    //check for meta tag to verify if we are in SD.Next
+    const metaTitle = document.querySelector('meta[property="og:title"]')?.getAttribute('content');
+    if (metaTitle && metaTitle === WEBUI_SDNEXT) {
+      COZY_NEST_CONFIG.webui = WEBUI_SDNEXT;
+      shouldDisplaySDNextWarning = true;
+    }
+    else {
+      COZY_NEST_CONFIG.webui = WEBUI_A1111;
+    }
+
+    await fetch('/cozy-nest/config', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(COZY_NEST_CONFIG)
+    })
+  }
+  CozyLogger.log(`Cozy Nest webui is ${COZY_NEST_CONFIG.webui}`)
+}
+
 /**
  * Need to be called after the page and the script is loaded
  * either from main.js for Dev or from the loader in the extension folder
@@ -1798,6 +1832,7 @@ export default  async function cozyNestLoader() {
 
   // fetch file=extensions/Cozy-Nest/nevyui_settings.json. add Date to avoid cache
   await fetchCozyNestConfig();
+  await detectWebuiContext();
 
   Loading.start();
 
@@ -1850,30 +1885,6 @@ async function fetchCozyNestConfig() {
   const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?t=${Date.now()}`);
   if (response.ok) {
     COZY_NEST_CONFIG = await response.json();
-
-    // we try to determine the webui. This should have been made during startup, but we need a fallback
-    // because this function is not available before a recent commit of sd.next
-    if (COZY_NEST_CONFIG.webui === WEBUI_UNKNOWN) {
-      CozyLogger.log("Cozy Nest webui is UNKNOWN. Trying to detect it.")
-      //check for meta tag to verify if we are in SD.Next
-      const metaTitle = document.querySelector('meta[property="og:title"]')?.getAttribute('content');
-      if (metaTitle && metaTitle === WEBUI_SDNEXT) {
-        COZY_NEST_CONFIG.webui = WEBUI_SDNEXT;
-        shouldDisplaySDNextWarning = true;
-      }
-      else {
-        COZY_NEST_CONFIG.webui = WEBUI_A1111;
-      }
-
-      await fetch('/cozy-nest/config', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(COZY_NEST_CONFIG)
-      })
-    }
-    CozyLogger.log(`Cozy Nest webui is ${COZY_NEST_CONFIG.webui}`)
 
     //save in local storage
     localStorage.setItem('COZY_NEST_CONFIG', JSON.stringify(COZY_NEST_CONFIG));
