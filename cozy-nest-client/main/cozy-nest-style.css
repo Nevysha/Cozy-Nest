@@ -1562,7 +1562,7 @@ textarea.nevysha-image-browser-folder {
 :root {
     --error-handler-white: #eeeeee;
 }
-#dialog-message-wrap {
+#dialog-message-wrap, #cozy-alert-wrap {
     font-size: 12px;
     position: fixed;
     z-index: 1000;
@@ -1587,6 +1587,27 @@ textarea.nevysha-image-browser-folder {
 }
 #dialog-message > .header > h1 {
     font-size: 1.5em;
+}
+#cozy-alert-wrap > div {
+    height: fit-content;
+    width: auto;
+    margin: auto;
+    background-color: var(--nevysha-gradiant-2);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+#cozy-alert-wrap > div > .header {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+#cozy-alert-title {
+    font-size: 1.5em;
+    margin: 0 auto;
+}
+#cozy-alert-close {
+    margin: auto;
 }
 .ui-dialog-title {
     color: var(--error-handler-white);
