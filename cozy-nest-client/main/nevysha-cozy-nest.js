@@ -1733,8 +1733,6 @@ const onLoad = (done) => {
   //add observer for .options resize
   addOptionsObserver();
 
-  createAlertDiv();
-
   if (COZY_NEST_CONFIG.webui === WEBUI_SDNEXT) {
     tweakForSDNext();
   }
@@ -1815,6 +1813,7 @@ export default  async function cozyNestLoader() {
 
   Loading.start();
 
+  createAlertDiv();
   setupPopupInstanceInfo();
   setupErrorHandling();
 
