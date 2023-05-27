@@ -9,6 +9,10 @@ import threading
 
 import gradio as gr
 import modules
+import piexif
+from PIL import Image
+from PIL.ExifTags import TAGS
+from PIL.PngImagePlugin import PngInfo
 from typing import Any
 from fastapi import FastAPI, Response, Request
 from fastapi.staticfiles import StaticFiles
@@ -680,6 +684,27 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
 
         except FileNotFoundError:
             return Response(status_code=404, content="File not found")
+
+    @app.get("/cozy-nest/image-exif")
+    async def get_image_exif(path: str):
+        image = Image.open(path)
+        image.load()
+
+        src_info = image.text or {}
+
+        # Extract EXIF data
+        tgt_info = PngInfo()
+
+        for k, v in src_info.items():
+            tgt_info.add_text(k, v)
+
+        if tgt_info is not None:
+            # for tag_id, value in exif_data.items():
+            #     tag_name = TAGS.get(tag_id, tag_id)
+            #     print(f"{tag_name}: {value}")
+            return Response(content=json.dumps(src_info), media_type="application/json")
+        else:
+            print("No EXIF data found.")
 
 
 script_callbacks.on_ui_tabs(on_ui_tabs)

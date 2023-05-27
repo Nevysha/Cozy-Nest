@@ -3,6 +3,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {Button, Column, Row} from "./App.jsx";
 import Tags from "./Tags.jsx";
 import * as PropTypes from "prop-types";
+import {CozyLogger} from "../../main/CozyLogger.js";
 
 const baseUrl = window.location.href.split(":")[0] + ":" + window.location.href.split(":")[1]
 const gradioPort = 7860
@@ -40,12 +41,22 @@ const safeExifSplit = (fn) => {
 }
 
 function Controls(props) {
+
+  const editExif = async () => {
+    //load file from url
+    const file = await fetch(props.imgRef.current.src).then(r => r.arrayBuffer());
+
+    const path = props.imgRef.current.src.split('path=')[1]
+    const exif = await fetch(`/cozy-nest/image-exif?path=${path}`).then(r => r.json());
+    CozyLogger.log('exif', exif)
+  }
+
   return (
     <Column style={{height: "100%", justifyContent: "space-between"}}>
       <SendTo imgRef={props.imgRef}/>
       <Row>
         <Button>Delete</Button>
-        <Button>Edit Exif</Button>
+        <Button onClick={editExif}>Edit Exif</Button>
       </Row>
     </Column>
   );
