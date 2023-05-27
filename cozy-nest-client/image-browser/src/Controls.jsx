@@ -51,9 +51,9 @@ export function Controls(props) {
         <Column style={{height: "100%", justifyContent: "space-between"}}>
             <SendTo imgRef={props.imgRef}/>
             <Row>
-                <Button>Delete</Button>
                 <ExifEditor exif={exif} visible={showExifEditor}/>
                 <Button onClick={editExif}>Edit Exif</Button>
+                <Button>Delete</Button>
             </Row>
         </Column>
     );

@@ -32,6 +32,7 @@
     border-bottom: 3px solid var(--nevysha-font-color);
 }
 
+/*Ace override*/
 .ace_cursor-layer {
     z-index: 900;
 }
@@ -50,4 +51,10 @@
     45% { opacity: 0.5; }
     60% { opacity: 0; }
     85% { opacity: 0; }
+}
+.ace_active-line {
+    background: #ffffff0d;
+}
+.ace_editor {
+    background-color: transparent;
 }

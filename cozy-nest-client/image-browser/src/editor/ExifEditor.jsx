@@ -6,7 +6,7 @@ ace.config.setModuleUrl("ace/mode/json_worker", 'cozy-nest-client/node_modules/a
 
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-json";
-import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/theme-github_dark";
 import "ace-builds/src-noconflict/ext-language_tools";
 
 export function ExifEditor(props) {
@@ -20,7 +20,8 @@ export function ExifEditor(props) {
         const _exif = {...props.exif, "cozy-nest-tags":"Favorites"}
         setExif(_exif)
         setVisible(props.visible)
-        setExifString(JSON.stringify(_exif))
+        setExifString(JSON.stringify(_exif, null, 2))
+        setIsJsonValid(true)
     }, [props.exif, props.visible])
 
     const handleChange = (text) => {
@@ -42,7 +43,7 @@ export function ExifEditor(props) {
                         <h1>Exif Editor</h1>
                         <AceEditor
                           mode="json"
-                          theme="monokai"
+                          theme="github_dark"
                           showPrintMargin={false}
                           onChange={handleChange}
                           value={exifString}
