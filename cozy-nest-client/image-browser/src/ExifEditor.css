@@ -1,0 +1,53 @@
+.ExifEditor.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    backdrop-filter: blur(5px);
+    z-index: 101;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
+.ExifEditor > .container {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    min-height: 715px;
+    background-color: var(--ae-input-bg-color);
+    border: 1px solid var(--ae-input-border-color);
+}
+
+.ExifEditor > .container h1 {
+    font-size: 1.5rem;
+    padding: 5px 0 5px 0;
+    margin: 0;
+    width: 100%;
+    background-color: var(--ae-input-bg-color);
+
+    text-align: center;
+    border-bottom: 3px solid var(--nevysha-font-color);
+}
+
+.ace_cursor-layer {
+    z-index: 900;
+}
+.ace_cursor-layer .ace_cursor {
+    z-index: 901;
+    background-color: var(--ae-primary-color);
+    position: fixed;
+}
+@keyframes blink-ace-animate {
+    from, to { opacity: 0.5; }
+    60% { opacity: 0; }
+}
+
+@keyframes blink-ace-animate-smooth {
+    from, to { opacity: 0.5; }
+    45% { opacity: 0.5; }
+    60% { opacity: 0; }
+    85% { opacity: 0; }
+}

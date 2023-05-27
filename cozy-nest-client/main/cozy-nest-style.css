@@ -1002,7 +1002,7 @@ canvas.nevysha {
 #txt2img_extra_networks_nevysha_wrapper > .vertical-line-wrapper,
 #img2img_extra_networks_nevysha_wrapper > .vertical-line-wrapper,
 .slide-right-browser-panel > .vertical-line-wrapper {
-    z-index: 9999;
+    z-index: 100;
     margin: 15px 0 0 5px;
 }
 /*div[id$="_extra_tabs"] {*/
