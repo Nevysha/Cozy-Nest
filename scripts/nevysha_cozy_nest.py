@@ -706,6 +706,24 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
         else:
             print("No EXIF data found.")
 
+    @app.post("/cozy-nest/image-exif")
+    async def set_image_exif(request: Request):
+        # Access POST parameters
+        request_json = await request.json()
+        data = request_json['data']
+        path = request_json['path']
+        image = Image.open(path)
+        image.load()
+
+        tgt_info = PngInfo()
+
+        for k, v in data.items():
+            tgt_info.add_text(k, v)
+
+        image.save(path, pnginfo=tgt_info)
+
+        return {"message": "EXIF data saved successfully"}
+
 
 script_callbacks.on_ui_tabs(on_ui_tabs)
 script_callbacks.on_app_started(cozy_nest_api)

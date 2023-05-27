@@ -15,7 +15,7 @@
 .ExifEditor > .container {
     display: flex;
     flex-direction: column;
-    width: 70%;
+    width: 1015px;
     min-height: 715px;
     background-color: var(--ae-input-bg-color);
     border: 1px solid var(--ae-input-border-color);

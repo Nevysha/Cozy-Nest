@@ -8,6 +8,7 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-github_dark";
 import "ace-builds/src-noconflict/ext-language_tools";
+import {CozyLogger} from "../../../main/CozyLogger.js";
 
 export function ExifEditor(props) {
 
@@ -17,7 +18,7 @@ export function ExifEditor(props) {
     const [isJsonValid, setIsJsonValid] = useState(false);
 
     useEffect(() => {
-        const _exif = {...props.exif, "cozy-nest-tags":"Favorites"}
+        const _exif = {...props.exif}
         setExif(_exif)
         setVisible(props.visible)
         setExifString(JSON.stringify(_exif, null, 2))
@@ -33,6 +34,26 @@ export function ExifEditor(props) {
         } catch (e) {
             setIsJsonValid(false)
         }
+    }
+
+    const save = async () => {
+        if (!isJsonValid) {
+            return
+        }
+        const path = props.imgRef.current.src.split('path=')[1]
+        const response = await fetch(`/cozy-nest/image-exif`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                //decode path from url
+                path: decodeURIComponent(path),
+                data: exif
+            })
+        })
+        const json = await response.json()
+        CozyLogger.log('json', json)
     }
 
     return (
@@ -59,7 +80,7 @@ export function ExifEditor(props) {
                               wrap: true,
                           }}
                         />
-                        <Button disabled={!isJsonValid}>{isJsonValid ? "Save" : "Invalid JSON"}</Button>
+                        <Button disabled={!isJsonValid} onClick={save}>{isJsonValid ? "Save" : "Invalid JSON"}</Button>
                         <Button onClick={() => setVisible(false)}>Close</Button>
                     </div>
                 </div>
