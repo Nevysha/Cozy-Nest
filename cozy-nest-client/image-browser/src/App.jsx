@@ -63,6 +63,7 @@ function App() {
   const [filteredImages, setFilteredImages] = useState([])
   const [searchStr, setSearchStr] = useState('');
   const [emptyFetch, setEmptyFetch] = useState(false);
+  const [visibilityFilter, setVisibilityFilter] = useState('radio-hide-hidden');
 
 
   const { sendMessage, lastMessage, readyState, getWebSocket }
@@ -134,8 +135,27 @@ function App() {
 
   //if searchStr is not empty, filter images
   useEffect(() => {
+
+    function applyActiveFilter() {
+      return images.filter(image => {
+        if (visibilityFilter === 'radio-hide-hidden') {
+          if (image.metadata.exif['cozy-nest-hidden'] === 'True') {
+            return false;
+          }
+          else return true;
+        }
+        else if (visibilityFilter === 'radio-only-hidden') {
+          if (!image.metadata.exif['cozy-nest-hidden'] || image.metadata.exif['cozy-nest-hidden'] !== 'True') {
+            return false;
+          }
+          else return true;
+        }
+        else return true;
+      })
+    }
+
     if (searchStr !== '') {
-      const filteredImages = images.filter(image => {
+      const filteredImages = applyActiveFilter().filter(image => {
         if (JSON.stringify(image.metadata.exif).includes(searchStr)) {
           return true;
         }
@@ -144,9 +164,9 @@ function App() {
       setFilteredImages(filteredImages)
     }
     else {
-      setFilteredImages(images)
+      setFilteredImages(applyActiveFilter())
     }
-  }, [searchStr])
+  }, [searchStr, visibilityFilter])
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Connecting',
@@ -210,7 +230,7 @@ function App() {
           <Row>
             <h1 className="cnib-title">Cozy Nest Image Browser <span className="beta-emphasis">beta</span></h1>
           </Row>
-          <Row>
+          <Row style={{width: 'auto'}}>
             <span>The WebSocket is currently <span className="connexionStatus" style={connexionStatusStyle}>{connectionStatus}</span></span>
             <button
               className="nevysha lg primary gradio-button btn"
@@ -221,6 +241,24 @@ function App() {
               Connect
             </button>
           </Row>
+        </Row>
+
+        <Row style={{gap:'10px', marginBottom: '2px'}} onChange={(e) => setVisibilityFilter(e.target.id)}>
+          {/*radio button for filter : Hide hidden, All, Only hidden*/}
+          <Row style={{width: 'auto', alignItems: 'center'}}>
+            <input type="radio" id="radio-hide-hidden" name="radio-filter" value="all" defaultChecked/>
+            <label htmlFor="radio-hide-hidden">Hide hidden</label>
+          </Row>
+          <Row style={{width: 'auto', alignItems: 'center'}}>
+            <input type="radio" id="radio-all" name="radio-filter" value="all"/>
+            <label htmlFor="radio-all">All</label>
+          </Row>
+          <Row style={{width: 'auto', alignItems: 'center'}}>
+            <input type="radio" id="radio-only-hidden" name="radio-filter" value="hidden"/>
+            <label htmlFor="radio-only-hidden">Only hidden</label>
+          </Row>
+
+
         </Row>
 
         <Row>

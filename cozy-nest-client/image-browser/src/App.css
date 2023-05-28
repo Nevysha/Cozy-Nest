@@ -132,3 +132,26 @@ textarea {
 .cnib-button {
     width: 100%;
 }
+
+input[type="radio"] {
+    display: inline-block;
+    flex-shrink: 0;
+    vertical-align: middle;
+    appearance: none;
+    border-width: 1px;
+    border-color: #6b7280;
+    background-origin: border-box;
+    padding: 0;
+    width: 1rem;
+    height: 1rem;
+    color: #2563eb;
+    user-select: none;
+    --ring-color: transparent;
+    position: relative;
+    box-shadow: var(--checkbox-shadow);
+    border: var(--checkbox-border-width) solid var(--checkbox-border-color);
+    border-radius: var(--radius-full);
+    background-color: var(--checkbox-background-color) !important;
+    line-height: var(--line-sm);
+    margin-right: 4px;
+}
