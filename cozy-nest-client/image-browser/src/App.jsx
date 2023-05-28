@@ -155,13 +155,13 @@ function App() {
     }
 
     if (searchStr !== '') {
-      const filteredImages = applyActiveFilter().filter(image => {
+      const _filteredImages = applyActiveFilter().filter(image => {
         if (JSON.stringify(image.metadata.exif).includes(searchStr)) {
           return true;
         }
         else return false;
       })
-      setFilteredImages(filteredImages)
+      setFilteredImages(_filteredImages)
     }
     else {
       setFilteredImages(applyActiveFilter())

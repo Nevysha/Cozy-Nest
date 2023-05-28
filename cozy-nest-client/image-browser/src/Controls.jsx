@@ -34,13 +34,28 @@ function SendTo(props) {
 export function Controls(props) {
 
     const [showExifEditor, setShowExifEditor] = useState(false);
-    const [exif, setExif] = useState({});
+    const [exif, setExif] = useState();
+    const [isHidden, setIsHidden] = useState(false);
+
+    useEffect(() => {
+        if (!props.imgRef.current) return
+        if (!props.imgRef.current.src) return
+
+        (async () => {
+            const path = props.imgRef.current.src.split('path=')[1]
+            const exif = await fetch(`/cozy-nest/image-exif?path=${path}`).then(r => r.json());
+            setExif(exif)
+        })()
+    }, [props.imgRef])
+
+    useEffect(() => {
+        if (!exif) return;
+
+        setIsHidden(exif['cozy-nest-hidden'] === 'True')
+
+    }, [exif])
 
     const editExif = async () => {
-        const path = props.imgRef.current.src.split('path=')[1]
-        const exif = await fetch(`/cozy-nest/image-exif?path=${path}`).then(r => r.json());
-        CozyLogger.log('exif', exif)
-        setExif(exif)
         setShowExifEditor(true)
     }
 
@@ -55,7 +70,6 @@ export function Controls(props) {
 
     const hideImg = async () => {
         const path = props.imgRef.current.src.split('path=')[1]
-        const exif = await fetch(`/cozy-nest/image-exif?path=${path}`).then(r => r.json());
 
         exif['cozy-nest-hidden'] = true
         setExif(exif)
@@ -72,7 +86,8 @@ export function Controls(props) {
                     <Button onClick={editExif}>Edit Exif</Button>
                 </Row>
                 <Row>
-                    <Button onClick={hideImg}>Hide</Button>
+                    {!isHidden && <Button onClick={hideImg}>Hide</Button>}
+                    {isHidden && <Button onClick={hideImg}>Show</Button>}
                     <Button onClick={() => deleteImg('archive')}>Move to archive</Button>
                     <Button onClick={() => deleteImg('delete')}>Delete</Button>
                 </Row>
