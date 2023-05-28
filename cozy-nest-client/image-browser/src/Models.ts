@@ -4,6 +4,13 @@ import {Image, Action} from "../../cozy-types";
 export const ImagesContext = createContext([])
 export const ImageContext = createContext(null)
 
+export function loadImages() {
+  const images = localStorage.getItem('images')
+  if (images) {
+    return JSON.parse(images)
+  }
+  return []
+}
 
 export function reduceImage(images: Image[], action: Action) {
   switch (action.type) {
