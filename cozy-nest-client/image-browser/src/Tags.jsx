@@ -54,13 +54,6 @@ const styles = {
 
 export default function Tags(props) {
 
-  // const [activeTags,] = useState(props.activeTags)
-  //
-  // useEffect(() => {
-  //   props.setActiveTags(activeTags)
-  //   console.log('activeTags', activeTags)
-  // }, [props.tags])
-
   console.log('props.defaultValue', props.defaultValue)
 
   return (
