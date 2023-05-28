@@ -98,6 +98,24 @@ function App() {
 
   }
 
+  function applyActiveFilter() {
+    return images.filter(image => {
+      if (visibilityFilter === 'radio-hide-hidden') {
+        if (image.metadata.exif['cozy-nest-hidden'] === 'True') {
+          return false;
+        }
+        else return true;
+      }
+      else if (visibilityFilter === 'radio-only-hidden') {
+        if (!image.metadata.exif['cozy-nest-hidden'] || image.metadata.exif['cozy-nest-hidden'] !== 'True') {
+          return false;
+        }
+        else return true;
+      }
+      else return true;
+    })
+  }
+
   //get images from server and set state
   useEffect(() => {
     if (lastMessage !== null) {
@@ -129,30 +147,12 @@ function App() {
       askForImages()
     }
     else {
-      setFilteredImages([...images])
+      setFilteredImages(applyActiveFilter())
     }
   }, [images, readyState])
 
   //if searchStr is not empty, filter images
   useEffect(() => {
-
-    function applyActiveFilter() {
-      return images.filter(image => {
-        if (visibilityFilter === 'radio-hide-hidden') {
-          if (image.metadata.exif['cozy-nest-hidden'] === 'True') {
-            return false;
-          }
-          else return true;
-        }
-        else if (visibilityFilter === 'radio-only-hidden') {
-          if (!image.metadata.exif['cozy-nest-hidden'] || image.metadata.exif['cozy-nest-hidden'] !== 'True') {
-            return false;
-          }
-          else return true;
-        }
-        else return true;
-      })
-    }
 
     if (searchStr !== '') {
       const _filteredImages = applyActiveFilter().filter(image => {
