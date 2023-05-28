@@ -5,11 +5,11 @@ const _LAZY_LOAD_MARGIN = 300
 
 export default function Browser(props) {
 
-  const [imagesRef, setImagesRef] = useState(props.imagesRef)
-
   const _me = useRef(null)
-
+  const [imagesRef, setImagesRef] = useState(props.imagesRef)
+  const [page, setPage] = useState(0)
   const [imagesLoaded, setImagesLoaded] = useState([])
+
   const [viewPort, setViewPort] = useState({
     top: 0,
     bottom: window.innerHeight + _LAZY_LOAD_MARGIN
@@ -17,7 +17,7 @@ export default function Browser(props) {
 
   //when imagesRef changes, reset imagesLoaded
   useEffect(() => {
-    setImagesLoaded([])
+    setImagesLoaded(imagesRef.slice(0, page*20+20))
   }, [imagesRef])
 
   useEffect(() => {
@@ -30,10 +30,13 @@ export default function Browser(props) {
     setImagesLoaded(imagesRef.slice(0, 20))
   }
 
-  const page = Math.floor(imagesLoaded.length / 20)
-
   const scrollHandler = () => {
     maybeLoadMore()
+
+    let _page = Math.floor(imagesLoaded.length / 20)
+    if (_page !== page) {
+      setPage(_page)
+    }
 
     const _viewPort = {
       top: (_me.current.scrollTop - _LAZY_LOAD_MARGIN) > 0 ? (_me.current.scrollTop - _LAZY_LOAD_MARGIN) : 0,
