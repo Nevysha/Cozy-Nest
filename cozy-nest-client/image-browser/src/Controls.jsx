@@ -3,7 +3,7 @@ import {CozyLogger} from "../../main/CozyLogger.js";
 import {Button, Column, Row} from "./App.jsx";
 import * as PropTypes from "prop-types";
 
-import './ExifEditor.css'
+import './editor/ExifEditor.css'
 import {ExifEditor, saveExif} from "./editor/ExifEditor.jsx";
 
 
@@ -15,7 +15,7 @@ function SendTo(props) {
         e.stopPropagation()
 
         if (window.sendToPipe) {
-            window.sendToPipe(where, props.imgRef.current)
+            window.sendToPipe(where, props.imgRef.current) //TODO fix this : not working since imgRef is broken
         } else {
             console.log(`mock sendToPipe(${where}, ${props.imgRef.current.src})`)
         }
@@ -38,15 +38,14 @@ export function Controls(props) {
     const [isHidden, setIsHidden] = useState(false);
 
     useEffect(() => {
-        if (!props.imgRef.current) return
-        if (!props.imgRef.current.src) return
+        if (!props.image.path) return
 
         (async () => {
-            const path = props.imgRef.current.src.split('path=')[1]
+            const path = props.image.path
             const exif = await fetch(`/cozy-nest/image-exif?path=${path}`).then(r => r.json());
             setExif(exif)
         })()
-    }, [props.imgRef])
+    }, [props.image])
 
     useEffect(() => {
         if (!exif) return;
@@ -64,12 +63,12 @@ export function Controls(props) {
             CozyLogger.log('deleteImg props missing')
             return
         }
-        const path = props.imgRef.current.src.split('path=')[1]
+        const path = props.image.path
         await props.deleteImg(what, path)
     }
 
     const hideImg = async () => {
-        const path = props.imgRef.current.src.split('path=')[1]
+        const path = props.image.path
 
         exif['cozy-nest-hidden'] = true
         setExif(exif)
@@ -82,7 +81,7 @@ export function Controls(props) {
             <SendTo imgRef={props.imgRef}/>
             <Column>
                 <Row>
-                    <ExifEditor exif={exif} visible={showExifEditor} onClose={() => setShowExifEditor(false)} imgRef={props.imgRef} />
+                    <ExifEditor image={props.image} exif={exif} visible={showExifEditor} onClose={() => setShowExifEditor(false)} />
                     <Button onClick={editExif}>Edit Exif</Button>
                 </Row>
                 <Row>
@@ -95,5 +94,3 @@ export function Controls(props) {
         </Column>
     );
 }
-
-Controls.propTypes = {imgRef: PropTypes.any};

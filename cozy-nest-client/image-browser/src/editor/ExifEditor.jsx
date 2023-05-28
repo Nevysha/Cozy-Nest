@@ -38,7 +38,7 @@ export function ExifEditor(props) {
         if (!isJsonValid) {
             return
         }
-        const path = props.imgRef.current.src.split('path=')[1]
+        const path = props.image.path
         await saveExif(path, exif)
     }
 
