@@ -5,7 +5,7 @@ const _LAZY_LOAD_MARGIN = 300
 
 export default function Browser(props) {
 
-  const imagesRef = props.imagesRef;
+  const [imagesRef, setImagesRef] = useState(props.imagesRef)
 
   const _me = useRef(null)
 
@@ -19,6 +19,11 @@ export default function Browser(props) {
   useEffect(() => {
     setImagesLoaded([])
   }, [imagesRef])
+
+  useEffect(() => {
+    setImagesRef(props.imagesRef)
+  }, [props.imagesRef])
+
 
   //load 20 images on mount when imagesRef is set
   if (imagesRef.length > 0 && imagesLoaded.length === 0) {
@@ -48,7 +53,7 @@ export default function Browser(props) {
 
   return <div className="browser nevysha nevysha-scrollable" onScroll={() => scrollHandler()} ref={_me}>
     {imagesLoaded.map((image, index) => {
-      return <CozyImage key={index} index={index} image={image} viewPort={viewPort}/>
+      return <CozyImage key={index} index={index} image={image} viewPort={viewPort} deleteImg={props.deleteImg}/>
     })}
     <div id="loadMoreThreshold" className="hackyOffPageElement"/>
   </div>;

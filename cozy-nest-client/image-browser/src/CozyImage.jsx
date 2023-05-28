@@ -63,7 +63,7 @@ function CozyImageInfo(props) {
         </tr>
         </tbody>
       </table>
-      <Controls imgRef={props.imgRef}/>
+      <Controls imgRef={props.imgRef} deleteImg={props.deleteImg}/>
     </div>
   );
 }
@@ -135,7 +135,7 @@ function CozyFullImageInfo(props) {
         </tbody>
       </table>
       <div className="blocInfo" dangerouslySetInnerHTML={{__html: formattedAll}} />
-      <Controls imgRef={props.imgRef}/>
+      <Controls imgRef={props.imgRef} deleteImg={props.deleteImg}/>
     </div>
   );
 }
@@ -189,7 +189,7 @@ export default function CozyImage(props) {
             alt="image"
             ref={imgRef}/>
         </div>
-        <CozyImageInfo image={props.image} imgRef={imgRef}/>
+        <CozyImageInfo image={props.image} imgRef={imgRef} deleteImg={props.deleteImg}/>
         {showModal && <div className="infoModal">
           <div className="image-wrapper">
             <img
@@ -197,7 +197,7 @@ export default function CozyImage(props) {
               src={getSrc()}
               alt="image"/>
           </div>
-          <CozyFullImageInfo image={props.image} closeModal={toggleModal} imgRef={imgRef}/>
+          <CozyFullImageInfo image={props.image} closeModal={toggleModal} imgRef={imgRef} deleteImg={props.deleteImg}/>
         </div>}
       </>) : (<div className="image image-placeholder"/>)}
     </div>

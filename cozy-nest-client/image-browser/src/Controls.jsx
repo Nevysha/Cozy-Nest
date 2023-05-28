@@ -37,14 +37,21 @@ export function Controls(props) {
     const [exif, setExif] = useState({});
 
     const editExif = async () => {
-        //load file from url
-        const file = await fetch(props.imgRef.current.src).then(r => r.arrayBuffer());
-
         const path = props.imgRef.current.src.split('path=')[1]
         const exif = await fetch(`/cozy-nest/image-exif?path=${path}`).then(r => r.json());
         CozyLogger.log('exif', exif)
         setExif(exif)
         setShowExifEditor(true)
+    }
+
+    const deleteImg = async () => {
+        if (!props.deleteImg) {
+            CozyLogger.log('deleteImg props missing')
+            return
+        }
+        const path = props.imgRef.current.src.split('path=')[1]
+        await props.deleteImg(path)
+
     }
 
     return (
@@ -53,7 +60,7 @@ export function Controls(props) {
             <Row>
                 <ExifEditor exif={exif} visible={showExifEditor} imgRef={props.imgRef} />
                 <Button onClick={editExif}>Edit Exif</Button>
-                <Button>Delete</Button>
+                <Button onClick={deleteImg}>Delete</Button>
             </Row>
         </Column>
     );

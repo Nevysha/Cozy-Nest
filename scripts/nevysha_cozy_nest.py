@@ -687,13 +687,21 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
         except FileNotFoundError:
             return Response(status_code=404, content="File not found")
 
+    @app.delete("/cozy-nest/image")
+    async def delete_image(path: str):
+        try:
+            os.remove(path)
+            tools.delete_img_data(path)
+            return {"message": "File deleted successfully"}
+        except FileNotFoundError:
+            return Response(status_code=404, content="File not found")
+
     @app.get("/cozy-nest/image-exif")
     async def get_image_exif(path: str):
 
         src_info = tools.get_image_exif(path)
 
         return Response(content=json.dumps(src_info), media_type="application/json")
-
 
     @app.post("/cozy-nest/image-exif")
     async def set_image_exif(request: Request):

@@ -43,8 +43,20 @@ def update_img_data(path):
                     'exif': exif,
                 }
                 break
-        with open(CACHE_FILENAME, 'w') as fr:
-            fr.write(json.dumps(cache))
+        with open(CACHE_FILENAME, 'w') as fw:
+            fw.write(json.dumps(cache))
+
+
+def delete_img_data(path):
+    # get the corresponding image in the cache and remove it
+    with open(CACHE_FILENAME, 'r') as f:
+        cache = json.loads(f.read())
+        for img in cache['images']:
+            if img['path'] == path:
+                cache['images'].remove(img)
+                break
+        with open(CACHE_FILENAME, 'w') as fw:
+            fw.write(json.dumps(cache))
 
 
 EXTENSION_TECHNICAL_NAME = os.path.basename(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

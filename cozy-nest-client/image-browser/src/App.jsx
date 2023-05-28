@@ -128,7 +128,7 @@ function App() {
       askForImages()
     }
     else {
-      setFilteredImages(images)
+      setFilteredImages([...images])
     }
   }, [images, readyState])
 
@@ -165,6 +165,24 @@ function App() {
           : 'red',
   };
 
+  const deleteImg = async (path) => {
+    const response = await fetch(`/cozy-nest/image?path=${path}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    const json = await response.json()
+    CozyLogger.log('json', json)
+
+    if (response.ok) {
+      //remove from images
+      const newImages = images.filter(image => image.path !== decodeURIComponent(path))
+      setImages([...newImages])
+    }
+
+  }
+
   return (
     <>
       <Column>
@@ -192,7 +210,7 @@ function App() {
         </Row>
 
       </Column>
-      <Browser key={0} imagesRef={filteredImages}/>
+      <Browser key={0} imagesRef={filteredImages} deleteImg={deleteImg}/>
     </>
   )
 }
