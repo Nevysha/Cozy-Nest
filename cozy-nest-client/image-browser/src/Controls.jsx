@@ -15,9 +15,8 @@ function SendTo(props) {
         e.stopPropagation()
 
         if (window.sendToPipe) {
-            window.sendToPipe(where, props.imgRef.current) //TODO fix this : not working since imgRef is broken
-        } else {
-            console.log(`mock sendToPipe(${where}, ${props.imgRef.current.src})`)
+            let _img = {src: `/cozy-nest/image?path=${props.image.path}`}
+            window.sendToPipe(where, _img)
         }
     }
 
@@ -78,7 +77,7 @@ export function Controls(props) {
 
     return (
         <Column style={{height: "100%", justifyContent: "space-between"}}>
-            <SendTo imgRef={props.imgRef}/>
+            <SendTo image={props.image}/>
             <Column>
                 <Row>
                     <ExifEditor image={props.image} exif={exif} visible={showExifEditor} onClose={() => setShowExifEditor(false)} />
