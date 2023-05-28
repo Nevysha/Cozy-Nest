@@ -136,7 +136,7 @@ function App() {
   useEffect(() => {
     if (searchStr !== '') {
       const filteredImages = images.filter(image => {
-        if (image.metadata.exif.includes(searchStr)) {
+        if (JSON.stringify(image.metadata.exif).includes(searchStr)) {
           return true;
         }
         else return false;

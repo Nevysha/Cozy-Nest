@@ -12,22 +12,17 @@ import modules.images
 import websockets
 from websockets.server import serve
 
+from scripts import tools
+
 
 def get_exif(path):
-    allExif = {}
-    try:
-        image = Image.open(path)
-        # info = image.info
-        (_, allExif, allExif_html) = modules.extras.run_pnginfo(image)
-        image.close()
-    except Exception as e:
-        print(f"CozyNestSocket: WARNING cannot get exif data for image {path}")
-        pass
+    # info = image.info
+    exif = tools.get_image_exif(path)
     img = {
         'path': path,
         'metadata': {
             'date': os.path.getmtime(path),
-            'exif': allExif,
+            'exif': exif,
         }
     }
     return img
