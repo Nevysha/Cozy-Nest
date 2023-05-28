@@ -70,7 +70,7 @@ export function CozyImageInfo(props) {
         </tbody>
       </table>
       {isVerbose && <div className="blocInfo" dangerouslySetInnerHTML={{__html: formattedAll}}/>}
-      <Controls image={props.image} deleteImg={props.deleteImg}/>
+      <Controls image={props.image} updateExifInState={props.updateExifInState} deleteImg={props.deleteImg}/>
     </div>
   );
 }

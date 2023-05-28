@@ -73,6 +73,16 @@ export function Controls(props) {
         setExif(exif)
 
         await saveExif(path, exif)
+        props.updateExifInState(path, exif)
+    }
+    const unhideImg = async () => {
+        const path = props.image.path
+
+        exif['cozy-nest-hidden'] = false
+        setExif(exif)
+
+        await saveExif(path, exif)
+        props.updateExifInState(path, exif)
     }
 
     return (
@@ -85,7 +95,7 @@ export function Controls(props) {
                 </Row>
                 <Row>
                     {!isHidden && <Button onClick={hideImg}>Hide</Button>}
-                    {isHidden && <Button onClick={hideImg}>Show</Button>}
+                    {isHidden && <Button onClick={unhideImg}>Show</Button>}
                     <Button onClick={() => deleteImg('archive')}>Move to archive</Button>
                     <Button onClick={() => deleteImg('delete')}>Delete</Button>
                 </Row>

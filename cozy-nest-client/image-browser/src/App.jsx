@@ -166,7 +166,7 @@ function App() {
     else {
       setFilteredImages(applyActiveFilter())
     }
-  }, [searchStr, visibilityFilter])
+  }, [searchStr, visibilityFilter, images])
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Connecting',
@@ -220,7 +220,17 @@ function App() {
         removeFromImages()
       }
     }
+  }
 
+  const updateExifInState = (path, exif) => {
+    //TODO use reducer
+    const newImages = images.map(image => {
+      if (image.path === path) {
+        image.metadata.exif = exif
+      }
+      return image
+    })
+    setImages([...newImages])
   }
 
   return (
@@ -272,7 +282,7 @@ function App() {
         </Row>
 
       </Column>
-      <Browser key={0} imagesRef={filteredImages} deleteImg={deleteImg}/>
+      <Browser key={0} imagesRef={filteredImages} updateExifInState={updateExifInState} deleteImg={deleteImg}/>
     </>
   )
 }

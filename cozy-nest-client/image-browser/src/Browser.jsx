@@ -56,7 +56,12 @@ export default function Browser(props) {
 
   return <div className="browser nevysha nevysha-scrollable" onScroll={() => scrollHandler()} ref={_me}>
     {imagesLoaded.map((image, index) => {
-      return <CozyImage key={index} index={index} image={image} viewPort={viewPort} deleteImg={props.deleteImg}/>
+      return <CozyImage key={index}
+                        index={index}
+                        image={image}
+                        viewPort={viewPort}
+                        updateExifInState={props.updateExifInState}
+                        deleteImg={props.deleteImg}/>
     })}
     <div id="loadMoreThreshold" className="hackyOffPageElement"/>
   </div>;
