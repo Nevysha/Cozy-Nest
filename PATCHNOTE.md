@@ -4,6 +4,13 @@
 - SD.Next (Vlad's fork) from commit `beff89ba`
 - Will work best on latest version of both as I'm only testing on latest version.
 
+## New features in 2.2.0
+
+- [x]  Tag system for image browser : you can now add tag to your images and filter them by tag. Tag are save in exif metadata.
+- [x]  Exif metadata editor : you can now edit exif metadata of your images
+- [x]  You can delete images from image browser
+- [x]  Image browser now build a cache of its index to speed up loading time
+
 ## Minor changes & fixes in 2.1.7
 
 - [x]  Quick fix to be able to save settings despite the new ui-config.json save ui system. (pruning the file from Cozy Nest entry on startup)
