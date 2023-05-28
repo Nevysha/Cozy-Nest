@@ -44,13 +44,13 @@ export function Controls(props) {
         setShowExifEditor(true)
     }
 
-    const deleteImg = async () => {
+    const deleteImg = async (what) => {
         if (!props.deleteImg) {
             CozyLogger.log('deleteImg props missing')
             return
         }
         const path = props.imgRef.current.src.split('path=')[1]
-        await props.deleteImg(path)
+        await props.deleteImg(what, path)
 
     }
 
@@ -60,7 +60,8 @@ export function Controls(props) {
             <Row>
                 <ExifEditor exif={exif} visible={showExifEditor} imgRef={props.imgRef} />
                 <Button onClick={editExif}>Edit Exif</Button>
-                <Button onClick={deleteImg}>Delete</Button>
+                <Button onClick={() => deleteImg('archive')}>Move to archive</Button>
+                <Button onClick={() => deleteImg('delete')}>Delete</Button>
             </Row>
         </Column>
     );

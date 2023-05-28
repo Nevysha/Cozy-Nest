@@ -58,6 +58,7 @@ def gradio_save_settings(main_menu_position,
                          auto_search_port,
                          auto_start_server,
                          fetch_output_folder_from_a1111_settings,
+                         archive_path,
                          sfw_mode,
                          enable_clear_button,
                          enable_extra_network_tweaks,
@@ -84,6 +85,7 @@ def gradio_save_settings(main_menu_position,
         'sfw_mode': sfw_mode,
         'enable_clear_button': enable_clear_button,
         'enable_extra_network_tweaks': enable_extra_network_tweaks,
+        'archive_path': archive_path,
     }
 
     current_config = get_dict_from_config()
@@ -136,6 +138,7 @@ def get_default_settings():
         'auto_start_server': True,
         'fetch_output_folder_from_a1111_settings': True,
         'cnib_output_folder': [],
+        'archive_path': '',
         'sfw_mode': False,
         'enable_clear_button': True,
         'enable_extra_network_tweaks': True,
@@ -267,6 +270,9 @@ def gradio_img_browser_tab(config):
                 elem_id="setting_nevyui_fetchOutputFolderFromA1111Settings",
                 interactive=True)
 
+        archive_path = gr.Textbox(value=config.get('archive_path'), label="Archive path",
+                                    elem_id="setting_nevyui_archivePath", interactive=True)
+
         # Add a text block to display each folder from output_folder_array()
         with gr.Blocks(elem_id="img_browser_folders_block"):
             # TODO refactor to remove this as it's no longer managed through gradio
@@ -278,7 +284,8 @@ def gradio_img_browser_tab(config):
         server_default_port,
         auto_search_port,
         auto_start_server,
-        fetch_output_folder_from_a1111_settings]
+        fetch_output_folder_from_a1111_settings,
+        archive_path]
 
 
 def gradio_main_tab(config):
@@ -357,7 +364,7 @@ def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_
                   server_default_port,
                   auto_search_port,
                   auto_start_server,
-                  fetch_output_folder_from_a1111_settings, sfw_mode, enable_clear_button, enable_extra_network_tweaks):
+                  fetch_output_folder_from_a1111_settings, archive_path, sfw_mode, enable_clear_button, enable_extra_network_tweaks):
     with gr.Row():
         btn_save = gr.Button(value="Save", elem_id="nevyui_sh_options_submit",
                              elem_classes="nevyui_apply_settings")
@@ -380,6 +387,7 @@ def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_
             auto_search_port,
             auto_start_server,
             fetch_output_folder_from_a1111_settings,
+            archive_path,
             sfw_mode,
             enable_clear_button,
             enable_extra_network_tweaks,
@@ -600,6 +608,7 @@ def on_ui_tabs():
                     auto_search_port,
                     auto_start_server,
                     fetch_output_folder_from_a1111_settings,
+                    archive_path,
                 ] = gradio_img_browser_tab(config)
             with gr.TabItem(label="Others", elem_id="cozy_nest_others_settings_tab"):
                 with gr.Column():
@@ -614,7 +623,7 @@ def on_ui_tabs():
                       server_default_port,
                       auto_search_port,
                       auto_start_server,
-                      fetch_output_folder_from_a1111_settings, sfw_mode, enable_clear_button,
+                      fetch_output_folder_from_a1111_settings, archive_path, sfw_mode, enable_clear_button,
                       enable_extra_network_tweaks)
 
         # hidden field to store some useful data and trigger some server actions (like "send to" txt2img,...)
@@ -685,6 +694,7 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
             return response
 
         except FileNotFoundError:
+            tools.delete_img_data(path)
             return Response(status_code=404, content="File not found")
 
     @app.delete("/cozy-nest/image")
@@ -693,6 +703,33 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
             os.remove(path)
             tools.delete_img_data(path)
             return {"message": "File deleted successfully"}
+        except FileNotFoundError:
+            return Response(status_code=404, content="File not found")
+
+    @app.put('/cozy-nest/image')
+    async def move_image(request: Request, path: str):
+        try:
+            request_json = await request.json()
+            is_archive = request_json['archive']
+            if not is_archive:
+                # do nothing for now
+                return Response(status_code=501, content="unimplemented")
+
+            config = get_dict_from_config()
+            archive_path = config.get('archive_path')
+            if not archive_path or archive_path == "":
+                # return {"message": "archive path not set"}
+                return Response(status_code=412, content="archive path not set")
+
+            # check if archive path exists
+            if not os.path.exists(archive_path):
+                return Response(status_code=412, content=f"archive path:{archive_path} does not exist")
+
+            new_path = os.path.join(archive_path, os.path.basename(path))
+
+            os.rename(path, new_path)
+            tools.delete_img_data(path)
+            return {"message": "File moved successfully"}
         except FileNotFoundError:
             return Response(status_code=404, content="File not found")
 

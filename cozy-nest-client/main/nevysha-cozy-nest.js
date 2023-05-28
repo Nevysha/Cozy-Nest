@@ -614,6 +614,13 @@ function createFolderListComponent() {
   const componentContainer = document.querySelector('#cnib_output_folder').parentElement;
   const textarea = document.querySelector('#cnib_output_folder textarea');
   componentContainer.classList.remove('hidden')
+  $(componentContainer).css('padding', '0 10px')
+
+  //add a label
+  const label = document.createElement('label');
+  label.classList.add('nevysha-label');
+  label.innerHTML = 'Folders to scrap for images';
+  componentContainer.appendChild(label);
 
   function updateList(foldersList) {
     document.querySelectorAll('.nevysha-image-browser-folder-container').forEach(el => el.remove());

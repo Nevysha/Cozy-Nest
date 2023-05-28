@@ -165,20 +165,40 @@ function App() {
           : 'red',
   };
 
-  const deleteImg = async (path) => {
-    const response = await fetch(`/cozy-nest/image?path=${path}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    const json = await response.json()
-    CozyLogger.log('json', json)
+  const deleteImg = async (what, path) => {
 
-    if (response.ok) {
+    function removeFromImages() {
       //remove from images
       const newImages = images.filter(image => image.path !== decodeURIComponent(path))
       setImages([...newImages])
+    }
+
+    if (what === 'delete') {
+      const response = await fetch(`/cozy-nest/image?path=${path}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const json = await response.json()
+      CozyLogger.log('json', json)
+      if (response.ok) {
+        removeFromImages()
+      }
+    }
+    else if (what === 'archive') {
+      const response = await fetch(`/cozy-nest/image?path=${path}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({archive: true})
+      })
+      const json = await response.json()
+      CozyLogger.log('json', json)
+      if (response.ok) {
+        removeFromImages()
+      }
     }
 
   }
