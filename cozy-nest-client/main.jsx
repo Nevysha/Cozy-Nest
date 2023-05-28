@@ -19,8 +19,8 @@ import {COZY_NEST_GRADIO_LOAD_DURATION} from "./main/Constants.js";
 import {CozyLogger} from "./main/CozyLogger.js";
 import {startCozyNestImageBrowser} from "./image-browser/src/main.jsx";
 
-export default function cozyNestLoader()  {
-  cozyNestModuleLoader()
+export default async function cozyNestLoader()  {
+  await cozyNestModuleLoader()
   startCozyNestImageBrowser();
 }
 window.cozyNestLoader = cozyNestLoader;
