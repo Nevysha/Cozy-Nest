@@ -18,7 +18,7 @@ import websockets
 from modules import script_callbacks, shared, call_queue, scripts
 
 from scripts import tools
-from scripts.cozynest_image_browser import start_server, get_exif
+from scripts.cozynest_image_browser import start_server
 
 
 def rgb_to_hex(r, g, b):
@@ -535,7 +535,7 @@ def on_ui_tabs():
 
                     # Receive response from the server
                     await websocket.recv()
-                    websocket.close()
+                    await websocket.close()
                     break
 
             except websockets.exceptions.ConnectionClosed:
@@ -554,9 +554,12 @@ def on_ui_tabs():
         if not any([path.startswith(folder) for folder in images_folders]):
             return
 
+        data = tools.get_exif(path)
+        tools.new_image(data)
+
         asyncio.run(send_to_socket({
             'what': 'image_saved',
-            'data': get_exif(path),
+            'data': data,
         }))
 
     if not disable_image_browser_value:
@@ -707,6 +710,7 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
             tgt_info.add_text(k, v)
 
         image.save(path, pnginfo=tgt_info)
+        tools.update_img_data(path)
 
         return {"message": "EXIF data saved successfully"}
 

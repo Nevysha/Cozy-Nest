@@ -15,19 +15,6 @@ from websockets.server import serve
 from scripts import tools
 
 
-def get_exif(path):
-    # info = image.info
-    exif = tools.get_image_exif(path)
-    img = {
-        'path': path,
-        'metadata': {
-            'date': os.path.getmtime(path),
-            'exif': exif,
-        }
-    }
-    return img
-
-
 async def start_server(images_folders, server_port, stopper):
     print(f"CozyNestSocket: Starting socket server on localhost:{server_port}...")
 
@@ -68,24 +55,7 @@ async def start_server(images_folders, server_port, stopper):
     async def process(data):
         what = data['what']
         if what == 'images':
-            # scrape the images folder recursively
-            images = []
-            for images_folder in images_folders:
-                for root, dirs, files in os.walk(images_folder):
-                    for file in files:
-                        if file.endswith(".png"):
-                            # get exif data
-                            img = get_exif(os.path.join(root, file))
-                            images.append(img)
-
-            # sort the images by date (newest first) metadata.date
-            images.sort(key=lambda x: x['metadata']['date'], reverse=True)
-
-            # send the images to the client
-            data = {
-                'what': 'images',
-                'images': images
-            }
+            data = tools.scrap_image_folders(images_folders)
             return json.dumps(data)
 
         if what == 'image_saved':
