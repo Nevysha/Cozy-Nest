@@ -72,7 +72,7 @@ export default function Tags(props) {
         placeholder={'Tags...'}
         styles={styles}
         onChange={(tags) => props.setActiveTags(tags.map(tag => tag.value))}
-        defaultValue={props.defaultValue}
+        value={props.defaultValue}
       />
     </div>
   )
