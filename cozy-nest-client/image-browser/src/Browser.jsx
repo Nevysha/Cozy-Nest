@@ -6,7 +6,7 @@ const _LAZY_LOAD_MARGIN = 300
 export default function Browser(props) {
 
   const _me = useRef(null)
-  const [imagesRef, setImagesRef] = useState(props.imagesRef)
+  const [imagesRef, setImagesRef] = useState(props.filteredImages)
   const [page, setPage] = useState(0)
   const [imagesLoaded, setImagesLoaded] = useState([])
 
@@ -21,8 +21,8 @@ export default function Browser(props) {
   }, [imagesRef])
 
   useEffect(() => {
-    setImagesRef(props.imagesRef)
-  }, [props.imagesRef])
+    setImagesRef(props.filteredImages)
+  }, [props.filteredImages])
 
 
   //load 20 images on mount when imagesRef is set
@@ -59,6 +59,7 @@ export default function Browser(props) {
       return <CozyImage key={index}
                         index={index}
                         image={image}
+                        images={props.images}
                         viewPort={viewPort}
                         updateExifInState={props.updateExifInState}
                         deleteImg={props.deleteImg}/>

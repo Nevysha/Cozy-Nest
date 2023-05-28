@@ -1,7 +1,7 @@
 import {Row} from "./App.jsx";
 import Tags from "./Tags.jsx";
 import {Controls} from "./Controls.jsx";
-import React from "react";
+import React, {useEffect, useState} from "react";
 
 const safeExifSplit = (fn) => {
   try {
@@ -40,6 +40,31 @@ export function CozyImageInfo(props) {
     formattedAll = 'No metadata found'
   }
 
+  const [tags, setTags] = useState([])
+  const [imgTags, setImgTags] = useState([])
+
+  useEffect(() => {
+    if (props.image.metadata.exif['cozy-nest-tags']) {
+      const _imgTags = props.image.metadata.exif['cozy-nest-tags'].split(',')
+          .map(tag => {
+            return {label: tag, value: tag}
+          })
+      console.log('_imgTags', _imgTags)
+      setImgTags([..._imgTags])
+    }
+  }, [])
+
+  useEffect(() => {
+    const _tags = []
+    props.images
+      .forEach(image => {
+        if (image.metadata.exif['cozy-nest-tags']) {
+          const imgTags = image.metadata.exif['cozy-nest-tags'].split(',')
+          _tags.push(...imgTags)
+        }
+    })
+    setTags([...new Set(_tags)])
+  }, [props.images])
 
   return (
     <div className="image-info">
@@ -51,7 +76,7 @@ export function CozyImageInfo(props) {
             Close
           </button>
           <Row>
-            <Tags/>
+            <Tags tags={tags} defaultValue={imgTags} setActiveTags={setImgTags}/>
           </Row>
         </>
       }

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
 
@@ -53,21 +53,27 @@ const styles = {
 }
 
 export default function Tags(props) {
-  const [tags, setTags] = useState(
-    [
-      { value: 'favorite', label: 'Favorite' },
-      { value: 'save_for_later', label: 'Save for later' },
 
-    ]
-  )
+  // const [activeTags,] = useState(props.activeTags)
+  //
+  // useEffect(() => {
+  //   props.setActiveTags(activeTags)
+  //   console.log('activeTags', activeTags)
+  // }, [props.tags])
+
+  console.log('props.defaultValue', props.defaultValue)
 
   return (
-    <Select
-      options={tags}
-      components={animatedComponents}
-      isMulti
-      placeholder={'Tags...'}
-      styles={styles}
-    />
+    <div style={{width: '300px'}}>
+      <Select
+        options={props.tags.map(tag => ({value: tag, label: tag}))}
+        components={animatedComponents}
+        isMulti
+        placeholder={'Tags...'}
+        styles={styles}
+        onChange={(tags) => props.setActiveTags(tags.map(tag => tag.value))}
+        defaultValue={props.defaultValue}
+      />
+    </div>
   )
 }

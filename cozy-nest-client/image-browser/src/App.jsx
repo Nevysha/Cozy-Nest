@@ -60,6 +60,8 @@ function App() {
   const [socketUrl, setSocketUrl] = useState(`ws://localhost:${serverPort}`);
   const [messageHistory, setMessageHistory] = useState([]);
   const [images, setImages] = useState([])
+  const [tags, setTags] = useState([])
+  const [activeTags, setActiveTags] = useState([])
   const [filteredImages, setFilteredImages] = useState([])
   const [searchStr, setSearchStr] = useState('');
   const [emptyFetch, setEmptyFetch] = useState(false);
@@ -98,22 +100,39 @@ function App() {
 
   }
 
-  function applyActiveFilter() {
-    return images.filter(image => {
+  function filterVisibility() {
+    return image => {
       if (visibilityFilter === 'radio-hide-hidden') {
         if (image.metadata.exif['cozy-nest-hidden'] === 'True') {
           return false;
-        }
-        else return true;
-      }
-      else if (visibilityFilter === 'radio-only-hidden') {
+        } else return true;
+      } else if (visibilityFilter === 'radio-only-hidden') {
         if (!image.metadata.exif['cozy-nest-hidden'] || image.metadata.exif['cozy-nest-hidden'] !== 'True') {
           return false;
-        }
-        else return true;
-      }
-      else return true;
-    })
+        } else return true;
+      } else return true;
+    };
+  }
+
+  function applyActiveFilter() {
+    return images
+        .filter(filterVisibility())
+        .filter(image => {
+          if (activeTags.length === 0) {
+              return true;
+          }
+          else {
+              if (image.metadata.exif['cozy-nest-tags']) {
+                const imgTags = image.metadata.exif['cozy-nest-tags'].split(',')
+                const intersection = imgTags.filter(tag => activeTags.includes(tag))
+                if (intersection.length > 0) {
+                    return true;
+                }
+                else return false;
+              }
+              else return false;
+          }
+        })
   }
 
   //get images from server and set state
@@ -166,7 +185,19 @@ function App() {
     else {
       setFilteredImages(applyActiveFilter())
     }
-  }, [searchStr, visibilityFilter, images])
+  }, [searchStr, visibilityFilter, activeTags, images])
+
+  useEffect(() => {
+    const _tags = []
+    images
+      .filter(filterVisibility()).forEach(image => {
+        if (image.metadata.exif['cozy-nest-tags']) {
+          const imgTags = image.metadata.exif['cozy-nest-tags'].split(',')
+          _tags.push(...imgTags)
+        }
+      })
+    setTags([...new Set(_tags)])
+  }, [images, visibilityFilter])
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Connecting',
@@ -267,8 +298,6 @@ function App() {
             <input type="radio" id="radio-only-hidden" name="radio-filter" value="hidden"/>
             <label htmlFor="radio-only-hidden">Only hidden</label>
           </Row>
-
-
         </Row>
 
         <Row>
@@ -278,11 +307,11 @@ function App() {
                     spellCheck="false"
                     data-gramm="false"
                     onChange={(e) => setSearchStr(e.target.value)}/>
-          <Tags />
+          <Tags tags={tags} setActiveTags={setActiveTags} />
         </Row>
 
       </Column>
-      <Browser key={0} imagesRef={filteredImages} updateExifInState={updateExifInState} deleteImg={deleteImg}/>
+      <Browser key={0} filteredImages={filteredImages} images={images} updateExifInState={updateExifInState} deleteImg={deleteImg}/>
     </>
   )
 }
