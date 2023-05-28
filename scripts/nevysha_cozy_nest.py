@@ -752,7 +752,7 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
         tgt_info = PngInfo()
 
         for k, v in data.items():
-            tgt_info.add_text(k, v)
+            tgt_info.add_text(k, str(v))
 
         image.save(path, pnginfo=tgt_info)
         tools.update_img_data(path)

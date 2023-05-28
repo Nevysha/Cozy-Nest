@@ -206,17 +206,21 @@ function App() {
   return (
     <>
       <Column>
-        <h1 className="cnib-title">Cozy Nest Image Browser <span className="beta-emphasis">beta</span></h1>
         <Row>
-          <span>The WebSocket is currently <span className="connexionStatus" style={connexionStatusStyle}>{connectionStatus}</span></span>
-          <button
-            className="nevysha lg primary gradio-button btn"
-            style={{marginLeft: '20px', width: '100px'}}
-            onClick={reconnect}
-            disabled={readyState === ReadyState.OPEN}
-          >
-            Connect
-          </button>
+          <Row>
+            <h1 className="cnib-title">Cozy Nest Image Browser <span className="beta-emphasis">beta</span></h1>
+          </Row>
+          <Row>
+            <span>The WebSocket is currently <span className="connexionStatus" style={connexionStatusStyle}>{connectionStatus}</span></span>
+            <button
+              className="nevysha lg primary gradio-button btn"
+              style={{marginLeft: '20px', width: '100px'}}
+              onClick={reconnect}
+              disabled={readyState === ReadyState.OPEN}
+            >
+              Connect
+            </button>
+          </Row>
         </Row>
 
         <Row>

@@ -8,6 +8,8 @@
 
 - [x]  Tag system for image browser : you can now add tag to your images and filter them by tag. Tag are save in exif metadata.
 - [x]  Exif metadata editor : you can now edit exif metadata of your images
+- [x]  You can move img into a separated archive folder (set through settings)
+- [x]  You can hide image from image browser (a tag is added to the image exif)
 - [x]  You can delete images from image browser
 - [x]  Image browser now build a cache of its index to speed up loading time
 
