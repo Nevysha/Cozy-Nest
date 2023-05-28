@@ -22,32 +22,33 @@ export default defineConfig({
     {
       name: 'route-default-to-index',
       configureServer: (server) => {
-        server.middlewares.use(async (_req, res, next) => {
-          if (_req.originalUrl === '/cozy-nest-client'
+        server.middlewares.use(
+          async (_req, res, next): Promise<void> => {
+            if (_req.originalUrl === '/cozy-nest-client'
               || _req.originalUrl === '/cozy-nest-client?__theme=dark'
               || _req.originalUrl === '/cozy-nest-client?__theme=light') {
 
-            let updatedResponse =await (await fetch('http://127.0.0.1:7860/')).text()
+              let updatedResponse =await (await fetch('http://127.0.0.1:7860/')).text()
 
-            const toAdd = `
-                <script type="module" src="/cozy-nest-client/main/_dev.js"></script>
-                <script type="module" src="/cozy-nest-client/main.jsx"></script>
-               `
+              const toAdd = `
+                        <script type="module" src="/cozy-nest-client/main/_dev.js"></script>
+                        <script type="module" src="/cozy-nest-client/main.tsx"></script>
+                       `
 
-            // replace </body> with </body><script type="module" src="/main.js"></script>
-            updatedResponse = updatedResponse.replace('</body>', `</body>${toAdd}`)
+              // replace </body> with </body><script type="module" src="/main.js"></script>
+              updatedResponse = updatedResponse.replace('</body>', `</body>${toAdd}`)
 
-            // Set the modified response
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'text/html');
-            res.setHeader('charset', 'utf-8');
-            res.end(updatedResponse);
-            return;
-          }
+              // Set the modified response
+              res.statusCode = 200;
+              res.setHeader('Content-Type', 'text/html');
+              res.setHeader('charset', 'utf-8');
+              res.end(updatedResponse);
+              return;
+            }
 
-          // Continue to the next middleware
-          next();
-        });
+            // Continue to the next middleware
+            next();
+          });
       }
     }
   ],
