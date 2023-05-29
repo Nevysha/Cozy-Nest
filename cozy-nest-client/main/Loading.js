@@ -1,7 +1,7 @@
 import {getTheme} from "./cozy-utils.js";
 import SimpleTimer from "./SimpleTimer.js";
 import {COZY_NEST_GRADIO_LOAD_DURATION} from "./Constants.js";
-import {waves, loading_roll} from "./svg.js";
+import {waves, loading_ellipsis} from "./svg.js";
 import {applyAccentColor, applyBgGradiantColor, applyWavesColor, applyFontColor} from "./tweaks/various-tweaks.js";
 
 export default class Loading {
@@ -76,7 +76,7 @@ export default class Loading {
               <div class="nevysha-cozy-nest-app-name animate__animated animate__backInLeft">
                   Cozy Nest
               </div>
-              ${loading_roll}
+              ${loading_ellipsis}
               <div id="loading_step_estimator" class="subtext3 animate__animated animate__pulse animate__infinite">
                 1
               </div>
