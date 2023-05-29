@@ -1,11 +1,5 @@
-// type for action
-export interface Action {
-  type: string
-  payload: any
-}
-
 // type for image
-export interface Image {
+export type Image = {
   path: string
   metadata: {
     date: number
@@ -16,3 +10,19 @@ export interface Image {
     }
   }
 }
+
+export type ImagesState = Image[];
+
+type ImageAction =
+    | { type: 'add'; payload: Image }
+    | { type: 'update'; payload: Image }
+    | { type: 'remove'; payload: Image };
+
+type ImagesAction =
+    | { type: 'set_images'; payload: Image[] };
+
+type DispatchImages = (action: TasksAction) => void;
+export type ImagesContextType = {
+  images: ImagesState,
+  dispatch: DispatchImages
+};
