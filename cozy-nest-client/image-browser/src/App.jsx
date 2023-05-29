@@ -284,23 +284,25 @@ function App() {
           </Row>
         </Row>
 
-        <Row style={{gap:'10px', marginBottom: '2px'}} onChange={(e) => setVisibilityFilter(e.target.id)}>
-          {/*radio button for filter : Hide hidden, All, Only hidden*/}
-          <Row style={{width: 'auto', alignItems: 'center'}}>
-            <input type="radio" id="radio-hide-hidden" name="radio-filter" value="all" defaultChecked/>
-            <label htmlFor="radio-hide-hidden">Hide hidden</label>
-          </Row>
-          <Row style={{width: 'auto', alignItems: 'center'}}>
-            <input type="radio" id="radio-all" name="radio-filter" value="all"/>
-            <label htmlFor="radio-all">All</label>
-          </Row>
-          <Row style={{width: 'auto', alignItems: 'center'}}>
-            <input type="radio" id="radio-only-hidden" name="radio-filter" value="hidden"/>
-            <label htmlFor="radio-only-hidden">Only hidden</label>
+        <Row>
+          <Row style={{gap:'10px', marginRight: '2px', width:'fit-content'}} onChange={(e) => setVisibilityFilter(e.target.id)}>
+            {/*radio button for filter : Hide hidden, All, Only hidden*/}
+            <Row style={{width: 'auto', alignItems: 'center'}}>
+              <input type="radio" id="radio-hide-hidden" name="radio-filter" value="all" defaultChecked/>
+              <label className="cozy-radio-label" htmlFor="radio-hide-hidden">Hide hidden</label>
+            </Row>
+            <Row style={{width: 'auto', alignItems: 'center'}}>
+              <input type="radio" id="radio-all" name="radio-filter" value="all"/>
+              <label className="cozy-radio-label" htmlFor="radio-all">All</label>
+            </Row>
+            <Row style={{width: 'auto', alignItems: 'center'}}>
+              <input type="radio" id="radio-only-hidden" name="radio-filter" value="hidden"/>
+              <label className="cozy-radio-label" htmlFor="radio-only-hidden">Only hidden</label>
+            </Row>
+
           </Row>
           <Tags tags={tags} setActiveTags={setActiveTags} />
         </Row>
-
         <Row>
           <textarea data-testid="textbox"
                     placeholder="Search anything : Prompt, Size, Model, ..."

@@ -155,3 +155,8 @@ input[type="radio"] {
     line-height: var(--line-sm);
     margin-right: 4px;
 }
+
+.cozy-radio-label {
+    text-overflow: clip;
+    white-space: nowrap;
+}
