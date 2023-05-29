@@ -6,7 +6,7 @@ const _LAZY_LOAD_MARGIN = 300
 
 export default function Browser(props) {
 
-  const {images, filteredImages} = useContext(ImagesContext)
+  const {filteredImages} = useContext(ImagesContext)
 
   const _me = useRef(null)
   const [page, setPage] = useState(0)
@@ -58,9 +58,7 @@ export default function Browser(props) {
           <ImageProvider key={index} _image={image}>
             <CozyImage
                   index={index}
-                  viewPort={viewPort}
-                  updateExifInState={props.updateExifInState}
-                  deleteImg={props.deleteImg}/>
+                  viewPort={viewPort}/>
           </ImageProvider>
       )
     })}

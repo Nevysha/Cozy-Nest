@@ -15,8 +15,8 @@ const safeExifSplit = (fn) => {
 
 export function CozyImageInfo(props) {
 
-  const {images} = useContext(ImagesContext)
-  const {image} = useContext(ImageContext)
+  const {images, updateExifInState} = useContext(ImagesContext)
+  const {image, setImage} = useContext(ImageContext)
 
   //format date to human readable eg 1683694961.5761478 to yyyy-mm-dd HH:MM:SS
   const date = new Date(image.metadata.date * 1000).toISOString().replace(/T/, ' ').replace(/\..+/, '')
@@ -77,7 +77,8 @@ export function CozyImageInfo(props) {
   async function saveExif() {
     image.metadata.exif['cozy-nest-tags'] = imgTags.map(tag => tag.value).join(',')
     await Exif.save(image.path, image.metadata.exif)
-    props.updateExifInState(image.path, image.metadata.exif)
+    updateExifInState(image)
+    setImage(image)
   }
 
   const close = async () => {
@@ -114,7 +115,7 @@ export function CozyImageInfo(props) {
         </tbody>
       </table>
       {isVerbose && <div className="blocInfo" dangerouslySetInnerHTML={{__html: formattedAll}}/>}
-      <Controls updateExifInState={props.updateExifInState} deleteImg={props.deleteImg}/>
+      <Controls />
     </div>
   );
 }

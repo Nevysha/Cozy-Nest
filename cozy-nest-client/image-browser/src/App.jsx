@@ -234,54 +234,6 @@ function App() {
           ? 'orange'
           : 'red',
   };
-
-  const deleteImg = async (what, path) => {
-
-    function removeFromImages() {
-      //remove from images
-      const newImages = images.filter(image => image.path !== decodeURIComponent(path))
-      setImages([...newImages])
-    }
-
-    if (what === 'delete') {
-      const response = await fetch(`/cozy-nest/image?path=${path}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      const json = await response.json()
-      CozyLogger.debug('json', json)
-      if (response.ok) {
-        removeFromImages()
-      }
-    }
-    else if (what === 'archive') {
-      const response = await fetch(`/cozy-nest/image?path=${path}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({archive: true})
-      })
-      const json = await response.json()
-      CozyLogger.debug('json', json)
-      if (response.ok) {
-        removeFromImages()
-      }
-    }
-  }
-
-  const updateExifInState = (path, exif) => {
-    //TODO use reducer
-    const newImages = images.map(image => {
-      if (image.path === path) {
-        image.metadata.exif = exif
-      }
-      return image
-    })
-    setImages([...newImages])
-  }
   
   const rebuildIndex = async () => {
     //fetch to @app.delete("/cozy-nest/index")
@@ -351,8 +303,7 @@ function App() {
       </Column>
       {!isLoading &&
 
-        <Browser updateExifInState={updateExifInState}
-              deleteImg={deleteImg}/>
+        <Browser />
 
       }
       {isLoading && <Loading label="building Index..."/>}

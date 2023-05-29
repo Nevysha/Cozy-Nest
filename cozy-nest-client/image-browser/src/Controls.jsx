@@ -4,7 +4,7 @@ import {Button, Column, Row} from "./App.jsx";
 
 import './editor/ExifEditor.css'
 import Exif from "./editor/ExifEditor.jsx";
-import {ImageContext} from "./ImagesContext.tsx";
+import {ImageContext, ImagesContext} from "./ImagesContext.tsx";
 
 const ExifEditor = Exif.ExifEditor
 
@@ -34,7 +34,8 @@ function SendTo(props) {
 
 export function Controls(props) {
 
-    const {image} = useContext(ImageContext)
+    const {deleteImg, updateExifInState} = useContext(ImagesContext)
+    const {image, setImage} = useContext(ImageContext)
 
     const [showExifEditor, setShowExifEditor] = useState(false);
     const [exif, setExif] = useState();
@@ -61,15 +62,6 @@ export function Controls(props) {
         setShowExifEditor(true)
     }
 
-    const deleteImg = async (what) => {
-        if (!props.deleteImg) {
-            CozyLogger.debug('deleteImg props missing')
-            return
-        }
-        const path = image.path
-        await props.deleteImg(what, path)
-    }
-
     const hideImg = async () => {
         const path = image.path
 
@@ -77,7 +69,8 @@ export function Controls(props) {
         setExif(exif)
 
         await Exif.save(path, exif)
-        props.updateExifInState(path, exif)
+        updateExifInState(image)
+        setImage(image)
     }
     const unhideImg = async () => {
         const path = image.path
@@ -86,7 +79,8 @@ export function Controls(props) {
         setExif(exif)
 
         await Exif.save(path, exif)
-        props.updateExifInState(path, exif)
+        updateExifInState(image)
+        setImage(image)
     }
 
     return (
@@ -100,8 +94,8 @@ export function Controls(props) {
                 <Row>
                     {!isHidden && <Button onClick={hideImg}>Hide</Button>}
                     {isHidden && <Button onClick={unhideImg}>Show</Button>}
-                    <Button onClick={() => deleteImg('archive')}>Move to archive</Button>
-                    <Button onClick={() => deleteImg('delete')}>Delete</Button>
+                    <Button onClick={() => deleteImg('archive', image)}>Move to archive</Button>
+                    <Button onClick={() => deleteImg('delete', image)}>Delete</Button>
                 </Row>
             </Column>
         </Column>
