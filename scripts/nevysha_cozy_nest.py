@@ -533,22 +533,6 @@ def on_ui_tabs():
     else:
         print("CozyNest: Image browser is disabled. To enable it, go to the CozyNest settings.")
 
-    async def send_to_socket(data):
-        async with websockets.connect(f'ws://localhost:{server_port}') as websocket:
-            try:
-                while True:
-                    # Send data to the server
-                    data = json.dumps(data).encode('utf-8')
-                    await websocket.send(data)
-
-                    # Receive response from the server
-                    await websocket.recv()
-                    await websocket.close()
-                    break
-
-            except websockets.exceptions.ConnectionClosed:
-                pass
-
     def on_image_saved(gen_params: script_callbacks.ImageSaveParams):
         base_dir = scripts.basedir()
 
@@ -568,7 +552,7 @@ def on_ui_tabs():
         asyncio.run(send_to_socket({
             'what': 'image_saved',
             'data': data,
-        }))
+        }, server_port))
 
     if not disable_image_browser_value:
         script_callbacks.on_image_saved(on_image_saved)
@@ -655,6 +639,23 @@ def gradio_others_settings(config):
 cwd = os.path.normpath(os.path.join(__file__, "../../"))
 
 
+async def send_to_socket(data, server_port):
+    async with websockets.connect(f'ws://localhost:{server_port}') as websocket:
+        try:
+            while True:
+                # Send data to the server
+                data = json.dumps(data).encode('utf-8')
+                await websocket.send(data)
+
+                # Receive response from the server
+                await websocket.recv()
+                await websocket.close()
+                break
+
+        except websockets.exceptions.ConnectionClosed:
+            pass
+
+
 def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
     app.mount(
         "/cozy-nest-client/",
@@ -705,6 +706,23 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
             return {"message": "File deleted successfully"}
         except FileNotFoundError:
             return Response(status_code=404, content="File not found")
+
+    @app.delete("/cozy-nest/index")
+    async def delete_index():
+        global _server_port
+        tools.delete_index()
+
+        config = get_dict_from_config()
+        cnib_output_folder = config.get('cnib_output_folder')
+        if cnib_output_folder and cnib_output_folder != "":
+            async def _scrap():
+                tools.scrap_image_folders(cnib_output_folder)
+                await send_to_socket({
+                    'what': 'index_built',
+                    'data': None,
+                }, _server_port)
+            asyncio.create_task(_scrap())
+            return {"message": "Index deleted successfully, rebuilding index in background"}
 
     @app.put('/cozy-nest/image')
     async def move_image(request: Request, path: str):

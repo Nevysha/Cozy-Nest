@@ -200,7 +200,7 @@ function App() {
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Connecting',
-    [ReadyState.OPEN]: 'Open',
+    [ReadyState.OPEN]: 'Connected',
     [ReadyState.CLOSING]: 'Closing',
     [ReadyState.CLOSED]: 'Closed',
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
@@ -262,24 +262,37 @@ function App() {
     })
     setImages([...newImages])
   }
+  
+  const rebuildIndex = async () => {
+    //fetch to @app.delete("/cozy-nest/index")
+    await fetch('/cozy-nest/index', {
+        method: 'DELETE',
+    })
+  }
 
   return (
     <>
       <Column>
         <Row>
           <Row>
-            <h1 className="cnib-title">Cozy Nest Image Browser <span className="beta-emphasis">beta</span></h1>
+            <h1 className="cnib-title"><span className="beta-emphasis">beta</span></h1>
+            <button
+                className="nevysha lg primary gradio-button btn"
+                style={{width: '100px'}}
+                onClick={rebuildIndex}
+            >
+              Rebuild Index
+            </button>
           </Row>
           <Row style={{width: 'auto'}}>
-            <span>The WebSocket is currently <span className="connexionStatus" style={connexionStatusStyle}>{connectionStatus}</span></span>
-            <button
+            <span>WebSocket status <span className="connexionStatus" style={connexionStatusStyle}>{connectionStatus}</span></span>
+            {readyState !== ReadyState.OPEN && <button
               className="nevysha lg primary gradio-button btn"
               style={{marginLeft: '20px', width: '100px'}}
               onClick={reconnect}
-              disabled={readyState === ReadyState.OPEN}
             >
               Connect
-            </button>
+            </button>}
           </Row>
         </Row>
 

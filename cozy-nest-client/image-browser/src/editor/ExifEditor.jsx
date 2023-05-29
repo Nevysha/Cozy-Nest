@@ -10,7 +10,7 @@ import "ace-builds/src-noconflict/theme-github_dark";
 import "ace-builds/src-noconflict/ext-language_tools";
 import {CozyLogger} from "../../../main/CozyLogger.js";
 
-export function ExifEditor(props) {
+function ExifEditor(props) {
 
     const [exif, setExif] = useState('');
     const [exifString, setExifString] = useState('');
@@ -86,7 +86,7 @@ export function ExifEditor(props) {
     );
 }
 
-export async function saveExif(path, exif) {
+async function saveExif(path, exif) {
 
     // check if path is URL encoded
     if (path.indexOf('%') !== -1) {
@@ -113,4 +113,9 @@ export async function saveExif(path, exif) {
     const json = await response.json()
     CozyLogger.log('json', json)
 
+}
+
+export default {
+    save: saveExif,
+    ExifEditor: ExifEditor
 }

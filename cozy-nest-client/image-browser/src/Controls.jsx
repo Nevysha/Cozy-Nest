@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {CozyLogger} from "../../main/CozyLogger.js";
 import {Button, Column, Row} from "./App.jsx";
-import * as PropTypes from "prop-types";
 
 import './editor/ExifEditor.css'
-import {ExifEditor, saveExif} from "./editor/ExifEditor.jsx";
+import Exif from "./editor/ExifEditor.jsx";
+
+const ExifEditor = Exif.ExifEditor
 
 
 function SendTo(props) {
@@ -72,7 +73,7 @@ export function Controls(props) {
         exif['cozy-nest-hidden'] = "True"
         setExif(exif)
 
-        await saveExif(path, exif)
+        await Exif.save(path, exif)
         props.updateExifInState(path, exif)
     }
     const unhideImg = async () => {
@@ -81,7 +82,7 @@ export function Controls(props) {
         exif['cozy-nest-hidden'] = "False"
         setExif(exif)
 
-        await saveExif(path, exif)
+        await Exif.save(path, exif)
         props.updateExifInState(path, exif)
     }
 

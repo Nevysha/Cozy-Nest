@@ -59,6 +59,12 @@ def delete_img_data(path):
             fw.write(json.dumps(cache))
 
 
+def delete_index():
+    # delete the cache file
+    if os.path.exists(CACHE_FILENAME):
+        os.remove(CACHE_FILENAME)
+
+
 EXTENSION_TECHNICAL_NAME = os.path.basename(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # TODO use db instead of cache file

@@ -55,6 +55,11 @@ const styles = {
       color: 'white',
     },
   }),
+  indicatorContainer: (styles:any) => ({
+    ...styles,
+    color: 'var(--nevysha-font-color)',
+    padding: 0,
+  })
 }
 
 interface TagOption {

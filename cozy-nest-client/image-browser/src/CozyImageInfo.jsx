@@ -2,8 +2,7 @@ import {Row} from "./App.jsx";
 import {ImgTags} from "./Tags.tsx";
 import {Controls} from "./Controls.jsx";
 import React, {useEffect, useState} from "react";
-import {CozyLogger} from "../../main/CozyLogger.js";
-import {saveExif} from "./editor/ExifEditor.jsx";
+import Exif from "./editor/ExifEditor.jsx";
 
 const safeExifSplit = (fn) => {
   try {
@@ -71,11 +70,15 @@ export function CozyImageInfo(props) {
     setImgTags(tags)
   }
 
+  async function saveExif() {
+    props.image.metadata.exif['cozy-nest-tags'] = imgTags.map(tag => tag.value).join(',')
+    await Exif.save(props.image.path, props.image.metadata.exif)
+    props.updateExifInState(props.image.path, props.image.metadata.exif)
+  }
+
   const close = async () => {
     props.closeModal()
-    props.image.metadata.exif['cozy-nest-tags'] = imgTags.map(tag => tag.value).join(',')
-    await saveExif(props.image.path, props.image.metadata.exif)
-    props.updateExifInState(props.image.path, props.image.metadata.exif)
+    await saveExif();
   }
 
   return (
