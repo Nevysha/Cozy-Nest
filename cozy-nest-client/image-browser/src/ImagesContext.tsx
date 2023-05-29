@@ -1,4 +1,4 @@
-import React, {createContext, ReactNode, useState, useContext, useEffect} from 'react';
+import React, {createContext, ReactNode, useState} from 'react';
 import {Image} from "../../cozy-types";
 // @ts-ignore
 import {CozyLogger} from "../../main/CozyLogger";
