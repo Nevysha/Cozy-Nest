@@ -65,6 +65,13 @@ async def start_server(images_folders, server_port, stopper):
                 'data': 'None'
             })
 
+        if what == 'index_built':
+            await on_index_built(data['data'])
+            return json.dumps({
+                'what': 'success',
+                'data': 'None'
+            })
+
         else:
             print(f"CozyNestSocket: Unknown data: {data}")
             return json.dumps({
@@ -80,6 +87,14 @@ async def start_server(images_folders, server_port, stopper):
 
         for websocket in CLIENTS_COPY.copy():
             await websocket_send('dispatch_on_image_saved', data, websocket)
+
+    async def on_index_built(data):
+
+        CLIENTS_COPY = CLIENTS.copy()
+        CLIENTS.clear()
+
+        for websocket in CLIENTS_COPY.copy():
+            await websocket_send('dispatch_on_index_built', data, websocket)
 
     async def websocket_send(what, data, websocket):
         try:

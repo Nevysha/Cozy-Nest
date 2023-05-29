@@ -710,19 +710,23 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
     @app.delete("/cozy-nest/index")
     async def delete_index():
         global _server_port
-        tools.delete_index()
 
         config = get_dict_from_config()
         cnib_output_folder = config.get('cnib_output_folder')
         if cnib_output_folder and cnib_output_folder != "":
-            async def _scrap():
-                tools.scrap_image_folders(cnib_output_folder)
-                await send_to_socket({
+            tools.delete_index()
+
+            def _scrap():
+                data = tools.scrap_image_folders(cnib_output_folder)
+                asyncio.run(send_to_socket({
                     'what': 'index_built',
-                    'data': None,
-                }, _server_port)
-            asyncio.create_task(_scrap())
+                    'data': data['images'],
+                }, _server_port))
+            thread = threading.Thread(target=_scrap)
+            thread.start()
             return {"message": "Index deleted successfully, rebuilding index in background"}
+        else:
+            return Response(status_code=412, content="Missing output folder in config")
 
     @app.put('/cozy-nest/image')
     async def move_image(request: Request, path: str):
