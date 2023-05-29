@@ -156,6 +156,9 @@ function App() {
         //add at the beginning of the array
         setImages(prev => [data.data, ...prev])
       }
+      if (data.what === 'dispatch_on_index_built') {
+        setImages([...data.data])
+      }
       setMessageHistory((prev) => prev.concat(lastMessage));
     }
   }, [lastMessage, setMessageHistory]);
@@ -265,9 +268,12 @@ function App() {
   
   const rebuildIndex = async () => {
     //fetch to @app.delete("/cozy-nest/index")
-    await fetch('/cozy-nest/index', {
+    const res = await fetch('/cozy-nest/index', {
         method: 'DELETE',
     })
+    if (res.ok) {
+      setImages([])
+    }
   }
 
   return (

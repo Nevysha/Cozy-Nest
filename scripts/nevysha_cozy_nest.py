@@ -717,11 +717,15 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
             tools.delete_index()
 
             def _scrap():
-                data = tools.scrap_image_folders(cnib_output_folder)
-                asyncio.run(send_to_socket({
-                    'what': 'index_built',
-                    'data': data['images'],
-                }, _server_port))
+                try:
+                    data = tools.scrap_image_folders(cnib_output_folder)
+                    asyncio.run(send_to_socket({
+                        'what': 'index_built',
+                        'data': data['images'],
+                    }, _server_port))
+                finally:
+                    pass
+
             thread = threading.Thread(target=_scrap)
             thread.start()
             return {"message": "Index deleted successfully, rebuilding index in background"}
