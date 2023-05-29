@@ -2,6 +2,8 @@ import {Row} from "./App.jsx";
 import {ImgTags} from "./Tags.tsx";
 import {Controls} from "./Controls.jsx";
 import React, {useEffect, useState} from "react";
+import {CozyLogger} from "../../main/CozyLogger.js";
+import {saveExif} from "./editor/ExifEditor.jsx";
 
 const safeExifSplit = (fn) => {
   try {
@@ -49,7 +51,6 @@ export function CozyImageInfo(props) {
           .map(tag => {
             return {label: tag, value: tag}
           })
-      console.log('_imgTags', _imgTags)
       setImgTags([..._imgTags])
     }
   }, [])
@@ -66,6 +67,14 @@ export function CozyImageInfo(props) {
     setTags([...new Set(_tags)])
   }, [props.images])
 
+  const onTagsChange = async (tags) => {
+    setImgTags(tags)
+
+    props.image.metadata.exif['cozy-nest-tags'] = tags.map(tag => tag.value).join(',')
+    await saveExif(props.image.path, props.image.metadata.exif)
+    props.updateExifInState(props.image.path, props.image.metadata.exif)
+  }
+
   return (
     <div className="image-info">
       {isVerbose &&
@@ -76,7 +85,7 @@ export function CozyImageInfo(props) {
             Close
           </button>
           <Row>
-            <ImgTags tags={tags} defaultValue={imgTags} />
+            <ImgTags tags={tags} defaultValue={imgTags} onChange={onTagsChange}/>
           </Row>
         </>
       }

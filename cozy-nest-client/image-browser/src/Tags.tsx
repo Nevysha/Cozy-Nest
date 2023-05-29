@@ -76,6 +76,7 @@ interface TagsProps {
 interface CreatableTagsProps {
   tags: string[];
   defaultValue: TagOption[];
+  onChange: (tags: TagOption[]) => void;
 }
 
 export default function Tags(props: TagsProps) {
@@ -107,17 +108,18 @@ export function ImgTags(props: CreatableTagsProps) {
 
   const handleCreate = (inputValue: string) => {
     setIsLoading(true);
+    const newOption = createOption(inputValue);
+    setOptions((prev) => [...prev, newOption]);
+    setValue([...value, newOption]);
+    props.onChange([...value, newOption]);
     setTimeout(() => {
-      const newOption = createOption(inputValue);
       setIsLoading(false);
-      setOptions((prev) => [...prev, newOption]);
-      setValue([...value, newOption]);
     }, 1000);
   };
 
-  const handleChange = (newValue: any, actionMeta: any) => {
-    CozyLogger.log(newValue, actionMeta)
+  const handleChange = (newValue: any) => {
     setValue(newValue);
+    props.onChange(newValue);
   }
 
   return (
@@ -130,7 +132,7 @@ export function ImgTags(props: CreatableTagsProps) {
           onCreateOption={handleCreate}
           placeholder={'Tags...'}
           styles={styles}
-          onChange={(tags, actionMeta) => handleChange(tags, actionMeta)}
+          onChange={(tags) => handleChange(tags)}
           value={value}
       />
   )
