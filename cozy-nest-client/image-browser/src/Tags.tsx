@@ -69,7 +69,7 @@ const createOption = (label: string):TagOption => ({
 
 interface TagsProps {
     tags: string[];
-    defaultValue: TagOption[];
+    defaultValue?: TagOption[];
     setActiveTags: (tags: string[]) => void;
 }
 
