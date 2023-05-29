@@ -189,8 +189,7 @@ function App() {
 
   useEffect(() => {
     const _tags = []
-    images
-      .filter(filterVisibility()).forEach(image => {
+    images.forEach(image => {
         if (image.metadata.exif['cozy-nest-tags']) {
           const imgTags = image.metadata.exif['cozy-nest-tags'].split(',')
           _tags.push(...imgTags)

@@ -67,10 +67,13 @@ export function CozyImageInfo(props) {
     setTags([...new Set(_tags)])
   }, [props.images])
 
-  const onTagsChange = async (tags) => {
+  const onTagsChange = (tags) => {
     setImgTags(tags)
+  }
 
-    props.image.metadata.exif['cozy-nest-tags'] = tags.map(tag => tag.value).join(',')
+  const close = async () => {
+    props.closeModal()
+    props.image.metadata.exif['cozy-nest-tags'] = imgTags.map(tag => tag.value).join(',')
     await saveExif(props.image.path, props.image.metadata.exif)
     props.updateExifInState(props.image.path, props.image.metadata.exif)
   }
@@ -81,7 +84,7 @@ export function CozyImageInfo(props) {
         <>
           <button
             className="nevysha lg primary gradio-button btn"
-            onClick={() => props.closeModal()}>
+            onClick={close}>
             Close
           </button>
           <Row>

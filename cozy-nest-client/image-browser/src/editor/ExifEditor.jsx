@@ -89,6 +89,12 @@ export async function saveExif(path, exif) {
         path = decodeURIComponent(path)
     }
 
+    //check if exif['cozy-nest-tags'] contains only ',' or only any number of ','
+    if (exif['cozy-nest-tags'] && exif['cozy-nest-tags'].match(/^,+$/g)) {
+        exif['cozy-nest-tags'] = ''
+    }
+
+
     const response = await fetch(`/cozy-nest/image-exif`, {
         method: 'POST',
         headers: {
