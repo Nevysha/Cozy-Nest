@@ -57,7 +57,6 @@ export default function Browser(props) {
       return <CozyImage key={index}
                         index={index}
                         image={image}
-                        images={props.images}
                         viewPort={viewPort}
                         updateExifInState={props.updateExifInState}
                         deleteImg={props.deleteImg}/>

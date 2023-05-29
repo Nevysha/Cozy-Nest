@@ -56,7 +56,7 @@ export default function CozyImage(props) {
             alt="image"
             ref={imgRef}/>
         </div>
-        <CozyImageInfo verbose={false} image={props.image} images={props.images} updateExifInState={props.updateExifInState} deleteImg={props.deleteImg}/>
+        <CozyImageInfo verbose={false} image={props.image} updateExifInState={props.updateExifInState} deleteImg={props.deleteImg}/>
         {showModal && <div className="infoModal">
           <div className="image-wrapper">
             <img
@@ -64,7 +64,7 @@ export default function CozyImage(props) {
               src={getSrc()}
               alt="image"/>
           </div>
-          <CozyImageInfo verbose={true} image={props.image} images={props.images} closeModal={toggleModal} updateExifInState={props.updateExifInState} deleteImg={props.deleteImg}/>
+          <CozyImageInfo verbose={true} image={props.image} closeModal={toggleModal} updateExifInState={props.updateExifInState} deleteImg={props.deleteImg}/>
         </div>}
       </>) : (<div className="image image-placeholder"/>)}
     </div>

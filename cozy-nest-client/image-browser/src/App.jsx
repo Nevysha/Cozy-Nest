@@ -6,7 +6,7 @@ import {MockImageBrowser} from "./MockImageBrowser.jsx";
 import {CozyLogger} from "../../main/CozyLogger.js";
 import Tags from "./Tags.tsx";
 import Loader from "react-spinners/HashLoader";
-import {ImagesContext, ImagesProvider} from "./ImagesContext.tsx";
+import {ImagesContext} from "./ImagesContext.tsx";
 
 //component to wrap flex row
 export function Row(props) {
@@ -85,10 +85,8 @@ function App() {
 
   const [socketUrl, setSocketUrl] = useState(`ws://localhost:${serverPort}`);
   const [messageHistory, setMessageHistory] = useState([]);
-  const [_images, set_images] = useState([])
   const [tags, setTags] = useState([])
   const [activeTags, setActiveTags] = useState([])
-  const [_filteredImages, set_filteredImages] = useState([])
   const [searchStr, setSearchStr] = useState('');
   const [emptyFetch, setEmptyFetch] = useState(false);
   const [visibilityFilter, setVisibilityFilter] = useState('radio-hide-hidden');
@@ -130,19 +128,15 @@ function App() {
   function filterVisibility() {
     return image => {
       if (visibilityFilter === 'radio-hide-hidden') {
-        if (image.metadata.exif['cozy-nest-hidden'] === 'True') {
-          return false;
-        } else return true;
+        return image.metadata.exif['cozy-nest-hidden'] !== 'True';
       } else if (visibilityFilter === 'radio-only-hidden') {
-        if (!image.metadata.exif['cozy-nest-hidden'] || image.metadata.exif['cozy-nest-hidden'] !== 'True') {
-          return false;
-        } else return true;
+        return !(!image.metadata.exif['cozy-nest-hidden'] || image.metadata.exif['cozy-nest-hidden'] !== 'True');
       } else return true;
     };
   }
 
   function applyActiveFilter() {
-    return _images
+    return images
         .filter(filterVisibility())
         .filter(image => {
           if (activeTags.length === 0) {
@@ -152,10 +146,7 @@ function App() {
               if (image.metadata.exif['cozy-nest-tags']) {
                 const imgTags = image.metadata.exif['cozy-nest-tags'].split(',')
                 const intersection = imgTags.filter(tag => activeTags.includes(tag))
-                if (intersection.length > 0) {
-                    return true;
-                }
-                else return false;
+                return intersection.length > 0;
               }
               else return false;
           }
@@ -177,16 +168,15 @@ function App() {
           //disable images fetch loop
           setEmptyFetch(true)
         }
-        set_images(data.images)
         setImages(data.images)
         setIsLoading(false)
       }
       if (data.what === 'dispatch_on_image_saved') {
         //add at the beginning of the array
-        set_images(prev => [data.data, ...prev])
+        setImages(prev => [data.data, ...prev])
       }
       if (data.what === 'dispatch_on_index_built') {
-        set_images([...data.data])
+        setImages([...data.data])
         setIsLoading(false)
       }
       setMessageHistory((prev) => prev.concat(lastMessage));
@@ -195,44 +185,38 @@ function App() {
 
   //if images is empty, load images
   useEffect(() => {
-    if (_images.length === 0 && readyState === ReadyState.OPEN && !emptyFetch) {
+    if (images.length === 0 && readyState === ReadyState.OPEN && !emptyFetch) {
       askForImages()
     }
     else {
-      set_filteredImages(applyActiveFilter())
       setFilteredImages(applyActiveFilter())
     }
-  }, [_images, readyState])
+  }, [images, readyState])
 
   //if searchStr is not empty, filter images
   useEffect(() => {
 
     if (searchStr !== '') {
       const _filteredImages = applyActiveFilter().filter(image => {
-        if (JSON.stringify(image.metadata.exif).includes(searchStr)) {
-          return true;
-        }
-        else return false;
+        return JSON.stringify(image.metadata.exif).includes(searchStr);
       })
-      set_filteredImages(_filteredImages)
       setFilteredImages(_filteredImages)
     }
     else {
-      set_filteredImages(applyActiveFilter())
       setFilteredImages(applyActiveFilter())
     }
-  }, [searchStr, visibilityFilter, activeTags, _images])
+  }, [searchStr, visibilityFilter, activeTags, images])
 
   useEffect(() => {
     const _tags = []
-    _images.forEach(image => {
+    images.forEach(image => {
         if (image.metadata.exif['cozy-nest-tags']) {
           const imgTags = image.metadata.exif['cozy-nest-tags'].split(',')
           _tags.push(...imgTags)
         }
       })
     setTags([...new Set(_tags)])
-  }, [_images, visibilityFilter])
+  }, [images, visibilityFilter])
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Connecting',
@@ -255,8 +239,8 @@ function App() {
 
     function removeFromImages() {
       //remove from images
-      const newImages = _images.filter(image => image.path !== decodeURIComponent(path))
-      set_images([...newImages])
+      const newImages = images.filter(image => image.path !== decodeURIComponent(path))
+      setImages([...newImages])
     }
 
     if (what === 'delete') {
@@ -290,13 +274,13 @@ function App() {
 
   const updateExifInState = (path, exif) => {
     //TODO use reducer
-    const newImages = _images.map(image => {
+    const newImages = images.map(image => {
       if (image.path === path) {
         image.metadata.exif = exif
       }
       return image
     })
-    set_images([...newImages])
+    setImages([...newImages])
   }
   
   const rebuildIndex = async () => {
@@ -305,7 +289,7 @@ function App() {
         method: 'DELETE',
     })
     if (res.ok) {
-      set_images([])
+      setImages([])
       setIsLoading(true)
     }
   }
@@ -367,7 +351,7 @@ function App() {
       </Column>
       {!isLoading &&
 
-        <Browser key={0} filteredImages={_filteredImages} images={_images} updateExifInState={updateExifInState}
+        <Browser updateExifInState={updateExifInState}
               deleteImg={deleteImg}/>
 
       }

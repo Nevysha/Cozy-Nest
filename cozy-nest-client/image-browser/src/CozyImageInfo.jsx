@@ -1,8 +1,9 @@
 import {Row} from "./App.jsx";
 import {ImgTags} from "./Tags.tsx";
 import {Controls} from "./Controls.jsx";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Exif from "./editor/ExifEditor.jsx";
+import {ImagesContext} from "./ImagesContext.tsx";
 
 const safeExifSplit = (fn) => {
   try {
@@ -13,6 +14,8 @@ const safeExifSplit = (fn) => {
 }
 
 export function CozyImageInfo(props) {
+
+  const {images} = useContext(ImagesContext)
 
   //format date to human readable eg 1683694961.5761478 to yyyy-mm-dd HH:MM:SS
   const date = new Date(props.image.metadata.date * 1000).toISOString().replace(/T/, ' ').replace(/\..+/, '')
@@ -56,7 +59,7 @@ export function CozyImageInfo(props) {
 
   useEffect(() => {
     const _tags = []
-    props.images
+    images
       .forEach(image => {
         if (image.metadata.exif['cozy-nest-tags']) {
           const imgTags = image.metadata.exif['cozy-nest-tags'].split(',')
@@ -64,7 +67,7 @@ export function CozyImageInfo(props) {
         }
     })
     setTags([...new Set(_tags)])
-  }, [props.images])
+  }, [images])
 
   const onTagsChange = (tags) => {
     setImgTags(tags)
