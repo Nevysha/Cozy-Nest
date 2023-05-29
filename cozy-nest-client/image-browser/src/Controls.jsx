@@ -69,7 +69,7 @@ export function Controls(props) {
     const hideImg = async () => {
         const path = props.image.path
 
-        exif['cozy-nest-hidden'] = true
+        exif['cozy-nest-hidden'] = "True"
         setExif(exif)
 
         await saveExif(path, exif)
@@ -78,7 +78,7 @@ export function Controls(props) {
     const unhideImg = async () => {
         const path = props.image.path
 
-        exif['cozy-nest-hidden'] = false
+        exif['cozy-nest-hidden'] = "False"
         setExif(exif)
 
         await saveExif(path, exif)
