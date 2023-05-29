@@ -17,11 +17,15 @@ export function ExifEditor(props) {
     const [isJsonValid, setIsJsonValid] = useState(false);
 
     useEffect(() => {
-        const _exif = {...props.exif}
-        setExif(_exif)
-        setExifString(JSON.stringify(_exif, null, 2))
-        setIsJsonValid(true)
-    }, [props.exif, props.visible])
+        (async () => {
+            const path = props.image.path
+            const _exif = await fetch(`/cozy-nest/image-exif?path=${path}`).then(r => r.json());
+            setExif(_exif)
+            setExifString(JSON.stringify(_exif, null, 2))
+            setIsJsonValid(true)
+        })()
+
+    }, [props.visible])
 
     const handleChange = (text) => {
         setExifString(text)
