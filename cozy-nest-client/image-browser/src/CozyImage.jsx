@@ -1,6 +1,7 @@
 //base url without port
-import React, {useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {CozyImageInfo} from "./CozyImageInfo.jsx";
+import {ImageContext} from "./ImagesContext.tsx";
 
 const baseUrl = window.location.href.split(":")[0] + ":" + window.location.href.split(":")[1]
 const gradioPort = 7860
@@ -10,6 +11,8 @@ const gradioPort = 7860
 export default function CozyImage(props) {
 
   const viewPort = props.viewPort
+
+  const {image} = useContext(ImageContext)
 
   const [showModal, setShowModal] = useState(false);
   const imgRef = useRef(null);
@@ -42,7 +45,7 @@ export default function CozyImage(props) {
 
   function getSrc() {
     // url encode path
-    const sanitizedPath = encodeURIComponent(props.image.path)
+    const sanitizedPath = encodeURIComponent(image.path)
     return `${baseUrl}:${gradioPort}/cozy-nest/image?path=${sanitizedPath}`;
   }
 
@@ -56,7 +59,7 @@ export default function CozyImage(props) {
             alt="image"
             ref={imgRef}/>
         </div>
-        <CozyImageInfo verbose={false} image={props.image} updateExifInState={props.updateExifInState} deleteImg={props.deleteImg}/>
+        <CozyImageInfo verbose={false} updateExifInState={props.updateExifInState} deleteImg={props.deleteImg}/>
         {showModal && <div className="infoModal">
           <div className="image-wrapper">
             <img
@@ -64,7 +67,7 @@ export default function CozyImage(props) {
               src={getSrc()}
               alt="image"/>
           </div>
-          <CozyImageInfo verbose={true} image={props.image} closeModal={toggleModal} updateExifInState={props.updateExifInState} deleteImg={props.deleteImg}/>
+          <CozyImageInfo verbose={true} closeModal={toggleModal} updateExifInState={props.updateExifInState} deleteImg={props.deleteImg}/>
         </div>}
       </>) : (<div className="image image-placeholder"/>)}
     </div>

@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {CozyLogger} from "../../main/CozyLogger.js";
 import {Button, Column, Row} from "./App.jsx";
 
 import './editor/ExifEditor.css'
 import Exif from "./editor/ExifEditor.jsx";
+import {ImageContext} from "./ImagesContext.tsx";
 
 const ExifEditor = Exif.ExifEditor
 
@@ -16,7 +17,7 @@ function SendTo(props) {
         e.stopPropagation()
 
         if (window.sendToPipe) {
-            let _img = {src: `/cozy-nest/image?path=${props.image.path}`}
+            let _img = {src: `/cozy-nest/image?path=${image.path}`}
             window.sendToPipe(where, _img)
         }
     }
@@ -33,19 +34,21 @@ function SendTo(props) {
 
 export function Controls(props) {
 
+    const {image} = useContext(ImageContext)
+
     const [showExifEditor, setShowExifEditor] = useState(false);
     const [exif, setExif] = useState();
     const [isHidden, setIsHidden] = useState(false);
 
     useEffect(() => {
-        if (!props.image.path) return
+        if (!image.path) return
 
         (async () => {
-            const path = props.image.path
+            const path = image.path
             const exif = await fetch(`/cozy-nest/image-exif?path=${path}`).then(r => r.json());
             setExif(exif)
         })()
-    }, [props.image])
+    }, [image])
 
     useEffect(() => {
         if (!exif) return;
@@ -63,12 +66,12 @@ export function Controls(props) {
             CozyLogger.debug('deleteImg props missing')
             return
         }
-        const path = props.image.path
+        const path = image.path
         await props.deleteImg(what, path)
     }
 
     const hideImg = async () => {
-        const path = props.image.path
+        const path = image.path
 
         exif['cozy-nest-hidden'] = "True"
         setExif(exif)
@@ -77,7 +80,7 @@ export function Controls(props) {
         props.updateExifInState(path, exif)
     }
     const unhideImg = async () => {
-        const path = props.image.path
+        const path = image.path
 
         exif['cozy-nest-hidden'] = "False"
         setExif(exif)
@@ -88,10 +91,10 @@ export function Controls(props) {
 
     return (
         <Column style={{height: "100%", justifyContent: "space-between"}}>
-            <SendTo image={props.image}/>
+            <SendTo image={image}/>
             <Column>
                 <Row>
-                    <ExifEditor image={props.image} exif={exif} visible={showExifEditor} onClose={() => setShowExifEditor(false)} />
+                    <ExifEditor exif={exif} visible={showExifEditor} onClose={() => setShowExifEditor(false)} />
                     <Button onClick={editExif}>Edit Exif</Button>
                 </Row>
                 <Row>

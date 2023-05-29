@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {Button} from "../App.jsx";
 
 import 'ace-builds'
@@ -9,8 +9,11 @@ import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-github_dark";
 import "ace-builds/src-noconflict/ext-language_tools";
 import {CozyLogger} from "../../../main/CozyLogger.js";
+import {ImageContext} from "../ImagesContext.tsx";
 
 function ExifEditor(props) {
+
+    const {image} = useContext(ImageContext)
 
     const [exif, setExif] = useState('');
     const [exifString, setExifString] = useState('');
@@ -18,7 +21,7 @@ function ExifEditor(props) {
 
     useEffect(() => {
         (async () => {
-            const path = props.image.path
+            const path = image.path
             const _exif = await fetch(`/cozy-nest/image-exif?path=${path}`).then(r => r.json());
             setExif(_exif)
             setExifString(JSON.stringify(_exif, null, 2))
@@ -42,7 +45,7 @@ function ExifEditor(props) {
         if (!isJsonValid) {
             return
         }
-        const path = props.image.path
+        const path = image.path
         await saveExif(path, exif)
     }
 

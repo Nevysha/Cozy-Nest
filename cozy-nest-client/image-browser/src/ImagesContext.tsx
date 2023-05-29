@@ -34,3 +34,28 @@ export function ImagesProvider({ children }: { children: ReactNode[] }) {
         </ImagesContext.Provider>
     )
 }
+
+interface ImageContextType {
+    image: Image;
+    setImage: React.Dispatch<React.SetStateAction<Image>>;
+}
+
+export const ImageContext = createContext<ImageContextType>({
+    image: {} as Image,
+    setImage: () => {}
+});
+
+export function ImageProvider({ children, _image }: { children: ReactNode[], _image: Image }) {
+    const [image, setImage] = useState<Image>(_image);
+
+    const value = {
+        image,
+        setImage
+    }
+
+    return (
+        <ImageContext.Provider value={value}>
+            {children}
+        </ImageContext.Provider>
+    )
+}

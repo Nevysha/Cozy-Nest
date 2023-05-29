@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 import CozyImage from "./CozyImage.jsx";
-import {ImagesContext} from "./ImagesContext.tsx";
+import {ImageProvider, ImagesContext} from "./ImagesContext.tsx";
 
 const _LAZY_LOAD_MARGIN = 300
 
@@ -54,12 +54,15 @@ export default function Browser(props) {
 
   return <div className="browser nevysha nevysha-scrollable" onScroll={() => scrollHandler()} ref={_me}>
     {imagesLoaded.map((image, index) => {
-      return <CozyImage key={index}
-                        index={index}
-                        image={image}
-                        viewPort={viewPort}
-                        updateExifInState={props.updateExifInState}
-                        deleteImg={props.deleteImg}/>
+      return (
+          <ImageProvider key={index} _image={image}>
+            <CozyImage
+                  index={index}
+                  viewPort={viewPort}
+                  updateExifInState={props.updateExifInState}
+                  deleteImg={props.deleteImg}/>
+          </ImageProvider>
+      )
     })}
     <div id="loadMoreThreshold" className="hackyOffPageElement"/>
   </div>;
