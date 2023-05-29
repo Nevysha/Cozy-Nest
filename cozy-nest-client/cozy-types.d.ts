@@ -10,19 +10,3 @@ export type Image = {
     }
   }
 }
-
-export type ImagesState = Image[];
-
-type ImageAction =
-    | { type: 'add'; payload: Image }
-    | { type: 'update'; payload: Image }
-    | { type: 'remove'; payload: Image };
-
-type ImagesAction =
-    | { type: 'set_images'; payload: Image[] };
-
-type DispatchImages = (action: TasksAction) => void;
-export type ImagesContextType = {
-  images: ImagesState,
-  dispatch: DispatchImages
-};

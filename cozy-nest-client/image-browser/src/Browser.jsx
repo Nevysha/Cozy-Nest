@@ -1,12 +1,14 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import CozyImage from "./CozyImage.jsx";
+import {ImagesContext} from "./ImagesContext.tsx";
 
 const _LAZY_LOAD_MARGIN = 300
 
 export default function Browser(props) {
 
+  const {images, filteredImages} = useContext(ImagesContext)
+
   const _me = useRef(null)
-  const [imagesRef, setImagesRef] = useState(props.filteredImages)
   const [page, setPage] = useState(0)
   const [imagesLoaded, setImagesLoaded] = useState([])
 
@@ -17,17 +19,13 @@ export default function Browser(props) {
 
   //when imagesRef changes, reset imagesLoaded
   useEffect(() => {
-    setImagesLoaded(imagesRef.slice(0, page*20+20))
-  }, [imagesRef])
-
-  useEffect(() => {
-    setImagesRef(props.filteredImages)
-  }, [props.filteredImages])
+    setImagesLoaded(filteredImages.slice(0, page*20+20))
+  }, [filteredImages])
 
 
   //load 20 images on mount when imagesRef is set
-  if (imagesRef.length > 0 && imagesLoaded.length === 0) {
-    setImagesLoaded(imagesRef.slice(0, 20))
+  if (filteredImages.length > 0 && imagesLoaded.length === 0) {
+    setImagesLoaded(filteredImages.slice(0, 20))
   }
 
   const scrollHandler = () => {
@@ -50,7 +48,7 @@ export default function Browser(props) {
     const loadMoreThreshold = document.getElementById("loadMoreThreshold")
     if (loadMoreThreshold.getBoundingClientRect().top < window.innerHeight) {
       //load 20 more images
-      setImagesLoaded(imagesLoaded.concat(imagesRef.slice(page*20, page*20+20)))
+      setImagesLoaded(imagesLoaded.concat(filteredImages.slice(page*20, page*20+20)))
     }
   }
 
