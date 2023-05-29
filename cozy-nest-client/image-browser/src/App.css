@@ -161,6 +161,18 @@ input[type="radio"] {
     white-space: nowrap;
 }
 
+.cozy-websocket-status {
+    justify-content: end;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    align-items: flex-end;
+}
+.cozy-websocket-status > span {
+    text-overflow: clip;
+    white-space: nowrap;
+}
+
 .cozy-nest-loading {
     position: absolute;
     width: 100%;

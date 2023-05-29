@@ -14,7 +14,6 @@ def get_image_exif(path: str):
 
         return src_info
     except:
-        print(f"CozyNestSocket: WARNING cannot get exif data for image {path}")
         return {}
 
 
@@ -78,8 +77,6 @@ def scrap_image_folders(images_folders):
         with open(CACHE_FILENAME, 'r') as f:
             return json.loads(f.read())
 
-    print(f"CozyNest: Cache file {CACHE_FILENAME} not found, scraping images to build index...")
-
     # scrape the images folder recursively
     images = []
     for images_folder in images_folders:
@@ -104,8 +101,6 @@ def scrap_image_folders(images_folders):
 
     with open(CACHE_FILENAME, 'w') as f:
         f.write(json.dumps(data))
-
-    print(f"CozyNest: Cache file {CACHE_FILENAME} created.")
 
     return data
 

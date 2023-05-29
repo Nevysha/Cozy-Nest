@@ -9,9 +9,14 @@ import Loader from "react-spinners/HashLoader";
 
 //component to wrap flex row
 export function Row(props) {
+
+  // if props.className is set, append flex-row to it
+  // otherwise, set className to flex-row
+  const className = props.className ? props.className + ' flex-row' : 'flex-row'
+
   return <div
     {...props}
-    className="flex-row">
+    className={className}>
     {props.children}
   </div>
 }
@@ -79,7 +84,7 @@ function App() {
   const [searchStr, setSearchStr] = useState('');
   const [emptyFetch, setEmptyFetch] = useState(false);
   const [visibilityFilter, setVisibilityFilter] = useState('radio-hide-hidden');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
 
   const { sendMessage, lastMessage, readyState, getWebSocket }
@@ -165,6 +170,7 @@ function App() {
           setEmptyFetch(true)
         }
         setImages(data.images)
+        setIsLoading(false)
       }
       if (data.what === 'dispatch_on_image_saved') {
         //add at the beginning of the array
@@ -306,7 +312,7 @@ function App() {
               Rebuild Index
             </button>
           </Row>
-          <Row style={{width: 'auto'}}>
+          <Row style={{width: 'auto'}} className='cozy-websocket-status'>
             <span>WebSocket status <span className="connexionStatus" style={connexionStatusStyle}>{connectionStatus}</span></span>
             {readyState !== ReadyState.OPEN && <button
               className="nevysha lg primary gradio-button btn"
