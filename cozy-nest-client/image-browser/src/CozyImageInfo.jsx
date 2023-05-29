@@ -1,5 +1,5 @@
 import {Row} from "./App.jsx";
-import Tags from "./Tags.jsx";
+import {ImgTags} from "./Tags.tsx";
 import {Controls} from "./Controls.jsx";
 import React, {useEffect, useState} from "react";
 
@@ -76,7 +76,7 @@ export function CozyImageInfo(props) {
             Close
           </button>
           <Row>
-            <Tags tags={tags} defaultValue={imgTags} setActiveTags={setImgTags}/>
+            <ImgTags tags={tags} defaultValue={imgTags} />
           </Row>
         </>
       }

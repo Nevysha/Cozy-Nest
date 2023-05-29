@@ -4,7 +4,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import Browser from "./Browser.jsx";
 import {MockImageBrowser} from "./MockImageBrowser.jsx";
 import {CozyLogger} from "../../main/CozyLogger.js";
-import Tags from "./Tags.jsx";
+import Tags from "./Tags.tsx";
 
 //component to wrap flex row
 export function Row(props) {
@@ -298,6 +298,7 @@ function App() {
             <input type="radio" id="radio-only-hidden" name="radio-filter" value="hidden"/>
             <label htmlFor="radio-only-hidden">Only hidden</label>
           </Row>
+          <Tags tags={tags} setActiveTags={setActiveTags} />
         </Row>
 
         <Row>
@@ -307,7 +308,6 @@ function App() {
                     spellCheck="false"
                     data-gramm="false"
                     onChange={(e) => setSearchStr(e.target.value)}/>
-          <Tags tags={tags} setActiveTags={setActiveTags} />
         </Row>
 
       </Column>
