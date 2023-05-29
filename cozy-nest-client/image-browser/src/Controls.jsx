@@ -38,17 +38,12 @@ export function Controls(props) {
     const {image, setImage} = useContext(ImageContext)
 
     const [showExifEditor, setShowExifEditor] = useState(false);
-    const [exif, setExif] = useState();
+    const [exif, setExif] = useState({});
     const [isHidden, setIsHidden] = useState(false);
 
     useEffect(() => {
         if (!image.path) return
-
-        (async () => {
-            const path = image.path
-            const exif = await fetch(`/cozy-nest/image-exif?path=${path}`).then(r => r.json());
-            setExif(exif)
-        })()
+        setExif(image.metadata.exif)
     }, [image])
 
     useEffect(() => {
