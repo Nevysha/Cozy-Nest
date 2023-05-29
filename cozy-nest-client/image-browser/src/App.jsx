@@ -5,6 +5,7 @@ import Browser from "./Browser.jsx";
 import {MockImageBrowser} from "./MockImageBrowser.jsx";
 import {CozyLogger} from "../../main/CozyLogger.js";
 import Tags from "./Tags.tsx";
+import Loader from "react-spinners/HashLoader";
 
 //component to wrap flex row
 export function Row(props) {
@@ -46,6 +47,18 @@ const serverPort = (() => {
 })();
 
 
+function Loading(props) {
+
+  const color = config['accent_color'] || '#36d7b7'
+  const label = props.label || ''
+
+  return (
+      <div className='cozy-nest-loading'>
+        <div>{label}</div>
+        <Loader color={color} />
+      </div>
+  )
+}
 
 function App() {
 
@@ -66,6 +79,7 @@ function App() {
   const [searchStr, setSearchStr] = useState('');
   const [emptyFetch, setEmptyFetch] = useState(false);
   const [visibilityFilter, setVisibilityFilter] = useState('radio-hide-hidden');
+  const [isLoading, setIsLoading] = useState(false);
 
 
   const { sendMessage, lastMessage, readyState, getWebSocket }
@@ -158,6 +172,7 @@ function App() {
       }
       if (data.what === 'dispatch_on_index_built') {
         setImages([...data.data])
+        setIsLoading(false)
       }
       setMessageHistory((prev) => prev.concat(lastMessage));
     }
@@ -234,7 +249,7 @@ function App() {
         }
       })
       const json = await response.json()
-      CozyLogger.log('json', json)
+      CozyLogger.debug('json', json)
       if (response.ok) {
         removeFromImages()
       }
@@ -248,7 +263,7 @@ function App() {
         body: JSON.stringify({archive: true})
       })
       const json = await response.json()
-      CozyLogger.log('json', json)
+      CozyLogger.debug('json', json)
       if (response.ok) {
         removeFromImages()
       }
@@ -273,6 +288,7 @@ function App() {
     })
     if (res.ok) {
       setImages([])
+      setIsLoading(true)
     }
   }
 
@@ -331,7 +347,9 @@ function App() {
         </Row>
 
       </Column>
-      <Browser key={0} filteredImages={filteredImages} images={images} updateExifInState={updateExifInState} deleteImg={deleteImg}/>
+      {!isLoading && <Browser key={0} filteredImages={filteredImages} images={images} updateExifInState={updateExifInState}
+                deleteImg={deleteImg}/>}
+      {isLoading && <Loading label="building Index..."/>}
     </>
   )
 }

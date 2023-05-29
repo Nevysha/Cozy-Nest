@@ -60,7 +60,7 @@ export function Controls(props) {
 
     const deleteImg = async (what) => {
         if (!props.deleteImg) {
-            CozyLogger.log('deleteImg props missing')
+            CozyLogger.debug('deleteImg props missing')
             return
         }
         const path = props.image.path

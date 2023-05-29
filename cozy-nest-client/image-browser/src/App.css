@@ -160,3 +160,15 @@ input[type="radio"] {
     text-overflow: clip;
     white-space: nowrap;
 }
+
+.cozy-nest-loading {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 25px;
+}

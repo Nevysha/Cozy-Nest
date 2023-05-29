@@ -111,7 +111,7 @@ async function saveExif(path, exif) {
         })
     })
     const json = await response.json()
-    CozyLogger.log('json', json)
+    CozyLogger.debug('json', json)
 
 }
 
