@@ -1,29 +1,19 @@
 //base url without port
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {CozyImageInfo} from "./CozyImageInfo.jsx";
-import {ImageContext, ImageProvider} from "./ImagesContext.tsx";
-import {CozyLogger} from "../../main/CozyLogger.js";
 
 const baseUrl = window.location.href.split(":")[0] + ":" + window.location.href.split(":")[1]
 const gradioPort = 7860
 
 
 
-export default function CozyImage(props) {
-
-  const viewPort = props.viewPort
-
-  const {setImage} = useContext(ImageContext)
+export default function CozyImage({viewPort, image, index}) {
 
   const [showModal, setShowModal] = useState(false);
   const imgRef = useRef(null);
   const _me = useRef(null);
 
   const [onScreen, setOnScreen] = useState(false);
-
-  useEffect(() => {
-    setImage(props.image)
-  }, [props.image])
 
   useEffect(() => {
 
@@ -50,33 +40,32 @@ export default function CozyImage(props) {
 
   function getSrc() {
     // url encode path
-    const sanitizedPath = encodeURIComponent(props.image.path)
+    const sanitizedPath = encodeURIComponent(image.path)
     return `${baseUrl}:${gradioPort}/cozy-nest/image?path=${sanitizedPath}`;
   }
 
   return (
-    <ImageProvider image={props.image}>
-      <div id={`img_${props.index}`} className="image" ref={_me}>
-        {onScreen ? (<>
-          <div className="image-wrapper" onClick={openModal}>
+
+    <div id={`img_${index}`} className="image" ref={_me}>
+      {onScreen ? (<>
+        <div className="image-wrapper" onClick={openModal}>
+          <img
+            className="cozy-nest-thumbnail"
+            src={getSrc()}
+            alt="image"
+            ref={imgRef}/>
+        </div>
+        <CozyImageInfo verbose={false} image={image}/>
+        {showModal && <div className="infoModal">
+          <div className="image-wrapper">
             <img
               className="cozy-nest-thumbnail"
               src={getSrc()}
-              alt="image"
-              ref={imgRef}/>
+              alt="image"/>
           </div>
-          <CozyImageInfo verbose={false}/>
-          {showModal && <div className="infoModal">
-            <div className="image-wrapper">
-              <img
-                className="cozy-nest-thumbnail"
-                src={getSrc()}
-                alt="image"/>
-            </div>
-            <CozyImageInfo verbose={true} closeModal={toggleModal} />
-          </div>}
-        </>) : (<div className="image image-placeholder"/>)}
-      </div>
-    </ImageProvider>
+          <CozyImageInfo verbose={true} image={image} closeModal={toggleModal} />
+        </div>}
+      </>) : (<div className="image image-placeholder"/>)}
+    </div>
   );
 }

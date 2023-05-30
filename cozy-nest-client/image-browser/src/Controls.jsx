@@ -4,12 +4,12 @@ import {Button, Column, Row} from "./App.jsx";
 
 import './editor/ExifEditor.css'
 import Exif from "./editor/ExifEditor.jsx";
-import {ImageContext, ImagesContext} from "./ImagesContext.tsx";
+import {ImagesContext} from "./ImagesContext.tsx";
 
 const ExifEditor = Exif.ExifEditor
 
 
-function SendTo(props) {
+function SendTo({image}) {
 
     const sendToPipe = (e, where) => {
 
@@ -32,10 +32,9 @@ function SendTo(props) {
     </Row>;
 }
 
-export function Controls(props) {
+export function Controls({image}) {
 
-    const {deleteImg, updateExifInState} = useContext(ImagesContext)
-    const {image, setImage} = useContext(ImageContext)
+    const {images, deleteImg, updateExifInState} = useContext(ImagesContext)
 
     const [showExifEditor, setShowExifEditor] = useState(false);
     const [exif, setExif] = useState({});
@@ -44,14 +43,14 @@ export function Controls(props) {
     useEffect(() => {
         if (!image.path) return
         setExif(image.metadata.exif)
-    }, [image])
+    }, [image, images])
 
     useEffect(() => {
         if (!exif) return;
 
         setIsHidden(exif['cozy-nest-hidden'] === 'True')
 
-    }, [exif])
+    }, [exif, image, images])
 
     const editExif = async () => {
         setShowExifEditor(true)
@@ -65,7 +64,6 @@ export function Controls(props) {
 
         await Exif.save(path, exif)
         updateExifInState(image)
-        setImage(image)
     }
     const unhideImg = async () => {
         const path = image.path
@@ -75,7 +73,6 @@ export function Controls(props) {
 
         await Exif.save(path, exif)
         updateExifInState(image)
-        setImage(image)
     }
 
     return (
@@ -83,7 +80,10 @@ export function Controls(props) {
             <SendTo image={image}/>
             <Column>
                 <Row>
-                    <ExifEditor exif={exif} visible={showExifEditor} onClose={() => setShowExifEditor(false)} />
+                    {showExifEditor &&
+                        <ExifEditor image={image} exif={exif} visible={showExifEditor}
+                                 onClose={() => setShowExifEditor(false)}/>
+                    }
                     <Button onClick={editExif}>Edit Exif</Button>
                 </Row>
                 <Row>

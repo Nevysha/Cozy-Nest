@@ -9,11 +9,8 @@ import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-github_dark";
 import "ace-builds/src-noconflict/ext-language_tools";
 import {CozyLogger} from "../../../main/CozyLogger.js";
-import {ImageContext} from "../ImagesContext.tsx";
 
-function ExifEditor(props) {
-
-    const {image} = useContext(ImageContext)
+function ExifEditor({onClose, visible, image}) {
 
     const [exif, setExif] = useState({});
     const [exifString, setExifString] = useState('');
@@ -23,7 +20,7 @@ function ExifEditor(props) {
         setExif(image.metadata.exif)
         setExifString(JSON.stringify(image.metadata.exif, null, 2))
         setIsJsonValid(true)
-    }, [props.visible, image])
+    }, [visible, image])
 
     const handleChange = (text) => {
         setExifString(text)
@@ -45,12 +42,12 @@ function ExifEditor(props) {
     }
 
     const close = () => {
-        props.onClose()
+        onClose()
     }
 
     return (
         <>
-            {props.visible &&
+            {visible &&
                 <div className="ExifEditor backdrop">
                     <div className="container">
                         <h1>Exif Editor</h1>
@@ -77,7 +74,7 @@ function ExifEditor(props) {
                     </div>
                 </div>
             }
-            {!props.visible &&
+            {!visible &&
                 <div/>
             }
         </>

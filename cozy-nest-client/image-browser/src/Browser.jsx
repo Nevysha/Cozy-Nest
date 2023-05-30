@@ -1,12 +1,12 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 import CozyImage from "./CozyImage.jsx";
-import {ImageProvider, ImagesContext} from "./ImagesContext.tsx";
+import {ImagesContext} from "./ImagesContext.tsx";
 
 const _LAZY_LOAD_MARGIN = 300
 
 export default function Browser(props) {
 
-  const {filteredImages} = useContext(ImagesContext)
+  const {images, filteredImages} = useContext(ImagesContext)
 
   const _me = useRef(null)
   const [page, setPage] = useState(0)
@@ -20,7 +20,7 @@ export default function Browser(props) {
   //when imagesRef changes, reset imagesLoaded
   useEffect(() => {
     setImagesLoaded(filteredImages.slice(0, Math.min(page*20+20, filteredImages.length)))
-  }, [filteredImages])
+  }, [filteredImages, images])
 
 
   //load 20 images on mount when imagesRef is set
@@ -48,12 +48,15 @@ export default function Browser(props) {
     const loadMoreThreshold = document.getElementById("loadMoreThreshold")
     if (loadMoreThreshold.getBoundingClientRect().top < window.innerHeight) {
       //load 20 more images
-      setImagesLoaded(imagesLoaded.concat(filteredImages.slice(page*20, page*20+20)))
+      setImagesLoaded(filteredImages.slice(0, page*20+20))
     }
   }
 
   return <div className="browser nevysha nevysha-scrollable" onScroll={() => scrollHandler()} ref={_me}>
     {imagesLoaded.map((image, index) => {
+
+      if (!image) return (<></>)
+
       return (
 
           <CozyImage

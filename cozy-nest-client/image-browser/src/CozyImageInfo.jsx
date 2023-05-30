@@ -3,7 +3,7 @@ import {ImgTags} from "./Tags.tsx";
 import {Controls} from "./Controls.jsx";
 import React, {useContext, useEffect, useState} from "react";
 import Exif from "./editor/ExifEditor.jsx";
-import {ImageContext, ImagesContext} from "./ImagesContext.tsx";
+import {ImagesContext} from "./ImagesContext.tsx";
 import {CozyLogger} from "../../main/CozyLogger.js";
 
 const tryCatch = (fn) => {
@@ -14,10 +14,9 @@ const tryCatch = (fn) => {
   }
 }
 
-export function CozyImageInfo(props) {
+export function CozyImageInfo({verbose, image, closeModal}) {
 
   const {images, updateExifInState} = useContext(ImagesContext)
-  const {image, setImage} = useContext(ImageContext)
 
   const [formattedExif, setFormattedExif] = useState({
     date: 0,
@@ -29,7 +28,7 @@ export function CozyImageInfo(props) {
     modelHash: '',
     formattedAll: ''
   })
-  const isVerbose = props.verbose;
+  const isVerbose = verbose;
 
   const [tags, setTags] = useState([])
   const [imgTags, setImgTags] = useState([])
@@ -93,7 +92,7 @@ export function CozyImageInfo(props) {
   }
 
   const close = async () => {
-    props.closeModal()
+    closeModal()
     await saveExif();
   }
 
@@ -128,7 +127,7 @@ export function CozyImageInfo(props) {
         </tbody>
       </table>
       {isVerbose && <div className="blocInfo" dangerouslySetInnerHTML={{__html: formattedExif?.formattedAll}}/>}
-      <Controls />
+      <Controls image={image}/>
     </div>
   );
 }
