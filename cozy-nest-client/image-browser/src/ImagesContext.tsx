@@ -63,8 +63,6 @@ export function ImagesProvider({ children }: { children: ReactNode[] }) {
     const updateExifInState = (image: Image) => {
 
         const {path, metadata: {exif}} = image
-
-        //TODO use reducer
         const newImages = images.map(image => {
             if (image.path === path) {
                 image.metadata.exif = exif
@@ -91,7 +89,7 @@ export function ImagesProvider({ children }: { children: ReactNode[] }) {
 }
 
 interface ImageContextType {
-    image: Image;
+    image: Image | null;
     setImage: React.Dispatch<React.SetStateAction<Image>>;
 }
 
@@ -100,14 +98,13 @@ export const ImageContext = createContext<ImageContextType>({
     setImage: () => {}
 });
 
-export function ImageProvider({ children, _image }: { children: ReactNode[], _image: Image }) {
-    const [image, setImage] = useState<Image>(_image);
+interface ImageProviderProps {
+    children: ReactNode[];
+    image: Image;
+}
 
-    // const {deleteImg} = useContext(ImagesContext);
-
-    // useEffect(() => {
-    //
-    // }, [image])
+export function ImageProvider(props: ImageProviderProps) {
+    const [image, setImage] = useState<Image>(props.image);
 
     const value = {
         image,
@@ -116,7 +113,7 @@ export function ImageProvider({ children, _image }: { children: ReactNode[], _im
 
     return (
         <ImageContext.Provider value={value}>
-            {children}
+            {props.children}
         </ImageContext.Provider>
     )
 }

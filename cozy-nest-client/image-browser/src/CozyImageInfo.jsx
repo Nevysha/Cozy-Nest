@@ -4,8 +4,9 @@ import {Controls} from "./Controls.jsx";
 import React, {useContext, useEffect, useState} from "react";
 import Exif from "./editor/ExifEditor.jsx";
 import {ImageContext, ImagesContext} from "./ImagesContext.tsx";
+import {CozyLogger} from "../../main/CozyLogger.js";
 
-const safeExifSplit = (fn) => {
+const tryCatch = (fn) => {
   try {
     return fn()
   } catch (ignored) {
@@ -18,37 +19,45 @@ export function CozyImageInfo(props) {
   const {images, updateExifInState} = useContext(ImagesContext)
   const {image, setImage} = useContext(ImageContext)
 
-  //format date to human readable eg 1683694961.5761478 to yyyy-mm-dd HH:MM:SS
-  const date = new Date(image.metadata.date * 1000).toISOString().replace(/T/, ' ').replace(/\..+/, '')
-
+  const [formattedExif, setFormattedExif] = useState({
+    date: 0,
+    model: '',
+    size: '',
+    seed: '',
+    steps: '',
+    sampler: '',
+    modelHash: '',
+    formattedAll: ''
+  })
   const isVerbose = props.verbose;
 
-  const model =
-    safeExifSplit(() => image.metadata.exif.parameters.split("Model: ")[1].split(",")[0]);
-  const size =
-    safeExifSplit(() => image.metadata.exif.parameters.split("Size: ")[1].split(",")[0]);
-  const seed =
-    safeExifSplit(() => image.metadata.exif.parameters.split("Seed: ")[1].split(",")[0]);
-  const steps =
-    safeExifSplit(() => image.metadata.exif.parameters.split("Steps: ")[1].split(",")[0]);
-  const sampler =
-    safeExifSplit(() => image.metadata.exif.parameters.split("Sampler: ")[1].split(",")[0]);
-  const modelHash =
-    safeExifSplit(() => image.metadata.exif.parameters.split("Model hash: ")[1].split(",")[0]);
-
-  let formattedAll = image.metadata.exif.parameters
-
-  try {
-    formattedAll = formattedAll.replace(/\n/g, "<br>")
-  }
-  catch (ignored) {
-    formattedAll = 'No metadata found'
-  }
+  CozyLogger.debug('CozyImageInfo', {formattedExif})
 
   const [tags, setTags] = useState([])
   const [imgTags, setImgTags] = useState([])
 
   useEffect(() => {
+    if (!image) return
+    if (!image.metadata) return
+    if (!image.metadata.exif) return
+    if (!image.metadata.exif.parameters) return
+
+    setFormattedExif({
+      date: tryCatch(() => new Date(image.metadata.date * 1000).toISOString().replace(/T/, ' ').replace(/\..+/, '')),
+      model: tryCatch(() => image.metadata.exif.parameters.split("Model: ")[1].split(",")[0]),
+      size: tryCatch(() => image.metadata.exif.parameters.split("Size: ")[1].split(",")[0]),
+      seed: tryCatch(() => image.metadata.exif.parameters.split("Seed: ")[1].split(",")[0]),
+      steps: tryCatch(() => image.metadata.exif.parameters.split("Steps: ")[1].split(",")[0]),
+      sampler: tryCatch(() => image.metadata.exif.parameters.split("Sampler: ")[1].split(",")[0]),
+      modelHash: tryCatch(() => image.metadata.exif.parameters.split("Model hash: ")[1].split(",")[0]),
+      formattedAll: tryCatch(() => image.metadata.exif.parameters.replace(/\n/g, "<br>"))
+    })
+  }, [image])
+
+  useEffect(() => {
+
+    if (!image) return
+
     if (image.metadata.exif['cozy-nest-tags']) {
       const _imgTags = image.metadata.exif['cozy-nest-tags'].split(',')
           .map(tag => {
@@ -56,7 +65,7 @@ export function CozyImageInfo(props) {
           })
       setImgTags([..._imgTags])
     }
-  }, [])
+  }, [image])
 
   useEffect(() => {
     const _tags = []
@@ -75,7 +84,11 @@ export function CozyImageInfo(props) {
   }
 
   async function saveExif() {
-    image.metadata.exif['cozy-nest-tags'] = imgTags.map(tag => tag.value).join(',')
+    const newTags = imgTags.map(tag => tag.value).join(',')
+    if (newTags === image.metadata.exif['cozy-nest-tags']) {
+      return
+    }
+    image.metadata.exif['cozy-nest-tags'] = newTags
     await Exif.save(image.path, image.metadata.exif)
     updateExifInState(image)
     setImage(image)
@@ -85,6 +98,8 @@ export function CozyImageInfo(props) {
     props.closeModal()
     await saveExif();
   }
+
+  if (!image) return (<div className="image-info">No image selected</div>)
 
   return (
     <div className="image-info">
@@ -102,19 +117,19 @@ export function CozyImageInfo(props) {
       }
       <table>
         <tbody>
-        <tr><td>Date: </td><td>{date}</td></tr>
-        <tr><td>Model: </td><td>{model}</td></tr>
+        <tr><td>Date: </td><td>{formattedExif?.date}</td></tr>
+        <tr><td>Model: </td><td>{formattedExif?.model}</td></tr>
         {isVerbose && <tr>
           <td>Model Hash:</td>
-          <td>{modelHash}</td>
+          <td>{formattedExif?.modelHash}</td>
         </tr>}
-        <tr><td>Size: </td><td>{size}</td></tr>
-        <tr><td>Seed: </td><td>{seed}</td></tr>
-        <tr><td>Steps: </td><td>{steps}</td></tr>
-        <tr><td>Sampler: </td><td>{sampler}</td></tr>
+        <tr><td>Size: </td><td>{formattedExif?.size}</td></tr>
+        <tr><td>Seed: </td><td>{formattedExif?.seed}</td></tr>
+        <tr><td>Steps: </td><td>{formattedExif?.steps}</td></tr>
+        <tr><td>Sampler: </td><td>{formattedExif?.sampler}</td></tr>
         </tbody>
       </table>
-      {isVerbose && <div className="blocInfo" dangerouslySetInnerHTML={{__html: formattedAll}}/>}
+      {isVerbose && <div className="blocInfo" dangerouslySetInnerHTML={{__html: formattedExif?.formattedAll}}/>}
       <Controls />
     </div>
   );

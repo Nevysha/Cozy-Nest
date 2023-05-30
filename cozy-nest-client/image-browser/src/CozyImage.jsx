@@ -13,13 +13,17 @@ export default function CozyImage(props) {
 
   const viewPort = props.viewPort
 
-  const {image} = props
+  const {setImage} = useContext(ImageContext)
 
   const [showModal, setShowModal] = useState(false);
   const imgRef = useRef(null);
   const _me = useRef(null);
 
   const [onScreen, setOnScreen] = useState(false);
+
+  useEffect(() => {
+    setImage(props.image)
+  }, [props.image])
 
   useEffect(() => {
 
@@ -46,12 +50,12 @@ export default function CozyImage(props) {
 
   function getSrc() {
     // url encode path
-    const sanitizedPath = encodeURIComponent(image.path)
+    const sanitizedPath = encodeURIComponent(props.image.path)
     return `${baseUrl}:${gradioPort}/cozy-nest/image?path=${sanitizedPath}`;
   }
 
   return (
-    <ImageProvider _image={image}>
+    <ImageProvider image={props.image}>
       <div id={`img_${props.index}`} className="image" ref={_me}>
         {onScreen ? (<>
           <div className="image-wrapper" onClick={openModal}>
