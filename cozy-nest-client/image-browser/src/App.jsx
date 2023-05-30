@@ -79,12 +79,11 @@ function App() {
   const {
     images,
     setImages,
-    filteredImages,
     setFilteredImages,
   } = useContext(ImagesContext)
 
   const [socketUrl, setSocketUrl] = useState(`ws://localhost:${serverPort}`);
-  const [messageHistory, setMessageHistory] = useState([]);
+  const [, setMessageHistory] = useState([]);
   const [tags, setTags] = useState([])
   const [activeTags, setActiveTags] = useState([])
   const [searchStr, setSearchStr] = useState('');
@@ -125,19 +124,15 @@ function App() {
 
   }
 
-  function filterVisibility() {
-    return image => {
-      if (visibilityFilter === 'radio-hide-hidden') {
-        return image.metadata.exif['cozy-nest-hidden'] !== 'True';
-      } else if (visibilityFilter === 'radio-only-hidden') {
-        return !(!image.metadata.exif['cozy-nest-hidden'] || image.metadata.exif['cozy-nest-hidden'] !== 'True');
-      } else return true;
-    };
-  }
-
   function applyActiveFilter() {
     return images
-        .filter(filterVisibility())
+        .filter(image => {
+          if (visibilityFilter === 'radio-hide-hidden') {
+            return image.metadata.exif['cozy-nest-hidden'] !== 'True';
+          } else if (visibilityFilter === 'radio-only-hidden') {
+            return !(!image.metadata.exif['cozy-nest-hidden'] || image.metadata.exif['cozy-nest-hidden'] !== 'True');
+          } else return true;
+        })
         .filter(image => {
           if (activeTags.length === 0) {
               return true;

@@ -2,6 +2,7 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {CozyImageInfo} from "./CozyImageInfo.jsx";
 import {ImageContext} from "./ImagesContext.tsx";
+import {CozyLogger} from "../../main/CozyLogger.js";
 
 const baseUrl = window.location.href.split(":")[0] + ":" + window.location.href.split(":")[1]
 const gradioPort = 7860

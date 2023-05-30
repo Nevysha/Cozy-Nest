@@ -19,13 +19,13 @@ export default function Browser(props) {
 
   //when imagesRef changes, reset imagesLoaded
   useEffect(() => {
-    setImagesLoaded(filteredImages.slice(0, page*20+20))
+    setImagesLoaded(filteredImages.slice(0, Math.min(page*20+20, filteredImages.length)))
   }, [filteredImages])
 
 
   //load 20 images on mount when imagesRef is set
   if (filteredImages.length > 0 && imagesLoaded.length === 0) {
-    setImagesLoaded(filteredImages.slice(0, 20))
+    setImagesLoaded(filteredImages.slice(0, Math.min(20, filteredImages.length)))
   }
 
   const scrollHandler = () => {
