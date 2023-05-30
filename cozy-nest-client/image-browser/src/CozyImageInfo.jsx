@@ -88,7 +88,6 @@ export function CozyImageInfo({verbose, image, closeModal}) {
     image.metadata.exif['cozy-nest-tags'] = newTags
     await Exif.save(image.path, image.metadata.exif)
     updateExifInState(image)
-    setImage(image)
   }
 
   const close = async () => {
