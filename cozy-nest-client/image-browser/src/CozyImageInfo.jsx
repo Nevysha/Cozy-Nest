@@ -31,8 +31,6 @@ export function CozyImageInfo(props) {
   })
   const isVerbose = props.verbose;
 
-  CozyLogger.debug('CozyImageInfo', {formattedExif})
-
   const [tags, setTags] = useState([])
   const [imgTags, setImgTags] = useState([])
 
