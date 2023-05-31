@@ -19,7 +19,7 @@ export default function Browser(props) {
 
   //when imagesRef changes, reset imagesLoaded
   useEffect(() => {
-    setImagesLoaded(filteredImages.slice(0, Math.min(page*20+20, filteredImages.length)))
+    setImagesLoaded([...filteredImages.slice(0, Math.min(page*20+20, filteredImages.length))])
   }, [filteredImages, images])
 
 
@@ -55,10 +55,7 @@ export default function Browser(props) {
   return <div className="browser nevysha nevysha-scrollable" onScroll={() => scrollHandler()} ref={_me}>
     {imagesLoaded.map((image, index) => {
 
-      if (!image) return (<></>)
-
       return (
-
           <CozyImage
               key={index}
               image={image}

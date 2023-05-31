@@ -62,7 +62,7 @@ export function CozyImageInfo({verbose, image, closeModal}) {
           })
       setImgTags([..._imgTags])
     }
-  }, [image, images])
+  }, [image.metadata.exif['cozy-nest-tags'], images])
 
   useEffect(() => {
     const _tags = []
