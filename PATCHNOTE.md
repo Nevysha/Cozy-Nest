@@ -4,6 +4,10 @@
 - SD.Next (Vlad's fork) from commit `beff89ba`
 - Will work best on latest version of both as I'm only testing on latest version.
 
+## Minor changes & fixes in 2.1.7
+
+- [x]  Quick fix to be able to save settings despite the new ui-config.json save ui system. (pruning the file from Cozy Nest entry on startup)
+
 ## Minor changes & fixes in 2.1.6
 
 - [x]  Some settings were not saved properly
