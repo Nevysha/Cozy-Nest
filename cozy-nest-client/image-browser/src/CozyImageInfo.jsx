@@ -49,7 +49,7 @@ export function CozyImageInfo({verbose, image, closeModal}) {
       modelHash: tryCatch(() => image.metadata.exif.parameters.split("Model hash: ")[1].split(",")[0]),
       formattedAll: tryCatch(() => image.metadata.exif.parameters.replace(/\n/g, "<br>"))
     })
-  }, [image])
+  }, [image, images])
 
   useEffect(() => {
 
@@ -62,7 +62,7 @@ export function CozyImageInfo({verbose, image, closeModal}) {
           })
       setImgTags([..._imgTags])
     }
-  }, [image])
+  }, [image, images])
 
   useEffect(() => {
     const _tags = []
@@ -111,6 +111,7 @@ export function CozyImageInfo({verbose, image, closeModal}) {
           </Row>
         </>
       }
+      {!isVerbose && <ImgTags tags={tags} defaultValue={imgTags} onChange={onTagsChange}/>}
       <table>
         <tbody>
         <tr><td>Date: </td><td>{formattedExif?.date}</td></tr>

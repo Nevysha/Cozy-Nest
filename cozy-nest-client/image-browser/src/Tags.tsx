@@ -1,13 +1,14 @@
 import
   // @ts-ignore
   React,
-{useEffect, useState} from "react";
+{useContext, useEffect, useState} from "react";
 import Select from 'react-select'
 import CreatableSelect from 'react-select/creatable';
 import makeAnimated from 'react-select/animated';
 
 // @ts-ignore
 import {CozyLogger} from "../../main/CozyLogger";
+import {ImagesContext} from "./ImagesContext.tsx";
 
 const animatedComponents = makeAnimated();
 
@@ -101,6 +102,8 @@ export default function Tags(props: TagsProps) {
 
 export function ImgTags(props: CreatableTagsProps) {
 
+  const {images} = useContext(ImagesContext);
+
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions]
       = useState(props.tags.map(tag => ({value: tag, label: tag})));
@@ -109,7 +112,7 @@ export function ImgTags(props: CreatableTagsProps) {
   useEffect(() => {
     setOptions(props.tags.map(tag => ({value: tag, label: tag})));
     setValue(props.defaultValue);
-  }, [props.tags, props.defaultValue])
+  }, [props.tags, props.defaultValue, images])
 
   const handleCreate = (inputValue: string) => {
     setIsLoading(true);
