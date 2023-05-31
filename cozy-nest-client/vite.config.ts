@@ -32,7 +32,7 @@ export default defineConfig({
 
               const toAdd = `
                         <script type="module" src="/cozy-nest-client/main/_dev.js"></script>
-                        <script type="module" src="/cozy-nest-client/main.tsx"></script>
+                        <script type="module" src="/cozy-nest-client/main.jsx"></script>
                        `
 
               // replace </body> with </body><script type="module" src="/main.js"></script>
