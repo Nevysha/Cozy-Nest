@@ -214,40 +214,30 @@ function addScrollable(bundle) {
 }
 
 function getHexColorForAccent() {
-  return COZY_NEST_CONFIG.accent_color;
+  return document.querySelector("#setting_nevyui_accentColor").querySelector("input").value;
 }
 
 
-function updateSettings(key, value) {
-  COZY_NEST_CONFIG[key] = value;
-  localStorage.setItem("COZY_NEST_CONFIG", JSON.stringify(COZY_NEST_CONFIG));
-}
 
 function applyCozyNestConfig() {
 
   //waves
   const setWaveColor = () => {
-    const hexColor = COZY_NEST_CONFIG.waves_color;
+    const hexColor = document.querySelector("#setting_nevyui_waveColor").querySelector("input").value;
     applyWavesColor(hexColor);
   }
   setWaveColor()
   document.querySelector("#setting_nevyui_waveColor").querySelector("input").addEventListener("change", setWaveColor)
 
   //font color
-  const fontColor =
-      getTheme() === "dark" ?
-          COZY_NEST_CONFIG.font_color :
-          COZY_NEST_CONFIG.font_color_light;
-
   const fontColorInput =
       getTheme() === "dark" ?
-          document.querySelector("#setting_nevyui_fontColor").querySelector("input") :
-          document.querySelector("#setting_nevyui_fontColorLight").querySelector("input")
-
+        document.querySelector("#setting_nevyui_fontColor").querySelector("input") :
+        document.querySelector("#setting_nevyui_fontColorLight").querySelector("input")
   //remove hidden css class of parent.parent
   fontColorInput.parentElement.parentElement.style.display = "block";
   const setFontColor = () => {
-    const hexColor = fontColor;
+    const hexColor = fontColorInput.value;
     if (!hexColor) return;
     applyFontColor(hexColor);
   }
@@ -256,7 +246,7 @@ function applyCozyNestConfig() {
 
   //background gradient
   const setGradientColor = () => {
-    const hexColor = COZY_NEST_CONFIG.bg_gradiant_color;
+    const hexColor = document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").value;
     applyBgGradiantColor(hexColor);
   }
   setGradientColor()
@@ -264,7 +254,7 @@ function applyCozyNestConfig() {
 
   //disable waves and gradiant
   const setDisabledWavesAndGradiant = () => {
-    const disableWavesAndGradiant = COZY_NEST_CONFIG.disable_waves_and_gradiant;
+    const disableWavesAndGradiant = document.querySelector("#setting_nevyui_disableWavesAndGradiant").querySelector("input").checked;
     const $waves = $('.wave');
     const $body = $('body');
     if (disableWavesAndGradiant) {
@@ -289,7 +279,7 @@ function applyCozyNestConfig() {
   }
   //accent generate button
   const setAccentForGenerate = () => {
-    const checked = COZY_NEST_CONFIG.accent_generate_button;
+    const checked = document.querySelector("#setting_nevyui_accentGenerateButton").querySelector("input").checked;
     document.querySelectorAll('button[id$="_generate"]').forEach((btn) => {
       if (checked) {
         let txtColorAppending = "";
@@ -313,7 +303,7 @@ function applyCozyNestConfig() {
 
   //font size
   const setFontSize = () => {
-    const fontSize = COZY_NEST_CONFIG.font_size;
+    const fontSize = document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").value;
     document.querySelector(':root').style.setProperty('--nevysha-text-md', `${fontSize}px`);
     recalcOffsetFromMenuHeight()
   }
@@ -323,7 +313,7 @@ function applyCozyNestConfig() {
 
   //card height
   const setCardHeight = () => {
-    const cardHeight = COZY_NEST_CONFIG.card_height;
+    const cardHeight = document.querySelector("#setting_nevyui_cardHeight").querySelector("input[type=number]").value;
     document.querySelector(':root').style.setProperty('--extra-network-card-height', `${cardHeight}em`);
   }
   setCardHeight()
@@ -332,7 +322,7 @@ function applyCozyNestConfig() {
 
   //card width
   const setCardWidth = () => {
-    const cardWidth = COZY_NEST_CONFIG.card_width;
+    const cardWidth = document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=number]").value;
     document.querySelector(':root').style.setProperty('--extra-network-card-width', `${cardWidth}em`);
   }
   setCardWidth()
@@ -341,7 +331,7 @@ function applyCozyNestConfig() {
 
   //check if menu is in left or top mode
   const menuPosition = () => {
-    const isLeftChecked = COZY_NEST_CONFIG.main_menu_position === "left";
+    const isLeftChecked = document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=left]").checked;
 
     //top mode
     if (!isLeftChecked) {
@@ -352,7 +342,7 @@ function applyCozyNestConfig() {
       document.querySelector(':root').style.setProperty('--menu-top-height', `25px`);
 
       //centered or not
-      const isCenteredChecked = COZY_NEST_CONFIG.main_menu_position === "top_centered";
+      const isCenteredChecked = document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top_centered]").checked;
       if (isCenteredChecked) {
         COZY_NEST_CONFIG.main_menu_position = "top_centered";
         document.querySelector(".nevysha.nevysha-tabnav").classList.add("center-menu-items")
@@ -380,7 +370,8 @@ function applyCozyNestConfig() {
 
   //quicksetting gap
   const setQuicksettingPosition = () => {
-    const position = COZY_NEST_CONFIG.quicksettings_position
+    const position = document.querySelector("#setting_nevyui_quicksettingsPosition")
+        .querySelector("input[type=radio]:checked").value;
     if (position === 'split') {
       document.querySelector("#quicksettings_gap").classList.add("nevysha-quicksettings-gap")
       document.querySelector("#quicksettings").classList.remove("centered-quicksettings")
@@ -400,7 +391,7 @@ function applyCozyNestConfig() {
 
   //enable/disable the sfw mode
   const setSfwSettings = () => {
-    const isSfwChecked = COZY_NEST_CONFIG.sfw_mode;
+    const isSfwChecked = document.querySelector("#setting_nevyui_sfwMode").querySelector("input[type=checkbox]").checked;
     if (isSfwChecked) {
       document.querySelector('body').classList.add("nsfw");
     }
@@ -621,6 +612,7 @@ async function loadVersionData() {
 function createFolderListComponent() {
   // create component to add and remove folders to scrap for images browser
   const componentContainer = document.querySelector('#cnib_output_folder').parentElement;
+  const textarea = document.querySelector('#cnib_output_folder textarea');
   componentContainer.classList.remove('hidden')
   $(componentContainer).css('padding', '0 10px')
 
@@ -632,14 +624,18 @@ function createFolderListComponent() {
 
   function updateList(foldersList) {
     document.querySelectorAll('.nevysha-image-browser-folder-container').forEach(el => el.remove());
+    textarea.value = JSON.stringify(foldersList);
 
-    COZY_NEST_CONFIG['cnib_output_folder'] = foldersList;
+    //throw change event to update textarea
+    textarea.dispatchEvent(new Event('change'));
+    textarea.dispatchEvent(new Event('blur'));
 
     parseAndDisplayFolderSettings();
   }
 
   function parseAndDisplayFolderSettings() {
-    const foldersList = COZY_NEST_CONFIG['cnib_output_folder'];
+    const forldersListJson = textarea.value;
+    const foldersList = JSON.parse(forldersListJson);
 
     for (const folderIndex in foldersList) {
       const folder = foldersList[folderIndex];
@@ -698,7 +694,8 @@ function createFolderListComponent() {
         return;
       }
 
-      const foldersList = COZY_NEST_CONFIG['cnib_output_folder'];
+      const foldersListJson = textarea.value;
+      const foldersList = JSON.parse(foldersListJson);
 
       //check if folder already exists
       if (foldersList.includes(folder)) {
@@ -749,7 +746,7 @@ const tweakNevyUiSettings = () => {
     $("#nevysha-saved-feedback").fadeIn();
 
     try {
-      const jsonFolders = COZY_NEST_CONFIG['cnib_output_folder'];
+      const jsonFolders = JSON.parse(document.querySelector('#cnib_output_folder textarea').value);
       //send config data with POST to /cozy-nest/config
       const config = {
         "cnib_output_folder": jsonFolders,
@@ -1872,7 +1869,7 @@ function setupErrorHandling() {
 let COZY_NEST_CONFIG;
 let shouldDisplaySDNextWarning = false;
 
-export async function fetchCozyNestConfig() {
+async function fetchCozyNestConfig() {
   const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?t=${Date.now()}`);
   if (response.ok) {
     COZY_NEST_CONFIG = await response.json();

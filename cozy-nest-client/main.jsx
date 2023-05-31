@@ -13,15 +13,14 @@ window.CozyTools = {
   dummySubdirs
 }
 
-import cozyNestModuleLoader, {fetchCozyNestConfig} from './main/nevysha-cozy-nest.js'
+import cozyNestModuleLoader from './main/nevysha-cozy-nest.js'
 import SimpleTimer from "./main/SimpleTimer.js";
 import {COZY_NEST_GRADIO_LOAD_DURATION} from "./main/Constants.js";
 import {CozyLogger} from "./main/CozyLogger.js";
 import {startCozyNestImageBrowser} from "./image-browser/src/main.jsx";
 
 export default async function cozyNestLoader()  {
-  await fetchCozyNestConfig();
-  await cozyNestModuleLoader();
+  await cozyNestModuleLoader()
   startCozyNestImageBrowser();
 }
 window.cozyNestLoader = cozyNestLoader;

@@ -40,20 +40,20 @@ EXTENSION_TECHNICAL_NAME = os.path.basename(os.path.dirname(os.path.dirname(os.p
 CONFIG_FILENAME = f"extensions/{EXTENSION_TECHNICAL_NAME}/nevyui_settings.json"
 
 
-def gradio_save_settings(accent_color,
-                         accent_generate_button,
-                         bg_gradiant_color,
-                         card_height,
-                         card_width,
-                         disable_waves_and_gradiant,
-                         error_popup,
-                         font_size,
-                         main_menu_position,
+def gradio_save_settings(main_menu_position,
                          quicksettings_position,
+                         accent_generate_button,
+                         font_size,
                          font_color,
                          font_color_light,
                          waves_color,
+                         bg_gradiant_color,
+                         accent_color,
+                         card_height,
+                         card_width,
+                         error_popup,
                          disable_image_browser,
+                         disable_waves_and_gradiant,
                          server_default_port,
                          auto_search_port,
                          auto_start_server,
@@ -61,7 +61,7 @@ def gradio_save_settings(accent_color,
                          archive_path,
                          sfw_mode,
                          enable_clear_button,
-                         enable_extra_network_tweaks
+                         enable_extra_network_tweaks,
                          ):
     settings = {
         'main_menu_position': main_menu_position,
@@ -276,8 +276,8 @@ def gradio_img_browser_tab(config):
         # Add a text block to display each folder from output_folder_array()
         with gr.Blocks(elem_id="img_browser_folders_block"):
             # TODO refactor to remove this as it's no longer managed through gradio
-            gr.HTML(f"<div id='cnib_output_folder'>{json.dumps(config.get('cnib_output_folder'))}</div>",
-                    elem_id="cnib_output_folder")
+            gr.Textbox(value=json.dumps(config.get('cnib_output_folder')), label="Output folder",
+                       elem_id="cnib_output_folder", interactive=True, visible=False)
 
     return [
         disable_image_browser,
@@ -358,46 +358,31 @@ def gradio_main_tab(config):
         ]
 
 
-def ui_action_btn(accent_color,
-                  accent_generate_button,
-                  bg_gradiant_color,
-                  card_height,
-                  card_width,
-                  disable_waves_and_gradiant,
-                  error_popup,
-                  font_size,
-                  main_menu_position,
-                  quicksettings_position,
-                  font_color,
-                  font_color_light,
-                  waves_color,
-                  disable_image_browser,
+def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
+                  disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
+                  quicksettings_position, font_color, font_color_light, waves_color, disable_image_browser,
                   server_default_port,
                   auto_search_port,
                   auto_start_server,
-                  fetch_output_folder_from_a1111_settings,
-                  archive_path,
-                  sfw_mode,
-                  enable_clear_button,
-                  enable_extra_network_tweaks):
+                  fetch_output_folder_from_a1111_settings, archive_path, sfw_mode, enable_clear_button, enable_extra_network_tweaks):
     with gr.Row():
         btn_save = gr.Button(value="Save", elem_id="nevyui_sh_options_submit",
                              elem_classes="nevyui_apply_settings")
         btn_save.click(gradio_save_settings, inputs=[
-            accent_color,
-            accent_generate_button,
-            bg_gradiant_color,
-            card_height,
-            card_width,
-            disable_waves_and_gradiant,
-            error_popup,
-            font_size,
             main_menu_position,
             quicksettings_position,
+            accent_generate_button,
+            font_size,
             font_color,
             font_color_light,
             waves_color,
+            bg_gradiant_color,
+            accent_color,
+            card_height,
+            card_width,
+            error_popup,
             disable_image_browser,
+            disable_waves_and_gradiant,
             server_default_port,
             auto_search_port,
             auto_start_server,
@@ -405,7 +390,7 @@ def ui_action_btn(accent_color,
             archive_path,
             sfw_mode,
             enable_clear_button,
-            enable_extra_network_tweaks
+            enable_extra_network_tweaks,
         ], outputs=[])
 
         btn_reset = gr.Button(value="Reset default (Reload UI needed to apply)",
@@ -616,27 +601,13 @@ def on_ui_tabs():
                         enable_extra_network_tweaks
                     ] = gradio_others_settings(config)
 
-        ui_action_btn(accent_color,
-                      accent_generate_button,
-                      bg_gradiant_color,
-                      card_height,
-                      card_width,
-                      disable_waves_and_gradiant,
-                      error_popup,
-                      font_size,
-                      main_menu_position,
-                      quicksettings_position,
-                      font_color,
-                      font_color_light,
-                      waves_color,
-                      disable_image_browser,
+        ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
+                      disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
+                      quicksettings_position, font_color, font_color_light, waves_color, disable_image_browser,
                       server_default_port,
                       auto_search_port,
                       auto_start_server,
-                      fetch_output_folder_from_a1111_settings,
-                      archive_path,
-                      sfw_mode,
-                      enable_clear_button,
+                      fetch_output_folder_from_a1111_settings, archive_path, sfw_mode, enable_clear_button,
                       enable_extra_network_tweaks)
 
         # hidden field to store some useful data and trigger some server actions (like "send to" txt2img,...)

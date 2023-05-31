@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useContext, useRef} from 'react'
+import React, {useEffect, useState, useCallback, useContext} from 'react'
 import './App.css'
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import Browser from "./Browser.jsx";
@@ -38,10 +38,23 @@ export function Button(props) {
       >{props.children}</button>
 }
 
+const config = JSON.parse(localStorage.getItem('COZY_NEST_CONFIG'))
+const disable_image_browser =
+  config['disable_image_browser']
+
+const serverPort = (() => {
+  try {
+    return config.server_default_port
+  }
+  catch (e) {
+    CozyLogger.debug('cnib_socket_server_port not found in main gradio app')
+    return 3333;
+  }
+})();
+
 
 function Loading(props) {
 
-  const config = useRef(JSON.parse(localStorage.getItem('COZY_NEST_CONFIG')))
   const color = config['accent_color'] || '#36d7b7'
   const label = props.label || ''
 
@@ -54,10 +67,6 @@ function Loading(props) {
 }
 
 function App() {
-
-  const config = useRef(JSON.parse(localStorage.getItem('COZY_NEST_CONFIG'))).current
-  const disable_image_browser =
-      config['disable_image_browser']
 
   if (disable_image_browser) {
     return (
@@ -73,7 +82,7 @@ function App() {
     setFilteredImages,
   } = useContext(ImagesContext)
 
-  const [socketUrl, setSocketUrl] = useState(`ws://localhost:${config['server_default_port']}`);
+  const [socketUrl, setSocketUrl] = useState(`ws://localhost:${serverPort}`);
   const [, setMessageHistory] = useState([]);
   const [tags, setTags] = useState([])
   const [activeTags, setActiveTags] = useState([])
