@@ -85,10 +85,7 @@ def gradio_save_settings(main_menu_position,
 
     current_config = get_dict_from_config()
 
-    if current_config['cnib_output_folder']:
-        settings['cnib_output_folder'] = current_config['cnib_output_folder']
-    else:
-        settings['cnib_output_folder'] = []
+    settings = {**current_config, **settings}
 
     save_settings(settings)
 
@@ -316,7 +313,7 @@ def gradio_main_tab(config):
 
         with gr.Row():
             font_color = gr.ColorPicker(value=config.get('font_color'), label="Font color",
-                                         elem_id="setting_nevyui_fontColor", interactive=True, visible=False)
+                                        elem_id="setting_nevyui_fontColor", interactive=True, visible=False)
 
             font_color_light = gr.ColorPicker(value=config.get('font_color_light'), label="Font color",
                                               elem_id="setting_nevyui_fontColorLight", interactive=True, visible=False)
@@ -353,7 +350,8 @@ def gradio_main_tab(config):
 
 def ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
                   disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
-                  quicksettings_position, font_color, font_color_light, waves_color, disable_image_browser, server_default_port,
+                  quicksettings_position, font_color, font_color_light, waves_color, disable_image_browser,
+                  server_default_port,
                   auto_search_port,
                   auto_start_server,
                   fetch_output_folder_from_a1111_settings, sfw_mode, enable_clear_button, enable_extra_network_tweaks):
@@ -449,8 +447,36 @@ def gradio_hidden_field(server_port):
                 ))
 
 
-def on_ui_tabs():
+def prune_ui_settings(**kwargs):
+    # load file ui-config.json located in working directory
+    ui_config_path = shared.cmd_opts.ui_config_file
+    if ui_config_path is None:
+        ui_config_path = os.path.join(shared.get_app_dir(), 'ui-config.json')
+    if os.path.exists(ui_config_path):
+        with open(ui_config_path, 'r') as f:
+            ui_config = json.load(f)
+        # remove keys that contains "nevyui" prefix
+        pruned = False
+        for key in list(ui_config.keys()):
+            if key.startswith('nevyui'):
+                pruned = True
+                del ui_config[key]
 
+        if pruned:
+            print('CozyNest: Pruned ui-config.json')
+
+        # save the file
+        with open(ui_config_path, 'w') as f:
+            json.dump(ui_config, f, indent=4)
+
+
+script_callbacks.on_before_reload(prune_ui_settings)
+script_callbacks.on_app_started(lambda a, b: prune_ui_settings)
+prune_ui_settings()
+
+
+def on_ui_tabs():
+    prune_ui_settings()
     # shared options
     config = get_dict_from_config()
     # merge default settings with user settings
@@ -578,7 +604,8 @@ def on_ui_tabs():
 
         ui_action_btn(accent_color, accent_generate_button, bg_gradiant_color, card_height, card_width,
                       disable_waves_and_gradiant, error_popup, font_size, main_menu_position,
-                      quicksettings_position, font_color, font_color_light, waves_color, disable_image_browser, server_default_port,
+                      quicksettings_position, font_color, font_color_light, waves_color, disable_image_browser,
+                      server_default_port,
                       auto_search_port,
                       auto_start_server,
                       fetch_output_folder_from_a1111_settings, sfw_mode, enable_clear_button,
