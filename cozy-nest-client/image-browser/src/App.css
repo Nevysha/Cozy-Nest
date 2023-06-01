@@ -9,15 +9,6 @@
     font-weight: bold;
     text-transform: uppercase;
 }
-.flex-column {
-    display: flex;
-    flex-direction: column;
-}
-.flex-row {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
 .browser {
     height: 100%;
     /*overflow-y: scroll;*/

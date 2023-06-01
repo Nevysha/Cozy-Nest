@@ -7,29 +7,9 @@ import {CozyLogger} from "../../main/CozyLogger.js";
 import Tags from "./Tags.tsx";
 import Loader from "react-spinners/HashLoader";
 import {ImagesContext} from "./ImagesContext.tsx";
+import {Column, Row} from "../../main/Utils.jsx";
 
-//component to wrap flex row
-export function Row(props) {
 
-  // if props.className is set, append flex-row to it
-  // otherwise, set className to flex-row
-  const className = props.className ? props.className + ' flex-row' : 'flex-row'
-
-  return <div
-    {...props}
-    className={className}>
-    {props.children}
-  </div>
-}
-
-//component to wrap flex column
-export function Column(props) {
-  return <div
-    {...props}
-    className="flex-column">
-    {props.children}
-  </div>
-}
 
 export function Button(props) {
   return <button

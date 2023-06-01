@@ -1,4 +1,4 @@
-import {Row} from "./App.jsx";
+import {Row} from "../../main/Utils.jsx";
 import {ImgTags} from "./Tags.tsx";
 import {Controls} from "./Controls.jsx";
 import React, {useContext, useEffect, useState} from "react";

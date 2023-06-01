@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import {CozyLogger} from "../../main/CozyLogger.js";
-import {Button, Column, Row} from "./App.jsx";
+import {Button} from "./App.jsx";
+import {Column, Row} from "../../main/Utils.jsx";
 
 import './editor/ExifEditor.css'
 import Exif from "./editor/ExifEditor.jsx";

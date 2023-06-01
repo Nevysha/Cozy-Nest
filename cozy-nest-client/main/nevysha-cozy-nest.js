@@ -1827,20 +1827,25 @@ export default  async function cozyNestModuleLoader() {
   setupPopupInstanceInfo();
   setupErrorHandling();
 
-  onloadSafe(() => {
-    CozyLogger.log(`running.`);
-    //remove #nevysha-loading from DOM
-    Loading.stop();
+  // wrap onloadSafe in Promise
+  return new Promise(resolve => {
+    onloadSafe(() => {
+      CozyLogger.log(`running.`);
+      //remove #nevysha-loading from DOM
+      Loading.stop();
 
-    SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
-    SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
+      SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
+      SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
 
-    if (shouldDisplaySDNextWarning)
-      showAlert(
-          "Warning",
-          "Cozy Nest detected that you are using SD.Next and running Cozy Nest for the first time. To ensure compatibility, please restart the server."
-          )
-  });
+      if (shouldDisplaySDNextWarning)
+        showAlert(
+            "Warning",
+            "Cozy Nest detected that you are using SD.Next and running Cozy Nest for the first time. To ensure compatibility, please restart the server."
+        )
+      resolve();
+    });
+  })
+
 };
 window.cozyNestModuleLoader = cozyNestModuleLoader;
 
@@ -1869,7 +1874,7 @@ function setupErrorHandling() {
 let COZY_NEST_CONFIG;
 let shouldDisplaySDNextWarning = false;
 
-async function fetchCozyNestConfig() {
+export async function fetchCozyNestConfig() {
   const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?t=${Date.now()}`);
   if (response.ok) {
     COZY_NEST_CONFIG = await response.json();
