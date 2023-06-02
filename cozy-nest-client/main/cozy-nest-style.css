@@ -1145,6 +1145,8 @@ input[type="number"] {
     margin: 15px 0 15px 0 !important;
     border-left: 4px solid var(--ae-primary-color);
     padding-left: 5px;
+    display: flex;
+    flex-wrap: wrap;
 }
 .nevysha.settings-nevyui-top > .nevysha-reporting > a {
     color: var(--ae-primary-color);

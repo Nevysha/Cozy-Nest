@@ -15,11 +15,18 @@ export function Row(props) {
     </div>
 }
 
+export const RowFullWidth = (props) => {
+    return <Row {...props} style={{width: '100%', justifyContent: 'space-between'}}/>
+}
+
 //component to wrap flex column
 export function Column(props) {
+
+    const className = props.className ? props.className + ' flex-column' : 'flex-column'
+
     return <div
         {...props}
-        className="flex-column">
+        className={className}>
         {props.children}
     </div>
 }

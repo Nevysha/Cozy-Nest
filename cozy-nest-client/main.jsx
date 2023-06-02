@@ -1,9 +1,12 @@
 import 'animate.css';
 import '@fontsource-variable/caveat';
-
 import sheet from './main/cozy-nest-style.css?inline' assert { type: 'css' };
-
-
+import cozyNestModuleLoader, {fetchCozyNestConfig} from './main/nevysha-cozy-nest.js'
+import SimpleTimer from "./main/SimpleTimer.js";
+import {COZY_NEST_GRADIO_LOAD_DURATION} from "./main/Constants.js";
+import {CozyLogger} from "./main/CozyLogger.js";
+import {startCozyNestImageBrowser} from "./image-browser/src/main.jsx";
+import startCozyNestSettings from "./settings/main.jsx";
 import {
   dummyLoraCard, dummyControlNetBloc, dummySubdirs
 } from './main/cozy-utils.js';
@@ -13,12 +16,7 @@ window.CozyTools = {
   dummySubdirs
 }
 
-import cozyNestModuleLoader, {fetchCozyNestConfig} from './main/nevysha-cozy-nest.js'
-import SimpleTimer from "./main/SimpleTimer.js";
-import {COZY_NEST_GRADIO_LOAD_DURATION} from "./main/Constants.js";
-import {CozyLogger} from "./main/CozyLogger.js";
-import {startCozyNestImageBrowser} from "./image-browser/src/main.jsx";
-import startCozyNestSettings from "./settings/main.jsx";
+
 
 export default async function cozyNestLoader()  {
   await fetchCozyNestConfig();
@@ -26,6 +24,7 @@ export default async function cozyNestLoader()  {
   startCozyNestSettings();
   startCozyNestImageBrowser();
 }
+
 window.cozyNestLoader = cozyNestLoader;
 
 (async () => {
