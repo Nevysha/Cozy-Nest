@@ -102,6 +102,7 @@ def scrap_image_folders(images_folders):
             return json.loads(f.read())
 
     # scrape the images folder recursively
+    # TODO store images as hash=>data in index
     images = []
     for images_folder in images_folders:
         for root, dirs, files in os.walk(images_folder):
