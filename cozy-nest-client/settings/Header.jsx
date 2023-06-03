@@ -10,7 +10,6 @@ export function Header (props) {
           <span className="subtitle">Find your cozy spot on Auto1111's webui</span>
         </div>
         <Row className="btn-toolbar">
-          <div className="btn">Drag Me</div>
           <div className="btn" onClick={props.onClickClose}>Close</div>
         </Row>
         <div className="container">

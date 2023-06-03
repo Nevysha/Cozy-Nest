@@ -1,11 +1,8 @@
 .App {
-    position: fixed;
-    right: 5px;
     /*TODO calc this*/
-    top: 30px;
+    width: max(800px, 50vw);
     height: fit-content;
     min-height: 150px;
-    width: max(800px, 50vw);
     z-index: 9998;
     border: 1px solid var(--ae-input-border-color);
 
