@@ -182,7 +182,7 @@ export function App() {
                       <Checkbox>Disable image browser (Reload UI required)</Checkbox>
                     </RowFullWidth>
                     <RowFullWidth>
-                      <FormControl>
+                      <FormControl style={{width: "30%"}}>
                         <FormLabel>Socket port for image browser</FormLabel>
                         <Input placeholder='3333' />
                       </FormControl>
