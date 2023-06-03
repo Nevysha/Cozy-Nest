@@ -28,6 +28,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import {PopoverColorPicker} from "./PopoverColorPicker.jsx";
+import {OuputFolderSelector} from "./OuputFolderSelector.jsx";
 
 
 function DialogWrapper({children, isVisible}) {
@@ -64,7 +65,6 @@ function DialogWrapper({children, isVisible}) {
   );
 }
 
-
 export function App() {
 
   const [isVisible, setIsVisible] = useState(true)
@@ -74,6 +74,8 @@ export function App() {
   const [wavesColor, setWavesColor] = useState(COZY_NEST_CONFIG.waves_color);
   const [bgGradiantColor, setBgGradiantColor] = useState(COZY_NEST_CONFIG.bg_gradiant_color);
   const [accentColor, setAccentColor] = useState(COZY_NEST_CONFIG.accent_color);
+
+  const [config, setConfig] = useState(COZY_NEST_CONFIG)
 
   const toggle = () => {
     CozyLogger.debug('toggle')
@@ -134,10 +136,10 @@ export function App() {
                       <FormControl>
                         <FormLabel>Font size</FormLabel>
                         <NumberInput defaultValue={12} min={10} max={18}>
-                          <NumberInputField />
+                          <NumberInputField/>
                           <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
+                            <NumberIncrementStepper/>
+                            <NumberDecrementStepper/>
                           </NumberInputStepper>
                         </NumberInput>
                       </FormControl>
@@ -145,10 +147,10 @@ export function App() {
                       <FormControl>
                         <FormLabel>Extra network card height</FormLabel>
                         <NumberInput defaultValue={8} min={5} max={20}>
-                          <NumberInputField />
+                          <NumberInputField/>
                           <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
+                            <NumberIncrementStepper/>
+                            <NumberDecrementStepper/>
                           </NumberInputStepper>
                         </NumberInput>
                       </FormControl>
@@ -156,21 +158,22 @@ export function App() {
                       <FormControl>
                         <FormLabel>Extra network card width</FormLabel>
                         <NumberInput defaultValue={13} min={5} max={20}>
-                          <NumberInputField />
+                          <NumberInputField/>
                           <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
+                            <NumberIncrementStepper/>
+                            <NumberDecrementStepper/>
                           </NumberInputStepper>
                         </NumberInput>
                       </FormControl>
 
                     </RowFullWidth>
                     <RowFullWidth>
-                      <PopoverColorPicker label="Font Color" color={fontColor} onChange={setFontColor} />
-                      <PopoverColorPicker label="Font Color" color={fontColorLight} onChange={setFontColorLight} />
-                      <PopoverColorPicker label="Waves Color" color={wavesColor} onChange={setWavesColor} />
-                      <PopoverColorPicker label="Background gradiant Color" color={bgGradiantColor} onChange={setBgGradiantColor} />
-                      <PopoverColorPicker label="Accent Color" color={accentColor} onChange={setAccentColor} />
+                      <PopoverColorPicker label="Font Color" color={fontColor} onChange={setFontColor}/>
+                      <PopoverColorPicker label="Font Color" color={fontColorLight} onChange={setFontColorLight}/>
+                      <PopoverColorPicker label="Waves Color" color={wavesColor} onChange={setWavesColor}/>
+                      <PopoverColorPicker label="Background gradiant Color" color={bgGradiantColor}
+                                          onChange={setBgGradiantColor}/>
+                      <PopoverColorPicker label="Accent Color" color={accentColor} onChange={setAccentColor}/>
                     </RowFullWidth>
                     <RowFullWidth>
                       <Checkbox>SFW mode 👀 (blur all images)</Checkbox>
@@ -184,20 +187,18 @@ export function App() {
                     <RowFullWidth>
                       <FormControl style={{width: "30%"}}>
                         <FormLabel>Socket port for image browser</FormLabel>
-                        <Input placeholder='3333' />
+                        <Input placeholder='3333'/>
                       </FormControl>
                       <Checkbox>Auto search port</Checkbox>
                       <Checkbox>Fetch output folder from a1111 settings (Reload needed to enable)</Checkbox>
                     </RowFullWidth>
                     <Column>
                       <FormLabel>Archive path</FormLabel>
-                      <Input placeholder='C:/stable-difusion/...' />
+                      <Input placeholder='C:/stable-difusion/...'/>
                     </Column>
                     <Column>
                       <FormLabel>Output path</FormLabel>
-                      <Input placeholder='C:/stable-difusion/...' />
-                      <Input placeholder='C:/stable-difusion/...' />
-                      <Input placeholder='C:/stable-difusion/...' />
+                      <OuputFolderSelector config={config} setConfig={setConfig}/>
                     </Column>
                   </TabPanel>
 
@@ -213,9 +214,9 @@ export function App() {
               </Tabs>
 
               <RowFullWidth className="btn-toolbar" style={{gap: '25px', padding: '15px'}}>
-                <div className="btn" style={{width:'100%'}}>Save</div>
-                <div className="btn" style={{width:'100%'}}>Reset</div>
-                <div className="btn" style={{width:'100%'}}>Reload UI</div>
+                <div className="btn" style={{width: '100%'}}>Save</div>
+                <div className="btn" style={{width: '100%'}}>Reset</div>
+                <div className="btn" style={{width: '100%'}}>Reload UI</div>
               </RowFullWidth>
 
               <div>Made by Nevysha with luv</div>
