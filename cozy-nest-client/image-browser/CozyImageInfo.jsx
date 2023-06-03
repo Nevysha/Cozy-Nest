@@ -115,11 +115,11 @@ export function CozyImageInfo({verbose, imageHash, closeModal}) {
             Close
           </button>
           <Row>
-            <ImgTags tags={tags} defaultValue={imgTags} onChange={onTagsChange}/>
+            <ImgTags tags={tags} imageHash={imageHash} onChange={onTagsChange}/>
           </Row>
         </>
       }
-      {!isVerbose && <ImgTags tags={tags} defaultValue={imgTags} onChange={onTagsChange}/>}
+      {!isVerbose && <ImgTags tags={tags} imageHash={imageHash} onChange={onTagsChange}/>}
       <table>
         <tbody>
         <tr><td>Date: </td><td>{formattedExif?.date}</td></tr>

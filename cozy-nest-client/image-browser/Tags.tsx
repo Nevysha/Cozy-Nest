@@ -100,34 +100,41 @@ export default function Tags(props: TagsProps) {
   )
 }
 
-export function ImgTags(props: CreatableTagsProps) {
+export function ImgTags({imageHash, tags, onChange}: {imageHash: string}) {
 
-  const {images} = useContext(ImagesContext);
+  const {images, getImage} = useContext(ImagesContext);
+  const [image, setImage] = useState(
+      images[imageHash]
+  );
+
+  const [imgTags, setImgTags] = useState([])
 
   const [isLoading, setIsLoading] = useState(false);
-  const [options, setOptions]
-      = useState(props.tags.map(tag => ({value: tag, label: tag})));
-  const [value, setValue] = useState(props.defaultValue);
+  const [options, setOptions] = useState([]);
 
   useEffect(() => {
-    setOptions(props.tags.map(tag => ({value: tag, label: tag})));
-    setValue(props.defaultValue);
-  }, [props.tags, props.defaultValue, images])
+    setOptions(tags.map(tag => ({value: tag, label: tag})));
+    setImage(getImage(imageHash));
+
+    if (image && image.metadata && image.metadata.exif && image.metadata.exif['cozy-nest-tags']) {
+      setImgTags(image.metadata.exif['cozy-nest-tags'].split(',').map(tag => ({value: tag, label: tag})));
+    }
+  }, [tags, image, imageHash])
 
   const handleCreate = (inputValue: string) => {
     setIsLoading(true);
     const newOption = createOption(inputValue);
     setOptions((prev) => [...prev, newOption]);
-    setValue([...value, newOption]);
-    props.onChange([...value, newOption]);
+    setImgTags([...imgTags, newOption]);
+    onChange([...imgTags, newOption]);
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
   };
 
   const handleChange = (newValue: any) => {
-    setValue(newValue);
-    props.onChange(newValue);
+    setImgTags(newValue);
+    onChange(newValue);
   }
 
   return (
@@ -141,7 +148,7 @@ export function ImgTags(props: CreatableTagsProps) {
           placeholder={'Tags...'}
           styles={styles}
           onChange={(tags) => handleChange(tags)}
-          value={value}
+          value={imgTags}
       />
   )
 }
