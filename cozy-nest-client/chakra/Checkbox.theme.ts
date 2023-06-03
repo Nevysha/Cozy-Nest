@@ -32,7 +32,7 @@ export const radioTheme = radioDefineMultiStyleConfig({
     control: {
       boxShadow: 'var(--input-shadow)',
       border: '1px solid var(--ae-input-border-color) !important',
-      borderRadius: 'var(--checkbox-border-radius)',
+      // borderRadius: 'var(--checkbox-border-radius)',
       backgroundColor: 'var(--checkbox-background-color)',
       lineHeight: 'var(--line-sm)',
     }
