@@ -3,11 +3,11 @@ import './App.css'
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import Browser from "./Browser.jsx";
 import {MockImageBrowser} from "./MockImageBrowser.jsx";
-import {CozyLogger} from "../../main/CozyLogger.js";
+import {CozyLogger} from "../main/CozyLogger.js";
 import Tags from "./Tags.tsx";
 import Loader from "react-spinners/HashLoader";
 import {ImagesContext} from "./ImagesContext.tsx";
-import {Column, Row} from "../../main/Utils.jsx";
+import {Column, Row} from "../main/Utils.jsx";
 
 
 

@@ -1,7 +1,7 @@
 import {ReadyState} from "react-use-websocket";
 import React from 'react'
 import Browser from "./Browser.jsx";
-import {Column, Row} from "../../main/Utils.jsx";
+import {Column, Row} from "../main/Utils.jsx";
 
 export function MockImageBrowser() {
     return (

@@ -5,8 +5,8 @@ import cozyNestModuleLoader, {fetchCozyNestConfig} from './main/nevysha-cozy-nes
 import SimpleTimer from "./main/SimpleTimer.js";
 import {COZY_NEST_GRADIO_LOAD_DURATION} from "./main/Constants.js";
 import {CozyLogger} from "./main/CozyLogger.js";
-import {startCozyNestImageBrowser} from "./image-browser/src/main.jsx";
-import startCozyNestSettings from "./settings/main.jsx";
+import {startCozyNestImageBrowser} from "@image-browser/main.jsx";
+import startCozyNestSettings from "@settings/main.jsx";
 import {
   dummyLoraCard, dummyControlNetBloc, dummySubdirs
 } from './main/cozy-utils.js';

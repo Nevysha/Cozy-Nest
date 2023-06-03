@@ -1,7 +1,7 @@
 import React, {createContext, ReactNode, useState} from 'react';
-import {Image} from "../../cozy-types";
+import {Image} from "../cozy-types";
 // @ts-ignore
-import {CozyLogger} from "../../main/CozyLogger";
+import {CozyLogger} from "../main/CozyLogger";
 
 interface ImagesContextType {
     images: Image[];

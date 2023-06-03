@@ -1,10 +1,10 @@
-import {Row} from "../../main/Utils.jsx";
+import {Row} from "../main/Utils.jsx";
 import {ImgTags} from "./Tags.tsx";
 import {Controls} from "./Controls.jsx";
 import React, {useContext, useEffect, useState} from "react";
 import Exif from "./editor/ExifEditor.jsx";
 import {ImagesContext} from "./ImagesContext.tsx";
-import {CozyLogger} from "../../main/CozyLogger.js";
+import {CozyLogger} from "../main/CozyLogger.js";
 
 const tryCatch = (fn) => {
   try {
