@@ -267,8 +267,6 @@ function tweakAWQ() {
       }
     });
   }
-
-
 }
 
 const addCozyNestCustomBtn = () => {
@@ -277,9 +275,6 @@ const addCozyNestCustomBtn = () => {
   nevySettingstabMenuWrapper.classList.add("nevysha-btn-menu-wrapper");
   nevySettingstabMenuWrapper.id = "nevysha-btn-menu-wrapper";
 
-  //add a new button in the tabnav
-  const nevySettingstabMenu2 = `<button class="nevysha-btn-menu" id="nevyui_sh_options" title="Nevysha Cozy Nest Settings">${svg_magic_wand}</button>`;
-  nevySettingstabMenuWrapper.insertAdjacentHTML('beforeend', nevySettingstabMenu2);
   //add a new button in the tabnav
   const updateInfoBtn = `<button class="nevysha-btn-menu" id="nevyui_update_info" title="Nevysha Cozy Nest Update Info">${svg_update_info}</button>`;
   nevySettingstabMenuWrapper.insertAdjacentHTML('beforeend', updateInfoBtn);
@@ -293,33 +288,6 @@ const addCozyNestCustomBtn = () => {
   updateTab.id = "nevyui_update_info_panel";
   updateTab.style = "display: none;";
   document.querySelector("#tabs").insertAdjacentElement("beforeend", updateTab)
-
-  //add kofi image :blush:
-  const kofiImg = document.createElement('button')
-  kofiImg.id = 'kofi_nevysha_support'
-  kofiImg.innerHTML = `<img id="kofi_nevysha_support_img" height="15" src="${kofiCup}" alt="Consider a donation on ko-fi! :3">`
-  kofiImg.title = "Consider a donation on ko-fi! :3"
-  nevySettingstabMenuWrapper.insertAdjacentElement('beforeend', kofiImg);
-
-  //create a div that will contain a dialog to display the iframe
-  const kofiTab = document.createElement("div");
-  kofiTab.classList.add("nevysha-kofi-tab", "nevysha", "nevysha-tab", "nevysha-tab-settings");
-  kofiTab.id = "nevyui_kofi_panel";
-  kofiTab.style = "display: none;";
-  // kofiTab.innerHTML = `<iframe id='kofiframe' src='https://ko-fi.com/nevysha/?hidefeed=true&widget=true&embed=true&preview=true' style='border:none;width:100%;padding:4px;background:#f9f9f9;' height='712' title='nevysha'></iframe>`
-  document.querySelector("#tabs").insertAdjacentElement("beforeend", kofiTab)
-
-  let kofiImgIsVisible = false
-
-  function toggleKofiPanel() {
-
-    window.open("https://ko-fi.com/nevysha", "_blank")
-  }
-
-  //add event listener to the button
-  kofiImg.addEventListener("click", () => {
-    toggleKofiPanel();
-  });
 
   //fetch version_data.json
   loadVersionData().then(ignored => ignored)
@@ -523,199 +491,6 @@ function createFolderListComponent() {
   parseAndDisplayFolderSettings();
 }
 
-const tweakNevyUiSettings = () => {
-  // select button element with "Nevysha Cozy Nest" as its content
-  const nevySettingstabMenu = $('#tabs > div > button:contains("Nevysha Cozy Nest")');
-  // hide the button
-  nevySettingstabMenu.hide();
-
-  addCozyNestCustomBtn();
-
-  ///create an hideable right side panel
-  const nevySettingstab = `<div id="nevyui_sh_options_panel" class="nevysha nevysha-tab nevysha-tab-settings" style="display: none;">`;
-  document.querySelector("#tabs").insertAdjacentHTML('beforeend', nevySettingstab);
-  //put tab_nevyui inside the panel
-  document.querySelector("#nevyui_sh_options_panel").appendChild(document.querySelector("#tab_nevyui"));
-
-  //add title
-  const title = `
-        <div class="nevysha settings-nevyui-title">
-            <h2>Nevysha's Cozy Nest</h2>
-            <span class="subtitle">Find your cozy spot on Auto1111's webui</span>
-          </div>`;
-  document.querySelector("#nevyui_sh_options_panel").insertAdjacentHTML("afterbegin", title);
-
-  //add an event listener on #nevyui_sh_options_submit to briefly show a message when the user clicks on it
-  document.querySelector("#nevyui_sh_options_submit").addEventListener("click", (e) => {
-    //cancel event
-    e.preventDefault();
-    e.stopPropagation();
-
-    //show the message with a smooth animation using jquery
-    $("#nevysha-saved-feedback").fadeIn();
-
-    try {
-      const jsonFolders = JSON.parse(document.querySelector('#cnib_output_folder textarea').value);
-      //send config data with POST to /cozy-nest/config
-      const config = {
-        "cnib_output_folder": jsonFolders,
-      }
-      fetch('/cozy-nest/config', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(config)
-      }).then(response => {
-        if (response.status === 200) {
-          return response.json();
-        } else {
-          throw new Error('Something went wrong on api server!');
-        }
-      })
-    }
-    catch (e) {
-      CozyLogger.debug(e);
-    }
-
-
-    //hide the message after 1.5 second
-    setTimeout(() => {
-          $("#nevysha-saved-feedback").fadeOut();
-
-        //save new settings in localStorage
-        (() => fetchCozyNestConfig())() //ignore async warn
-    }, 1500);
-  });
-
-  //add an event listener on #nevyui_sh_options_submit to briefly show a message when the user clicks on it
-  document.querySelector("#nevyui_sh_options_reset").addEventListener("click", (e) => {
-    //cancel event
-    e.preventDefault();
-    e.stopPropagation();
-
-    //show the message with a smooth animation using jquery
-    $("#nevysha-reset-feedback").fadeIn();
-    //hide the message after 1.5 second
-    setTimeout(() => {
-      $("#nevysha-reset-feedback").fadeOut();
-
-      //save new settings in localStorage
-      (() => fetchCozyNestConfig())() //ignore async warn
-    }, 1500);
-  });
-
-
-  //show tab_nevyui by default to bypass gradio
-  document.querySelector("#tab_nevyui").style.display = "block";
-
-  //add click event to the new settings button
-  (function closure() {
-    let shown = false;
-    document.querySelector("#nevyui_sh_options").addEventListener("click", (e) => {
-      //cancel event
-      e.preventDefault();
-      e.stopPropagation();
-
-      //show tab_nevyui by default to bypass gradio hidding tabs
-      document.querySelector("#tab_nevyui").style.display = "block";
-
-      //toggle the panel with a slide animation using jquery
-      if (shown) {
-        $("#nevyui_sh_options_panel").slideUp(ANIMATION_SPEED);
-      } else {
-        $("#nevyui_sh_options_panel").slideDown(ANIMATION_SPEED);
-      }
-      shown = !shown;
-    });
-  })();
-
-
-  //add click event to the new update info button
-  (function closure() {
-    let shown = false;
-    document.querySelector("#nevyui_update_info").addEventListener("click", (e) => {
-      //cancel event
-      e.preventDefault();
-      e.stopPropagation();
-
-      //show tab_nevyui by default to bypass gradio hidding tabs
-      document.querySelector("#tab_nevyui").style.display = "block";
-
-      //toggle the panel with a slide animation using jquery
-      if (shown) {
-        $("#nevyui_update_info_panel").slideUp(ANIMATION_SPEED);
-      } else {
-        $("#nevyui_update_info_panel").slideDown(ANIMATION_SPEED);
-      }
-      shown = !shown;
-    });
-  })();
-
-  createFolderListComponent();
-}
-
-const makeSettingsDraggable = () => {
-  // Get a reference to the draggable div element
-  const draggableSettings = document.querySelector('#nevyui_sh_options_panel');
-
-  // Define variables to keep track of the mouse position and offset
-  let isDragging = false;
-  let mouseX = 0;
-  let mouseY = 0;
-  let offsetX = 0;
-  let offsetY = 0;
-
-  // create draggable icon
-  const draggableAnchorIcon = document.createElement('div');
-  draggableAnchorIcon.classList.add('nevysha-draggable-anchor-icon', 'nevysha-button');
-  //add a drag icon
-  draggableAnchorIcon.innerHTML = "Drag Me";
-  // add the anchor to the start of the draggable div
-  draggableSettings.insertBefore(draggableAnchorIcon, draggableSettings.firstChild);
-  // create a blank div above the svg icon to catch for mousedown events
-  const draggableAnchor = document.createElement('div');
-  draggableAnchor.classList.add('nevysha-draggable-anchor', 'nevysha-button');
-  // add the anchor to the start of the draggable div
-  draggableSettings.insertBefore(draggableAnchor, draggableSettings.firstChild);
-
-  //add close button
-  const settingCloseButton = document.createElement('div');
-  settingCloseButton.classList.add('nevysha-draggable-anchor', 'nevysha-draggable-anchor-icon', 'nevysha-setting-close-button', 'nevysha-button');
-  settingCloseButton.innerHTML = 'Close';
-  settingCloseButton.style.left = '70px';
-  settingCloseButton.style.top = '2px';
-  draggableSettings.appendChild(settingCloseButton);
-  settingCloseButton.addEventListener('click', () => {
-    document.querySelector("#nevyui_sh_options").click();
-  });
-
-
-  // Add event listeners for mouse events
-  draggableAnchor.addEventListener('mousedown', function(event) {
-    // Set dragging flag and store mouse position and offset from element top-left corner
-    isDragging = true;
-    mouseX = event.clientX;
-    mouseY = event.clientY;
-    offsetX = draggableSettings.offsetLeft;
-    offsetY = draggableSettings.offsetTop;
-  });
-
-  document.addEventListener('mousemove', function(event) {
-    // If dragging, update element position based on mouse movement
-    if (isDragging) {
-      const deltaX = event.clientX - mouseX;
-      const deltaY = event.clientY - mouseY;
-      draggableSettings.style.left = (offsetX + deltaX) + 'px';
-      draggableSettings.style.top = (offsetY + deltaY) + 'px';
-    }
-  });
-
-  document.addEventListener('mouseup', function(event) {
-    // Reset dragging flag
-    isDragging = false;
-  });
-}
 
 function observeElementAdded(targetSelector, callback) {
   // Create a new MutationObserver instance
@@ -1479,8 +1254,7 @@ const onLoad = (done) => {
   //add expend to inpainting
   tweakInpainting();
 
-  //tweak webui setting page for Cozy Nest directly with JS because... gradio blblblbl
-  tweakNevyUiSettings();
+  addCozyNestCustomBtn();
 
   //load settings
   recalcOffsetFromMenuHeight();
@@ -1496,9 +1270,6 @@ const onLoad = (done) => {
   else {
     document.querySelector("body").classList.remove("nevysha-light")
   }
-
-  //make settings draggable
-  makeSettingsDraggable();
 
   //add observer for .options resize
   addOptionsObserver();

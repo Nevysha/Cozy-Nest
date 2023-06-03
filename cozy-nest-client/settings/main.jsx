@@ -16,7 +16,8 @@ export default function startCozyNestSettings() {
   const settingsDiv = document.createElement("div");
   settingsDiv.id = containerId;
   settingsDiv.style = 'display: flex;'
-  document.querySelector('#nevysha-btn-menu-wrapper').appendChild(settingsDiv);
+  // insert settingsDiv before the first child of '#nevysha-btn-menu-wrapper'
+  document.getElementById('nevysha-btn-menu-wrapper').insertBefore(settingsDiv, document.getElementById('nevysha-btn-menu-wrapper').firstChild);
 
   ReactDOM.createRoot(document.getElementById(containerId)).render(
     <React.StrictMode>

@@ -39,7 +39,7 @@ import {
   applyFontSize,
   setCardHeight,
   setCardWidth,
-  applyMenuPosition, setQuicksettingPosition, setSfwSettings
+  applyMenuPosition, setQuicksettingPosition, setSfwSettings, recalcOffsetFromMenuHeight
 } from "../main/tweaks/various-tweaks.js";
 import {getTheme} from "../main/cozy-utils.js";
 
@@ -93,16 +93,16 @@ const nevyshaScrollbar = {
 
 export function App() {
 
-  const [isVisible, setIsVisible] = useState(true)
+  const [isVisible, setIsVisible] = useState(false)
 
   const [config, setConfig] = useState(COZY_NEST_CONFIG)
 
-  useEffect(() => {
+  function applySettings() {
     applyWavesColor(config.waves_color);
     applyFontColor(
-        getTheme() === "dark" ?
-          config.font_color :
-          config.font_color_light
+      getTheme() === "dark" ?
+        config.font_color :
+        config.font_color_light
     )
     applyBgGradiantColor(config.bg_gradiant_color);
     applyDisabledWavesAndGradiant(config.disable_waves_and_gradiant);
@@ -114,7 +114,16 @@ export function App() {
     applyMenuPosition(config.main_menu_position)
     setQuicksettingPosition(config.quicksettings_position)
     setSfwSettings(config.sfw_mode)
+    recalcOffsetFromMenuHeight()
+  }
+
+  useEffect(() => {
+    applySettings();
   }, [config])
+
+  useEffect(() => {
+    applySettings();
+  }, [])
 
   const toggle = () => {
     CozyLogger.debug('toggle')
