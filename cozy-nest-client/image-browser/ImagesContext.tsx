@@ -2,6 +2,7 @@ import React, {createContext, ReactNode, useState} from 'react';
 import {Image} from "../cozy-types";
 // @ts-ignore
 import {CozyLogger} from "../main/CozyLogger";
+import {TagOption} from "./Tags.tsx";
 
 interface ImagesContextType {
     images: Image[];
@@ -20,6 +21,7 @@ export const ImagesContext = createContext<ImagesContextType>({
 export function ImagesProvider({ children }: { children: ReactNode[] }) {
     const [images, setImages] = useState<Image[]>([]);
     const [filteredImages, setFilteredImages] = useState<Image[]>([]);
+    const [tags, setTags] = useState<TagOption[]>([]);
 
     const deleteImg = async (what: string, image: Image) => {
 
@@ -64,7 +66,7 @@ export function ImagesProvider({ children }: { children: ReactNode[] }) {
 
         const {metadata: {exif, hash}} = image
         const newImages = images.map(image => {
-            if (image.metadata.hash === hash) {
+            if (image.hash === hash) {
                 image.metadata.exif = exif
             }
             return image
@@ -83,7 +85,9 @@ export function ImagesProvider({ children }: { children: ReactNode[] }) {
         setFilteredImages,
         deleteImg,
         updateExifInState,
-        getImage
+        getImage,
+        tags,
+        setTags: (tags: string []) => {tags.map(tag => ({value: tag, label: tag}))},
     }
 
     return (

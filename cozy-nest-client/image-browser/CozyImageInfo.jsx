@@ -16,7 +16,7 @@ const tryCatch = (fn) => {
 
 export function CozyImageInfo({verbose, imageHash, closeModal}) {
 
-  const {images, updateExifInState, getImage} = useContext(ImagesContext)
+  const {images, updateExifInState, getImage, tags} = useContext(ImagesContext)
 
   const [image, setImage] = useState(
     getImage(imageHash)
@@ -34,7 +34,6 @@ export function CozyImageInfo({verbose, imageHash, closeModal}) {
   })
   const isVerbose = verbose;
 
-  const [tags, setTags] = useState([])
   const [imgTags, setImgTags] = useState([])
 
   useEffect(() => {
@@ -70,18 +69,6 @@ export function CozyImageInfo({verbose, imageHash, closeModal}) {
           })
       setImgTags([..._imgTags])
     }
-  }, [image])
-
-  useEffect(() => {
-    const _tags = []
-    images
-      .forEach(image => {
-        if (image.metadata.exif['cozy-nest-tags']) {
-          const imgTags = image.metadata.exif['cozy-nest-tags'].split(',')
-          _tags.push(...imgTags)
-        }
-    })
-    setTags([...new Set(_tags)])
   }, [image])
 
   const onTagsChange = (tags) => {

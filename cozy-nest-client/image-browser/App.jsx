@@ -60,11 +60,12 @@ function App() {
     images,
     setImages,
     setFilteredImages,
+    tags,
+    setTags,
   } = useContext(ImagesContext)
 
   const [socketUrl, setSocketUrl] = useState(`ws://localhost:${serverPort}`);
   const [, setMessageHistory] = useState([]);
-  const [tags, setTags] = useState([])
   const [activeTags, setActiveTags] = useState([])
   const [searchStr, setSearchStr] = useState('');
   const [emptyFetch, setEmptyFetch] = useState(false);

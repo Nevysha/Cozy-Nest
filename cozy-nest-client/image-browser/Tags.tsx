@@ -5,9 +5,8 @@ import
 import Select from 'react-select'
 import CreatableSelect from 'react-select/creatable';
 import makeAnimated from 'react-select/animated';
-
-// @ts-ignore
-import {CozyLogger} from "../../main/CozyLogger";
+//@ts-ignore
+import {CozyLogger} from "../main/CozyLogger";
 import {ImagesContext} from "./ImagesContext.tsx";
 
 const animatedComponents = makeAnimated();
@@ -63,7 +62,7 @@ const styles = {
   })
 }
 
-interface TagOption {
+export interface TagOption {
     label: string;
     value: string;
 }
@@ -100,9 +99,9 @@ export default function Tags(props: TagsProps) {
   )
 }
 
-export function ImgTags({imageHash, tags, onChange}: {imageHash: string}) {
+export function ImgTags({imageHash, onChange}: {imageHash: string}) {
 
-  const {images, getImage} = useContext(ImagesContext);
+  const {images, getImage, tags} = useContext(ImagesContext);
   const [image, setImage] = useState(
     getImage(imageHash)
   );
@@ -113,13 +112,16 @@ export function ImgTags({imageHash, tags, onChange}: {imageHash: string}) {
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
+    const formattedOpt = tags.map(tag => ({value: tag, label: tag}));
     setOptions(tags.map(tag => ({value: tag, label: tag})));
     setImage(getImage(imageHash));
 
     if (image && image.metadata && image.metadata.exif && image.metadata.exif['cozy-nest-tags']) {
-      setImgTags(image.metadata.exif['cozy-nest-tags'].split(',').map(tag => ({value: tag, label: tag})));
+      const formattedTags = image.metadata.exif['cozy-nest-tags'].split(',').map(tag => ({value: tag, label: tag}));
+      CozyLogger.debug('ImgTags', 'formattedTags', formattedTags, 'formattedOpt', formattedOpt);
+      setImgTags([...formattedTags]);
     }
-  }, [tags, image, imageHash])
+  }, [])
 
   const handleCreate = (inputValue: string) => {
     setIsLoading(true);
