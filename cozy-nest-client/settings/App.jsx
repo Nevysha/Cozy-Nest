@@ -44,6 +44,7 @@ import {
 import {getTheme} from "../main/cozy-utils.js";
 import {WEBUI_SDNEXT} from "../main/Constants.js";
 import {saveCozyNestConfig} from "../main/nevysha-cozy-nest.js";
+import {ButtonWithConfirmDialog} from "../chakra/ButtonWithConfirmDialog.jsx";
 
 
 function DialogWrapper({children, isVisible}) {
@@ -144,6 +145,24 @@ export function App() {
 
   const saveConfig = () => {
     (async () => await saveCozyNestConfig(config))()
+  }
+
+  const resetConfig = () => {
+    (async () => {
+      // call to @app.delete("/cozy-nest/config")
+      await fetch(`/cozy-nest/config`, {
+        method: 'DELETE',
+      })
+    })();
+  }
+
+  const reloadUi = () => {
+    (async () => {
+      // call to @app.get("/cozy-nest/reloadui")
+      await fetch(`/cozy-nest/reloadui`)
+      //reload the page
+      window.location.reload()
+    })();
   }
 
 
@@ -344,13 +363,16 @@ export function App() {
                   style={{width: '100%'}}
                   onClick={saveConfig}
                 >Save</button>
+                <ButtonWithConfirmDialog
+                  message="Are you sure you want to reset all settings ? This will trigger a UI Reload"
+                  confirmLabel="Reset"
+                  cancelLabel="Cancel"
+                  onConfirm={resetConfig}
+                />
                 <button
                   className="btn-settings"
                   style={{width: '100%'}}
-                >Reset</button>
-                <button
-                  className="btn-settings"
-                  style={{width: '100%'}}
+                  onClick={reloadUi}
                 >Reload UI</button>
               </RowFullWidth>
 

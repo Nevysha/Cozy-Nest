@@ -401,6 +401,15 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
 
         return {"message": "Config saved successfully"}
 
+    @app.delete("/cozy-nest/config")
+    async def delete_config():
+        reset_settings()
+        return {"message": "Config deleted successfully"}
+
+    @app.get("/cozy-nest/reloadui")
+    async def reload_ui():
+        request_restart()
+
     @app.get("/cozy-nest/image")
     async def get_image(path: str):
         # Open the file in binary mode

@@ -36,10 +36,15 @@
     background: var(--ae-input-bg-color);
     border: 1px solid var(--ae-input-border-color);
     border-radius: 0;
+    color: var(--body-text-color);
+    font-size: var(--body-text-size);
 }
 .btn-settings:hover {
     background: var(--ae-input-bg-color);
     border: 1px solid var(--ae-input-border-color);
+}
+.btn-settings:active {
+    outline: none;
 }
 .btn-toolbar {
     padding: 10px 0 20px;

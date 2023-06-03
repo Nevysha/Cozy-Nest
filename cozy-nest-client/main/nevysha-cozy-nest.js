@@ -1303,13 +1303,16 @@ const onLoad = (done) => {
   done();
 };
 
-export async function saveCozyNestConfig() {
+export async function saveCozyNestConfig(config) {
+
+  config = config || COZY_NEST_CONFIG;
+
   await fetch('/cozy-nest/config', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(COZY_NEST_CONFIG)
+    body: JSON.stringify(config)
   })
 }
 
