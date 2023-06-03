@@ -41,7 +41,7 @@ export function OuputFolderSelector({config, setConfig}) {
               />
               <InputRightElement width='4.5rem'>
                 <button
-                    className="btn"
+                    className="btn-settings"
                     onClick={() => {
                         const newOutputFolder = [...outputFolder]
                         newOutputFolder.splice(index, 1)
@@ -62,7 +62,7 @@ export function OuputFolderSelector({config, setConfig}) {
               }}
           />
           <InputRightElement width='4.5rem'>
-            <button className="btn" onClick={addNewOutputFolder}>Add</button>
+            <button className="btn-settings" onClick={addNewOutputFolder}>Add</button>
           </InputRightElement>
         </InputGroup>
       </div>

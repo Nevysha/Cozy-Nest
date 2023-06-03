@@ -42,6 +42,7 @@ import {
   applyMenuPosition, setQuicksettingPosition, setSfwSettings, recalcOffsetFromMenuHeight
 } from "../main/tweaks/various-tweaks.js";
 import {getTheme} from "../main/cozy-utils.js";
+import {WEBUI_SDNEXT} from "../main/Constants.js";
 
 
 function DialogWrapper({children, isVisible}) {
@@ -59,7 +60,7 @@ function DialogWrapper({children, isVisible}) {
 
   return (
     <AlertDialog
-      motionPreset='slideInBottom'
+      motionPreset='scale'
       isOpen={isOpen}
       leastDestructiveRef={cancelRef}
       onClose={onClose}
@@ -293,8 +294,11 @@ export function App() {
                             onChange={(e) => updateConfig(e, 'server_default_port')}
                         />
                       </FormControl>
-                      <Checkbox>Auto search port</Checkbox>
-                      <Checkbox>Fetch output folder from a1111 settings (Reload needed to enable)</Checkbox>
+                      <Checkbox
+                      >Auto search port</Checkbox>
+                      <Checkbox
+                        visibility={config.webui === WEBUI_SDNEXT ? 'hidden' : 'visible'}
+                      >Fetch output folder from a1111 settings (Reload needed to enable)</Checkbox>
                     </RowFullWidth>
                     <Column>
                       <FormLabel>Archive path</FormLabel>
@@ -328,9 +332,9 @@ export function App() {
               </Tabs>
 
               <RowFullWidth className="btn-toolbar" style={{gap: '25px', padding: '15px'}}>
-                <button className="btn" style={{width: '100%'}}>Save</button>
-                <button className="btn" style={{width: '100%'}}>Reset</button>
-                <button className="btn" style={{width: '100%'}}>Reload UI</button>
+                <button className="btn-settings" style={{width: '100%'}}>Save</button>
+                <button className="btn-settings" style={{width: '100%'}}>Reset</button>
+                <button className="btn-settings" style={{width: '100%'}}>Reload UI</button>
               </RowFullWidth>
 
               <div>Made by Nevysha with luv</div>

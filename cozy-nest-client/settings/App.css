@@ -25,7 +25,7 @@
     padding: var(--block-padding);
 }
 
-.btn {
+.btn-settings {
     cursor: pointer;
     position: relative;
     width: 60px;
@@ -37,7 +37,7 @@
     border: 1px solid var(--ae-input-border-color);
     border-radius: 0;
 }
-.btn:hover {
+.btn-settings:hover {
     background: var(--ae-input-bg-color);
     border: 1px solid var(--ae-input-border-color);
 }

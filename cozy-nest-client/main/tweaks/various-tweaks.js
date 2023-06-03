@@ -92,7 +92,6 @@ export const applyMenuPosition = (position) => {
     document.querySelector(':root').style.setProperty('--menu-top-height', `25px`);
 
     //centered or not
-    const isCenteredChecked = document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top_centered]").checked;
     if (position === "top_centered") {
       document.querySelector(".nevysha.nevysha-tabnav").classList.add("center-menu-items")
     } else {

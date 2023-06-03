@@ -1861,6 +1861,10 @@ body.nevysha-light .nevysha-button:hover {
     fill: var(--body-text-color);
 }
 
+#nevyui_update_info_close_btn, #nevyui_update_btn {
+    width: 60px;
+}
+
 #cozynest_others_settings_header > p:nth-child(1) {
     font-style: italic;
 }

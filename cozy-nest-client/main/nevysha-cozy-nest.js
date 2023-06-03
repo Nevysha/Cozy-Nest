@@ -289,6 +289,28 @@ const addCozyNestCustomBtn = () => {
   updateTab.style = "display: none;";
   document.querySelector("#tabs").insertAdjacentElement("beforeend", updateTab)
 
+  // add click event to the new update info button
+  function listenerClosure() {
+    let shown = false;
+    document.querySelector("#nevyui_update_info").addEventListener("click", (e) => {
+      //cancel event
+      e.preventDefault();
+      e.stopPropagation();
+
+      //show tab_nevyui by default to bypass gradio hidding tabs
+      document.querySelector("#tab_nevyui").style.display = "block";
+
+      //toggle the panel with a slide animation using jquery
+      if (shown) {
+        $("#nevyui_update_info_panel").slideUp(ANIMATION_SPEED);
+      } else {
+        $("#nevyui_update_info_panel").slideDown(ANIMATION_SPEED);
+      }
+      shown = !shown;
+    });
+  }
+  listenerClosure();
+
   //fetch version_data.json
   loadVersionData().then(ignored => ignored)
 }
@@ -1145,10 +1167,6 @@ const onloadSafe = (done) => {
   // }
 }
 
-function tweakForSDNext() {
-  document.querySelector('#setting_nevyui_fetchOutputFolderFromA1111Settings').style.display = 'none';
-}
-
 const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
@@ -1204,7 +1222,7 @@ const onLoad = (done) => {
   document.querySelectorAll('.extra-network-cards').forEach(elem => elem.setAttribute('class', `${elem.getAttribute('class')} nevysha nevysha-scrollable`))
   document.querySelectorAll('#cozy_nest_settings_tabs > .tabitem').forEach(elem => elem.classList.add('nevysha', 'nevysha-scrollable'))
 
-  document.querySelector('#nevyui_sh_options_start_socket').setAttribute('style', 'display: none;')
+
   //hide "send to" panel in settings
   //this panel is used to transfert image data into tab
   document.querySelector('#nevysha-send-to').setAttribute('style', 'display: none;')
@@ -1273,10 +1291,6 @@ const onLoad = (done) => {
 
   //add observer for .options resize
   addOptionsObserver();
-
-  if (COZY_NEST_CONFIG.webui === WEBUI_SDNEXT) {
-    tweakForSDNext();
-  }
 
   /* --------------- TWEAK SOME EXTENSION --------------- */
   //if AWQ-container is present in COZY_NEST_CONFIG.extensions array from localStorage, tweak AWQ

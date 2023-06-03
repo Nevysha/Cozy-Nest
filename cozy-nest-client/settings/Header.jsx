@@ -10,7 +10,7 @@ export function Header (props) {
           <span className="subtitle">Find your cozy spot on Auto1111's webui</span>
         </div>
         <Row>
-          <div className="btn" onClick={props.onClickClose}>Close</div>
+          <div className="btn-settings" onClick={props.onClickClose}>Close</div>
         </Row>
         <div className="container">
           <div className="nevysha settings-nevyui-top"><p className="nevysha-reporting">Found a bug or want to ask for
