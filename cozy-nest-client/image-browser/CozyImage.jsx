@@ -1,19 +1,28 @@
 //base url without port
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {CozyImageInfo} from "./CozyImageInfo.jsx";
+import {ImagesContext} from "./ImagesContext.tsx";
 
 const baseUrl = window.location.href.split(":")[0] + ":" + window.location.href.split(":")[1]
 const gradioPort = 7860
 
 
 
-export default function CozyImage({viewPort, image, index}) {
+export default function CozyImage({viewPort, imageHash, index}) {
 
   const [showModal, setShowModal] = useState(false);
   const imgRef = useRef(null);
   const _me = useRef(null);
-
+  const {images, getImage} = useContext(ImagesContext)
   const [onScreen, setOnScreen] = useState(false);
+
+  const [image, setImage] = useState(
+    images[imageHash]
+  );
+
+  useEffect(() => {
+    setImage(getImage(imageHash));
+  }, [images, imageHash]);
 
   useEffect(() => {
 
@@ -55,7 +64,7 @@ export default function CozyImage({viewPort, image, index}) {
             alt="image"
             ref={imgRef}/>
         </div>
-        <CozyImageInfo verbose={false} image={image}/>
+        <CozyImageInfo verbose={false} imageHash={imageHash}/>
         {showModal && <div className="infoModal">
           <div className="image-wrapper">
             <img
@@ -63,7 +72,7 @@ export default function CozyImage({viewPort, image, index}) {
               src={getSrc()}
               alt="image"/>
           </div>
-          <CozyImageInfo verbose={true} image={image} closeModal={toggleModal} />
+          <CozyImageInfo verbose={true} imageHash={imageHash} closeModal={toggleModal} />
         </div>}
       </>) : (<div className="image image-placeholder"/>)}
     </div>

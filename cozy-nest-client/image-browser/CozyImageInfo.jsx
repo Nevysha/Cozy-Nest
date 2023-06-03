@@ -14,9 +14,13 @@ const tryCatch = (fn) => {
   }
 }
 
-export function CozyImageInfo({verbose, image, closeModal}) {
+export function CozyImageInfo({verbose, imageHash, closeModal}) {
 
-  const {images, updateExifInState} = useContext(ImagesContext)
+  const {images, updateExifInState, getImage} = useContext(ImagesContext)
+
+  const [image, setImage] = useState(
+    images[imageHash]
+  );
 
   const [formattedExif, setFormattedExif] = useState({
     date: 0,
@@ -34,6 +38,10 @@ export function CozyImageInfo({verbose, image, closeModal}) {
   const [imgTags, setImgTags] = useState([])
 
   useEffect(() => {
+    setImage(getImage(imageHash));
+  }, [images, imageHash]);
+
+  useEffect(() => {
     if (!image) return
     if (!image.metadata) return
     if (!image.metadata.exif) return
@@ -49,7 +57,7 @@ export function CozyImageInfo({verbose, image, closeModal}) {
       modelHash: tryCatch(() => image.metadata.exif.parameters.split("Model hash: ")[1].split(",")[0]),
       formattedAll: tryCatch(() => image.metadata.exif.parameters.replace(/\n/g, "<br>"))
     })
-  }, [image, images])
+  }, [image])
 
   useEffect(() => {
 
@@ -62,7 +70,7 @@ export function CozyImageInfo({verbose, image, closeModal}) {
           })
       setImgTags([..._imgTags])
     }
-  }, [image.metadata.exif['cozy-nest-tags'], images])
+  }, [image])
 
   useEffect(() => {
     const _tags = []
@@ -74,7 +82,7 @@ export function CozyImageInfo({verbose, image, closeModal}) {
         }
     })
     setTags([...new Set(_tags)])
-  }, [images])
+  }, [image])
 
   const onTagsChange = (tags) => {
     setImgTags(tags)
@@ -127,7 +135,7 @@ export function CozyImageInfo({verbose, image, closeModal}) {
         </tbody>
       </table>
       {isVerbose && <div className="blocInfo" dangerouslySetInnerHTML={{__html: formattedExif?.formattedAll}}/>}
-      <Controls image={image}/>
+      <Controls imageHash={imageHash}/>
     </div>
   );
 }

@@ -62,14 +62,18 @@ export function ImagesProvider({ children }: { children: ReactNode[] }) {
 
     const updateExifInState = (image: Image) => {
 
-        const {path, metadata: {exif}} = image
+        const {metadata: {exif, hash}} = image
         const newImages = images.map(image => {
-            if (image.path === path) {
+            if (image.metadata.hash === hash) {
                 image.metadata.exif = exif
             }
             return image
         })
         setImages([...newImages])
+    }
+
+    const getImage = (hash: string) => {
+        return images.find(image => image.metadata.hash === hash)
     }
 
     const value = {
@@ -78,7 +82,8 @@ export function ImagesProvider({ children }: { children: ReactNode[] }) {
         filteredImages,
         setFilteredImages,
         deleteImg,
-        updateExifInState
+        updateExifInState,
+        getImage
     }
 
     return (

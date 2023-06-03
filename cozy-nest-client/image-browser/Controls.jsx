@@ -10,7 +10,17 @@ import {ImagesContext} from "./ImagesContext.tsx";
 const ExifEditor = Exif.ExifEditor
 
 
-function SendTo({image}) {
+function SendTo({imageHash}) {
+
+    const {images, getImage} = useContext(ImagesContext)
+
+    const [image, setImage] = useState(
+      images[imageHash]
+    );
+
+    useEffect(() => {
+        setImage(getImage(imageHash));
+    }, [images, imageHash]);
 
     const sendToPipe = (e, where) => {
 
@@ -33,18 +43,26 @@ function SendTo({image}) {
     </Row>;
 }
 
-export function Controls({image}) {
+export function Controls({imageHash}) {
 
-    const {images, deleteImg, updateExifInState} = useContext(ImagesContext)
+    const {images, deleteImg, updateExifInState, getImage} = useContext(ImagesContext)
 
     const [showExifEditor, setShowExifEditor] = useState(false);
     const [exif, setExif] = useState({});
     const [isHidden, setIsHidden] = useState(false);
 
+    const [image, setImage] = useState(
+      images[imageHash]
+    );
+
     useEffect(() => {
-        if (!image.path) return
+        setImage(getImage(imageHash));
+    }, [images, imageHash]);
+
+    useEffect(() => {
+        if (!image || !image.path) return
         setExif(image.metadata.exif)
-    }, [image, images])
+    }, [image, imageHash])
 
     useEffect(() => {
         if (!exif) return;
@@ -78,11 +96,11 @@ export function Controls({image}) {
 
     return (
         <Column style={{height: "100%", justifyContent: "space-between"}}>
-            <SendTo image={image}/>
+            <SendTo imageHash={imageHash}/>
             <Column>
                 <Row>
                     {showExifEditor &&
-                        <ExifEditor image={image} exif={exif} visible={showExifEditor}
+                        <ExifEditor imageHash={imageHash} exif={exif} visible={showExifEditor}
                                  onClose={() => setShowExifEditor(false)}/>
                     }
                     <Button onClick={editExif}>Edit Exif</Button>

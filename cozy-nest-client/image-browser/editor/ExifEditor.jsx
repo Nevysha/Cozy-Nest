@@ -9,12 +9,23 @@ import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/theme-github_dark";
 import "ace-builds/src-noconflict/ext-language_tools";
 import {CozyLogger} from "../../main/CozyLogger.js";
+import {ImagesContext} from "../ImagesContext.tsx";
 
-function ExifEditor({onClose, visible, image}) {
+function ExifEditor({onClose, visible, imageHash}) {
 
     const [exif, setExif] = useState({});
     const [exifString, setExifString] = useState('');
     const [isJsonValid, setIsJsonValid] = useState(false);
+
+    const {images, getImage} = useContext(ImagesContext)
+
+    const [image, setImage] = useState(
+      images[imageHash]
+    );
+
+    useEffect(() => {
+        setImage(getImage(imageHash));
+    }, [images, imageHash]);
 
     useEffect(() => {
         setExif(image.metadata.exif)
