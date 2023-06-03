@@ -28,13 +28,16 @@
 .btn {
     cursor: pointer;
     position: relative;
-    top: 2px;
-    left: 2px;
     width: 60px;
     height: 35px;
     display: flex;
     place-content: center;
     flex-wrap: wrap;
+    background: var(--ae-input-bg-color);
+    border: 1px solid var(--ae-input-border-color);
+    border-radius: 0;
+}
+.btn:hover {
     background: var(--ae-input-bg-color);
     border: 1px solid var(--ae-input-border-color);
 }
@@ -80,4 +83,11 @@
 }
 
 .header {
+}
+
+.OutputFolderSelector {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 5px;
 }

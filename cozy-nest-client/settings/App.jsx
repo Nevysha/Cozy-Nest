@@ -65,6 +65,19 @@ function DialogWrapper({children, isVisible}) {
   );
 }
 
+const nevyshaScrollbar = {
+  '&::-webkit-scrollbar': {
+    width: '5px',
+  },
+  '&::-webkit-scrollbar-track': {
+    backgroundColor: 'transparent'
+  },
+  '&::-webkit-scrollbar-thumb': {
+    backgroundColor: 'var(--ae-primary-color)',
+    borderRadius: '20px',
+  },
+}
+
 export function App() {
 
   const [isVisible, setIsVisible] = useState(true)
@@ -107,7 +120,7 @@ export function App() {
                 </TabList>
 
                 <TabPanels>
-                  <TabPanel>
+                  <TabPanel css={nevyshaScrollbar}>
                     <RowFullWidth>
                       <Checkbox
                           isChecked={config.error_popup}
@@ -223,21 +236,32 @@ export function App() {
                     </RowFullWidth>
                   </TabPanel>
 
-                  <TabPanel>
+                  <TabPanel css={nevyshaScrollbar}>
                     <RowFullWidth>
-                      <Checkbox>Disable image browser (Reload UI required)</Checkbox>
+                      <Checkbox
+                          isChecked={config.disable_image_browser}
+                          onChange={(e) => setConfig({...config, disable_image_browser: e.target.checked})}
+                      >Disable image browser (Reload UI required)</Checkbox>
                     </RowFullWidth>
                     <RowFullWidth>
                       <FormControl style={{width: "30%"}}>
                         <FormLabel>Socket port for image browser</FormLabel>
-                        <Input placeholder='3333'/>
+                        <Input
+                            placeholder='3333'
+                            value={config.server_default_port}
+                            onChange={(e) => updateConfig(e, 'server_default_port')}
+                        />
                       </FormControl>
                       <Checkbox>Auto search port</Checkbox>
                       <Checkbox>Fetch output folder from a1111 settings (Reload needed to enable)</Checkbox>
                     </RowFullWidth>
                     <Column>
                       <FormLabel>Archive path</FormLabel>
-                      <Input placeholder='C:/stable-difusion/...'/>
+                      <Input
+                          placeholder='C:/stable-difusion/...'
+                          value={config.archive_path}
+                          onChange={(e) => updateConfig(e, 'archive_path')}
+                      />
                     </Column>
                     <Column>
                       <FormLabel>Output path</FormLabel>
@@ -245,21 +269,27 @@ export function App() {
                     </Column>
                   </TabPanel>
 
-                  <TabPanel>
+                  <TabPanel css={nevyshaScrollbar}>
                     <p>Those settings are heavy on DOM modification and might conflict with some others extensions</p>
                     <p>Reload UI needed to apply</p>
                     <Column>
-                      <Checkbox>Enable clear gallery button in txt2img and img2img tabs</Checkbox>
-                      <Checkbox>Enable extra network tweaks</Checkbox>
+                      <Checkbox
+                          isChecked={config.enable_clear_button}
+                          onChange={(e) => setConfig({...config, enable_clear_button: e.target.checked})}
+                      >Enable clear gallery button in txt2img and img2img tabs</Checkbox>
+                      <Checkbox
+                          isChecked={config.enable_extra_network_tweaks}
+                          onChange={(e) => setConfig({...config, enable_extra_network_tweaks: e.target.checked})}
+                      >Enable extra network tweaks</Checkbox>
                     </Column>
                   </TabPanel>
                 </TabPanels>
               </Tabs>
 
               <RowFullWidth className="btn-toolbar" style={{gap: '25px', padding: '15px'}}>
-                <div className="btn" style={{width: '100%'}}>Save</div>
-                <div className="btn" style={{width: '100%'}}>Reset</div>
-                <div className="btn" style={{width: '100%'}}>Reload UI</div>
+                <button className="btn" style={{width: '100%'}}>Save</button>
+                <button className="btn" style={{width: '100%'}}>Reset</button>
+                <button className="btn" style={{width: '100%'}}>Reload UI</button>
               </RowFullWidth>
 
               <div>Made by Nevysha with luv</div>

@@ -25,6 +25,7 @@ export function OuputFolderSelector({config, setConfig}) {
 
   return (
     <>
+      <div className="OutputFolderSelector">
       {outputFolder.map((folder, index) => {
         return (
             <InputGroup key={index}>
@@ -39,7 +40,7 @@ export function OuputFolderSelector({config, setConfig}) {
                 }}
               />
               <InputRightElement width='4.5rem'>
-                <div
+                <button
                     className="btn"
                     onClick={() => {
                         const newOutputFolder = [...outputFolder]
@@ -47,23 +48,24 @@ export function OuputFolderSelector({config, setConfig}) {
                         setOutputFolder(newOutputFolder)
                         setConfig({...config, cnib_output_folder: newOutputFolder})
                     }}
-                >Delete</div>
+                >Delete</button>
               </InputRightElement>
             </InputGroup>
         )
       })}
-      <InputGroup>
-        <Input
-            placeholder="Add a new folder..."
-            value={newOutputFolder}
-            onChange={(e) => {
-                setNewOutputFolder(e.target.value)
-            }}
-        />
-        <InputRightElement width='4.5rem'>
-          <div className="btn" onClick={addNewOutputFolder}>Add</div>
-        </InputRightElement>
-      </InputGroup>
+        <InputGroup>
+          <Input
+              placeholder="Add a new folder..."
+              value={newOutputFolder}
+              onChange={(e) => {
+                  setNewOutputFolder(e.target.value)
+              }}
+          />
+          <InputRightElement width='4.5rem'>
+            <button className="btn" onClick={addNewOutputFolder}>Add</button>
+          </InputRightElement>
+        </InputGroup>
+      </div>
     </>
   );
 }

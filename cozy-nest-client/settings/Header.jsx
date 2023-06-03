@@ -9,7 +9,7 @@ export function Header (props) {
           <h2>Nevysha's Cozy Nest</h2>
           <span className="subtitle">Find your cozy spot on Auto1111's webui</span>
         </div>
-        <Row className="btn-toolbar">
+        <Row>
           <div className="btn" onClick={props.onClickClose}>Close</div>
         </Row>
         <div className="container">

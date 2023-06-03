@@ -43,7 +43,9 @@ export const tabsTheme = defineMultiStyleConfig({
         backgroundColor: 'var(--tab-nav-background-color-selected) !important',
         gap: '20px',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        height: '500px',
+        overflowY: 'auto',
       }
     }) },
 })
