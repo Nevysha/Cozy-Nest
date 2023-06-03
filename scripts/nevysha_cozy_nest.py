@@ -272,36 +272,8 @@ def gradio_hidden_field(server_port):
                     source_image_component=image,
                 ))
 
-def prune_ui_settings(**kwargs):
-    # load file ui-config.json located in working directory
-    ui_config_path = shared.cmd_opts.ui_config_file
-    if ui_config_path is None:
-        ui_config_path = os.path.join(shared.get_app_dir(), 'ui-config.json')
-    if os.path.exists(ui_config_path):
-        with open(ui_config_path, 'r') as f:
-            ui_config = json.load(f)
-        # remove keys that contains "nevyui" prefix
-        pruned = False
-        for key in list(ui_config.keys()):
-            if key.startswith('nevyui'):
-                pruned = True
-                del ui_config[key]
-
-        if pruned:
-            print('CozyNest: Pruned ui-config.json')
-
-        # save the file
-        with open(ui_config_path, 'w') as f:
-            json.dump(ui_config, f, indent=4)
-
-
-script_callbacks.on_before_reload(prune_ui_settings)
-script_callbacks.on_app_started(lambda a, b: prune_ui_settings)
-prune_ui_settings()
-
 
 def on_ui_tabs():
-    prune_ui_settings()
     # shared options
     config = get_dict_from_config()
     # merge default settings with user settings
@@ -379,7 +351,7 @@ def on_ui_tabs():
                       " then use <a href='https://www.reddit.com/r/NevyshaCozyNest/'>this subreddit</a>"
                       " or <a href='https://github.com/Nevysha/Cozy-Nest'>github</a>. "
                       "You can also join this <a href='https://discord.gg/yppzDXjT7S'>discord server</a> to discuss about Cozy Nest</p>"
-                      "<p class='nevysha-emphasis'>WARNING : Some visual settings are immediately applied but will not be saved until you click \"Save\"</p></div>")
+                      "</div>")
 
         # hidden field to store some useful data and trigger some server actions (like "send to" txt2img,...)
         gradio_hidden_field(server_port)

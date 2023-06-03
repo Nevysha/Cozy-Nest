@@ -43,6 +43,7 @@ import {
 } from "../main/tweaks/various-tweaks.js";
 import {getTheme} from "../main/cozy-utils.js";
 import {WEBUI_SDNEXT} from "../main/Constants.js";
+import {saveCozyNestConfig} from "../main/nevysha-cozy-nest.js";
 
 
 function DialogWrapper({children, isVisible}) {
@@ -68,11 +69,9 @@ function DialogWrapper({children, isVisible}) {
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
-
           <AlertDialogBody>
             {children}
           </AlertDialogBody>
-
         </AlertDialogContent>
       </AlertDialogOverlay>
     </AlertDialog>
@@ -123,6 +122,10 @@ export function App() {
   }, [config])
 
   useEffect(() => {
+    setConfig(COZY_NEST_CONFIG)
+  }, [COZY_NEST_CONFIG])
+
+  useEffect(() => {
     applySettings();
   }, [])
 
@@ -137,6 +140,10 @@ export function App() {
     newConfig[what] = e.target.value
 
     setConfig(newConfig)
+  }
+
+  const saveConfig = () => {
+    (async () => await saveCozyNestConfig(config))()
   }
 
 
@@ -332,9 +339,19 @@ export function App() {
               </Tabs>
 
               <RowFullWidth className="btn-toolbar" style={{gap: '25px', padding: '15px'}}>
-                <button className="btn-settings" style={{width: '100%'}}>Save</button>
-                <button className="btn-settings" style={{width: '100%'}}>Reset</button>
-                <button className="btn-settings" style={{width: '100%'}}>Reload UI</button>
+                <button
+                  className="btn-settings"
+                  style={{width: '100%'}}
+                  onClick={saveConfig}
+                >Save</button>
+                <button
+                  className="btn-settings"
+                  style={{width: '100%'}}
+                >Reset</button>
+                <button
+                  className="btn-settings"
+                  style={{width: '100%'}}
+                >Reload UI</button>
               </RowFullWidth>
 
               <div>Made by Nevysha with luv</div>

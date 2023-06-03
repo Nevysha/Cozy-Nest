@@ -1303,6 +1303,16 @@ const onLoad = (done) => {
   done();
 };
 
+export async function saveCozyNestConfig() {
+  await fetch('/cozy-nest/config', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(COZY_NEST_CONFIG)
+  })
+}
+
 async function detectWebuiContext() {
   // we try to determine the webui. This should have been made during startup, but we need a fallback
   // because this function is not available before a recent commit of sd.next
@@ -1318,13 +1328,7 @@ async function detectWebuiContext() {
       COZY_NEST_CONFIG.webui = WEBUI_A1111;
     }
 
-    await fetch('/cozy-nest/config', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(COZY_NEST_CONFIG)
-    })
+    await saveCozyNestConfig();
   }
   CozyLogger.debug(`webui is ${COZY_NEST_CONFIG.webui}`)
 }
