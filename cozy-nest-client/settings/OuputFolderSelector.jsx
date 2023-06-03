@@ -6,9 +6,22 @@ export function OuputFolderSelector({config, setConfig}) {
 
   const [outputFolder, setOutputFolder] = useState(config.cnib_output_folder)
 
+  const [newOutputFolder, setNewOutputFolder] = useState('')
+
   useEffect(() => {
     setOutputFolder(config.cnib_output_folder)
   }, [config]);
+
+  const addNewOutputFolder = () => {
+    if (newOutputFolder === '') {
+      return
+    }
+    const newOutputFolderArray = [...outputFolder]
+    newOutputFolderArray.push(newOutputFolder)
+    setOutputFolder(newOutputFolderArray)
+    setConfig({...config, cnib_output_folder: newOutputFolderArray})
+    setNewOutputFolder('')
+  }
 
   return (
     <>
@@ -26,7 +39,15 @@ export function OuputFolderSelector({config, setConfig}) {
                 }}
               />
               <InputRightElement width='4.5rem'>
-                <div className="btn">Delete</div>
+                <div
+                    className="btn"
+                    onClick={() => {
+                        const newOutputFolder = [...outputFolder]
+                        newOutputFolder.splice(index, 1)
+                        setOutputFolder(newOutputFolder)
+                        setConfig({...config, cnib_output_folder: newOutputFolder})
+                    }}
+                >Delete</div>
               </InputRightElement>
             </InputGroup>
         )
@@ -34,9 +55,13 @@ export function OuputFolderSelector({config, setConfig}) {
       <InputGroup>
         <Input
             placeholder="Add a new folder..."
+            value={newOutputFolder}
+            onChange={(e) => {
+                setNewOutputFolder(e.target.value)
+            }}
         />
         <InputRightElement width='4.5rem'>
-          <div className="btn">Add</div>
+          <div className="btn" onClick={addNewOutputFolder}>Add</div>
         </InputRightElement>
       </InputGroup>
     </>
