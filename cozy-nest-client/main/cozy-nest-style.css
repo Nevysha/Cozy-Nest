@@ -1869,6 +1869,10 @@ body.nevysha-light .nevysha-button:hover {
     font-style: italic;
 }
 
+#nevysha_cozy_nest {
+    display: none;
+}
+
 body.nsfw img:not([id='kofi_nevysha_support_img']) {
     filter: blur(20px);
 }
