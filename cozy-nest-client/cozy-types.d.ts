@@ -1,8 +1,8 @@
 // type for image
 export type Image = {
-  path: string
+  path: string,
+  hash: string,
   metadata: {
-    hash: string
     date: number
     exif: {
       parameters: string,

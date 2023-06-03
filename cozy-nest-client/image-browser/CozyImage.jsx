@@ -17,7 +17,7 @@ export default function CozyImage({viewPort, imageHash, index}) {
   const [onScreen, setOnScreen] = useState(false);
 
   const [image, setImage] = useState(
-    images[imageHash]
+    getImage(imageHash)
   );
 
   useEffect(() => {

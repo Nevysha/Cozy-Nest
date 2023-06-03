@@ -104,7 +104,7 @@ export function ImgTags({imageHash, tags, onChange}: {imageHash: string}) {
 
   const {images, getImage} = useContext(ImagesContext);
   const [image, setImage] = useState(
-      images[imageHash]
+    getImage(imageHash)
   );
 
   const [imgTags, setImgTags] = useState([])

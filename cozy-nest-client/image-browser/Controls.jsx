@@ -15,7 +15,7 @@ function SendTo({imageHash}) {
     const {images, getImage} = useContext(ImagesContext)
 
     const [image, setImage] = useState(
-      images[imageHash]
+      getImage(imageHash)
     );
 
     useEffect(() => {
@@ -52,7 +52,7 @@ export function Controls({imageHash}) {
     const [isHidden, setIsHidden] = useState(false);
 
     const [image, setImage] = useState(
-      images[imageHash]
+      getImage(imageHash)
     );
 
     useEffect(() => {

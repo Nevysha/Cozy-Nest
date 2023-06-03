@@ -19,7 +19,7 @@ export function CozyImageInfo({verbose, imageHash, closeModal}) {
   const {images, updateExifInState, getImage} = useContext(ImagesContext)
 
   const [image, setImage] = useState(
-    images[imageHash]
+    getImage(imageHash)
   );
 
   const [formattedExif, setFormattedExif] = useState({

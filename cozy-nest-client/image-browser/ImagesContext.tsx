@@ -73,7 +73,7 @@ export function ImagesProvider({ children }: { children: ReactNode[] }) {
     }
 
     const getImage = (hash: string) => {
-        return images.find(image => image.metadata.hash === hash)
+        return images.find(image => image.hash === hash)
     }
 
     const value = {

@@ -20,7 +20,7 @@ function ExifEditor({onClose, visible, imageHash}) {
     const {images, getImage} = useContext(ImagesContext)
 
     const [image, setImage] = useState(
-      images[imageHash]
+      getImage(imageHash)
     );
 
     useEffect(() => {

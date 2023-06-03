@@ -44,8 +44,8 @@ def get_exif(path):
 
     img = {
         'path': path,
+        'hash': sha256_hex,
         'metadata': {
-            'hash': sha256_hex,
             'date': os.path.getmtime(path),
             'exif': exif,
         }
@@ -61,13 +61,12 @@ def update_img_data(path):
             if img['path'] == path:
                 exif = get_image_exif(path)
                 img['metadata'] = {
-                    'hash': img['metadata']['hash'],
                     'date': os.path.getmtime(path),
                     'exif': exif,
                 }
                 break
         with open(CACHE_FILENAME, 'w') as fw:
-            fw.write(json.dumps(cache))
+            fw.write(json.dumps(cache, indent=4))
 
 
 def delete_img_data(path):
