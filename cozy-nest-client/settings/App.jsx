@@ -84,6 +84,10 @@ export function App() {
 
   const [config, setConfig] = useState(COZY_NEST_CONFIG)
 
+  useEffect(() => {
+    
+  }, [config])
+
   const toggle = () => {
     CozyLogger.debug('toggle')
     setIsVisible(!isVisible)
