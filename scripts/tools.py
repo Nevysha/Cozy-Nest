@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 
@@ -17,12 +18,34 @@ def get_image_exif(path: str):
         return {}
 
 
+def calculate_sha256(file_path):
+    # Create a SHA-256 hash object
+    sha256_hash = hashlib.sha256()
+
+    # Open the file in binary mode
+    with open(file_path, 'rb') as file:
+        # Read the file in chunks to avoid loading the entire file into memory
+        for chunk in iter(lambda: file.read(4096), b''):
+            # Update the hash object with the current chunk
+            sha256_hash.update(chunk)
+
+    # Get the hexadecimal representation of the hash digest
+    sha256_hex = sha256_hash.hexdigest()
+
+    return sha256_hex
+
+
 def get_exif(path):
     # info = image.info
     exif = get_image_exif(path)
+
+    # get the image sha256 hash
+    sha256_hex = calculate_sha256(path)
+
     img = {
         'path': path,
         'metadata': {
+            'hash': sha256_hex,
             'date': os.path.getmtime(path),
             'exif': exif,
         }
@@ -38,6 +61,7 @@ def update_img_data(path):
             if img['path'] == path:
                 exif = get_image_exif(path)
                 img['metadata'] = {
+                    'hash': img['metadata']['hash'],
                     'date': os.path.getmtime(path),
                     'exif': exif,
                 }
