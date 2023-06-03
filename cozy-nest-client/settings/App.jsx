@@ -62,16 +62,16 @@ export function App() {
         <div className="App nevysha">
           <Header onClickClose={() => setIsVisible(false)}/>
 
-          <Tabs variant='nevysha'>
-            <TabList style={{backgroundColor: 'var(--tab-nav-background-color)'}}>
-              <Tab>Main Settings</Tab>
-              <Tab>Image Browser Settings</Tab>
-              <Tab>Others</Tab>
-            </TabList>
+          <div className="container">
+            <Tabs variant='nevysha'>
+              <TabList style={{backgroundColor: 'var(--tab-nav-background-color)'}}>
+                <Tab>Main Settings</Tab>
+                <Tab>Image Browser Settings</Tab>
+                <Tab>Others</Tab>
+              </TabList>
 
-            <TabPanels>
-              <TabPanel>
-                <Column>
+              <TabPanels>
+                <TabPanel>
                   <RowFullWidth>
                     <Checkbox>Display information dialog on Cozy Nest error</Checkbox>
                     <Checkbox>Disable waves and gradiant background animations</Checkbox>
@@ -96,99 +96,99 @@ export function App() {
                       </Stack>
                     </RadioGroup>
                   </Column>
-                </Column>
-                <Row>
-                  <Checkbox>Accent Generate Button</Checkbox>
-                </Row>
-                <RowFullWidth>
-                  <FormControl>
-                    <FormLabel>Font size</FormLabel>
-                    <NumberInput defaultValue={12} min={10} max={18}>
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                  </FormControl>
+                  <Row>
+                    <Checkbox>Accent Generate Button</Checkbox>
+                  </Row>
+                  <RowFullWidth>
+                    <FormControl>
+                      <FormLabel>Font size</FormLabel>
+                      <NumberInput defaultValue={12} min={10} max={18}>
+                        <NumberInputField />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
+                    </FormControl>
 
-                  <FormControl>
-                    <FormLabel>Extra network card height</FormLabel>
-                    <NumberInput defaultValue={8} min={5} max={20}>
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                  </FormControl>
+                    <FormControl>
+                      <FormLabel>Extra network card height</FormLabel>
+                      <NumberInput defaultValue={8} min={5} max={20}>
+                        <NumberInputField />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
+                    </FormControl>
 
-                  <FormControl>
-                    <FormLabel>Extra network card width</FormLabel>
-                    <NumberInput defaultValue={13} min={5} max={20}>
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                  </FormControl>
+                    <FormControl>
+                      <FormLabel>Extra network card width</FormLabel>
+                      <NumberInput defaultValue={13} min={5} max={20}>
+                        <NumberInputField />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
+                    </FormControl>
 
-                </RowFullWidth>
-                <RowFullWidth>
-                  <PopoverColorPicker label="Font Color" color={fontColor} onChange={setFontColor} />
-                  <PopoverColorPicker label="Font Color" color={fontColorLight} onChange={setFontColorLight} />
-                  <PopoverColorPicker label="Waves Color" color={wavesColor} onChange={setWavesColor} />
-                  <PopoverColorPicker label="Background gradiant Color" color={bgGradiantColor} onChange={setBgGradiantColor} />
-                  <PopoverColorPicker label="Accent Color" color={accentColor} onChange={setAccentColor} />
-                </RowFullWidth>
-                <RowFullWidth>
-                  <Checkbox>SFW mode 👀 (blur all images)</Checkbox>
-                </RowFullWidth>
-              </TabPanel>
+                  </RowFullWidth>
+                  <RowFullWidth>
+                    <PopoverColorPicker label="Font Color" color={fontColor} onChange={setFontColor} />
+                    <PopoverColorPicker label="Font Color" color={fontColorLight} onChange={setFontColorLight} />
+                    <PopoverColorPicker label="Waves Color" color={wavesColor} onChange={setWavesColor} />
+                    <PopoverColorPicker label="Background gradiant Color" color={bgGradiantColor} onChange={setBgGradiantColor} />
+                    <PopoverColorPicker label="Accent Color" color={accentColor} onChange={setAccentColor} />
+                  </RowFullWidth>
+                  <RowFullWidth>
+                    <Checkbox>SFW mode 👀 (blur all images)</Checkbox>
+                  </RowFullWidth>
+                </TabPanel>
 
-              <TabPanel>
-                <RowFullWidth>
-                  <Checkbox>Disable image browser (Reload UI required)</Checkbox>
-                </RowFullWidth>
-                <RowFullWidth>
-                  <FormControl>
-                    <FormLabel>Socket port for image browser</FormLabel>
-                    <Input placeholder='3333' />
-                  </FormControl>
-                  <Checkbox>Auto search port</Checkbox>
-                  <Checkbox>Fetch output folder from a1111 settings (Reload needed to enable)</Checkbox>
-                </RowFullWidth>
-                <Column>
-                  <FormLabel>Archive path</FormLabel>
-                  <Input placeholder='C:/stable-difusion/...' />
-                </Column>
-                <Column>
-                  <FormLabel>Output path</FormLabel>
-                  <Input placeholder='C:/stable-difusion/...' />
-                  <Input placeholder='C:/stable-difusion/...' />
-                  <Input placeholder='C:/stable-difusion/...' />
-                </Column>
-              </TabPanel>
+                <TabPanel>
+                  <RowFullWidth>
+                    <Checkbox>Disable image browser (Reload UI required)</Checkbox>
+                  </RowFullWidth>
+                  <RowFullWidth>
+                    <FormControl>
+                      <FormLabel>Socket port for image browser</FormLabel>
+                      <Input placeholder='3333' />
+                    </FormControl>
+                    <Checkbox>Auto search port</Checkbox>
+                    <Checkbox>Fetch output folder from a1111 settings (Reload needed to enable)</Checkbox>
+                  </RowFullWidth>
+                  <Column>
+                    <FormLabel>Archive path</FormLabel>
+                    <Input placeholder='C:/stable-difusion/...' />
+                  </Column>
+                  <Column>
+                    <FormLabel>Output path</FormLabel>
+                    <Input placeholder='C:/stable-difusion/...' />
+                    <Input placeholder='C:/stable-difusion/...' />
+                    <Input placeholder='C:/stable-difusion/...' />
+                  </Column>
+                </TabPanel>
 
-              <TabPanel>
-                <p>Those settings are heavy on DOM modification and might conflict with some others extensions</p>
-                <p>Reload UI needed to apply</p>
-                <Column>
-                  <Checkbox>Enable clear gallery button in txt2img and img2img tabs</Checkbox>
-                  <Checkbox>Enable extra network tweaks</Checkbox>
-                </Column>
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
+                <TabPanel>
+                  <p>Those settings are heavy on DOM modification and might conflict with some others extensions</p>
+                  <p>Reload UI needed to apply</p>
+                  <Column>
+                    <Checkbox>Enable clear gallery button in txt2img and img2img tabs</Checkbox>
+                    <Checkbox>Enable extra network tweaks</Checkbox>
+                  </Column>
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
 
-          <RowFullWidth className="btn-toolbar" style={{gap: '25px', padding: '15px'}}>
-            <div className="btn" style={{width:'100%'}}>Save</div>
-            <div className="btn" style={{width:'100%'}}>Reset</div>
-            <div className="btn" style={{width:'100%'}}>Reload UI</div>
-          </RowFullWidth>
+            <RowFullWidth className="btn-toolbar" style={{gap: '25px', padding: '15px'}}>
+              <div className="btn" style={{width:'100%'}}>Save</div>
+              <div className="btn" style={{width:'100%'}}>Reset</div>
+              <div className="btn" style={{width:'100%'}}>Reload UI</div>
+            </RowFullWidth>
 
-          <div>Made by Nevysha with luv</div>
+            <div>Made by Nevysha with luv</div>
+          </div>
 
         </div>
       }

@@ -16,7 +16,7 @@ export function Row(props) {
 }
 
 export const RowFullWidth = (props) => {
-    return <Row {...props} style={{width: '100%', justifyContent: 'space-between'}}/>
+    return <Row {...props} style={{width: '100%', justifyContent: 'space-between', gap: '30px'}}/>
 }
 
 //component to wrap flex column
