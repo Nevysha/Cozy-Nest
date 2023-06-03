@@ -69,18 +69,21 @@ export function App() {
 
   const [isVisible, setIsVisible] = useState(true)
 
-  const [fontColor, setFontColor] = useState(COZY_NEST_CONFIG.font_color);
-  const [fontColorLight, setFontColorLight] = useState(COZY_NEST_CONFIG.font_color_light);
-  const [wavesColor, setWavesColor] = useState(COZY_NEST_CONFIG.waves_color);
-  const [bgGradiantColor, setBgGradiantColor] = useState(COZY_NEST_CONFIG.bg_gradiant_color);
-  const [accentColor, setAccentColor] = useState(COZY_NEST_CONFIG.accent_color);
-
   const [config, setConfig] = useState(COZY_NEST_CONFIG)
 
   const toggle = () => {
     CozyLogger.debug('toggle')
     setIsVisible(!isVisible)
   }
+
+  const updateConfig = (e, what) => {
+
+    const newConfig = {...config}
+    newConfig[what] = e.target.value
+
+    setConfig(newConfig)
+  }
+
 
   return (
     <div style={{display: 'flex'}}>
@@ -106,31 +109,46 @@ export function App() {
                 <TabPanels>
                   <TabPanel>
                     <RowFullWidth>
-                      <Checkbox>Display information dialog on Cozy Nest error</Checkbox>
-                      <Checkbox>Disable waves and gradiant background animations</Checkbox>
+                      <Checkbox
+                          isChecked={config.error_popup}
+                          onChange={(e) => setConfig({...config, error_popup: e.target.checked})}
+                      >Display information dialog on Cozy Nest error</Checkbox>
+                      <Checkbox
+                          isChecked={config.disable_waves_and_gradiant}
+                          onChange={(e) => setConfig({...config, disable_waves_and_gradiant: e.target.checked})}
+                      >Disable waves and gradiant background animations</Checkbox>
                     </RowFullWidth>
                     <Column>
                       <label>Main menu position</label>
-                      <RadioGroup>
+                      <RadioGroup
+                          value={config.main_menu_position}
+                          onChange={(value) => setConfig({...config, main_menu_position: value})}
+                      >
                         <Stack direction='row'>
-                          <Radio value='1'>left</Radio>
-                          <Radio value='2'>top</Radio>
-                          <Radio value='3'>top centered</Radio>
+                          <Radio value='left'>left</Radio>
+                          <Radio value='top'>top</Radio>
+                          <Radio value='top_centered'>top centered</Radio>
                         </Stack>
                       </RadioGroup>
                     </Column>
                     <Column>
                       <label>Quicksettings position</label>
-                      <RadioGroup>
+                      <RadioGroup
+                          value={config.quicksettings_position}
+                          onChange={(value) => setConfig({...config, quicksettings_position: value})}
+                      >
                         <Stack direction='row'>
-                          <Radio value='1'>left</Radio>
-                          <Radio value='2'>split</Radio>
-                          <Radio value='3'>centered</Radio>
+                          <Radio value='left'>left</Radio>
+                          <Radio value='split'>split</Radio>
+                          <Radio value='centered'>centered</Radio>
                         </Stack>
                       </RadioGroup>
                     </Column>
                     <Row>
-                      <Checkbox>Accent Generate Button</Checkbox>
+                      <Checkbox
+                          isChecked={config.accent_generate_button}
+                          onChange={(e) => setConfig({...config, accent_generate_button: e.target.checked})}
+                      >Accent Generate Button</Checkbox>
                     </Row>
                     <RowFullWidth>
                       <FormControl>
@@ -146,7 +164,11 @@ export function App() {
 
                       <FormControl>
                         <FormLabel>Extra network card height</FormLabel>
-                        <NumberInput defaultValue={8} min={5} max={20}>
+                        <NumberInput
+                            value={config.card_height}
+                            onChange={(e) => updateConfig(e, 'card_height')}
+                            min={5} max={20}
+                        >
                           <NumberInputField/>
                           <NumberInputStepper>
                             <NumberIncrementStepper/>
@@ -157,7 +179,11 @@ export function App() {
 
                       <FormControl>
                         <FormLabel>Extra network card width</FormLabel>
-                        <NumberInput defaultValue={13} min={5} max={20}>
+                        <NumberInput
+                            value={config.card_width}
+                            onChange={(e) => updateConfig(e, 'card_width')}
+                            min={5} max={20}
+                        >
                           <NumberInputField/>
                           <NumberInputStepper>
                             <NumberIncrementStepper/>
@@ -168,15 +194,32 @@ export function App() {
 
                     </RowFullWidth>
                     <RowFullWidth>
-                      <PopoverColorPicker label="Font Color" color={fontColor} onChange={setFontColor}/>
-                      <PopoverColorPicker label="Font Color" color={fontColorLight} onChange={setFontColorLight}/>
-                      <PopoverColorPicker label="Waves Color" color={wavesColor} onChange={setWavesColor}/>
-                      <PopoverColorPicker label="Background gradiant Color" color={bgGradiantColor}
-                                          onChange={setBgGradiantColor}/>
-                      <PopoverColorPicker label="Accent Color" color={accentColor} onChange={setAccentColor}/>
+                      <PopoverColorPicker
+                          label="Font Color"
+                          color={config.font_color}
+                          onChange={(e) => updateConfig(e, 'font_color')} />
+                      <PopoverColorPicker
+                          label="Font Color"
+                          color={config.font_color_light}
+                          onChange={(e) => updateConfig(e, 'font_color_light')} />
+                      <PopoverColorPicker
+                          label="Waves Color"
+                          color={config.waves_color}
+                          onChange={(e) => updateConfig(e, 'waves_color')} />
+                      <PopoverColorPicker
+                          label="Background gradiant Color"
+                          color={config.bg_gradiant_color}
+                          onChange={(e) => updateConfig(e, 'bg_gradiant_color')} />
+                      <PopoverColorPicker
+                          label="Accent Color"
+                          color={config.accent_color}
+                          onChange={(e) => updateConfig(e, 'accent_color')} />
                     </RowFullWidth>
                     <RowFullWidth>
-                      <Checkbox>SFW mode 👀 (blur all images)</Checkbox>
+                      <Checkbox
+                          isChecked={config.sfw_mode}
+                          onChange={(e) => setConfig({...config, sfw_mode: e.target.checked})}
+                      >SFW mode 👀 (blur all images)</Checkbox>
                     </RowFullWidth>
                   </TabPanel>
 
