@@ -17,7 +17,7 @@ import Loading from "./Loading.js";
 import {waves, svg_magic_wand, svg_update_info} from "./svg.js";
 import {
   applyAccentColor, applyBgGradiantColor, applyWavesColor
-  , wrapDataGenerationInfo, wrapSettings, createVerticalLineComp, applyFontColor
+  , wrapDataGenerationInfo, wrapSettings, createVerticalLineComp, applyFontColor, recalcOffsetFromMenuHeight
 } from "./tweaks/various-tweaks.js";
 import kofiCup from './kofi-cup-border.png'
 import {
@@ -211,197 +211,6 @@ function tweakInpainting() {
 
 function addScrollable(bundle) {
   document.getElementById(`${bundle.prefix}_gallery_container`).classList.add("nevysha","nevysha-scrollable")
-}
-
-function getHexColorForAccent() {
-  return document.querySelector("#setting_nevyui_accentColor").querySelector("input").value;
-}
-
-
-
-function applyCozyNestConfig() {
-
-  //waves
-  const setWaveColor = () => {
-    const hexColor = document.querySelector("#setting_nevyui_waveColor").querySelector("input").value;
-    applyWavesColor(hexColor);
-  }
-  setWaveColor()
-  document.querySelector("#setting_nevyui_waveColor").querySelector("input").addEventListener("change", setWaveColor)
-
-  //font color
-  const fontColorInput =
-      getTheme() === "dark" ?
-        document.querySelector("#setting_nevyui_fontColor").querySelector("input") :
-        document.querySelector("#setting_nevyui_fontColorLight").querySelector("input")
-  //remove hidden css class of parent.parent
-  fontColorInput.parentElement.parentElement.style.display = "block";
-  const setFontColor = () => {
-    const hexColor = fontColorInput.value;
-    if (!hexColor) return;
-    applyFontColor(hexColor);
-  }
-  setFontColor()
-  fontColorInput.addEventListener("change", setFontColor)
-
-  //background gradient
-  const setGradientColor = () => {
-    const hexColor = document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").value;
-    applyBgGradiantColor(hexColor);
-  }
-  setGradientColor()
-  document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").addEventListener("change", setGradientColor)
-
-  //disable waves and gradiant
-  const setDisabledWavesAndGradiant = () => {
-    const disableWavesAndGradiant = document.querySelector("#setting_nevyui_disableWavesAndGradiant").querySelector("input").checked;
-    const $waves = $('.wave');
-    const $body = $('body');
-    if (disableWavesAndGradiant) {
-      $waves.css('animation', 'none');
-      $body.css('animation', 'none');
-      $body.css('background-position', '75% 75%')
-    }
-    else {
-      $waves.css('animation', '');
-      $body.css('animation', '');
-      $body.css('background-position', '')
-    }
-
-  }
-  setDisabledWavesAndGradiant()
-  document.querySelector("#setting_nevyui_disableWavesAndGradiant").querySelector("input").addEventListener("change", setDisabledWavesAndGradiant)
-
-  //background gradient
-  const setAccentColor = () => {
-    const hexColor = getHexColorForAccent();
-    applyAccentColor(hexColor, getHexColorForAccent());
-  }
-  //accent generate button
-  const setAccentForGenerate = () => {
-    const checked = document.querySelector("#setting_nevyui_accentGenerateButton").querySelector("input").checked;
-    document.querySelectorAll('button[id$="_generate"]').forEach((btn) => {
-      if (checked) {
-        let txtColorAppending = "";
-        if (getLuminance(getHexColorForAccent())  > 0.5) {
-          txtColorAppending = "color: black !important";
-        }
-        btn.setAttribute("style", `background: var(--ae-primary-color) !important; ${txtColorAppending}`);
-      } else {
-        btn.setAttribute("style", '');
-      }
-    })
-  }
-
-  setAccentColor()
-  document.querySelector("#setting_nevyui_accentColor").querySelector("input").addEventListener("change", setAccentColor)
-  document.querySelector("#setting_nevyui_accentColor").querySelector("input").addEventListener("change", setAccentForGenerate)
-
-
-  setAccentForGenerate()
-  document.querySelector("#setting_nevyui_accentGenerateButton").querySelector("input").addEventListener("change", setAccentForGenerate);
-
-  //font size
-  const setFontSize = () => {
-    const fontSize = document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").value;
-    document.querySelector(':root').style.setProperty('--nevysha-text-md', `${fontSize}px`);
-    recalcOffsetFromMenuHeight()
-  }
-  setFontSize()
-  document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").addEventListener("change", setFontSize)
-  document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=range]").addEventListener("change", setFontSize)
-
-  //card height
-  const setCardHeight = () => {
-    const cardHeight = document.querySelector("#setting_nevyui_cardHeight").querySelector("input[type=number]").value;
-    document.querySelector(':root').style.setProperty('--extra-network-card-height', `${cardHeight}em`);
-  }
-  setCardHeight()
-  document.querySelector("#setting_nevyui_cardHeight").querySelector("input[type=number]").addEventListener("change", setCardHeight)
-  document.querySelector("#setting_nevyui_cardHeight").querySelector("input[type=range]").addEventListener("change", setCardHeight)
-
-  //card width
-  const setCardWidth = () => {
-    const cardWidth = document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=number]").value;
-    document.querySelector(':root').style.setProperty('--extra-network-card-width', `${cardWidth}em`);
-  }
-  setCardWidth()
-  document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=number]").addEventListener("change", setCardWidth)
-  document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=range]").addEventListener("change", setCardWidth)
-
-  //check if menu is in left or top mode
-  const menuPosition = () => {
-    const isLeftChecked = document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=left]").checked;
-
-    //top mode
-    if (!isLeftChecked) {
-      document.querySelector(".nevysha.nevysha-tabnav").classList.add("menu-fix-top")
-      document.querySelector(".gradio-container.app").classList.add("menu-fix-top")
-      document.querySelector("#nevysha-btn-menu-wrapper")?.classList.add("menu-fix-top")
-      document.querySelector(':root').style.setProperty('--nevysha-margin-left', `0`);
-      document.querySelector(':root').style.setProperty('--menu-top-height', `25px`);
-
-      //centered or not
-      const isCenteredChecked = document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top_centered]").checked;
-      if (isCenteredChecked) {
-        COZY_NEST_CONFIG.main_menu_position = "top_centered";
-        document.querySelector(".nevysha.nevysha-tabnav").classList.add("center-menu-items")
-      } else {
-        COZY_NEST_CONFIG.main_menu_position = "top";
-        document.querySelector(".nevysha.nevysha-tabnav").classList.remove("center-menu-items")
-      }
-    }
-    //left mode
-    else {
-      COZY_NEST_CONFIG.main_menu_position = "left";
-      document.querySelector(".nevysha.nevysha-tabnav").classList.remove("center-menu-items")
-      document.querySelector(".nevysha.nevysha-tabnav").classList.remove("menu-fix-top")
-      document.querySelector(".gradio-container.app").classList.remove("menu-fix-top")
-      document.querySelector("#nevysha-btn-menu-wrapper")?.classList.remove("menu-fix-top")
-      document.querySelector(':root').style.setProperty('--nevysha-margin-left', `175px`);
-      document.querySelector(':root').style.setProperty('--menu-top-height', `1px`);
-    }
-    recalcOffsetFromMenuHeight()
-  }
-  menuPosition()
-  document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=left]").addEventListener("change", menuPosition)
-  document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top]").addEventListener("change", menuPosition)
-  document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top_centered]").addEventListener("change", menuPosition)
-
-  //quicksetting gap
-  const setQuicksettingPosition = () => {
-    const position = document.querySelector("#setting_nevyui_quicksettingsPosition")
-        .querySelector("input[type=radio]:checked").value;
-    if (position === 'split') {
-      document.querySelector("#quicksettings_gap").classList.add("nevysha-quicksettings-gap")
-      document.querySelector("#quicksettings").classList.remove("centered-quicksettings")
-    }
-    else if (position === 'centered') {
-      document.querySelector("#quicksettings_gap").classList.remove("nevysha-quicksettings-gap")
-      document.querySelector("#quicksettings").classList.add("centered-quicksettings")
-    }
-    else {
-      document.querySelector("#quicksettings_gap").classList.remove("nevysha-quicksettings-gap")
-      document.querySelector("#quicksettings").classList.remove("centered-quicksettings")
-    }
-  }
-  setQuicksettingPosition()
-  document.querySelector("#setting_nevyui_quicksettingsPosition")
-      .querySelectorAll("input[type=radio]").forEach((input) => input.addEventListener("change", setQuicksettingPosition))
-
-  //enable/disable the sfw mode
-  const setSfwSettings = () => {
-    const isSfwChecked = document.querySelector("#setting_nevyui_sfwMode").querySelector("input[type=checkbox]").checked;
-    if (isSfwChecked) {
-      document.querySelector('body').classList.add("nsfw");
-    }
-    else {
-      document.querySelector('body').classList.remove("nsfw");
-    }
-  }
-  setSfwSettings()
-  document.querySelector("#setting_nevyui_sfwMode").querySelector("input[type=checkbox]").addEventListener("change", setSfwSettings)
-
 }
 
 function tweakAWQ() {
@@ -1491,68 +1300,6 @@ window.sendToPipe = sendToPipe;
 
 window.troubleshootSize = {}
 
-const recalcOffsetFromMenuHeight = () => {
-  let menuHeight = 0;
-
-  const tabs = document.getElementById('tabs');
-
-  const footer = document.querySelector('#footer #footer');
-  let footerHeight;
-  if (!footer) {
-    if (COZY_NEST_CONFIG.webui === WEBUI_SDNEXT)
-      footerHeight = 5;
-    else
-      footerHeight = 0;
-  }
-  else {
-    footerHeight = footer.offsetHeight;
-  }
-
-  if (COZY_NEST_CONFIG.main_menu_position !== 'left') {
-    const menu = document.querySelector('.tab-nav.nevysha-tabnav')
-
-    menuHeight = menu.offsetHeight + 2;
-    document.querySelector(':root').style.setProperty('--menu-top-height', `${menuHeight}px`);
-    const $app = $('.gradio-container.app');
-    $app.attr('style', `${$app.attr('style')} padding-top: ${menuHeight}px !important;`);
-
-    const rect = tabs.getBoundingClientRect();
-    const tabsTop = rect.top;
-
-    document.querySelector(':root').style.setProperty('--main-container-height', `${window.innerHeight - (tabsTop + footerHeight)}px`);
-
-    window.troubleshootSize = {
-      menuHeight,
-      footerHeight: footerHeight,
-      tabsTop,
-      WindowInnerHeight: window.innerHeight,
-      bodyHeight: window.innerHeight - (tabsTop + footerHeight),
-      'main-container-height': `${window.innerHeight - (tabsTop + footerHeight)}px`,
-    }
-  }
-  else {
-    document.querySelector(':root').style.setProperty('--menu-top-height', `1px`);
-
-    const $app = $('.gradio-container.app');
-    $app.attr('style', `${$app.attr('style')} padding-top: ${menuHeight}px !important;`);
-
-    const rect = tabs.getBoundingClientRect();
-    const tabsTop = rect.top;
-
-    document.querySelector(':root').style.setProperty('--main-container-height', `${window.innerHeight - (tabsTop + footerHeight)}px`);
-
-    window.troubleshootSize = {
-      menuHeight,
-      footerHeight: footerHeight,
-      tabsTop,
-      WindowInnerHeight: window.innerHeight,
-      bodyHeight: window.innerHeight - (tabsTop + footerHeight),
-      'main-container-height': `${window.innerHeight - (tabsTop + footerHeight)}px`,
-    }
-  }
-
-}
-
 function addOptionsObserver() {
   // Select the target node
   const targetNode = document.body;
@@ -1736,7 +1483,6 @@ const onLoad = (done) => {
   tweakNevyUiSettings();
 
   //load settings
-  applyCozyNestConfig();
   recalcOffsetFromMenuHeight();
 
   //add tab wrapper

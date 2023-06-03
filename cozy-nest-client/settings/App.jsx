@@ -29,6 +29,19 @@ import {
 } from '@chakra-ui/react'
 import {PopoverColorPicker} from "./PopoverColorPicker.jsx";
 import {OuputFolderSelector} from "./OuputFolderSelector.jsx";
+import {
+  applyAccentColor,
+  applyBgGradiantColor,
+  applyFontColor,
+  applyWavesColor,
+  applyDisabledWavesAndGradiant,
+  applyAccentForGenerate,
+  applyFontSize,
+  setCardHeight,
+  setCardWidth,
+  applyMenuPosition, setQuicksettingPosition, setSfwSettings
+} from "../main/tweaks/various-tweaks.js";
+import {getTheme} from "../main/cozy-utils.js";
 
 
 function DialogWrapper({children, isVisible}) {
@@ -85,7 +98,22 @@ export function App() {
   const [config, setConfig] = useState(COZY_NEST_CONFIG)
 
   useEffect(() => {
-    
+    applyWavesColor(config.waves_color);
+    applyFontColor(
+        getTheme() === "dark" ?
+          config.font_color :
+          config.font_color_light
+    )
+    applyBgGradiantColor(config.bg_gradiant_color);
+    applyDisabledWavesAndGradiant(config.disable_waves_and_gradiant);
+    applyAccentColor(config.accent_color, config.accent_color);
+    applyAccentForGenerate(config.accent_generate_button, config.accent_color);
+    applyFontSize(config.font_size)
+    setCardHeight(config.card_height)
+    setCardWidth(config.card_width)
+    applyMenuPosition(config.main_menu_position)
+    setQuicksettingPosition(config.quicksettings_position)
+    setSfwSettings(config.sfw_mode)
   }, [config])
 
   const toggle = () => {
