@@ -75,9 +75,9 @@ export function CozyImageInfo({verbose, imageHash, closeModal}) {
           </button>
         </>
       }
+      <CozyTags imageHash={imageHash} isFull={isVerbose}/>
       <table>
         <tbody>
-        <tr><td>Tags: </td><td><CozyTags imageHash={imageHash} isFull={isVerbose}/></td></tr>
         <tr><td>Date: </td><td>{formattedExif?.date}</td></tr>
         <tr><td>Model: </td><td>{formattedExif?.model}</td></tr>
         {isVerbose && <tr>

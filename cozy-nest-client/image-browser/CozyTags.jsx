@@ -5,10 +5,67 @@ import {Button} from "./App.jsx";
 import {Input} from "@chakra-ui/react";
 import useClickOutside from "../settings/useClickOutside.js";
 import {CozyLogger} from "../main/CozyLogger.js";
+import makeAnimated from 'react-select/animated';
+import CreatableSelect from "react-select/creatable";
+
+
+const animatedComponents = makeAnimated();
+
+// StylesConfig
+const styles = {
+    container: (state) => ({
+        ...state,
+        width: '100%',
+    }),
+    control: (state) => ({
+        ...state,
+        borderRadius:0,
+        border: '1px solid var(--border-color-primary)',
+        background: 'var(--input-background-fill)',
+        width: '100%',
+    }),
+    option: (state) => ({
+        ...state,
+        borderRadius:0,
+        color: 'var(--body-text-color)',
+        background: 'var(--background-fill-primary)',
+        '&:hover': {
+            background: 'var(--ae-primary-color)'
+        }
+    }),
+    menu: (state) => ({
+        ...state,
+        borderRadius:0,
+        background: 'var(--background-fill-primary)',
+        border: '1px solid var(--ae-input-border-color) !important'
+    }),
+    multiValue: (state) => ({
+        ...state,
+        borderRadius:0,
+        background: 'var(--background-fill-primary)',
+        color: 'var(--nevysha-font-color)',
+    }),
+    multiValueLabel: (styles) => ({
+        ...styles,
+        color: 'var(--nevysha-font-color)',
+    }),
+    multiValueRemove: (styles) => ({
+        ...styles,
+        ':hover': {
+            color: 'white',
+        },
+    }),
+    indicatorContainer: (styles) => ({
+        ...styles,
+        color: 'var(--nevysha-font-color)',
+        padding: 0,
+    })
+}
+
 
 export function CozyTags({imageHash, isFull}) {
 
-    const {getImage, tags} = useContext(ImagesContext)
+    const {getImage, tags, setTags} = useContext(ImagesContext)
 
     const [image, setImage] = useState(
         getImage(imageHash)
@@ -17,11 +74,7 @@ export function CozyTags({imageHash, isFull}) {
     const [imgTags, setImgTags] = useState([])
     const [splicedTags, setSplicedTags] = useState([])
 
-    const [isInputVisible, setIsInputVisible] = useState(false)
-
-    const popover = useRef();
-    const close = useCallback(() => setIsInputVisible(false), []);
-    useClickOutside(popover, close);
+    const [isLoading, setIsLoading] = useState(false);
 
     const exifTags = image && image.metadata && image.metadata.exif && image.metadata.exif['cozy-nest-tags']
 
@@ -49,29 +102,32 @@ export function CozyTags({imageHash, isFull}) {
         setImage(getImage(imageHash))
     }, [imageHash])
 
-    CozyLogger.debug('CozyTags', {imageHash, image, imgTags, exifTags})
+    const handleCreate = (inputValue) => {
+        setIsLoading(true);
+        setTags([...tags, inputValue])
+        setImgTags([...imgTags, inputValue])
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
+    };
+
+    const handleChange = (newValue) => {
+        setImgTags(newValue);
+    }
 
     return (
-        <div className="CozyTags">
-            {splicedTags.map((tag, index) => {
-                return (
-                    <span key={index} className="cozy-nest-tags">
-                        {tag}
-                    </span>
-                )
-            })}
-            {imgTags.length > splicedTags.length &&
-              <span className="hasMore">...</span>
-            }
-            <Button title="edit tags" className="btn" style={{width:'10px'}} onClick={() => setIsInputVisible(!isInputVisible)}>+</Button>
-            {isInputVisible &&
-              <Input
-                ref={popover}
-                defaultValue={imgTags.join(',')}
-                type="text"
-                className="form-control CozyTagInput"
-                placeholder="Add tag"/>
-            }
-        </div>
+      <>
+        <CreatableSelect
+          placeholder={'Tags...'}
+          styles={styles}
+          isMulti
+          options={tags.map(tag => ({value: tag, label: tag}))}
+          onCreateOption={handleCreate}
+          isDisabled={isLoading}
+          isLoading={isLoading}
+          value={imgTags.map(tag => ({value: tag, label: tag}))}
+          onChange={(tags) => handleChange(tags)}
+        />
+      </>
     );
 }
