@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.7.0",
     "@fontsource-variable/caveat": "^5.0.0",
     "animate.css": "^4.1.1",
     "jquery": "^3.7.0",

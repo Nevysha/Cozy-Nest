@@ -4,6 +4,7 @@ import React, {useContext, useEffect, useState} from "react";
 import Exif from "./editor/ExifEditor.jsx";
 import {ImagesContext} from "./ImagesContext.tsx";
 import {CozyLogger} from "../main/CozyLogger.js";
+import {CozyTags} from "./CozyTags.jsx";
 
 const tryCatch = (fn) => {
   try {
@@ -15,7 +16,7 @@ const tryCatch = (fn) => {
 
 export function CozyImageInfo({verbose, imageHash, closeModal}) {
 
-  const {images, updateExifInState, getImage, tags} = useContext(ImagesContext)
+  const {images, updateExifInState, getImage} = useContext(ImagesContext)
 
   const [image, setImage] = useState(
     getImage(imageHash)
@@ -33,7 +34,7 @@ export function CozyImageInfo({verbose, imageHash, closeModal}) {
   })
   const isVerbose = verbose;
 
-  const [imgTags, setImgTags] = useState([])
+
 
   useEffect(() => {
     setImage(getImage(imageHash));
@@ -57,36 +58,8 @@ export function CozyImageInfo({verbose, imageHash, closeModal}) {
     })
   }, [image])
 
-  useEffect(() => {
-
-    if (!image) return
-
-    if (image.metadata.exif['cozy-nest-tags']) {
-      const _imgTags = image.metadata.exif['cozy-nest-tags'].split(',')
-          .map(tag => {
-            return {label: tag, value: tag}
-          })
-      setImgTags([..._imgTags])
-    }
-  }, [image])
-
-  const onTagsChange = (tags) => {
-    setImgTags(tags)
-  }
-
-  async function saveExif() {
-    const newTags = imgTags.map(tag => tag.value).join(',')
-    if (newTags === image.metadata.exif['cozy-nest-tags']) {
-      return
-    }
-    image.metadata.exif['cozy-nest-tags'] = newTags
-    await Exif.save(image.path, image.metadata.exif)
-    updateExifInState(image)
-  }
-
   const close = async () => {
     closeModal()
-    await saveExif();
   }
 
   if (!image) return (<div className="image-info">No image selected</div>)
@@ -104,6 +77,7 @@ export function CozyImageInfo({verbose, imageHash, closeModal}) {
       }
       <table>
         <tbody>
+        <tr><td>Tags: </td><td><CozyTags imageHash={imageHash} isFull={isVerbose}/></td></tr>
         <tr><td>Date: </td><td>{formattedExif?.date}</td></tr>
         <tr><td>Model: </td><td>{formattedExif?.model}</td></tr>
         {isVerbose && <tr>

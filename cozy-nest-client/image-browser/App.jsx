@@ -267,7 +267,7 @@ function App() {
         </Row>
         <Row>
           <textarea data-testid="textbox"
-                    placeholder="Search anything : Prompt, Size, Model, ..."
+                    placeholder="Search anything : Tags, Prompt, Size, Model, ..."
                     rows="1"
                     spellCheck="false"
                     data-gramm="false"

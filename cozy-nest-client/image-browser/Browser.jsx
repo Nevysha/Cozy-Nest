@@ -57,7 +57,7 @@ export default function Browser(props) {
 
       return (
           <CozyImage
-              key={index}
+              key={image.hash}
               imageHash={image.hash}
               index={index}
               viewPort={viewPort}/>

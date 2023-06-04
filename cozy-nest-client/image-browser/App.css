@@ -176,3 +176,26 @@ input[type="radio"] {
     flex-direction: column;
     gap: 25px;
 }
+
+
+.CozyTags {
+    display: flex;
+    flex-wrap: wrap
+}
+.CozyTagInput {
+    position: absolute;
+    width: 190px;
+    margin-top: 25px;
+    border: 1px solid var(--ae-primary-color) !important;
+    font-size: var(--body-text-size);
+}
+.cozy-nest-tags {
+    background-color: var(--ae-input-bg-color);
+    border: 1px solid var(--ae-input-border-color);
+    margin-right: 2px;
+    padding: 2px 4px;
+}
+.hasMore {
+    margin-top: auto;
+    margin-right: 3px;
+}
