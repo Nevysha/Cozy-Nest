@@ -13,7 +13,7 @@ export default function CozyImage({viewPort, imageHash, index}) {
   const [showModal, setShowModal] = useState(false);
   const imgRef = useRef(null);
   const _me = useRef(null);
-  const {images, getImage} = useContext(ImagesContext)
+  const {getImage} = useContext(ImagesContext)
   const [onScreen, setOnScreen] = useState(false);
 
   const [image, setImage] = useState(
@@ -22,7 +22,7 @@ export default function CozyImage({viewPort, imageHash, index}) {
 
   useEffect(() => {
     setImage(getImage(imageHash));
-  }, [images, imageHash]);
+  }, [imageHash]);
 
   useEffect(() => {
 
