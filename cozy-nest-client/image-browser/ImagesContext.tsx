@@ -2,7 +2,6 @@ import React, {createContext, ReactNode, useState} from 'react';
 import {Image} from "../cozy-types";
 // @ts-ignore
 import {CozyLogger} from "../main/CozyLogger";
-import {TagOption} from "./Tags.tsx";
 
 interface ImagesContextType {
     images: Image[];
@@ -87,7 +86,7 @@ export function ImagesProvider({ children }: { children: ReactNode[] }) {
         updateExifInState,
         getImage,
         tags,
-        setTags: (tags: string []) => {tags.map(tag => ({value: tag, label: tag}))},
+        setTags
     }
 
     return (

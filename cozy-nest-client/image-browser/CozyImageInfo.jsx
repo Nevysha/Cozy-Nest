@@ -1,5 +1,4 @@
 import {Row} from "../main/Utils.jsx";
-import {ImgTags} from "./Tags.tsx";
 import {Controls} from "./Controls.jsx";
 import React, {useContext, useEffect, useState} from "react";
 import Exif from "./editor/ExifEditor.jsx";
@@ -101,12 +100,8 @@ export function CozyImageInfo({verbose, imageHash, closeModal}) {
             onClick={close}>
             Close
           </button>
-          <Row>
-            <ImgTags tags={tags} imageHash={imageHash} onChange={onTagsChange}/>
-          </Row>
         </>
       }
-      {!isVerbose && <ImgTags tags={tags} imageHash={imageHash} onChange={onTagsChange}/>}
       <table>
         <tbody>
         <tr><td>Date: </td><td>{formattedExif?.date}</td></tr>

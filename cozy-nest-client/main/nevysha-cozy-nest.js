@@ -1393,19 +1393,21 @@ function setupErrorHandling() {
   //set a global error handler
   window.addEventListener('error', function ({message, filename , lineno, colno, error }) {
 
-    // get setting_nevyui_errorPopup checkbox value
-    const errorPopup = document.querySelector('#setting_nevyui_errorPopup').querySelector("input").checked;
-    if (!errorPopup) return;
+    //TODO uncomment
 
-    //if filename does not contains Cozy-Nest, ignore
-    if (!filename.toLowerCase().includes('cozy-nest')) return;
-
-    // Handle the error here
-    populateInstanceInfoDialog();
-    document.querySelector('#cozy_nest_error_handling_display').innerHTML = `An error occurred: ${message} at ${filename } line ${lineno} column ${colno}`;
-    document.querySelector('#cozy_nest_error_handling_display_stack').innerHTML = error.stack;
-    document.querySelector('#cozy_nest_error_handling_display_stack').setAttribute('style', 'display: block;');
-    showInstanceInfoDialog();
+    // // get setting_nevyui_errorPopup checkbox value
+    // const errorPopup = document.querySelector('#setting_nevyui_errorPopup').querySelector("input").checked;
+    // if (!errorPopup) return;
+    //
+    // //if filename does not contains Cozy-Nest, ignore
+    // if (!filename.toLowerCase().includes('cozy-nest')) return;
+    //
+    // // Handle the error here
+    // populateInstanceInfoDialog();
+    // document.querySelector('#cozy_nest_error_handling_display').innerHTML = `An error occurred: ${message} at ${filename } line ${lineno} column ${colno}`;
+    // document.querySelector('#cozy_nest_error_handling_display_stack').innerHTML = error.stack;
+    // document.querySelector('#cozy_nest_error_handling_display_stack').setAttribute('style', 'display: block;');
+    // showInstanceInfoDialog();
   });
 }
 

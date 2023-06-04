@@ -4,7 +4,6 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import Browser from "./Browser.jsx";
 import {MockImageBrowser} from "./MockImageBrowser.jsx";
 import {CozyLogger} from "../main/CozyLogger.js";
-import Tags from "./Tags.tsx";
 import Loader from "react-spinners/HashLoader";
 import {ImagesContext} from "./ImagesContext.tsx";
 import {Column, Row} from "../main/Utils.jsx";
@@ -191,7 +190,7 @@ function App() {
           _tags.push(...imgTags)
         }
       })
-    setTags([...new Set(_tags)])
+    setTags([..._tags])
   }, [images, visibilityFilter])
 
   const connectionStatus = {
@@ -265,7 +264,6 @@ function App() {
             </Row>
 
           </Row>
-          <Tags tags={tags} setActiveTags={setActiveTags} />
         </Row>
         <Row>
           <textarea data-testid="textbox"
