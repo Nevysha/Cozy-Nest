@@ -118,11 +118,11 @@ export function CozyTags({imageHash, isFull}) {
     }
 
     const handleSave = async (newTags) => {
-        //TODO
+
         const exif = image.metadata.exif
         exif['cozy-nest-tags'] = newTags.join(',')
         CozyLogger.debug('Saving tags', exif)
-        // await saveExif()
+        await saveExif(image.path, exif)
     }
 
     return (
