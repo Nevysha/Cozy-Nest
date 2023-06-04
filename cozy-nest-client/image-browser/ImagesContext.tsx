@@ -1,4 +1,4 @@
-import React, {createContext, ReactNode, useState} from 'react';
+import React, {createContext, ReactNode, useEffect, useState} from 'react';
 import {Image} from "../cozy-types";
 // @ts-ignore
 import {CozyLogger} from "../main/CozyLogger";
@@ -20,7 +20,15 @@ export const ImagesContext = createContext<ImagesContextType>({
 export function ImagesProvider({ children }: { children: ReactNode[] }) {
     const [images, setImages] = useState<Image[]>([]);
     const [filteredImages, setFilteredImages] = useState<Image[]>([]);
-    const [tags, setTags] = useState<TagOption[]>([]);
+    const [tags, setTags] = useState<string[]>([]);
+
+    useEffect(() => {
+
+        const noDuplicates = [...new Set(tags)];
+        if (noDuplicates.length !== tags.length) {
+            setTags(noDuplicates)
+        }
+    }, [tags])
 
     const deleteImg = async (what: string, image: Image) => {
 

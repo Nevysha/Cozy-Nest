@@ -11,7 +11,7 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import {CozyLogger} from "../../main/CozyLogger.js";
 import {ImagesContext} from "../ImagesContext.tsx";
 
-function ExifEditor({onClose, visible, imageHash}) {
+export function ExifEditor({onClose, visible, imageHash}) {
 
     const [exif, setExif] = useState({});
     const [exifString, setExifString] = useState('');
@@ -92,7 +92,7 @@ function ExifEditor({onClose, visible, imageHash}) {
     );
 }
 
-async function saveExif(path, exif) {
+export async function saveExif(path, exif) {
 
     // check if path is URL encoded
     if (path.indexOf('%') !== -1) {

@@ -4,10 +4,8 @@ import {Button} from "./App.jsx";
 import {Column, Row} from "../main/Utils.jsx";
 
 import './editor/ExifEditor.css'
-import Exif from "./editor/ExifEditor.jsx";
+import {ExifEditor} from "./editor/ExifEditor.jsx";
 import {ImagesContext} from "./ImagesContext.tsx";
-
-const ExifEditor = Exif.ExifEditor
 
 
 function SendTo({imageHash}) {

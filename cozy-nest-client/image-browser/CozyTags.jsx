@@ -3,9 +3,8 @@ import {ImagesContext} from "./ImagesContext";
 import makeAnimated from 'react-select/animated';
 import CreatableSelect from "react-select/creatable";
 
-import ExifEditor from "./editor/ExifEditor.jsx";
+import {saveExif} from "./editor/ExifEditor.jsx";
 import {CozyLogger} from "../main/CozyLogger.js";
-const saveExif = ExifEditor.save;
 
 
 const animatedComponents = makeAnimated();
@@ -104,15 +103,19 @@ export function CozyTags({imageHash, isFull}) {
     const handleCreate = (inputValue) => {
         setIsLoading(true);
         setTags([...tags, inputValue])
-        setImgTags([...imgTags, inputValue])
+
+        //remove duplicates [...imgTags, inputValue]
+        const _imgTags = [...new Set([...imgTags, inputValue])]
+
+        setImgTags([..._imgTags])
         setTimeout(() => {
             setIsLoading(false);
-            handleSave([...imgTags, inputValue]).then(_ => _)
+            handleSave([..._imgTags]).then(_ => _)
         }, 1000);
     };
 
     const handleChange = (newValue) => {
-        const _newValue = newValue.map(tag => tag.value)
+        const _newValue = [...new Set(newValue.map(tag => tag.value))]
         setImgTags(_newValue);
         handleSave(_newValue).then(_ => _)
     }
@@ -121,7 +124,7 @@ export function CozyTags({imageHash, isFull}) {
 
         const exif = image.metadata.exif
         exif['cozy-nest-tags'] = newTags.join(',')
-        CozyLogger.debug('Saving tags', exif)
+        CozyLogger.debug('Saving tags', exif['cozy-nest-tags'])
         await saveExif(image.path, exif)
     }
 
