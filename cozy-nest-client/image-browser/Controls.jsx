@@ -6,6 +6,7 @@ import {Column, Row} from "../main/Utils.jsx";
 import './editor/ExifEditor.css'
 import Exif from "./editor/ExifEditor.jsx";
 import {ImagesContext} from "./ImagesContext.tsx";
+import {ButtonWithConfirmDialog} from "../chakra/ButtonWithConfirmDialog.jsx";
 
 
 function SendTo({imageHash}) {
@@ -109,7 +110,13 @@ export function Controls({imageHash}) {
                     {!isHidden && <Button onClick={hideImg}>Hide</Button>}
                     {isHidden && <Button onClick={unhideImg}>Show</Button>}
                     <Button onClick={() => deleteImg('archive', image)}>Move to archive</Button>
-                    <Button onClick={() => deleteImg('delete', image)}>Delete</Button>
+                    <ButtonWithConfirmDialog
+                      style={{height: '100%'}}
+                      message='This action cannot be undone. Are you sure?'
+                      confirmLabel='Delete'
+                      cancelLabel="Cancel"
+                      onConfirm={() => deleteImg('delete', image)}
+                    />
                 </Row>
             </Column>
         </Column>

@@ -11,15 +11,21 @@ import {
   Button,
 } from '@chakra-ui/react'
 
-export function ButtonWithConfirmDialog({message, confirmLabel, cancelLabel, onConfirm}) {
+export function ButtonWithConfirmDialog({message, confirmLabel, cancelLabel, onConfirm, style}) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
+
+  if (style) {
+    style = {...style, width: '100%'}
+  }
+  else
+    style = {width: '100%'}
 
   return (
     <>
       <button
         className="btn-settings"
-        style={{width: '100%'}}
+        style={style}
         onClick={onOpen}
       >{confirmLabel}</button>
 

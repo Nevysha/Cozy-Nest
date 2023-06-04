@@ -529,7 +529,6 @@ input[type=range]::-webkit-slider-thumb {
 
     border-radius: var(--button-large-radius);
     padding: var(--button-large-padding);
-    font-weight: var(--button-large-text-weight);
     font-size: var(--button-large-text-size);
 
     --checkbox-background-color: var(--neutral-800);
