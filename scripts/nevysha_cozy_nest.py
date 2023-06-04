@@ -273,7 +273,11 @@ def gradio_hidden_field(server_port):
                 ))
 
 
+_server_port = None
+
+
 def on_ui_tabs():
+    global _server_port
     # shared options
     config = get_dict_from_config()
     # merge default settings with user settings

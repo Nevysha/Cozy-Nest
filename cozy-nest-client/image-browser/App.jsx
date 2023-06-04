@@ -7,6 +7,7 @@ import {CozyLogger} from "../main/CozyLogger.js";
 import Loader from "react-spinners/HashLoader";
 import {ImagesContext} from "./ImagesContext.tsx";
 import {Column, Row} from "../main/Utils.jsx";
+import {CozyTagsSelect} from "./CozyTags.jsx";
 
 
 
@@ -272,6 +273,7 @@ function App() {
                     spellCheck="false"
                     data-gramm="false"
                     onChange={(e) => setSearchStr(e.target.value)}/>
+          <CozyTagsSelect setActiveTags={setActiveTags} />
         </Row>
 
       </Column>

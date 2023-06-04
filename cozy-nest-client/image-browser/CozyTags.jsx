@@ -2,7 +2,7 @@ import React, {useCallback, useContext, useEffect, useRef, useState} from 'react
 import {ImagesContext} from "./ImagesContext";
 import makeAnimated from 'react-select/animated';
 import CreatableSelect from "react-select/creatable";
-
+import Select from 'react-select';
 import {saveExif} from "./editor/ExifEditor.jsx";
 import {CozyLogger} from "../main/CozyLogger.js";
 
@@ -136,4 +136,19 @@ export function CozyTags({imageHash, isFull}) {
         />
       </>
     );
+}
+
+export function CozyTagsSelect({setActiveTags}) {
+    const {tags} = useContext(ImagesContext)
+
+    return (
+      <Select
+        options={tags.map(tag => ({value: tag, label: tag}))}
+        components={animatedComponents}
+        isMulti
+        placeholder={'Tags...'}
+        styles={styles}
+        onChange={(tags) => setActiveTags(tags)}
+        />
+    )
 }

@@ -4,7 +4,7 @@ import {Button} from "./App.jsx";
 import {Column, Row} from "../main/Utils.jsx";
 
 import './editor/ExifEditor.css'
-import {ExifEditor} from "./editor/ExifEditor.jsx";
+import Exif from "./editor/ExifEditor.jsx";
 import {ImagesContext} from "./ImagesContext.tsx";
 
 
@@ -91,6 +91,8 @@ export function Controls({imageHash}) {
         await Exif.save(path, exif)
         updateExifInState(image)
     }
+
+    const ExifEditor = Exif.ExifEditor
 
     return (
         <Column style={{height: "100%", justifyContent: "space-between"}}>
