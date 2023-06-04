@@ -70,7 +70,6 @@ export function CozyTags({imageHash, isFull}) {
     );
 
     const [imgTags, setImgTags] = useState([])
-    const [splicedTags, setSplicedTags] = useState([])
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -83,12 +82,6 @@ export function CozyTags({imageHash, isFull}) {
         if (image.metadata.exif['cozy-nest-tags']) {
             const _imgTags = image.metadata.exif['cozy-nest-tags'].split(',')
             setImgTags([..._imgTags])
-            setSplicedTags([..._imgTags])
-            if (!isFull) {
-                // keep only the first 3 tags
-                _imgTags.splice(3)
-                setSplicedTags(_imgTags)
-            }
 
         }
         else {
