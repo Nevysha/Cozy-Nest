@@ -1,12 +1,11 @@
 import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import {ImagesContext} from "./ImagesContext";
-import {Row} from "../main/Utils.jsx";
-import {Button} from "./App.jsx";
-import {Input} from "@chakra-ui/react";
-import useClickOutside from "../settings/useClickOutside.js";
-import {CozyLogger} from "../main/CozyLogger.js";
 import makeAnimated from 'react-select/animated';
 import CreatableSelect from "react-select/creatable";
+
+import ExifEditor from "./editor/ExifEditor.jsx";
+import {CozyLogger} from "../main/CozyLogger.js";
+const saveExif = ExifEditor.save;
 
 
 const animatedComponents = makeAnimated();
@@ -108,11 +107,22 @@ export function CozyTags({imageHash, isFull}) {
         setImgTags([...imgTags, inputValue])
         setTimeout(() => {
             setIsLoading(false);
+            handleSave([...imgTags, inputValue]).then(_ => _)
         }, 1000);
     };
 
     const handleChange = (newValue) => {
-        setImgTags(newValue);
+        const _newValue = newValue.map(tag => tag.value)
+        setImgTags(_newValue);
+        handleSave(_newValue).then(_ => _)
+    }
+
+    const handleSave = async (newTags) => {
+        //TODO
+        const exif = image.metadata.exif
+        exif['cozy-nest-tags'] = newTags.join(',')
+        CozyLogger.debug('Saving tags', exif)
+        // await saveExif()
     }
 
     return (
