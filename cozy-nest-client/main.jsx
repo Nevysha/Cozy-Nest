@@ -10,6 +10,7 @@ import startCozyNestSettings from "@settings/main.jsx";
 import {
   dummyLoraCard, dummyControlNetBloc, dummySubdirs
 } from './main/cozy-utils.js';
+import startCozyPrompt from "./cozy-prompt/main.jsx";
 window.CozyTools = {
   dummyLoraCard,
   dummyControlNetBloc,
@@ -22,6 +23,7 @@ export default async function cozyNestLoader()  {
   await fetchCozyNestConfig();
   await cozyNestModuleLoader();
   startCozyNestSettings();
+  startCozyPrompt();
   startCozyNestImageBrowser();
 }
 

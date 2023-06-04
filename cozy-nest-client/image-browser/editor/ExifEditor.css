@@ -33,10 +33,10 @@
 }
 
 /*Ace override*/
-.ace_cursor-layer {
+.ExifEditor .ace_cursor-layer {
     z-index: 900;
 }
-.ace_cursor-layer .ace_cursor {
+.ExifEditor .ace_cursor-layer .ace_cursor {
     z-index: 901;
     background-color: var(--ae-primary-color);
     position: fixed;
@@ -52,9 +52,9 @@
     60% { opacity: 0; }
     85% { opacity: 0; }
 }
-.ace_active-line {
+.ExifEditor .ace_active-line {
     background: #ffffff0d;
 }
-.ace_editor {
+.ExifEditor .ace_editor {
     background-color: transparent;
 }

@@ -99,10 +99,6 @@ function App() {
     // force a dummy url change
     setSocketUrl(socketUrl + '?t=' + Date.now())
 
-    // get the #nevyui_sh_options_start_socket button from main gradio app and click it
-    const button = document.querySelector('#nevyui_sh_options_start_socket');
-    button.click();
-
   }
 
   function applyActiveFilter() {

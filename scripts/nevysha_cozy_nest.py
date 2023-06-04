@@ -320,6 +320,7 @@ def on_ui_tabs():
             config.get('auto_search_port'),
             config.get('cnib_output_folder')
         )
+        _server_port = server_port
     else:
         print("CozyNest: Image browser is disabled. To enable it, go to the CozyNest settings.")
 
