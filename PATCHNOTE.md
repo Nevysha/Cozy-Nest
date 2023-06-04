@@ -1,11 +1,12 @@
 ## Compatibility
 
-- From Automatic1111's webui `5ab7f213` commit to the 1.2.1 release.
+- Automatic1111's webui 1.3.1 release.
 - SD.Next (Vlad's fork) from commit `beff89ba`
 - Will work best on latest version of both as I'm only testing on latest version.
 
 ## New features in 2.2.0
 
+- [x]  Tag system for image browser : you can now add tag to your images and filter them by tag. Tags are saved in exif metadata.
 - [x]  Exif metadata editor : you can now edit exif metadata of your images
 - [x]  You can move img into a separated archive folder (set through settings)
 - [x]  You can hide image from image browser (a tag is added to the image exif)
