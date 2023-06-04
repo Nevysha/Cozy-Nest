@@ -148,7 +148,7 @@ export function CozyTagsSelect({setActiveTags}) {
         isMulti
         placeholder={'Tags...'}
         styles={styles}
-        onChange={(tags) => setActiveTags(tags)}
+        onChange={(tags) => setActiveTags(tags.map(tag => tag.value))}
         />
     )
 }
