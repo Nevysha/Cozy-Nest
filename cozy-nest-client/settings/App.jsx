@@ -138,7 +138,10 @@ export function App() {
   const updateConfig = (e, what) => {
 
     const newConfig = {...config}
-    newConfig[what] = e.target.value
+    if (e.target)
+      newConfig[what] = e.target.value
+    else
+      newConfig[what] = e
 
     setConfig(newConfig)
   }

@@ -19,14 +19,15 @@ import "ace-builds/src-noconflict/ext-language_tools";
 
 import './CozyPrompt.css'
 import useExternalTextareaObserver from "./useExternalTextareaObserver.js";
+import {Button} from "../image-browser/App.jsx";
+import {Row} from "../main/Utils.jsx";
 
 
 export function App() {
 
   const nativeTextarea = document.querySelector('#txt2img_prompt label textarea');
-  nativeTextarea.style.display = 'none';
 
-  const [nativeIsVisible, setNativeIsVisible] = useState(true);
+  const [nativeIsVisible, setNativeIsVisible] = useState(false);
   const nativeTextareaValue = useExternalTextareaObserver('#txt2img_prompt label textarea');
 
   const [prompt, setPrompt] = useState('');
@@ -37,13 +38,11 @@ export function App() {
   const [startY, setStartY] = useState(0);
 
   const propagate = () => {
-
     nativeTextarea.value
       = prompt
 
     const event = new Event('input')
     nativeTextarea.dispatchEvent(event)
-
   }
 
   useEffect(() => {
@@ -62,6 +61,16 @@ export function App() {
   useEffect(() => {
     setPrompt(nativeTextareaValue)
   }, [nativeTextareaValue]);
+  useEffect(() => {
+    if (!nativeIsVisible) {
+      nativeTextarea.style.display = 'none';
+    }
+    else {
+      nativeTextarea.style.display = 'block';
+      //margin-top: 40px;
+      nativeTextarea.style.marginTop = '40px';
+    }
+  }, [nativeIsVisible]);
 
   useEffect(() => {
     const handleGlobalMouseUp = () => {
@@ -93,13 +102,11 @@ export function App() {
   };
 
   const toggleNative = () => {
-    if (nativeIsVisible) {
-      nativeTextarea.style.display = 'none';
-    }
-    else {
-      nativeTextarea.style.display = 'block';
-    }
     setNativeIsVisible(!nativeIsVisible);
+  }
+
+  function prettify() {
+    setPrompt(prompt.replaceAll('),', '),\n'))
   }
 
   return (
@@ -134,6 +141,11 @@ export function App() {
         onMouseDown={handleMouseDown}
         className="CozyPrompt__resize-handle"
        />
+      <Row>
+        <Button onClick={prettify}>Prettify</Button>
+        <Button onClick={toggleNative}>Toggle native</Button>
+      </Row>
+
     </div>
   );
 }
