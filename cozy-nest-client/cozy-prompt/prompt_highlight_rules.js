@@ -12,18 +12,48 @@ ace.define("ace/mode/prompt_highlight_rules", ["require", "exports", "module", "
     const openBracket = /[\(\[\{]/;
     const closeBracket = /[\)\]\}]/;
 
+    let bracketLevel = 0;
+
     this.$rules = {
       start: [
-        { regex: openBracket, token: "open-bracket", next: "inner" },
-        { regex: closeBracket, token: "close-bracket", next: "start" },
+        {
+          token: () => {
+            bracketLevel++;
+            return `open-bracket.open-bracket-${(bracketLevel) % 4}`;
+          },
+          next: "inner",
+          regex: openBracket
+        },
+        {
+          token: () => {
+            bracketLevel--;
+            return `close-bracket.close-bracket-${(bracketLevel+1) % 4}`;
+          },
+          regex: closeBracket,
+          next: "start"
+        },
         { regex: /[,|:]/, token: "token" },
         { regex: /\w+/, token: "text" },
       ],
       inner: [
-        { regex: openBracket, token: "open-bracket", next: "inner" },
+        {
+          token: () => {
+            bracketLevel++;
+            return `open-bracket.open-bracket-${(bracketLevel) % 4}`;
+          },
+          regex: openBracket,
+          next: "inner"
+        },
         { regex: /[,|:]/, token: "token" },
         { regex: /\w+/, token: "inner-bracket" },
-        { regex: closeBracket, token: "close-bracket", next: "start" },
+        {
+          token: () => {
+            bracketLevel--;
+            return `close-bracket.close-bracket-${(bracketLevel+1) % 4}`;
+          },
+          regex: closeBracket,
+          next: "start"
+        },
       ]
     };
   }

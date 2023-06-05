@@ -36,6 +36,16 @@
 .CozyPrompt .ace_editor {
     background-color: var(--ae-input-bg-color) !important;
 }
+.CozyPrompt .ace_scrollbar::-webkit-scrollbar {
+    width: 5px;
+}
+.CozyPrompt .ace_scrollbar::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+.CozyPrompt .ace_scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--ae-primary-color);
+    border-radius: 20px;
+}
 
 /*Editor color*/
 .ace_text-layer {
@@ -47,11 +57,20 @@
     font-weight: bold;;
     font-size: 1.1em;
 }
-.ace_open-bracket {
-    /*margin-right: 3px;*/
+.ace_open-bracket-0, .ace_close-bracket-0 {
+    color: violet;
 }
-.ace_close-bracket {
-    /*margin-left: 3px;*/
+.ace_open-bracket-1, .ace_close-bracket-1 {
+    color: var(--ae-primary-color);
+}
+.ace_open-bracket-2, .ace_close-bracket-2 {
+    color: hotpink;
+}
+.ace_open-bracket-3, .ace_close-bracket-3 {
+    color: greenyellow;
+}
+.ace_open-bracket-4, .ace_close-bracket-4 {
+    color: #fa662a;
 }
 .ace_token {
     color: #cccc96;

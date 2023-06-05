@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 
 import 'ace-builds'
 // ace.config.setModuleUrl(
@@ -24,23 +24,27 @@ import {CozyLogger} from "../main/CozyLogger.js";
 export function App() {
 
   const [prompt, setPrompt] = useState('');
+  const editor = useRef();
 
-  const reformat = () => {
+  const propagate = () => {
 
-    //replace ")," with "),\n"
     document.querySelector('#txt2img_prompt textarea').value
       = prompt
+
+    const event = new Event('input')
+    document.querySelector('#txt2img_prompt textarea').dispatchEvent(event)
 
   }
 
   return (
     <div className="CozyPrompt">
       <AceEditor
+        ref={editor}
         mode="prompt"
         theme="github_dark"
         showPrintMargin={false}
         onChange={setPrompt}
-        onBlur={reformat}
+        onBlur={propagate}
         value={prompt}
         name="ace-prompt-editor"
         editorProps={{ $blockScrolling: true }}
@@ -57,6 +61,7 @@ export function App() {
           fontFamily: "monospace",
         }}
       />
+      <div>Drag me</div>
     </div>
   );
 }
