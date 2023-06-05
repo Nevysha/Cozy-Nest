@@ -22,15 +22,15 @@ import useExternalTextareaObserver from "./useExternalTextareaObserver.js";
 import {Button} from "../image-browser/App.jsx";
 import {Row} from "../main/Utils.jsx";
 
-export function App({containerId}) {
+export function App({parentId, containerId}) {
 
   let savedHeight = localStorage.getItem(`cozy-prompt-height-${containerId}`);
   savedHeight = savedHeight ? parseInt(savedHeight) : 200;
 
-  const nativeTextarea = document.querySelector('#txt2img_prompt label textarea');
+  const nativeTextarea = document.querySelector(`#${parentId} label textarea`);
 
   const [nativeIsVisible, setNativeIsVisible] = useState(false);
-  const nativeTextareaValue = useExternalTextareaObserver('#txt2img_prompt label textarea');
+  const nativeTextareaValue = useExternalTextareaObserver(`#${parentId} label textarea`);
 
   const [prompt, setPrompt] = useState('');
   const editor = useRef();

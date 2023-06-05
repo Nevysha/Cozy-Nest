@@ -23,7 +23,8 @@ export default async function cozyNestLoader()  {
   await fetchCozyNestConfig();
   await cozyNestModuleLoader();
   startCozyNestSettings();
-  startCozyPrompt();
+  startCozyPrompt('txt2img_prompt', 'cozy_nest_prompt_txt2img');
+  startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img');
   startCozyNestImageBrowser();
 }
 

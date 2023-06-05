@@ -6,6 +6,7 @@
 
 ## New features in 2.2.0
 
+- [x]  Enhanced prompt editor with color (in txt2img and img2img)
 - [x]  Tag system for image browser : you can now add tag to your images and filter them by tag. Tags are saved in exif metadata.
 - [x]  Exif metadata editor : you can now edit exif metadata of your images
 - [x]  You can move img into a separated archive folder (set through settings)

@@ -2,9 +2,7 @@ import React from "react";
 import ReactDOM from 'react-dom/client'
 import {App} from "./App.jsx";
 
-const containerId = 'cozy_nest_prompt_txt2img';
-const parentId = 'txt2img_prompt';
-export default function startCozyPrompt() {
+export default function startCozyPrompt(parentId, containerId) {
   //
   if (!document.getElementById(parentId)) {
     setTimeout(() => startCozyPrompt(), 200)
@@ -20,7 +18,7 @@ export default function startCozyPrompt() {
 
   ReactDOM.createRoot(document.getElementById(containerId)).render(
     <React.StrictMode>
-      <App containerId={containerId}/>
+      <App containerId={containerId} parentId={parentId}/>
     </React.StrictMode>,
   )
 }
