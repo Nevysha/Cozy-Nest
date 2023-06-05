@@ -112,6 +112,11 @@ export function App({containerId}) {
     setPrompt(prompt.replaceAll('),', '),\n'))
   }
 
+  function onLoadEditor(editor) {
+    editor.renderer.setPadding(10);
+    editor.renderer.setScrollMargin(10);
+  }
+
   return (
     <div
       className="CozyPrompt"
@@ -119,6 +124,7 @@ export function App({containerId}) {
     >
       <AceEditor
         ref={editor}
+        onLoad={onLoadEditor}
         mode="prompt"
         theme="github_dark"
         showPrintMargin={false}

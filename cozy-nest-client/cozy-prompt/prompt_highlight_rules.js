@@ -32,8 +32,13 @@ ace.define("ace/mode/prompt_highlight_rules", ["require", "exports", "module", "
           regex: closeBracket,
           next: "start"
         },
+        { regex: /<lora:/, token: "lora-begin", next: "lora" },
         { regex: /[,|:]/, token: "token" },
         { regex: /\w+/, token: "text" },
+      ],
+      lora: [
+        { regex: '>', token: "lora-end", next: "start" },
+        { regex: /\w+/, token: "lora-inner" },
       ],
       inner: [
         {

@@ -33,6 +33,10 @@
 .CozyPrompt .ace_active-line {
     background: #ffffff0d !important;
 }
+.CozyPrompt {
+    /*padding: 10px;*/
+    background-color: var(--input-background-fill) !important;
+}
 .CozyPrompt .ace_editor {
     background-color: var(--input-background-fill) !important;
 }
@@ -82,4 +86,13 @@
     color: #cccc96;
     font-weight: bold;
     /*margin: 0 3px;*/
+}
+.ace_lora-begin, .ace_lora-end, .ace_lora-inner {
+    color: #c444d5;
+
+}
+.ace_lora-begin, .ace_lora-end {
+    font-weight: bold;
+    font-size: 1.1em;
+    filter: brightness(1.2);
 }
