@@ -2,11 +2,11 @@ import React from "react";
 import ReactDOM from 'react-dom/client'
 import {App} from "./App.jsx";
 
-
 const containerId = 'cozy_nest_prompt';
+const parentId = 'txt2img_prompt';
 export default function startCozyPrompt() {
   //
-  if (!document.getElementById('txt2img_prompt_container')) {
+  if (!document.getElementById(parentId)) {
     setTimeout(() => startCozyPrompt(), 200)
     return
   }
@@ -15,8 +15,8 @@ export default function startCozyPrompt() {
   settingsDiv.id = containerId;
   settingsDiv.style = 'display: flex; height: fit-content; width: 100%;'
 
-  document.getElementById('txt2img_prompt_container')
-    .insertBefore(settingsDiv, document.getElementById('txt2img_prompt_container').firstChild);
+  document.getElementById(parentId)
+    .insertBefore(settingsDiv, document.getElementById(parentId).firstChild);
 
   ReactDOM.createRoot(document.getElementById(containerId)).render(
     <React.StrictMode>

@@ -1,6 +1,6 @@
 .CozyPrompt {
-    min-height: 200px;
-    max-height: 400px;
+    min-height: 100px;
+    max-height: 800px;
     width: 100%;
     border: 1px solid var(--ae-input-border-color) !important;
 }
@@ -34,7 +34,7 @@
     background: #ffffff0d !important;
 }
 .CozyPrompt .ace_editor {
-    background-color: var(--ae-input-bg-color) !important;
+    background-color: var(--input-background-fill) !important;
 }
 .CozyPrompt .ace_scrollbar::-webkit-scrollbar {
     width: 5px;
@@ -45,6 +45,12 @@
 .CozyPrompt .ace_scrollbar::-webkit-scrollbar-thumb {
     background-color: var(--ae-primary-color);
     border-radius: 20px;
+}
+.CozyPrompt__resize-handle {
+    width: 100%;
+    height: 5px;
+    background-color: var(--ae-input-border-color);
+    cursor: row-resize;
 }
 
 /*Editor color*/
