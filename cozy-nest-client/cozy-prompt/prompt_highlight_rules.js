@@ -26,7 +26,8 @@ ace.define("ace/mode/prompt_highlight_rules", ["require", "exports", "module", "
         },
         {
           token: () => {
-            return `close-bracket.close-bracket-${(bracketLevel) % 4}`;
+            bracketLevel--;
+            return `close-bracket.close-bracket-${(bracketLevel+1) % 4}`;
           },
           regex: closeBracket,
           next: "start"
@@ -47,7 +48,8 @@ ace.define("ace/mode/prompt_highlight_rules", ["require", "exports", "module", "
         { regex: /\w+/, token: "inner-bracket" },
         {
           token: () => {
-            return `close-bracket.close-bracket-${(bracketLevel) % 4}`;
+            bracketLevel--;
+            return `close-bracket.close-bracket-${(bracketLevel+1) % 4}`;
           },
           regex: closeBracket,
           next: "start"

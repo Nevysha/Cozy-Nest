@@ -22,8 +22,10 @@ import useExternalTextareaObserver from "./useExternalTextareaObserver.js";
 import {Button} from "../image-browser/App.jsx";
 import {Row} from "../main/Utils.jsx";
 
+export function App({containerId}) {
 
-export function App() {
+  let savedHeight = localStorage.getItem(`cozy-prompt-height-${containerId}`);
+  savedHeight = savedHeight ? parseInt(savedHeight) : 200;
 
   const nativeTextarea = document.querySelector('#txt2img_prompt label textarea');
 
@@ -33,7 +35,7 @@ export function App() {
   const [prompt, setPrompt] = useState('');
   const editor = useRef();
 
-  const [height, setHeight] = useState(200);
+  const [height, setHeight] = useState(savedHeight);
   const [dragging, setDragging] = useState(false);
   const [startY, setStartY] = useState(0);
 
@@ -82,6 +84,7 @@ export function App() {
       if (dragging) {
         const newHeight = height + event.clientY - startY;
         setHeight(newHeight);
+        localStorage.setItem(`cozy-prompt-height-${containerId}`, String(newHeight));
         setStartY(event.clientY);
       }
     };
