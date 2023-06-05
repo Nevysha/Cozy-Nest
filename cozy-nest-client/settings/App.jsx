@@ -42,7 +42,7 @@ import {
   applyMenuPosition, setQuicksettingPosition, setSfwSettings, recalcOffsetFromMenuHeight
 } from "../main/tweaks/various-tweaks.js";
 import {getTheme} from "../main/cozy-utils.js";
-import {WEBUI_SDNEXT} from "../main/Constants.js";
+import {WEBUI_A1111, WEBUI_SDNEXT} from "../main/Constants.js";
 import {saveCozyNestConfig} from "../main/nevysha-cozy-nest.js";
 import {ButtonWithConfirmDialog} from "../chakra/ButtonWithConfirmDialog.jsx";
 
@@ -160,6 +160,12 @@ export function App() {
   }
 
   const reloadUi = () => {
+
+    if (config.webui === WEBUI_A1111) {
+      document.querySelector('#settings_restart_gradio').click();
+      return;
+    }
+
     (async () => {
       // call to @app.get("/cozy-nest/reloadui")
       await fetch(`/cozy-nest/reloadui`)
@@ -355,6 +361,10 @@ export function App() {
                           isChecked={config.enable_extra_network_tweaks}
                           onChange={(e) => setConfig({...config, enable_extra_network_tweaks: e.target.checked})}
                       >Enable extra network tweaks</Checkbox>
+                      <Checkbox
+                          isChecked={config.enable_cozy_prompt}
+                          onChange={(e) => setConfig({...config, enable_cozy_prompt: e.target.checked})}
+                      >Enable Cozy Prompt</Checkbox>
                     </Column>
                   </TabPanel>
                 </TabPanels>

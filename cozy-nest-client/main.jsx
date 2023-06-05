@@ -23,8 +23,12 @@ export default async function cozyNestLoader()  {
   await fetchCozyNestConfig();
   await cozyNestModuleLoader();
   startCozyNestSettings();
-  startCozyPrompt('txt2img_prompt', 'cozy_nest_prompt_txt2img');
-  startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img');
+
+  if (COZY_NEST_CONFIG.enable_cozy_prompt === true) {
+    startCozyPrompt('txt2img_prompt', 'cozy_nest_prompt_txt2img');
+    startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img');
+  }
+
   startCozyNestImageBrowser();
 }
 

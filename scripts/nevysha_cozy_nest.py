@@ -142,6 +142,7 @@ def get_default_settings():
         'sfw_mode': False,
         'enable_clear_button': True,
         'enable_extra_network_tweaks': True,
+        'enable_cozy_prompt': True,
         'webui': 'unknown'
     }
 
