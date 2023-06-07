@@ -1,7 +1,7 @@
 import { extendTheme } from '@chakra-ui/react'
 
 
-import {inputTheme, numberInputTheme} from "./input.theme";
+import {inputTheme, numberInputTheme} from "./Input.theme";
 import {tabsTheme} from "./Tabs.theme";
 import {checkboxTheme, radioTheme} from "./Checkbox.theme";
 import {modalTheme} from "./Modal.theme";
