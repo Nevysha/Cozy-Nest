@@ -10,13 +10,24 @@ export function ExtraNetworks() {
   const panel = React.useRef(null);
 
   const style = {
-    marginRight: `-${width}px`,
     width: `${width}px`,
+  }
+
+  if (!isExpanded) {
+    style["marginRight"] = `-${width}px`;
   }
 
   const handleClick = () => {
     if (!isExpanded) {
-      $(panel).animate({"margin-right": `+=${width}`}, ANIMATION_SPEED);
+      $(panel).animate({"margin-right": `+=${width}`}, ANIMATION_SPEED, () => {
+        setIsExpanded(true);
+      });
+
+    }
+    else {
+      $(panel).animate({"margin-right": `-=${width}`}, ANIMATION_SPEED, () => {
+        setIsExpanded(false);
+      });
     }
   }
 

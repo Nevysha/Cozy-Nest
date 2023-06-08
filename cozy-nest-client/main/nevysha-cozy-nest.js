@@ -534,6 +534,193 @@ function observeElementAdded(targetSelector, callback) {
   observer.observe(document.body, { childList: true, subtree: true });
 }
 
+function tweakExtraNetworks({prefix}) {
+  let extraNetworks = document.querySelector(`div#${prefix}_extra_networks`);
+
+  //hide base button txt2img_extra_networks
+  document.querySelector(`button#${prefix}_extra_networks`).style.display = 'none';
+
+  extraNetworks.style.display = 'flex'
+
+  // txt2img and img2img extra network are not built the same way in the DOM (:
+  // so we handle the DOM tweak differently
+  let extraNetworkGradioWrapper
+  let extraNetworkNevyshaWrapper
+
+  function tweakTabBehavior() {
+    //add an event listener to show it when the user clicks on the button #img2img_extra_networks
+    window.extraNetworkHandler = window.extraNetworkHandler || {};
+    window.extraNetworkHandler[prefix] = (e) => {
+
+      function closure() {
+
+        //tweak height
+        const $cards_html = $('div[id$="_cards_html"]');
+        $cards_html.css('height', `${document.querySelector(`#tab_${prefix}`).offsetHeight - 100}px`);
+        $cards_html.css('display', 'flex');
+
+        //add classes : 'nevysha', 'nevysha-scrollable'
+        const $cards = $('div[id$="_cards"]');
+        // $cards.css('height', '100%')
+        $cards.addClass('nevysha');
+        $cards.addClass('nevysha-scrollable');
+
+        const $subdirs = $('div[id$="_subdirs"]');
+        $subdirs.addClass('nevysha');
+        $subdirs.addClass('nevysha-scrollable');
+
+        let shown = extraNetworkGradioWrapper.style.display === 'flex';
+        if (!shown) {
+
+          //show the extra network
+          extraNetworkGradioWrapper.style.display = 'flex';
+          extraNetworkGradioWrapper.style.marginRight = `-${extraNetworkGradioWrapper.offsetWidth}px`;
+          $(extraNetworkGradioWrapper).animate({"margin-right": `+=${extraNetworkGradioWrapper.offsetWidth}`}, ANIMATION_SPEED);
+        } else {
+          //hide the extra network
+          $(extraNetworkGradioWrapper).animate({
+              "margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`},
+            ANIMATION_SPEED,
+            () => {
+              // hide it after the animation is done
+              extraNetworkGradioWrapper.style.display = 'none';
+            });
+        }
+      }
+
+      if (document.querySelector(`#${prefix}_textual_inversion_cards`)) {
+        closure();
+      }
+      else {
+        // Start observing the target node
+        observeElementAdded(`#${prefix}_textual_inversion_cards`, closure);
+      }
+    };
+
+    //add a listener to close the extra network when the user press the escape key
+    document.addEventListener('keydown', (e) => {
+      let shown = extraNetworkGradioWrapper.style.display === 'flex';
+      if (e.key === 'Escape' && shown) {
+        $(extraNetworkGradioWrapper).animate({"margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`}, ANIMATION_SPEED, () => {
+          extraNetworkGradioWrapper.style.display = 'none';
+        });
+      }
+    });
+  }
+
+  if (prefix === 'img2img') {
+    extraNetworkGradioWrapper = document.createElement('div');
+    extraNetworkGradioWrapper.setAttribute('id', `${prefix}_extra_networks_parent`);
+
+    //hide it
+    extraNetworkGradioWrapper.style.display = 'none';
+
+    tweakTabBehavior();
+
+    //add extraNetworkGradioWrapper at the beginning of the extraNetworks parent
+    extraNetworks.parentElement.insertAdjacentElement('afterbegin', extraNetworkGradioWrapper);
+
+    extraNetworkNevyshaWrapper = document.createElement('div');
+    extraNetworkNevyshaWrapper.setAttribute('id', `${prefix}_extra_networks_nevysha_wrapper`);
+    extraNetworkNevyshaWrapper.appendChild(extraNetworks);
+
+    extraNetworkGradioWrapper.appendChild(extraNetworkNevyshaWrapper);
+  }
+  else if (prefix === 'txt2img') {
+    // move everything that's inside extraNetworkGradioWrapper to a new div
+    extraNetworkGradioWrapper = extraNetworks.parentElement;
+    extraNetworkGradioWrapper.setAttribute('id', `${prefix}_extra_networks_parent`);
+
+    //hide it
+    extraNetworkGradioWrapper.style.display = 'none';
+
+    extraNetworkNevyshaWrapper = document.createElement('div');
+    extraNetworkNevyshaWrapper.setAttribute('id', `${prefix}_extra_networks_nevysha_wrapper`);
+    extraNetworkNevyshaWrapper.appendChild(extraNetworks);
+    extraNetworkGradioWrapper.appendChild(extraNetworkNevyshaWrapper);
+
+    tweakTabBehavior();
+  }
+
+  //apply the width saved in local storage
+  const extraNetworksWidth = localStorage.getItem('nevysha_extra_networks_width');
+  if (extraNetworksWidth) {
+    extraNetworkGradioWrapper.style.width = extraNetworksWidth;
+  }
+
+  // Create a vertical line component
+  const lineWrapper = createVerticalLineComp();
+  //add the line to the beginning of the extraNetworkNevyshaWrapper
+  extraNetworkNevyshaWrapper.insertBefore(lineWrapper, extraNetworkNevyshaWrapper.firstChild);
+
+  //add a close button inside the line
+  const closeENButton = document.createElement('button');
+  closeENButton.setAttribute('id', `${prefix}_floating_close_extra_networks`);
+  //add button class
+  closeENButton.classList.add('nevysha', 'lg', 'primary', 'gradio-button', 'nevysha-extra-network-floating-btn');
+  closeENButton.innerHTML = '<div>Close</div>';
+  //click the original button to close the extra network
+  closeENButton.addEventListener('click', (e) => {
+    window.extraNetworkHandler[prefix]();
+  });
+  //add the button at the begining of the div
+  lineWrapper.insertBefore(closeENButton, lineWrapper.firstChild);
+
+  // Add an event listener to the resizer element to track mouse movement
+  lineWrapper.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+
+    // Set the initial values for the width and height of the container
+    let width = extraNetworkGradioWrapper.offsetWidth;
+
+    // Set the initial mouse position
+    let x = e.clientX;
+
+    // Track mouse movement while dragging
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', stopDrag);
+
+    function drag(e) {
+      // Calculate the difference in mouse position
+      const diffX = e.clientX - x;
+
+      // Update the container's width
+      extraNetworkGradioWrapper.style.width = (width - diffX) + 'px';
+    }
+
+    function stopDrag() {
+
+      //save the new width in local storage
+      localStorage.setItem(`nevysha_extra_networks_width`, extraNetworkGradioWrapper.style.width);
+
+      document.removeEventListener('mousemove', drag);
+      document.removeEventListener('mouseup', stopDrag);
+    }
+  });
+}
+
+function addExtraNetworksBtn({prefix}) {
+
+  //create button
+  const extraNetworksBtn = document.createElement('button');
+  extraNetworksBtn.setAttribute('id', `${prefix}_extra_networks_right_button`);
+  extraNetworksBtn.classList.add('nevysha', 'lg', 'primary', 'gradio-button');
+  extraNetworksBtn.innerHTML = '<div>Extra Networks</div>';
+  //click the original button to close the extra network
+  extraNetworksBtn.addEventListener('click', (e) => {
+    if (!e.isTrusted) return
+    window.extraNetworkHandler[prefix]();
+  });
+
+  //add button to the begining of the wrapper div
+  const rightPanBtnWrapper = document.querySelector(`div#right_button_wrapper`);
+  rightPanBtnWrapper.insertBefore(extraNetworksBtn, rightPanBtnWrapper.firstChild);
+
+  if (prefix === 'img2img') {
+    document.querySelector(`#${prefix}_extra_networks_right_button`).style.display = 'none';
+  }
+}
+
 const addTabWrapper = () => {
   const tabWrapper = document.createElement('button');
   //add tabWrapper after the gradio tab
@@ -1057,12 +1244,23 @@ const onLoad = (done) => {
     addDraggable(bundle);
     addScrollable(bundle);
 
+    if (COZY_NEST_CONFIG.enable_extra_network_tweaks) {
+      tweakExtraNetworks(bundle);
+      addExtraNetworksBtn(bundle);
+    }
+
     //add a clear button to generated image
     clearGeneratedImage(bundle);
   }
 
-  nevysha_magic({prefix: "txt2img"});
-  nevysha_magic({prefix: "img2img"});
+  if (COZY_NEST_CONFIG.enable_extra_network_tweaks) {
+    document.querySelector(`button#txt2img_extra_networks`).click();
+    document.querySelector(`button#img2img_extra_networks`).click();
+  }
+  setTimeout(() => {
+    nevysha_magic({prefix: "txt2img"});
+    nevysha_magic({prefix: "img2img"});
+  }, 500)
 
 
   //general

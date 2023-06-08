@@ -4,8 +4,15 @@
     min-width: 25px !important;
 }
 
-.extra_networks_wrapper {
+#extra_networks_wrapper {
     position: fixed;
     top: calc(75px + var(--menu-top-height));
     height: calc(100% - (100px + var(--menu-top-height)));
+    right: 0;
+
+    z-index: 9999;
+    padding-right: 15px;
+    display: flex;
+    flex-direction: row;
+    background-color: var(--block-background-fill) !important;
 }
