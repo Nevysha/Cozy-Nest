@@ -1,0 +1,11 @@
+.main-btn-label {
+    writing-mode: vertical-rl;
+    width: 25px;
+    min-width: 25px !important;
+}
+
+.extra_networks_wrapper {
+    position: fixed;
+    top: calc(75px + var(--menu-top-height));
+    height: calc(100% - (100px + var(--menu-top-height)));
+}
