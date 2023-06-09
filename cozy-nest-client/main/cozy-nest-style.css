@@ -929,7 +929,7 @@ button.secondary, button.primary {
     padding: 10px;
     margin-left: 15px;
 }
-#cozy_img_browser_panel {
+#cozy-img-browser_panel {
     border: 1px solid var(--ae-input-border-color) !important;
 }
 

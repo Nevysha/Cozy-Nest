@@ -910,32 +910,18 @@ const addTabWrapper = () => {
 
 }
 
-function createRightWrapperDiv() {
-  const tab = document.querySelector(`div#tabs`);
-
-  //create wrapper div for the button
-  const rightPanBtnWrapper = document.createElement('div');
-  rightPanBtnWrapper.setAttribute('id', `right_button_wrapper`);
-  rightPanBtnWrapper.classList.add('nevysha', 'nevysha-right-button-wrapper');
-  //add button to the begining of the tab
-  tab.insertAdjacentElement('beforeend', rightPanBtnWrapper);
-
-  //add a button for image browser
+function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab) {
   const cozyImgBrowserBtn = document.createElement('button');
-  cozyImgBrowserBtn.setAttribute('id', `image_browser_right_button`);
+  cozyImgBrowserBtn.setAttribute('id', `${label}_right_button`);
   cozyImgBrowserBtn.classList.add('nevysha', 'lg', 'primary', 'gradio-button');
-  cozyImgBrowserBtn.innerHTML = `<div>Cozy Image Browser</div>`;
-  cozyImgBrowserBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  });
+  cozyImgBrowserBtn.innerHTML = `<div>${buttonLabel}</div>`;
   rightPanBtnWrapper.appendChild(cozyImgBrowserBtn);
 
   //create a panel to display Cozy Image Browser
   const cozyImgBrowserPanel =
-    `<div id="cozy_img_browser_panel" class="nevysha cozy-img-browser-panel slide-right-browser-panel" style="display: none">
+    `<div id="${label}_panel" class="nevysha slide-right-browser-panel" style="display: none">
       <div class="nevysha slide-right-browser-panel-container nevysha-scrollable">
-        <div class="nevysha" id="cozy-img-browser-react"/>
+        <div class="nevysha" id="${label}-react"/>
       </div>
     </div>`;
   //add the panel to the end of the tab
@@ -943,9 +929,9 @@ function createRightWrapperDiv() {
 
   // Create a vertical line component
   const lineWrapper = createVerticalLineComp();
-  const cozyImgBrowserPanelWrapper = document.querySelector('#cozy_img_browser_panel');
+  const cozyImgBrowserPanelWrapper = document.querySelector(`#${label}_panel`);
   //set cozyImgBrowserPanelWrapper.style.width from local storage value if it exists
-  const cozyImgBrowserPanelWidth = localStorage.getItem('cozyImgBrowserPanelWrapper');
+  const cozyImgBrowserPanelWidth = localStorage.getItem(`${label}_panelWidth`);
   if (cozyImgBrowserPanelWidth) {
     cozyImgBrowserPanelWrapper.style.width = cozyImgBrowserPanelWidth;
   }
@@ -954,7 +940,7 @@ function createRightWrapperDiv() {
   //TODO refactor to factorise code bellow with extraNetwork
   //add a close button inside the line
   const closeCozyImgBrowser = document.createElement('button');
-  closeCozyImgBrowser.setAttribute('id', `floating_close_cozy_img_browser_panel_button`);
+  closeCozyImgBrowser.setAttribute('id', `floating_close_${label}__panel_button`);
   //add button class
   closeCozyImgBrowser.classList.add('nevysha', 'lg', 'primary', 'gradio-button', 'nevysha-extra-network-floating-btn');
   closeCozyImgBrowser.innerHTML = '<div>Close</div>';
@@ -965,7 +951,7 @@ function createRightWrapperDiv() {
   //add the button at the begining of the div
   lineWrapper.insertBefore(closeCozyImgBrowser, lineWrapper.firstChild);
   //Add an event listener to the resizer element to track mouse movement
-  lineWrapper.addEventListener('mousedown', function(e) {
+  lineWrapper.addEventListener('mousedown', function (e) {
     e.preventDefault();
 
     // Set the initial values for the width and height of the container
@@ -989,7 +975,7 @@ function createRightWrapperDiv() {
     function stopDrag() {
 
       //save the new width in local storage
-      localStorage.setItem(`cozyImgBrowserPanelWrapper`, cozyImgBrowserPanelWrapper.style.width);
+      localStorage.setItem(`${label}_panelWidth`, cozyImgBrowserPanelWrapper.style.width);
 
       document.removeEventListener('mousemove', drag);
       document.removeEventListener('mouseup', stopDrag);
@@ -997,16 +983,15 @@ function createRightWrapperDiv() {
   });
 
   //add listener to open or close the panel using jquery animate
-  cozyImgBrowserBtn.addEventListener('click', (e) => {
+  cozyImgBrowserBtn.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
-    const panel = document.querySelector('#cozy_img_browser_panel');
+    const panel = document.querySelector(`#${label}_panel`);
     if (panel.style.display === 'none') {
       panel.style.display = 'flex'
       panel.style.marginRight = `-${panel.offsetWidth}px`;
       $(panel).animate({"margin-right": `+=${panel.offsetWidth}`}, ANIMATION_SPEED);
-    }
-    else {
+    } else {
       $(panel).animate({"margin-right": `-=${panel.offsetWidth}`}, ANIMATION_SPEED, () => {
         panel.style.display = 'none'
       });
@@ -1014,20 +999,22 @@ function createRightWrapperDiv() {
   });
 }
 
+function createRightWrapperDiv() {
+  const tab = document.querySelector(`div#tabs`);
+
+  //create wrapper div for the button
+  const rightPanBtnWrapper = document.createElement('div');
+  rightPanBtnWrapper.setAttribute('id', `right_button_wrapper`);
+  rightPanBtnWrapper.classList.add('nevysha', 'nevysha-right-button-wrapper');
+  //add button to the begining of the tab
+  tab.insertAdjacentElement('beforeend', rightPanBtnWrapper);
+
+  buildRightSlidePanelFor('cozy-img-browser', 'Cozy Image Browser', rightPanBtnWrapper, tab);
+  buildRightSlidePanelFor('cozy-extra-network', 'Cozy Extra Network', rightPanBtnWrapper, tab);
+}
+
 function setButtonVisibilityFromCurrentTab(id) {
-
-  //hide each button that ends with extra_networks_right_button
-  const extraNetworksRightBtns = document.querySelectorAll(`button[id$="extra_networks_right_button"]`);
-  extraNetworksRightBtns.forEach((btn) => {
-    btn.style.display = 'none';
-
-  })
-  if (id === 'tab_txt2img') {
-    document.querySelector('button#txt2img_extra_networks_right_button').style.display = 'flex';
-  }
-  if (id === 'tab_img2img') {
-    document.querySelector('button#img2img_extra_networks_right_button').style.display = 'flex';
-  }
+  CozyLogger.debug(`setButtonVisibilityFromCurrentTab(${id})`);
 }
 
 function errorPipe(data) {
@@ -1244,23 +1231,12 @@ const onLoad = (done) => {
     addDraggable(bundle);
     addScrollable(bundle);
 
-    if (COZY_NEST_CONFIG.enable_extra_network_tweaks) {
-      tweakExtraNetworks(bundle);
-      addExtraNetworksBtn(bundle);
-    }
-
     //add a clear button to generated image
     clearGeneratedImage(bundle);
   }
 
-  if (COZY_NEST_CONFIG.enable_extra_network_tweaks) {
-    document.querySelector(`button#txt2img_extra_networks`).click();
-    document.querySelector(`button#img2img_extra_networks`).click();
-  }
-  setTimeout(() => {
-    nevysha_magic({prefix: "txt2img"});
-    nevysha_magic({prefix: "img2img"});
-  }, 500)
+  nevysha_magic({prefix: "txt2img"});
+  nevysha_magic({prefix: "img2img"});
 
 
   //general
