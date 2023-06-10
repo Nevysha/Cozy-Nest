@@ -28,7 +28,6 @@ function ExtraNetworkTab({nativeElement}) {
     }
 
     ref.current.appendChild(nativeElement)
-
   })
 
   return (
@@ -40,50 +39,21 @@ function ExtraNetworkTab({nativeElement}) {
 
 export function ExtraNetworks() {
 
-  const [virtualExtraNetworksContainer, setVirtualExtraNetworksContainer] = React.useState([])
-  const [tabNames, setTabNames] = React.useState([])
+  const [loaded, setLoaded] = React.useState(false)
+  const ref = React.useRef(null)
 
   function loadNativeElements() {
-    const tabs = document.querySelectorAll('#txt2img_extra_tabs > .tabitem > div > div')
+    if (!ref.current) return
 
-    const build = []
+    const tabs = document.querySelector('#txt2img_extra_tabs')
 
-    tabs.forEach((item, index) => {
-      build.push(<ExtraNetworkTab key={index} nativeElement={item}/>)
-    })
-
-    setVirtualExtraNetworksContainer(build)
-
-    const buttons = document.querySelectorAll('#txt2img_extra_tabs > div > button:not(.gradio-button)');
-    const names = []
-    buttons.forEach((item, index) => {
-      names.push(item.innerText)
-    })
-    setTabNames(names)
-  }
-
-  if (!virtualExtraNetworksContainer || virtualExtraNetworksContainer.length === 0) {
-    return (
-      <>
-        <button onClick={() => loadNativeElements()}>load</button>
-        <div>loading...</div>
-      </>
-    )
+    ref.current.appendChild(tabs)
+    setLoaded(true)
   }
 
   return (
-    <>
-        <Tabs variant='nevyshaExtraNetwork'>
-          <TabList style={{backgroundColor: 'var(--tab-nav-background-color)'}}>
-            {tabNames.map((item, index) => {
-              return <Tab key={index}>{item}</Tab>
-            } )}
-          </TabList>
-
-          <TabPanels>
-            {virtualExtraNetworksContainer}
-          </TabPanels>
-        </Tabs>
-    </>
+    <div ref={ref} style={{height:'100%'}}>
+      <button onClick={() => loadNativeElements()}>load</button>
+    </div>
   );
 }

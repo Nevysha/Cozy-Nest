@@ -523,6 +523,11 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
 
         return {"message": "EXIF data saved successfully"}
 
+    @app.get("/cozy-nest/extra-networks")
+    async def get_extra_networks():
+        pass
+
+
 
 script_callbacks.on_ui_tabs(on_ui_tabs)
 script_callbacks.on_app_started(cozy_nest_api)
