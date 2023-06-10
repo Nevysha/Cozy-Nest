@@ -1,41 +1,5 @@
 import React, {useEffect} from "react";
 import './ExtraNetworks.css'
-import {Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/react";
-
-
-const nevyshaScrollbar = {
-  '&::-webkit-scrollbar': {
-    width: '5px',
-  },
-  '&::-webkit-scrollbar-track': {
-    backgroundColor: 'transparent'
-  },
-  '&::-webkit-scrollbar-thumb': {
-    backgroundColor: 'var(--ae-primary-color)',
-    borderRadius: '20px',
-  },
-}
-
-function ExtraNetworkTab({nativeElement}) {
-
-  const ref = React.useRef(null)
-
-  useEffect(() => {
-    if (!ref.current) return
-
-    while (ref.current.firstChild) {
-      ref.current.removeChild(ref.current.firstChild);
-    }
-
-    ref.current.appendChild(nativeElement)
-  })
-
-  return (
-    <TabPanel css={nevyshaScrollbar}>
-      <div className="ExtraNetworkTab" ref={ref} />
-    </TabPanel>
-  )
-}
 
 export function ExtraNetworks() {
 
