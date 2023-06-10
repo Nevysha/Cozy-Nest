@@ -1010,11 +1010,27 @@ function createRightWrapperDiv() {
   tab.insertAdjacentElement('beforeend', rightPanBtnWrapper);
 
   buildRightSlidePanelFor('cozy-img-browser', 'Cozy Image Browser', rightPanBtnWrapper, tab);
-  buildRightSlidePanelFor('cozy-extra-network', 'Cozy Extra Network', rightPanBtnWrapper, tab);
+
+  buildRightSlidePanelFor('cozy-txt2img-extra-network', 'Extra Network', rightPanBtnWrapper, tab);
+  document.getElementById('cozy-txt2img-extra-network-react').classList.add('cozy-extra-network')
+
+  buildRightSlidePanelFor('cozy-img2img-extra-network', 'Extra Network', rightPanBtnWrapper, tab);
+  document.getElementById('cozy-img2img-extra-network-react').classList.add('cozy-extra-network')
+  document.querySelector(`#cozy-img2img-extra-network_right_button`).style.display = 'none';
 }
 
 function setButtonVisibilityFromCurrentTab(id) {
   CozyLogger.debug(`setButtonVisibilityFromCurrentTab(${id})`);
+
+  document.querySelector(`#cozy-txt2img-extra-network_right_button`).style.display = 'none';
+  document.querySelector(`#cozy-img2img-extra-network_right_button`).style.display = 'none';
+
+  if (id === 'tab_txt2img') {
+    document.querySelector(`#cozy-txt2img-extra-network_right_button`).style.display = 'flex';
+  }
+  else if (id === 'tab_img2img') {
+    document.querySelector(`#cozy-img2img-extra-network_right_button`).style.display = 'flex';
+  }
 }
 
 function errorPipe(data) {

@@ -32,6 +32,7 @@ export default async function cozyNestLoader()  {
   }
   if (COZY_NEST_CONFIG.enable_extra_network_tweaks === true) {
     startExtraNetwork('txt2img');
+    startExtraNetwork('img2img');
   }
 
   startCozyNestImageBrowser();

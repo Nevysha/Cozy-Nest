@@ -6,12 +6,12 @@ import {LoaderProvider} from "./LoaderContext.jsx";
 
 export function startExtraNetwork(prefix) {
 
-    if (!document.getElementById('cozy-extra-network-react')) {
+    if (!document.getElementById(`cozy-${prefix}-extra-network-react`)) {
       setTimeout(() => startExtraNetwork(), 200)
       return
     }
 
-    ReactDOM.createRoot(document.getElementById('cozy-extra-network-react')).render(
+    ReactDOM.createRoot(document.getElementById(`cozy-${prefix}-extra-network-react`)).render(
       <React.StrictMode>
         <LoaderProvider prefix={prefix}>
           <ExtraNetworks prefix={prefix} />

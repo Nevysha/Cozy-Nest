@@ -4,18 +4,18 @@
     min-width: 25px !important;
 }
 
-#cozy-extra-network-react {
+.cozy-extra-network {
     display: flex;
     flex-direction: column;
     height: calc(100% - 20px);
 }
 
-#cozy-extra-network-react > div > .tabs > .tabitem {
+.cozy-extra-network > div > .tabs > .tabitem {
     height: 100%;
     overflow-y: auto;
 }
 
-#cozy-extra-network-react > div > .tabs {
+.cozy-extra-network > div > .tabs {
     height: 100%;
 }
 
@@ -52,15 +52,15 @@
     border-radius: 20px;
 }
 
-#cozy-extra-network-react > div > .tabs > .tabitem::-webkit-scrollbar {
+.cozy-extra-network > div > .tabs > .tabitem::-webkit-scrollbar {
     width: 5px;
 }
 
-#cozy-extra-network-react > div > .tabs > .tabitem::-webkit-scrollbar-track {
+.cozy-extra-network > div > .tabs > .tabitem::-webkit-scrollbar-track {
     background-color: transparent;
 }
 
-#cozy-extra-network-react > div > .tabs > .tabitem::-webkit-scrollbar-thumb {
+.cozy-extra-network > div > .tabs > .tabitem::-webkit-scrollbar-thumb {
     background-color: var(--ae-primary-color);
     border-radius: 20px;
 }
