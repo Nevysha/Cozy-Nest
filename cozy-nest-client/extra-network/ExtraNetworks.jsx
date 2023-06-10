@@ -1,23 +1,46 @@
 import React, {useEffect} from "react";
 import './ExtraNetworks.css'
+import {LoaderContext} from "./LoaderContext.jsx";
+import {CozyLogger} from "../main/CozyLogger.js";
 
-export function ExtraNetworks() {
+let extraNetworksParent = null;
 
-  const [loaded, setLoaded] = React.useState(false)
+export function ExtraNetworks({prefix}) {
+
   const ref = React.useRef(null)
+  const {ready} = React.useContext(LoaderContext)
+
+  useEffect(() => {
+    if (ready) {
+      loadNativeElements()
+    }
+    return () => {
+      unLoad()
+    }
+  }, [ready])
 
   function loadNativeElements() {
     if (!ref.current) return
 
-    const tabs = document.querySelector('#txt2img_extra_tabs')
+    CozyLogger.debug('loading native elements')
+
+    const tabs = document.querySelector(`#${prefix}_extra_tabs`)
+    extraNetworksParent = tabs.parentNode
 
     ref.current.appendChild(tabs)
-    setLoaded(true)
+  }
+
+  function unLoad() {
+    if (!ref.current || !extraNetworksParent) return
+
+    CozyLogger.debug('unloading native elements')
+
+    const tabs = document.querySelector(`#${prefix}_extra_tabs`)
+
+    extraNetworksParent.appendChild(tabs)
   }
 
   return (
-    <div ref={ref} style={{height:'100%'}}>
-      <button onClick={() => loadNativeElements()}>load</button>
-    </div>
+    <div ref={ref} style={{height:'100%'}} />
   );
 }
