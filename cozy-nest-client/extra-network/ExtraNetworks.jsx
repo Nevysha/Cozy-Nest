@@ -33,7 +33,7 @@ export function ExtraNetworks({prefix}) {
   function unLoad() {
     if (!ref.current || !extraNetworksParent) return
 
-    CozyLogger.debug('unloading native elements')
+    CozyLogger.debug('unloading native elements', prefix)
 
     const tabs = document.querySelector(`#${prefix}_extra_tabs`)
 

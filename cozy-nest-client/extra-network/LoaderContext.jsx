@@ -50,8 +50,13 @@ export function LoaderProvider({children, prefix}) {
   })
 
   React.useEffect(() => {
-    const {ready, loading} = state
-    if (ready || loading) return
+    const {ready, loading} = state;
+    if (ready || loading) return;
+
+    setState({
+      loading: true,
+      ready: false,
+    });
 
     (async () => {
       await requireNativeBloc(prefix, setState)
@@ -61,7 +66,7 @@ export function LoaderProvider({children, prefix}) {
       })
     })()
 
-  }, [state.ready])
+  }, [])
 
   return (
     <LoaderContext.Provider value={state}>
