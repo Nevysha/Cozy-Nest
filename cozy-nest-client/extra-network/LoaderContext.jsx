@@ -3,7 +3,6 @@ import {CozyLogger} from "../main/CozyLogger.js";
 
 export const LoaderContext = React.createContext({
   ready: false,
-  loading: false,
 });
 
 function observeDivChanges(targetDiv) {
@@ -33,43 +32,58 @@ async function requireNativeBloc(prefix) {
 
   CozyLogger.debug('triggering extra network', prefix)
 
+  triggerButton.style.display = 'none'
+
   triggerButton.click()
 
   const tabs = document.querySelector(`#${prefix}_extra_tabs`)
 
   //setup a mutation observer to detect when the tabs are added
   await observeDivChanges(tabs)
+  triggerButton.click()
   CozyLogger.debug('tabs loaded', prefix)
 }
 
+//we use a local not hook to avoid async issues and double call
+const states = {}
+
 export function LoaderProvider({children, prefix}) {
 
-  const [state, setState] = React.useState({
-    loading: false,
-    ready: false,
-  })
+  const [ready, setReady] = React.useState(false)
+
+  if (!states[prefix]) {
+    states[prefix] = {
+      loaded: false,
+      loading: false,
+    }
+  }
 
   React.useEffect(() => {
-    const {ready, loading} = state;
+    const {ready, loading} = states[prefix];
     if (ready || loading) return;
 
-    setState({
+    states[prefix] = {
+      loaded: false,
       loading: true,
-      ready: false,
-    });
+    };
 
     (async () => {
-      await requireNativeBloc(prefix, setState)
-      setState({
-        ready: true,
+      await requireNativeBloc(prefix)
+      states[prefix] = {
+        loaded: true,
         loading: false,
-      })
+      }
+      setReady(true)
     })()
 
   }, [])
 
+  const value = {
+    ready,
+  }
+
   return (
-    <LoaderContext.Provider value={state}>
+    <LoaderContext.Provider value={value}>
       {children}
     </LoaderContext.Provider>
   )
