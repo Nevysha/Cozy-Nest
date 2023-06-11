@@ -2,11 +2,12 @@ import React from 'react';
 import {CozyLogger} from "../main/CozyLogger.js";
 
 export const LoaderContext = React.createContext({
-  loaded: false,
+  ready: false,
+  loading: false,
 });
 
 function observeDivChanges(targetDiv) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     let timer; // Holds the timeout reference
 
     const observer = new MutationObserver((mutationsList, observer) => {
@@ -14,7 +15,7 @@ function observeDivChanges(targetDiv) {
       timer = setTimeout(() => {
         observer.disconnect(); // Stop observing mutations
         resolve(); // Resolve the Promise
-      }, 1000);
+      }, 200);
     });
 
     observer.observe(targetDiv, { attributes: true, childList: true, subtree: true });
@@ -26,11 +27,11 @@ function observeDivChanges(targetDiv) {
   });
 }
 
-let loading = false
-let loaded = false
-
 async function requireNativeBloc(prefix) {
+
   const triggerButton = document.querySelector(`button#${prefix}_extra_networks`)
+
+  CozyLogger.debug('triggering extra network', prefix)
 
   triggerButton.click()
 
@@ -38,33 +39,29 @@ async function requireNativeBloc(prefix) {
 
   //setup a mutation observer to detect when the tabs are added
   await observeDivChanges(tabs)
-  CozyLogger.debug('tabs loaded')
-  loading = false
-  loaded = true
+  CozyLogger.debug('tabs loaded', prefix)
 }
 
 export function LoaderProvider({children, prefix}) {
 
-  const [ready, setReady] = React.useState(false)
+  const [state, setState] = React.useState({
+    loading: false,
+    ready: false,
+  })
 
   React.useEffect(() => {
-    if (loaded || loading) return
+    const {ready, loading} = state
+    if (ready || loading) return
 
-    loading = true
+    (async () => {
+      await requireNativeBloc(prefix, setState)
+      setState({
+        ready: true,
+        loading: false,
+      })
+    })()
 
-    load().then(_=>_)
-
-  }, [])
-
-  const load = async () => {
-    await requireNativeBloc(prefix)
-    setReady(true)
-  }
-
-  const state = {
-    loaded,
-    ready,
-  }
+  }, [state.ready])
 
   return (
     <LoaderContext.Provider value={state}>

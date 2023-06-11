@@ -136,7 +136,7 @@ def get_default_settings():
         'server_default_port': 3333,
         'auto_search_port': True,
         'auto_start_server': True,
-        'fetch_output_folder_from_a1111_settings': True,
+        'fetch_output_folder_from_a1111_settings': False,
         'cnib_output_folder': [],
         'archive_path': '',
         'sfw_mode': False,

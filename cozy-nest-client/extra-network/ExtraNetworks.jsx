@@ -22,7 +22,7 @@ export function ExtraNetworks({prefix}) {
   function loadNativeElements() {
     if (!ref.current) return
 
-    CozyLogger.debug('loading native elements')
+    CozyLogger.debug('loading native elements', prefix)
 
     const tabs = document.querySelector(`#${prefix}_extra_tabs`)
     extraNetworksParent = tabs.parentNode
