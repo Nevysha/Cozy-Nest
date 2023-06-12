@@ -106,7 +106,7 @@ def scrap_image_folders(images_folders):
     for images_folder in images_folders:
         for root, dirs, files in os.walk(images_folder):
             for file in files:
-                if file.endswith(".png"):
+                if file.endswith(".png") or file.endswith(".jpg") or file.endswith(".jpeg"):
                     # get exif data
                     img = get_exif(os.path.join(root, file))
                     images.append(img)
