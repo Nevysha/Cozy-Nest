@@ -29,6 +29,6 @@ npm run dev
 
 ```bash
 cd Cozy-Nest/cozy-nest-client
-# check output folder in vite.config.js. It is hard coded atm.
+# check output folder in vite.config.ts. It is hard coded atm.
 npm run build
 ```

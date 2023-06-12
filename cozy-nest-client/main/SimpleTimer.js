@@ -1,3 +1,5 @@
+import {CozyLogger} from './CozyLogger';
+
 export default class SimpleTimer {
 
   static timers = {};
@@ -9,7 +11,9 @@ export default class SimpleTimer {
   }
 
   static end(timerName) {
-    return SimpleTimer.timers[timerName].end();
+    const elapsedTime = SimpleTimer.timers[timerName].end();
+    CozyLogger.debug(`SimpleTimer: end ${timerName} in ${elapsedTime}ms`)
+    return elapsedTime;
   }
 
   static last(timerName) {
