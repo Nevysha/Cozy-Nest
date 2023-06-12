@@ -17,10 +17,15 @@ Cozy Nest is a UI extension for Automatic's sd-webui. Inspired by [anapnoe](http
 ## Features:
 - [x]  Fully integrated Image Browser **IN BETA**. Lots of bugs and missing features. Please be kind with Github issues.
    - [x]  Send to txt2img / img2img / …
+   - [x]  Search
+   - [x]  Tag your images and filter by tag
+   - [x]  Edit exif metadata
+   - [x]  Archive, hide or delete images
    - [x]  Clean memory for image not visible (unload them / replace with dummy div) clean filteredImages and loadedImage Array
    - [x]  manage new image generated
    - [x]  Automatically get image output folder (without grid folder)
    - [x]  Drag and drop image
+- [x]  Enhanced prompt editor with color (in txt2img and img2img) - It can be disabled through settings
 - [x]  Resizable panels
 - [x]  Full Screen Inpainting
 - [x]  Customizable tab menu position (top, left, centered)

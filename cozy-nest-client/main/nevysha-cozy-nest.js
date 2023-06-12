@@ -17,7 +17,7 @@ import Loading from "./Loading.js";
 import {waves, svg_magic_wand, svg_update_info} from "./svg.js";
 import {
   applyAccentColor, applyBgGradiantColor, applyWavesColor
-  , wrapDataGenerationInfo, wrapSettings, createVerticalLineComp, applyFontColor
+  , wrapDataGenerationInfo, wrapSettings, createVerticalLineComp, applyFontColor, recalcOffsetFromMenuHeight
 } from "./tweaks/various-tweaks.js";
 import kofiCup from './kofi-cup-border.png'
 import {
@@ -213,197 +213,6 @@ function addScrollable(bundle) {
   document.getElementById(`${bundle.prefix}_gallery_container`).classList.add("nevysha","nevysha-scrollable")
 }
 
-function getHexColorForAccent() {
-  return document.querySelector("#setting_nevyui_accentColor").querySelector("input").value;
-}
-
-
-
-function applyCozyNestConfig() {
-
-  //waves
-  const setWaveColor = () => {
-    const hexColor = document.querySelector("#setting_nevyui_waveColor").querySelector("input").value;
-    applyWavesColor(hexColor);
-  }
-  setWaveColor()
-  document.querySelector("#setting_nevyui_waveColor").querySelector("input").addEventListener("change", setWaveColor)
-
-  //font color
-  const fontColorInput =
-      getTheme() === "dark" ?
-        document.querySelector("#setting_nevyui_fontColor").querySelector("input") :
-        document.querySelector("#setting_nevyui_fontColorLight").querySelector("input")
-  //remove hidden css class of parent.parent
-  fontColorInput.parentElement.parentElement.style.display = "block";
-  const setFontColor = () => {
-    const hexColor = fontColorInput.value;
-    if (!hexColor) return;
-    applyFontColor(hexColor);
-  }
-  setFontColor()
-  fontColorInput.addEventListener("change", setFontColor)
-
-  //background gradient
-  const setGradientColor = () => {
-    const hexColor = document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").value;
-    applyBgGradiantColor(hexColor);
-  }
-  setGradientColor()
-  document.querySelector("#setting_nevyui_bgGradiantColor").querySelector("input").addEventListener("change", setGradientColor)
-
-  //disable waves and gradiant
-  const setDisabledWavesAndGradiant = () => {
-    const disableWavesAndGradiant = document.querySelector("#setting_nevyui_disableWavesAndGradiant").querySelector("input").checked;
-    const $waves = $('.wave');
-    const $body = $('body');
-    if (disableWavesAndGradiant) {
-      $waves.css('animation', 'none');
-      $body.css('animation', 'none');
-      $body.css('background-position', '75% 75%')
-    }
-    else {
-      $waves.css('animation', '');
-      $body.css('animation', '');
-      $body.css('background-position', '')
-    }
-
-  }
-  setDisabledWavesAndGradiant()
-  document.querySelector("#setting_nevyui_disableWavesAndGradiant").querySelector("input").addEventListener("change", setDisabledWavesAndGradiant)
-
-  //background gradient
-  const setAccentColor = () => {
-    const hexColor = getHexColorForAccent();
-    applyAccentColor(hexColor, getHexColorForAccent());
-  }
-  //accent generate button
-  const setAccentForGenerate = () => {
-    const checked = document.querySelector("#setting_nevyui_accentGenerateButton").querySelector("input").checked;
-    document.querySelectorAll('button[id$="_generate"]').forEach((btn) => {
-      if (checked) {
-        let txtColorAppending = "";
-        if (getLuminance(getHexColorForAccent())  > 0.5) {
-          txtColorAppending = "color: black !important";
-        }
-        btn.setAttribute("style", `background: var(--ae-primary-color) !important; ${txtColorAppending}`);
-      } else {
-        btn.setAttribute("style", '');
-      }
-    })
-  }
-
-  setAccentColor()
-  document.querySelector("#setting_nevyui_accentColor").querySelector("input").addEventListener("change", setAccentColor)
-  document.querySelector("#setting_nevyui_accentColor").querySelector("input").addEventListener("change", setAccentForGenerate)
-
-
-  setAccentForGenerate()
-  document.querySelector("#setting_nevyui_accentGenerateButton").querySelector("input").addEventListener("change", setAccentForGenerate);
-
-  //font size
-  const setFontSize = () => {
-    const fontSize = document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").value;
-    document.querySelector(':root').style.setProperty('--nevysha-text-md', `${fontSize}px`);
-    recalcOffsetFromMenuHeight()
-  }
-  setFontSize()
-  document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=number]").addEventListener("change", setFontSize)
-  document.querySelector("#setting_nevyui_fontSize").querySelector("input[type=range]").addEventListener("change", setFontSize)
-
-  //card height
-  const setCardHeight = () => {
-    const cardHeight = document.querySelector("#setting_nevyui_cardHeight").querySelector("input[type=number]").value;
-    document.querySelector(':root').style.setProperty('--extra-network-card-height', `${cardHeight}em`);
-  }
-  setCardHeight()
-  document.querySelector("#setting_nevyui_cardHeight").querySelector("input[type=number]").addEventListener("change", setCardHeight)
-  document.querySelector("#setting_nevyui_cardHeight").querySelector("input[type=range]").addEventListener("change", setCardHeight)
-
-  //card width
-  const setCardWidth = () => {
-    const cardWidth = document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=number]").value;
-    document.querySelector(':root').style.setProperty('--extra-network-card-width', `${cardWidth}em`);
-  }
-  setCardWidth()
-  document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=number]").addEventListener("change", setCardWidth)
-  document.querySelector("#setting_nevyui_cardWidth").querySelector("input[type=range]").addEventListener("change", setCardWidth)
-
-  //check if menu is in left or top mode
-  const menuPosition = () => {
-    const isLeftChecked = document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=left]").checked;
-
-    //top mode
-    if (!isLeftChecked) {
-      document.querySelector(".nevysha.nevysha-tabnav").classList.add("menu-fix-top")
-      document.querySelector(".gradio-container.app").classList.add("menu-fix-top")
-      document.querySelector("#nevysha-btn-menu-wrapper")?.classList.add("menu-fix-top")
-      document.querySelector(':root').style.setProperty('--nevysha-margin-left', `0`);
-      document.querySelector(':root').style.setProperty('--menu-top-height', `25px`);
-
-      //centered or not
-      const isCenteredChecked = document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top_centered]").checked;
-      if (isCenteredChecked) {
-        COZY_NEST_CONFIG.main_menu_position = "top_centered";
-        document.querySelector(".nevysha.nevysha-tabnav").classList.add("center-menu-items")
-      } else {
-        COZY_NEST_CONFIG.main_menu_position = "top";
-        document.querySelector(".nevysha.nevysha-tabnav").classList.remove("center-menu-items")
-      }
-    }
-    //left mode
-    else {
-      COZY_NEST_CONFIG.main_menu_position = "left";
-      document.querySelector(".nevysha.nevysha-tabnav").classList.remove("center-menu-items")
-      document.querySelector(".nevysha.nevysha-tabnav").classList.remove("menu-fix-top")
-      document.querySelector(".gradio-container.app").classList.remove("menu-fix-top")
-      document.querySelector("#nevysha-btn-menu-wrapper")?.classList.remove("menu-fix-top")
-      document.querySelector(':root').style.setProperty('--nevysha-margin-left', `175px`);
-      document.querySelector(':root').style.setProperty('--menu-top-height', `1px`);
-    }
-    recalcOffsetFromMenuHeight()
-  }
-  menuPosition()
-  document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=left]").addEventListener("change", menuPosition)
-  document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top]").addEventListener("change", menuPosition)
-  document.querySelector("#setting_nevyui_menuPosition").querySelector("input[value=top_centered]").addEventListener("change", menuPosition)
-
-  //quicksetting gap
-  const setQuicksettingPosition = () => {
-    const position = document.querySelector("#setting_nevyui_quicksettingsPosition")
-        .querySelector("input[type=radio]:checked").value;
-    if (position === 'split') {
-      document.querySelector("#quicksettings_gap").classList.add("nevysha-quicksettings-gap")
-      document.querySelector("#quicksettings").classList.remove("centered-quicksettings")
-    }
-    else if (position === 'centered') {
-      document.querySelector("#quicksettings_gap").classList.remove("nevysha-quicksettings-gap")
-      document.querySelector("#quicksettings").classList.add("centered-quicksettings")
-    }
-    else {
-      document.querySelector("#quicksettings_gap").classList.remove("nevysha-quicksettings-gap")
-      document.querySelector("#quicksettings").classList.remove("centered-quicksettings")
-    }
-  }
-  setQuicksettingPosition()
-  document.querySelector("#setting_nevyui_quicksettingsPosition")
-      .querySelectorAll("input[type=radio]").forEach((input) => input.addEventListener("change", setQuicksettingPosition))
-
-  //enable/disable the sfw mode
-  const setSfwSettings = () => {
-    const isSfwChecked = document.querySelector("#setting_nevyui_sfwMode").querySelector("input[type=checkbox]").checked;
-    if (isSfwChecked) {
-      document.querySelector('body').classList.add("nsfw");
-    }
-    else {
-      document.querySelector('body').classList.remove("nsfw");
-    }
-  }
-  setSfwSettings()
-  document.querySelector("#setting_nevyui_sfwMode").querySelector("input[type=checkbox]").addEventListener("change", setSfwSettings)
-
-}
-
 function tweakAWQ() {
 
   const observer = new MutationObserver((mutationsList, observer) => {
@@ -458,8 +267,6 @@ function tweakAWQ() {
       }
     });
   }
-
-
 }
 
 const addCozyNestCustomBtn = () => {
@@ -468,9 +275,6 @@ const addCozyNestCustomBtn = () => {
   nevySettingstabMenuWrapper.classList.add("nevysha-btn-menu-wrapper");
   nevySettingstabMenuWrapper.id = "nevysha-btn-menu-wrapper";
 
-  //add a new button in the tabnav
-  const nevySettingstabMenu2 = `<button class="nevysha-btn-menu" id="nevyui_sh_options" title="Nevysha Cozy Nest Settings">${svg_magic_wand}</button>`;
-  nevySettingstabMenuWrapper.insertAdjacentHTML('beforeend', nevySettingstabMenu2);
   //add a new button in the tabnav
   const updateInfoBtn = `<button class="nevysha-btn-menu" id="nevyui_update_info" title="Nevysha Cozy Nest Update Info">${svg_update_info}</button>`;
   nevySettingstabMenuWrapper.insertAdjacentHTML('beforeend', updateInfoBtn);
@@ -485,32 +289,27 @@ const addCozyNestCustomBtn = () => {
   updateTab.style = "display: none;";
   document.querySelector("#tabs").insertAdjacentElement("beforeend", updateTab)
 
-  //add kofi image :blush:
-  const kofiImg = document.createElement('button')
-  kofiImg.id = 'kofi_nevysha_support'
-  kofiImg.innerHTML = `<img id="kofi_nevysha_support_img" height="15" src="${kofiCup}" alt="Consider a donation on ko-fi! :3">`
-  kofiImg.title = "Consider a donation on ko-fi! :3"
-  nevySettingstabMenuWrapper.insertAdjacentElement('beforeend', kofiImg);
+  // add click event to the new update info button
+  function listenerClosure() {
+    let shown = false;
+    document.querySelector("#nevyui_update_info").addEventListener("click", (e) => {
+      //cancel event
+      e.preventDefault();
+      e.stopPropagation();
 
-  //create a div that will contain a dialog to display the iframe
-  const kofiTab = document.createElement("div");
-  kofiTab.classList.add("nevysha-kofi-tab", "nevysha", "nevysha-tab", "nevysha-tab-settings");
-  kofiTab.id = "nevyui_kofi_panel";
-  kofiTab.style = "display: none;";
-  // kofiTab.innerHTML = `<iframe id='kofiframe' src='https://ko-fi.com/nevysha/?hidefeed=true&widget=true&embed=true&preview=true' style='border:none;width:100%;padding:4px;background:#f9f9f9;' height='712' title='nevysha'></iframe>`
-  document.querySelector("#tabs").insertAdjacentElement("beforeend", kofiTab)
+      //show tab_nevyui by default to bypass gradio hidding tabs
+      document.querySelector("#tab_nevyui").style.display = "block";
 
-  let kofiImgIsVisible = false
-
-  function toggleKofiPanel() {
-
-    window.open("https://ko-fi.com/nevysha", "_blank")
+      //toggle the panel with a slide animation using jquery
+      if (shown) {
+        $("#nevyui_update_info_panel").slideUp(ANIMATION_SPEED);
+      } else {
+        $("#nevyui_update_info_panel").slideDown(ANIMATION_SPEED);
+      }
+      shown = !shown;
+    });
   }
-
-  //add event listener to the button
-  kofiImg.addEventListener("click", () => {
-    toggleKofiPanel();
-  });
+  listenerClosure();
 
   //fetch version_data.json
   loadVersionData().then(ignored => ignored)
@@ -614,6 +413,13 @@ function createFolderListComponent() {
   const componentContainer = document.querySelector('#cnib_output_folder').parentElement;
   const textarea = document.querySelector('#cnib_output_folder textarea');
   componentContainer.classList.remove('hidden')
+  $(componentContainer).css('padding', '0 10px')
+
+  //add a label
+  const label = document.createElement('label');
+  label.classList.add('nevysha-label');
+  label.innerHTML = 'Folders to scrap for images';
+  componentContainer.appendChild(label);
 
   function updateList(foldersList) {
     document.querySelectorAll('.nevysha-image-browser-folder-container').forEach(el => el.remove());
@@ -707,199 +513,6 @@ function createFolderListComponent() {
   parseAndDisplayFolderSettings();
 }
 
-const tweakNevyUiSettings = () => {
-  // select button element with "Nevysha Cozy Nest" as its content
-  const nevySettingstabMenu = $('#tabs > div > button:contains("Nevysha Cozy Nest")');
-  // hide the button
-  nevySettingstabMenu.hide();
-
-  addCozyNestCustomBtn();
-
-  ///create an hideable right side panel
-  const nevySettingstab = `<div id="nevyui_sh_options_panel" class="nevysha nevysha-tab nevysha-tab-settings" style="display: none;">`;
-  document.querySelector("#tabs").insertAdjacentHTML('beforeend', nevySettingstab);
-  //put tab_nevyui inside the panel
-  document.querySelector("#nevyui_sh_options_panel").appendChild(document.querySelector("#tab_nevyui"));
-
-  //add title
-  const title = `
-        <div class="nevysha settings-nevyui-title">
-            <h2>Nevysha's Cozy Nest</h2>
-            <span class="subtitle">Find your cozy spot on Auto1111's webui</span>
-          </div>`;
-  document.querySelector("#nevyui_sh_options_panel").insertAdjacentHTML("afterbegin", title);
-
-  //add an event listener on #nevyui_sh_options_submit to briefly show a message when the user clicks on it
-  document.querySelector("#nevyui_sh_options_submit").addEventListener("click", (e) => {
-    //cancel event
-    e.preventDefault();
-    e.stopPropagation();
-
-    //show the message with a smooth animation using jquery
-    $("#nevysha-saved-feedback").fadeIn();
-
-    try {
-      const jsonFolders = JSON.parse(document.querySelector('#cnib_output_folder textarea').value);
-      //send config data with POST to /cozy-nest/config
-      const config = {
-        "cnib_output_folder": jsonFolders,
-      }
-      fetch('/cozy-nest/config', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(config)
-      }).then(response => {
-        if (response.status === 200) {
-          return response.json();
-        } else {
-          throw new Error('Something went wrong on api server!');
-        }
-      })
-    }
-    catch (e) {
-      CozyLogger.debug(e);
-    }
-
-
-    //hide the message after 1.5 second
-    setTimeout(() => {
-          $("#nevysha-saved-feedback").fadeOut();
-
-        //save new settings in localStorage
-        (() => fetchCozyNestConfig())() //ignore async warn
-    }, 1500);
-  });
-
-  //add an event listener on #nevyui_sh_options_submit to briefly show a message when the user clicks on it
-  document.querySelector("#nevyui_sh_options_reset").addEventListener("click", (e) => {
-    //cancel event
-    e.preventDefault();
-    e.stopPropagation();
-
-    //show the message with a smooth animation using jquery
-    $("#nevysha-reset-feedback").fadeIn();
-    //hide the message after 1.5 second
-    setTimeout(() => {
-      $("#nevysha-reset-feedback").fadeOut();
-
-      //save new settings in localStorage
-      (() => fetchCozyNestConfig())() //ignore async warn
-    }, 1500);
-  });
-
-
-  //show tab_nevyui by default to bypass gradio
-  document.querySelector("#tab_nevyui").style.display = "block";
-
-  //add click event to the new settings button
-  (function closure() {
-    let shown = false;
-    document.querySelector("#nevyui_sh_options").addEventListener("click", (e) => {
-      //cancel event
-      e.preventDefault();
-      e.stopPropagation();
-
-      //show tab_nevyui by default to bypass gradio hidding tabs
-      document.querySelector("#tab_nevyui").style.display = "block";
-
-      //toggle the panel with a slide animation using jquery
-      if (shown) {
-        $("#nevyui_sh_options_panel").slideUp(ANIMATION_SPEED);
-      } else {
-        $("#nevyui_sh_options_panel").slideDown(ANIMATION_SPEED);
-      }
-      shown = !shown;
-    });
-  })();
-
-
-  //add click event to the new update info button
-  (function closure() {
-    let shown = false;
-    document.querySelector("#nevyui_update_info").addEventListener("click", (e) => {
-      //cancel event
-      e.preventDefault();
-      e.stopPropagation();
-
-      //show tab_nevyui by default to bypass gradio hidding tabs
-      document.querySelector("#tab_nevyui").style.display = "block";
-
-      //toggle the panel with a slide animation using jquery
-      if (shown) {
-        $("#nevyui_update_info_panel").slideUp(ANIMATION_SPEED);
-      } else {
-        $("#nevyui_update_info_panel").slideDown(ANIMATION_SPEED);
-      }
-      shown = !shown;
-    });
-  })();
-
-  createFolderListComponent();
-}
-
-const makeSettingsDraggable = () => {
-  // Get a reference to the draggable div element
-  const draggableSettings = document.querySelector('#nevyui_sh_options_panel');
-
-  // Define variables to keep track of the mouse position and offset
-  let isDragging = false;
-  let mouseX = 0;
-  let mouseY = 0;
-  let offsetX = 0;
-  let offsetY = 0;
-
-  // create draggable icon
-  const draggableAnchorIcon = document.createElement('div');
-  draggableAnchorIcon.classList.add('nevysha-draggable-anchor-icon', 'nevysha-button');
-  //add a drag icon
-  draggableAnchorIcon.innerHTML = "Drag Me";
-  // add the anchor to the start of the draggable div
-  draggableSettings.insertBefore(draggableAnchorIcon, draggableSettings.firstChild);
-  // create a blank div above the svg icon to catch for mousedown events
-  const draggableAnchor = document.createElement('div');
-  draggableAnchor.classList.add('nevysha-draggable-anchor', 'nevysha-button');
-  // add the anchor to the start of the draggable div
-  draggableSettings.insertBefore(draggableAnchor, draggableSettings.firstChild);
-
-  //add close button
-  const settingCloseButton = document.createElement('div');
-  settingCloseButton.classList.add('nevysha-draggable-anchor', 'nevysha-draggable-anchor-icon', 'nevysha-setting-close-button', 'nevysha-button');
-  settingCloseButton.innerHTML = 'Close';
-  settingCloseButton.style.left = '70px';
-  settingCloseButton.style.top = '2px';
-  draggableSettings.appendChild(settingCloseButton);
-  settingCloseButton.addEventListener('click', () => {
-    document.querySelector("#nevyui_sh_options").click();
-  });
-
-
-  // Add event listeners for mouse events
-  draggableAnchor.addEventListener('mousedown', function(event) {
-    // Set dragging flag and store mouse position and offset from element top-left corner
-    isDragging = true;
-    mouseX = event.clientX;
-    mouseY = event.clientY;
-    offsetX = draggableSettings.offsetLeft;
-    offsetY = draggableSettings.offsetTop;
-  });
-
-  document.addEventListener('mousemove', function(event) {
-    // If dragging, update element position based on mouse movement
-    if (isDragging) {
-      const deltaX = event.clientX - mouseX;
-      const deltaY = event.clientY - mouseY;
-      draggableSettings.style.left = (offsetX + deltaX) + 'px';
-      draggableSettings.style.top = (offsetY + deltaY) + 'px';
-    }
-  });
-
-  document.addEventListener('mouseup', function(event) {
-    // Reset dragging flag
-    isDragging = false;
-  });
-}
 
 function observeElementAdded(targetSelector, callback) {
   // Create a new MutationObserver instance
@@ -966,12 +579,12 @@ function tweakExtraNetworks({prefix}) {
         } else {
           //hide the extra network
           $(extraNetworkGradioWrapper).animate({
-                "margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`},
-              ANIMATION_SPEED,
-              () => {
-                // hide it after the animation is done
-                extraNetworkGradioWrapper.style.display = 'none';
-              });
+              "margin-right": `-=${extraNetworkGradioWrapper.offsetWidth}`},
+            ANIMATION_SPEED,
+            () => {
+              // hide it after the animation is done
+              extraNetworkGradioWrapper.style.display = 'none';
+            });
         }
       }
 
@@ -1297,32 +910,18 @@ const addTabWrapper = () => {
 
 }
 
-function createRightWrapperDiv() {
-  const tab = document.querySelector(`div#tabs`);
-
-  //create wrapper div for the button
-  const rightPanBtnWrapper = document.createElement('div');
-  rightPanBtnWrapper.setAttribute('id', `right_button_wrapper`);
-  rightPanBtnWrapper.classList.add('nevysha', 'nevysha-right-button-wrapper');
-  //add button to the begining of the tab
-  tab.insertAdjacentElement('beforeend', rightPanBtnWrapper);
-
-  //add a button for image browser
+function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab) {
   const cozyImgBrowserBtn = document.createElement('button');
-  cozyImgBrowserBtn.setAttribute('id', `image_browser_right_button`);
+  cozyImgBrowserBtn.setAttribute('id', `${label}_right_button`);
   cozyImgBrowserBtn.classList.add('nevysha', 'lg', 'primary', 'gradio-button');
-  cozyImgBrowserBtn.innerHTML = `<div>Cozy Image Browser</div>`;
-  cozyImgBrowserBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  });
+  cozyImgBrowserBtn.innerHTML = `<div>${buttonLabel}</div>`;
   rightPanBtnWrapper.appendChild(cozyImgBrowserBtn);
 
   //create a panel to display Cozy Image Browser
   const cozyImgBrowserPanel =
-    `<div id="cozy_img_browser_panel" class="nevysha cozy-img-browser-panel slide-right-browser-panel" style="display: none">
+    `<div id="${label}_panel" class="nevysha slide-right-browser-panel" style="display: none">
       <div class="nevysha slide-right-browser-panel-container nevysha-scrollable">
-        <div class="nevysha" id="cozy-img-browser-react"/>
+        <div class="nevysha" id="${label}-react"/>
       </div>
     </div>`;
   //add the panel to the end of the tab
@@ -1330,9 +929,9 @@ function createRightWrapperDiv() {
 
   // Create a vertical line component
   const lineWrapper = createVerticalLineComp();
-  const cozyImgBrowserPanelWrapper = document.querySelector('#cozy_img_browser_panel');
+  const cozyImgBrowserPanelWrapper = document.querySelector(`#${label}_panel`);
   //set cozyImgBrowserPanelWrapper.style.width from local storage value if it exists
-  const cozyImgBrowserPanelWidth = localStorage.getItem('cozyImgBrowserPanelWrapper');
+  const cozyImgBrowserPanelWidth = localStorage.getItem(`${label}_panelWidth`);
   if (cozyImgBrowserPanelWidth) {
     cozyImgBrowserPanelWrapper.style.width = cozyImgBrowserPanelWidth;
   }
@@ -1341,7 +940,7 @@ function createRightWrapperDiv() {
   //TODO refactor to factorise code bellow with extraNetwork
   //add a close button inside the line
   const closeCozyImgBrowser = document.createElement('button');
-  closeCozyImgBrowser.setAttribute('id', `floating_close_cozy_img_browser_panel_button`);
+  closeCozyImgBrowser.setAttribute('id', `floating_close_${label}__panel_button`);
   //add button class
   closeCozyImgBrowser.classList.add('nevysha', 'lg', 'primary', 'gradio-button', 'nevysha-extra-network-floating-btn');
   closeCozyImgBrowser.innerHTML = '<div>Close</div>';
@@ -1352,7 +951,7 @@ function createRightWrapperDiv() {
   //add the button at the begining of the div
   lineWrapper.insertBefore(closeCozyImgBrowser, lineWrapper.firstChild);
   //Add an event listener to the resizer element to track mouse movement
-  lineWrapper.addEventListener('mousedown', function(e) {
+  lineWrapper.addEventListener('mousedown', function (e) {
     e.preventDefault();
 
     // Set the initial values for the width and height of the container
@@ -1376,7 +975,7 @@ function createRightWrapperDiv() {
     function stopDrag() {
 
       //save the new width in local storage
-      localStorage.setItem(`cozyImgBrowserPanelWrapper`, cozyImgBrowserPanelWrapper.style.width);
+      localStorage.setItem(`${label}_panelWidth`, cozyImgBrowserPanelWrapper.style.width);
 
       document.removeEventListener('mousemove', drag);
       document.removeEventListener('mouseup', stopDrag);
@@ -1384,16 +983,15 @@ function createRightWrapperDiv() {
   });
 
   //add listener to open or close the panel using jquery animate
-  cozyImgBrowserBtn.addEventListener('click', (e) => {
+  cozyImgBrowserBtn.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
-    const panel = document.querySelector('#cozy_img_browser_panel');
+    const panel = document.querySelector(`#${label}_panel`);
     if (panel.style.display === 'none') {
       panel.style.display = 'flex'
       panel.style.marginRight = `-${panel.offsetWidth}px`;
       $(panel).animate({"margin-right": `+=${panel.offsetWidth}`}, ANIMATION_SPEED);
-    }
-    else {
+    } else {
       $(panel).animate({"margin-right": `-=${panel.offsetWidth}`}, ANIMATION_SPEED, () => {
         panel.style.display = 'none'
       });
@@ -1401,19 +999,40 @@ function createRightWrapperDiv() {
   });
 }
 
-function setButtonVisibilityFromCurrentTab(id) {
+function createRightWrapperDiv() {
+  const tab = document.querySelector(`div#tabs`);
 
-  //hide each button that ends with extra_networks_right_button
-  const extraNetworksRightBtns = document.querySelectorAll(`button[id$="extra_networks_right_button"]`);
-  extraNetworksRightBtns.forEach((btn) => {
-    btn.style.display = 'none';
+  //create wrapper div for the button
+  const rightPanBtnWrapper = document.createElement('div');
+  rightPanBtnWrapper.setAttribute('id', `right_button_wrapper`);
+  rightPanBtnWrapper.classList.add('nevysha', 'nevysha-right-button-wrapper');
+  //add button to the begining of the tab
+  tab.insertAdjacentElement('beforeend', rightPanBtnWrapper);
 
-  })
-  if (id === 'tab_txt2img') {
-    document.querySelector('button#txt2img_extra_networks_right_button').style.display = 'flex';
+  if (COZY_NEST_CONFIG.enable_extra_network_tweaks === true) {
+    buildRightSlidePanelFor('cozy-txt2img-extra-network', 'Extra Network', rightPanBtnWrapper, tab);
+    document.getElementById('cozy-txt2img-extra-network-react').classList.add('cozy-extra-network')
+
+    buildRightSlidePanelFor('cozy-img2img-extra-network', 'Extra Network', rightPanBtnWrapper, tab);
+    document.getElementById('cozy-img2img-extra-network-react').classList.add('cozy-extra-network')
+    document.querySelector(`#cozy-img2img-extra-network_right_button`).style.display = 'none';
   }
-  if (id === 'tab_img2img') {
-    document.querySelector('button#img2img_extra_networks_right_button').style.display = 'flex';
+  if (COZY_NEST_CONFIG.disable_image_browser !== true) {
+    buildRightSlidePanelFor('cozy-img-browser', 'Cozy Image Browser', rightPanBtnWrapper, tab);
+  }
+}
+
+function setButtonVisibilityFromCurrentTab(id) {
+  CozyLogger.debug(`setButtonVisibilityFromCurrentTab(${id})`);
+
+  document.querySelector(`#cozy-txt2img-extra-network_right_button`).style.display = 'none';
+  document.querySelector(`#cozy-img2img-extra-network_right_button`).style.display = 'none';
+
+  if (id === 'tab_txt2img') {
+    document.querySelector(`#cozy-txt2img-extra-network_right_button`).style.display = 'flex';
+  }
+  else if (id === 'tab_img2img') {
+    document.querySelector(`#cozy-img2img-extra-network_right_button`).style.display = 'flex';
   }
 }
 
@@ -1483,68 +1102,6 @@ async function sendToPipe(where, elemImgFrom) {
 window.sendToPipe = sendToPipe;
 
 window.troubleshootSize = {}
-
-const recalcOffsetFromMenuHeight = () => {
-  let menuHeight = 0;
-
-  const tabs = document.getElementById('tabs');
-
-  const footer = document.querySelector('#footer #footer');
-  let footerHeight;
-  if (!footer) {
-    if (COZY_NEST_CONFIG.webui === WEBUI_SDNEXT)
-      footerHeight = 5;
-    else
-      footerHeight = 0;
-  }
-  else {
-    footerHeight = footer.offsetHeight;
-  }
-
-  if (COZY_NEST_CONFIG.main_menu_position !== 'left') {
-    const menu = document.querySelector('.tab-nav.nevysha-tabnav')
-
-    menuHeight = menu.offsetHeight + 2;
-    document.querySelector(':root').style.setProperty('--menu-top-height', `${menuHeight}px`);
-    const $app = $('.gradio-container.app');
-    $app.attr('style', `${$app.attr('style')} padding-top: ${menuHeight}px !important;`);
-
-    const rect = tabs.getBoundingClientRect();
-    const tabsTop = rect.top;
-
-    document.querySelector(':root').style.setProperty('--main-container-height', `${window.innerHeight - (tabsTop + footerHeight)}px`);
-
-    window.troubleshootSize = {
-      menuHeight,
-      footerHeight: footerHeight,
-      tabsTop,
-      WindowInnerHeight: window.innerHeight,
-      bodyHeight: window.innerHeight - (tabsTop + footerHeight),
-      'main-container-height': `${window.innerHeight - (tabsTop + footerHeight)}px`,
-    }
-  }
-  else {
-    document.querySelector(':root').style.setProperty('--menu-top-height', `1px`);
-
-    const $app = $('.gradio-container.app');
-    $app.attr('style', `${$app.attr('style')} padding-top: ${menuHeight}px !important;`);
-
-    const rect = tabs.getBoundingClientRect();
-    const tabsTop = rect.top;
-
-    document.querySelector(':root').style.setProperty('--main-container-height', `${window.innerHeight - (tabsTop + footerHeight)}px`);
-
-    window.troubleshootSize = {
-      menuHeight,
-      footerHeight: footerHeight,
-      tabsTop,
-      WindowInnerHeight: window.innerHeight,
-      bodyHeight: window.innerHeight - (tabsTop + footerHeight),
-      'main-container-height': `${window.innerHeight - (tabsTop + footerHeight)}px`,
-    }
-  }
-
-}
 
 function addOptionsObserver() {
   // Select the target node
@@ -1616,10 +1173,6 @@ const onloadSafe = (done) => {
   // }
 }
 
-function tweakForSDNext() {
-  document.querySelector('#setting_nevyui_fetchOutputFolderFromA1111Settings').style.display = 'none';
-}
-
 const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
@@ -1675,7 +1228,7 @@ const onLoad = (done) => {
   document.querySelectorAll('.extra-network-cards').forEach(elem => elem.setAttribute('class', `${elem.getAttribute('class')} nevysha nevysha-scrollable`))
   document.querySelectorAll('#cozy_nest_settings_tabs > .tabitem').forEach(elem => elem.classList.add('nevysha', 'nevysha-scrollable'))
 
-  document.querySelector('#nevyui_sh_options_start_socket').setAttribute('style', 'display: none;')
+
   //hide "send to" panel in settings
   //this panel is used to transfert image data into tab
   document.querySelector('#nevysha-send-to').setAttribute('style', 'display: none;')
@@ -1697,23 +1250,13 @@ const onLoad = (done) => {
     addDraggable(bundle);
     addScrollable(bundle);
 
-    if (COZY_NEST_CONFIG.enable_extra_network_tweaks) {
-      tweakExtraNetworks(bundle);
-      addExtraNetworksBtn(bundle);
-    }
-
     //add a clear button to generated image
     clearGeneratedImage(bundle);
   }
 
-  if (COZY_NEST_CONFIG.enable_extra_network_tweaks) {
-    document.querySelector(`button#txt2img_extra_networks`).click();
-    document.querySelector(`button#img2img_extra_networks`).click();
-  }
-  setTimeout(() => {
-    nevysha_magic({prefix: "txt2img"});
-    nevysha_magic({prefix: "img2img"});
-  }, 500)
+  nevysha_magic({prefix: "txt2img"});
+  nevysha_magic({prefix: "img2img"});
+
 
   //general
   tweakButtonsIcons();
@@ -1725,11 +1268,9 @@ const onLoad = (done) => {
   //add expend to inpainting
   tweakInpainting();
 
-  //tweak webui setting page for Cozy Nest directly with JS because... gradio blblblbl
-  tweakNevyUiSettings();
+  addCozyNestCustomBtn();
 
   //load settings
-  applyCozyNestConfig();
   recalcOffsetFromMenuHeight();
 
   //add tab wrapper
@@ -1744,18 +1285,8 @@ const onLoad = (done) => {
     document.querySelector("body").classList.remove("nevysha-light")
   }
 
-  //make settings draggable
-  makeSettingsDraggable();
-
   //add observer for .options resize
   addOptionsObserver();
-
-  if (COZY_NEST_CONFIG.webui === WEBUI_SDNEXT) {
-    tweakForSDNext();
-  }
-
-  //load /assets/index-eff6a2cc.js
-  loadCozyNestImageBrowserSubmodule();
 
   /* --------------- TWEAK SOME EXTENSION --------------- */
   //if AWQ-container is present in COZY_NEST_CONFIG.extensions array from localStorage, tweak AWQ
@@ -1768,15 +1299,17 @@ const onLoad = (done) => {
   done();
 };
 
-async function loadCozyNestImageBrowserSubmodule() {
-  try {
-    const jsModule = await fetch(`file=extensions/Cozy-Nest/cozy-nest-image-browser/assets/index.js?t=${Date.now()}`);
-    eval(await jsModule.text());
-  }
-  catch (err) {
-    // handle any errors that occur during the import process
-    console.error("Failed to load cozy-nest-image-browser submodule", err);
-  }
+export async function saveCozyNestConfig(config) {
+
+  config = config || COZY_NEST_CONFIG;
+
+  await fetch('/cozy-nest/config', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(config)
+  })
 }
 
 async function detectWebuiContext() {
@@ -1794,13 +1327,7 @@ async function detectWebuiContext() {
       COZY_NEST_CONFIG.webui = WEBUI_A1111;
     }
 
-    await fetch('/cozy-nest/config', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(COZY_NEST_CONFIG)
-    })
+    await saveCozyNestConfig();
   }
   CozyLogger.debug(`webui is ${COZY_NEST_CONFIG.webui}`)
 }
@@ -1810,7 +1337,7 @@ async function detectWebuiContext() {
  * either from main.js for Dev or from the loader in the extension folder
  * @returns {Promise<void>}
  */
-export default  async function cozyNestLoader() {
+export default async function cozyNestModuleLoader(extraCozyNestModulesLoader) {
 
   //check if the param CozyNest=No is present in the url
   const urlParams = new URLSearchParams(window.location.search);
@@ -1834,22 +1361,28 @@ export default  async function cozyNestLoader() {
   setupPopupInstanceInfo();
   setupErrorHandling();
 
-  onloadSafe(() => {
-    CozyLogger.log(`running.`);
-    //remove #nevysha-loading from DOM
-    Loading.stop();
+  // wrap onloadSafe in Promise
+  return new Promise(resolve => {
+    onloadSafe(async () => {
 
-    SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
-    SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
+      await extraCozyNestModulesLoader();
 
-    if (shouldDisplaySDNextWarning)
-      showAlert(
-          "Warning",
-          "Cozy Nest detected that you are using SD.Next and running Cozy Nest for the first time. To ensure compatibility, please restart the server."
-          )
-  });
+      //remove #nevysha-loading from DOM
+      Loading.stop();
+      CozyLogger.log(`running.`);
+
+      SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
+      SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
+
+      if (shouldDisplaySDNextWarning)
+        showAlert(
+            "Warning",
+            "Cozy Nest detected that you are using SD.Next and running Cozy Nest for the first time. To ensure compatibility, please restart the server."
+        )
+      resolve();
+    });
+  })
 };
-window.cozyNestLoader = cozyNestLoader;
 
 
 function setupErrorHandling() {
@@ -1857,26 +1390,28 @@ function setupErrorHandling() {
   //set a global error handler
   window.addEventListener('error', function ({message, filename , lineno, colno, error }) {
 
-    // get setting_nevyui_errorPopup checkbox value
-    const errorPopup = document.querySelector('#setting_nevyui_errorPopup').querySelector("input").checked;
-    if (!errorPopup) return;
+    //TODO uncomment
 
-    //if filename does not contains Cozy-Nest, ignore
-    if (!filename.toLowerCase().includes('cozy-nest')) return;
-
-    // Handle the error here
-    populateInstanceInfoDialog();
-    document.querySelector('#cozy_nest_error_handling_display').innerHTML = `An error occurred: ${message} at ${filename } line ${lineno} column ${colno}`;
-    document.querySelector('#cozy_nest_error_handling_display_stack').innerHTML = error.stack;
-    document.querySelector('#cozy_nest_error_handling_display_stack').setAttribute('style', 'display: block;');
-    showInstanceInfoDialog();
+    // // get setting_nevyui_errorPopup checkbox value
+    // const errorPopup = document.querySelector('#setting_nevyui_errorPopup').querySelector("input").checked;
+    // if (!errorPopup) return;
+    //
+    // //if filename does not contains Cozy-Nest, ignore
+    // if (!filename.toLowerCase().includes('cozy-nest')) return;
+    //
+    // // Handle the error here
+    // populateInstanceInfoDialog();
+    // document.querySelector('#cozy_nest_error_handling_display').innerHTML = `An error occurred: ${message} at ${filename } line ${lineno} column ${colno}`;
+    // document.querySelector('#cozy_nest_error_handling_display_stack').innerHTML = error.stack;
+    // document.querySelector('#cozy_nest_error_handling_display_stack').setAttribute('style', 'display: block;');
+    // showInstanceInfoDialog();
   });
 }
 
 let COZY_NEST_CONFIG;
 let shouldDisplaySDNextWarning = false;
 
-async function fetchCozyNestConfig() {
+export async function fetchCozyNestConfig() {
   const response = await fetch(`file=extensions/Cozy-Nest/nevyui_settings.json?t=${Date.now()}`);
   if (response.ok) {
     COZY_NEST_CONFIG = await response.json();

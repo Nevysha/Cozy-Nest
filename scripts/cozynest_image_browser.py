@@ -12,25 +12,7 @@ import modules.images
 import websockets
 from websockets.server import serve
 
-
-def get_exif(path):
-    allExif = {}
-    try:
-        image = Image.open(path)
-        # info = image.info
-        (_, allExif, allExif_html) = modules.extras.run_pnginfo(image)
-        image.close()
-    except Exception as e:
-        print(f"CozyNestSocket: WARNING cannot get exif data for image {path}")
-        pass
-    img = {
-        'path': path,
-        'metadata': {
-            'date': os.path.getmtime(path),
-            'exif': allExif,
-        }
-    }
-    return img
+from scripts import tools
 
 
 async def start_server(images_folders, server_port, stopper):
@@ -73,28 +55,18 @@ async def start_server(images_folders, server_port, stopper):
     async def process(data):
         what = data['what']
         if what == 'images':
-            # scrape the images folder recursively
-            images = []
-            for images_folder in images_folders:
-                for root, dirs, files in os.walk(images_folder):
-                    for file in files:
-                        if file.endswith(".png"):
-                            # get exif data
-                            img = get_exif(os.path.join(root, file))
-                            images.append(img)
-
-            # sort the images by date (newest first) metadata.date
-            images.sort(key=lambda x: x['metadata']['date'], reverse=True)
-
-            # send the images to the client
-            data = {
-                'what': 'images',
-                'images': images
-            }
+            data = tools.scrap_image_folders(images_folders)
             return json.dumps(data)
 
         if what == 'image_saved':
             await on_image_saved(data['data'])
+            return json.dumps({
+                'what': 'success',
+                'data': 'None'
+            })
+
+        if what == 'index_built':
+            await on_index_built(data['data'])
             return json.dumps({
                 'what': 'success',
                 'data': 'None'
@@ -115,6 +87,14 @@ async def start_server(images_folders, server_port, stopper):
 
         for websocket in CLIENTS_COPY.copy():
             await websocket_send('dispatch_on_image_saved', data, websocket)
+
+    async def on_index_built(data):
+
+        CLIENTS_COPY = CLIENTS.copy()
+        CLIENTS.clear()
+
+        for websocket in CLIENTS_COPY.copy():
+            await websocket_send('dispatch_on_index_built', data, websocket)
 
     async def websocket_send(what, data, websocket):
         try:

@@ -1,22 +1,46 @@
 import 'animate.css';
 import '@fontsource-variable/caveat';
-
 import sheet from './main/cozy-nest-style.css?inline' assert { type: 'css' };
-
-
+import cozyNestModuleLoader, {fetchCozyNestConfig} from './main/nevysha-cozy-nest.js'
+import SimpleTimer from "./main/SimpleTimer.js";
+import {COZY_NEST_GRADIO_LOAD_DURATION} from "./main/Constants.js";
+import {CozyLogger} from "./main/CozyLogger.js";
+import {startCozyNestImageBrowser} from "@image-browser/main.jsx";
+import startCozyNestSettings from "@settings/main.jsx";
 import {
   dummyLoraCard, dummyControlNetBloc, dummySubdirs
 } from './main/cozy-utils.js';
+import startCozyPrompt from "./cozy-prompt/main.jsx";
+import {startExtraNetwork} from "./extra-network/main.jsx";
+import Loading from "./main/Loading.js";
 window.CozyTools = {
   dummyLoraCard,
   dummyControlNetBloc,
   dummySubdirs
 }
 
-import cozyNestLoader from './main/nevysha-cozy-nest.js'
-import SimpleTimer from "./main/SimpleTimer.js";
-import {COZY_NEST_GRADIO_LOAD_DURATION} from "./main/Constants.js";
-import {CozyLogger} from "./main/CozyLogger.js";
+
+
+export default async function cozyNestLoader()  {
+  await fetchCozyNestConfig();
+  await cozyNestModuleLoader(async () => {
+    startCozyNestSettings();
+
+
+    if (COZY_NEST_CONFIG.enable_cozy_prompt === true) {
+      startCozyPrompt('txt2img_prompt', 'cozy_nest_prompt_txt2img');
+      startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img');
+    }
+    if (COZY_NEST_CONFIG.enable_extra_network_tweaks === true) {
+      await startExtraNetwork('txt2img');
+      await startExtraNetwork('img2img');
+    }
+
+    startCozyNestImageBrowser();
+  });
+}
+
+window.cozyNestLoader = cozyNestLoader;
 
 (async () => {
   //check if the param CozyNest=No is present in the url
@@ -36,15 +60,6 @@ import {CozyLogger} from "./main/CozyLogger.js";
   document.adoptedStyleSheets = [styleSheet];
 
   SimpleTimer.time(COZY_NEST_GRADIO_LOAD_DURATION);
-
-  // Cozy-Nest-Image-Browser link
-  const cozyNestImageBrowserLink = document.createElement('link');
-  cozyNestImageBrowserLink.rel = 'stylesheet';
-  cozyNestImageBrowserLink.type = 'text/css';
-  cozyNestImageBrowserLink.href = `file=extensions/Cozy-Nest/cozy-nest-image-browser/assets/index.css?t=${Date.now()}`;
-
-  // Append the link element to the document head
-  document.head.appendChild(cozyNestImageBrowserLink);
 
   if (import.meta.env.VITE_CONTEXT === 'DEV') {
     CozyLogger.debug('DEV MODE');

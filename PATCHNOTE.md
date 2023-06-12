@@ -1,8 +1,18 @@
 ## Compatibility
 
-- From Automatic1111's webui `5ab7f213` commit to the 1.2.1 release.
+- Automatic1111's webui 1.3.1 release.
 - SD.Next (Vlad's fork) from commit `beff89ba`
 - Will work best on latest version of both as I'm only testing on latest version.
+
+## New features in 2.2.0
+- [x]  Redo the Extra Network tweaks from scratch. User experiencing issues with previous version should not experience issues anymore.
+- [x]  Enhanced prompt editor with color (in txt2img and img2img) - It can be disabled through settings
+- [x]  Tag system for image browser : you can now add tag to your images and filter them by tag. Tags are saved in exif metadata.
+- [x]  Exif metadata editor : you can now edit exif metadata of your images
+- [x]  You can move img into a separated archive folder (set through settings)
+- [x]  You can hide image from image browser (a tag is added to the image exif)
+- [x]  You can delete images from image browser
+- [x]  Image browser now build a cache of its index to speed up loading time
 
 ## Minor changes & fixes in 2.1.7
 
