@@ -18,22 +18,10 @@ export function Button(props) {
       >{props.children}</button>
 }
 
-const config = JSON.parse(localStorage.getItem('COZY_NEST_CONFIG'))
-const disable_image_browser =
-  config['disable_image_browser']
-
-const serverPort = (() => {
-  try {
-    return config.server_default_port
-  }
-  catch (e) {
-    CozyLogger.debug('cnib_socket_server_port not found in main gradio app')
-    return 3333;
-  }
-})();
-
 
 function Loading(props) {
+
+  const config = JSON.parse(localStorage.getItem('COZY_NEST_CONFIG'))
 
   const color = config['accent_color'] || '#36d7b7'
   const label = props.label || ''
@@ -48,6 +36,20 @@ function Loading(props) {
 
 function App() {
 
+  const config = JSON.parse(localStorage.getItem('COZY_NEST_CONFIG'))
+  const disable_image_browser =
+    config['disable_image_browser']
+
+  const serverPort = (() => {
+    try {
+      return config.server_default_port
+    }
+    catch (e) {
+      CozyLogger.debug('cnib_socket_server_port not found in main gradio app')
+      return 3333;
+    }
+  })();
+
   if (disable_image_browser) {
     return (
         <>
@@ -60,7 +62,6 @@ function App() {
     images,
     setImages,
     setFilteredImages,
-    tags,
     setTags,
   } = useContext(ImagesContext)
 
