@@ -152,7 +152,7 @@ export function App({parentId, containerId}) {
        />
       <Row>
         <Button onClick={prettify}>Prettify</Button>
-        <Button onClick={toggleNative}>Toggle native</Button>
+        <Button onClick={toggleNative}>{nativeIsVisible ? "Hide" : "Show"} native textarea</Button>
       </Row>
 
     </div>
