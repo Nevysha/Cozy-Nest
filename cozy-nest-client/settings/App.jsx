@@ -333,6 +333,8 @@ export function App() {
                       >Auto search port</Checkbox>
                       <Checkbox
                         visibility={config.webui === WEBUI_SDNEXT ? 'hidden' : 'visible'}
+                        isChecked={config.fetch_output_folder_from_a1111_settings}
+                        onChange={(e) => setConfig({...config, fetch_output_folder_from_a1111_settings: e.target.checked})}
                       >Fetch output folder from a1111 settings (Reload needed to enable)</Checkbox>
                     </RowFullWidth>
                     <Column>
