@@ -165,6 +165,10 @@ export function App() {
       document.querySelector('#settings_restart_gradio').click();
       return;
     }
+    else if (config.webui === WEBUI_SDNEXT) {
+      document.querySelector('#restart_submit').click();
+      return;
+    }
 
     (async () => {
       // call to @app.get("/cozy-nest/reloadui")
