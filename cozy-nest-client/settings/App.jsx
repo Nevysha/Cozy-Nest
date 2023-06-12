@@ -247,7 +247,10 @@ export function App() {
                     <RowFullWidth>
                       <FormControl>
                         <FormLabel>Font size</FormLabel>
-                        <NumberInput defaultValue={12} min={10} max={18}>
+                        <NumberInput
+                          value={config.font_size}
+                          onChange={(e) => updateConfig(e, 'font_size')}
+                          min={10} max={18}>
                           <NumberInputField/>
                           <NumberInputStepper>
                             <NumberIncrementStepper/>

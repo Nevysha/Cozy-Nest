@@ -72,6 +72,7 @@ function App() {
   const [emptyFetch, setEmptyFetch] = useState(false);
   const [visibilityFilter, setVisibilityFilter] = useState('radio-hide-hidden');
   const [isLoading, setIsLoading] = useState(true);
+  const [warnForJpeg, setWarnForJpeg] = useState(false);
 
 
   const { sendMessage, lastMessage, readyState, getWebSocket }
@@ -156,6 +157,16 @@ function App() {
     }
   }, [lastMessage, setMessageHistory]);
 
+  function checkForJpeg() {
+    if (images.length > 0) {
+      const jpeg = images.find(image => image.path.indexOf('jpeg') !== -1 || image.path.indexOf('jpg') !== -1)
+      if (jpeg) {
+        CozyLogger.debug('Found jpeg in images array')
+        setWarnForJpeg(true)
+      }
+    }
+  }
+
   //if images is empty, load images
   useEffect(() => {
     if (images.length === 0 && readyState === ReadyState.OPEN && !emptyFetch) {
@@ -164,6 +175,7 @@ function App() {
     else {
       setFilteredImages(applyActiveFilter())
     }
+    checkForJpeg()
   }, [images, readyState])
 
   //if searchStr is not empty, filter images
@@ -232,6 +244,7 @@ function App() {
             >
               Rebuild Index
             </button>
+            {warnForJpeg && <span style={{marginLeft: '20px', color: 'orange'}}>Warning: jpeg found in output folder. Jpeg images are not supported</span>}
           </Row>
           <Row style={{width: 'auto'}} className='cozy-websocket-status'>
             <span>WebSocket status <span className="connexionStatus" style={connexionStatusStyle}>{connectionStatus}</span></span>
