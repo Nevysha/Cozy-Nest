@@ -12,6 +12,7 @@ import {
 } from './main/cozy-utils.js';
 import startCozyPrompt from "./cozy-prompt/main.jsx";
 import {startExtraNetwork} from "./extra-network/main.jsx";
+import Loading from "./main/Loading.js";
 window.CozyTools = {
   dummyLoraCard,
   dummyControlNetBloc,
@@ -22,20 +23,21 @@ window.CozyTools = {
 
 export default async function cozyNestLoader()  {
   await fetchCozyNestConfig();
-  await cozyNestModuleLoader();
-  startCozyNestSettings();
+  await cozyNestModuleLoader(async () => {
+    startCozyNestSettings();
 
 
-  if (COZY_NEST_CONFIG.enable_cozy_prompt === true) {
-    startCozyPrompt('txt2img_prompt', 'cozy_nest_prompt_txt2img');
-    startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img');
-  }
-  if (COZY_NEST_CONFIG.enable_extra_network_tweaks === true) {
-    startExtraNetwork('txt2img');
-    startExtraNetwork('img2img');
-  }
+    if (COZY_NEST_CONFIG.enable_cozy_prompt === true) {
+      startCozyPrompt('txt2img_prompt', 'cozy_nest_prompt_txt2img');
+      startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img');
+    }
+    if (COZY_NEST_CONFIG.enable_extra_network_tweaks === true) {
+      await startExtraNetwork('txt2img');
+      await startExtraNetwork('img2img');
+    }
 
-  startCozyNestImageBrowser();
+    startCozyNestImageBrowser();
+  });
 }
 
 window.cozyNestLoader = cozyNestLoader;

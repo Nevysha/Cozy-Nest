@@ -19,8 +19,8 @@ export default class Loading {
     if (Loading._instance) {
       Loading._instance.observer.disconnect();
     }
-    //wait for one second to let gradio finish request...
-    setTimeout(() => document.querySelector("#nevysha-loading-wrap").remove(), 2000);
+
+    document.querySelector("#nevysha-loading-wrap").remove();
   }
 
   constructor() {

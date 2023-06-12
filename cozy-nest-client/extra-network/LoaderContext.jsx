@@ -47,7 +47,7 @@ async function requireNativeBloc(prefix) {
 //we use a local not hook to avoid async issues and double call
 const states = {}
 
-export function LoaderProvider({children, prefix}) {
+export function LoaderProvider({children, prefix, resolve}) {
 
   const [ready, setReady] = React.useState(false)
 
@@ -74,6 +74,7 @@ export function LoaderProvider({children, prefix}) {
         loading: false,
       }
       setReady(true)
+      resolve()
     })()
 
   }, [])

@@ -1338,7 +1338,7 @@ async function detectWebuiContext() {
  * either from main.js for Dev or from the loader in the extension folder
  * @returns {Promise<void>}
  */
-export default  async function cozyNestModuleLoader() {
+export default async function cozyNestModuleLoader(extraCozyNestModulesLoader) {
 
   //check if the param CozyNest=No is present in the url
   const urlParams = new URLSearchParams(window.location.search);
@@ -1364,10 +1364,13 @@ export default  async function cozyNestModuleLoader() {
 
   // wrap onloadSafe in Promise
   return new Promise(resolve => {
-    onloadSafe(() => {
-      CozyLogger.log(`running.`);
+    onloadSafe(async () => {
+
+      await extraCozyNestModulesLoader();
+
       //remove #nevysha-loading from DOM
       Loading.stop();
+      CozyLogger.log(`running.`);
 
       SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
       SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
@@ -1380,9 +1383,7 @@ export default  async function cozyNestModuleLoader() {
       resolve();
     });
   })
-
 };
-window.cozyNestModuleLoader = cozyNestModuleLoader;
 
 
 function setupErrorHandling() {

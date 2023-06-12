@@ -1,5 +1,3 @@
-import cozyNestModuleLoader from "./nevysha-cozy-nest.js";
-
 export class CozyLogger {
 
   static _instance = null;

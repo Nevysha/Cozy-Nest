@@ -6,18 +6,24 @@ import {LoaderProvider} from "./LoaderContext.jsx";
 import {CozyLogger} from "../main/CozyLogger.js";
 
 export function startExtraNetwork(prefix) {
+  return new Promise((resolve, reject) => {
+    _startExtraNetwork(prefix, resolve)
+  })
+}
+
+function _startExtraNetwork(prefix, resolve) {
 
   CozyLogger.debug('startExtraNetwork', prefix)
 
   if (!document.getElementById(`cozy-${prefix}-extra-network-react`)) {
     CozyLogger.debug('waiting for extra network react', prefix)
-    setTimeout(() => startExtraNetwork(), 200)
+    setTimeout(() => _startExtraNetwork(), 200)
     return
   }
 
   ReactDOM.createRoot(document.getElementById(`cozy-${prefix}-extra-network-react`)).render(
     <React.StrictMode>
-      <LoaderProvider prefix={prefix}>
+      <LoaderProvider prefix={prefix} resolve={resolve}>
         <ExtraNetworks prefix={prefix} />
       </LoaderProvider>
     </React.StrictMode>,
