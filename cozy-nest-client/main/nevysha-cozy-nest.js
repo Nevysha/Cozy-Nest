@@ -1009,10 +1009,6 @@ function createRightWrapperDiv() {
   //add button to the begining of the tab
   tab.insertAdjacentElement('beforeend', rightPanBtnWrapper);
 
-  if (COZY_NEST_CONFIG.disable_image_browser !== true) {
-    buildRightSlidePanelFor('cozy-img-browser', 'Cozy Image Browser', rightPanBtnWrapper, tab);
-  }
-
   if (COZY_NEST_CONFIG.enable_extra_network_tweaks === true) {
     buildRightSlidePanelFor('cozy-txt2img-extra-network', 'Extra Network', rightPanBtnWrapper, tab);
     document.getElementById('cozy-txt2img-extra-network-react').classList.add('cozy-extra-network')
@@ -1020,6 +1016,9 @@ function createRightWrapperDiv() {
     buildRightSlidePanelFor('cozy-img2img-extra-network', 'Extra Network', rightPanBtnWrapper, tab);
     document.getElementById('cozy-img2img-extra-network-react').classList.add('cozy-extra-network')
     document.querySelector(`#cozy-img2img-extra-network_right_button`).style.display = 'none';
+  }
+  if (COZY_NEST_CONFIG.disable_image_browser !== true) {
+    buildRightSlidePanelFor('cozy-img-browser', 'Cozy Image Browser', rightPanBtnWrapper, tab);
   }
 }
 
