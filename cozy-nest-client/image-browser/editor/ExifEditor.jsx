@@ -2,7 +2,9 @@ import React, {useContext, useEffect, useRef, useState} from "react";
 import {Button} from "../App.jsx";
 
 import 'ace-builds'
-ace.config.setModuleUrl("ace/mode/json_worker", 'cozy-nest-client/node_modules/ace-builds/src-noconflict/worker-json.js')
+ace.config.setModuleUrl("ace/mode/json_worker",
+  // `/cozy-nest-client/assets/index.js?t=${Date.now()}
+  '/cozy-nest-client/assets/worker-json.js')
 
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-json";
