@@ -1,7 +1,6 @@
 import 'animate.css';
 import '@fontsource-variable/caveat';
 import sheet from './main/cozy-nest-style.css?inline' assert { type: 'css' };
-import latte from './main/latte.css' assert { type: 'css' };
 import cozyNestModuleLoader, {fetchCozyNestConfig} from './main/nevysha-cozy-nest.js'
 import SimpleTimer from "./main/SimpleTimer.js";
 import {COZY_NEST_GRADIO_LOAD_DURATION} from "./main/Constants.js";
@@ -9,11 +8,10 @@ import {CozyLogger} from "./main/CozyLogger.js";
 import {startCozyNestImageBrowser} from "@image-browser/main.jsx";
 import startCozyNestSettings from "@settings/main.jsx";
 import {
-  dummyLoraCard, dummyControlNetBloc, dummySubdirs
+  dummyLoraCard, dummyControlNetBloc, dummySubdirs, getTheme
 } from './main/cozy-utils.js';
 import startCozyPrompt from "./cozy-prompt/main.jsx";
 import {startExtraNetwork} from "./extra-network/main.jsx";
-import Loading from "./main/Loading.js";
 window.CozyTools = {
   dummyLoraCard,
   dummyControlNetBloc,
@@ -56,11 +54,20 @@ window.cozyNestLoader = cozyNestLoader;
     return
   }
 
-  const styleSheet = new CSSStyleSheet();
-  styleSheet.replaceSync(sheet);
-  const latteSheet = new CSSStyleSheet();
-  latteSheet.replaceSync(latte);
-  document.adoptedStyleSheets = [styleSheet, latteSheet];
+  // if (getTheme() === 'dark') {
+    const styleSheet = new CSSStyleSheet();
+    styleSheet.replaceSync(sheet);
+    document.adoptedStyleSheets = [styleSheet];
+  // }
+  // else {
+  //   const {latte} = await import('./main/latte.css?inline');
+  //   const styleSheet = new CSSStyleSheet();
+  //   styleSheet.replaceSync(sheet);
+  //   const latteSheet = new CSSStyleSheet();
+  //   latteSheet.replaceSync(latte);
+  //   document.adoptedStyleSheets = [styleSheet, latteSheet];
+  // }
+
 
   SimpleTimer.time(COZY_NEST_GRADIO_LOAD_DURATION);
 
