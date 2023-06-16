@@ -978,38 +978,10 @@ canvas.nevysha {
     background-color: var(--ae-primary-color) !important;
 }
 
-/*extra network*/
-#txt2img_extra_networks_parent,
-#img2img_extra_networks_parent {
-    position: fixed;
-    z-index: 9999;
-    background-color: var(--block-background-fill) !important;
-    width: 75vw;
-    right: 0;
-    height: calc(100% - (100px + var(--menu-top-height)));
-    top: calc(75px + var(--menu-top-height));
-    padding-right: 15px;
-    border: 1px solid var(--ae-input-border-color) !important;
-}
-#txt2img_extra_networks_nevysha_wrapper,
-#img2img_extra_networks_nevysha_wrapper {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-}
-
-#txt2img_extra_networks_nevysha_wrapper > .vertical-line-wrapper,
-#img2img_extra_networks_nevysha_wrapper > .vertical-line-wrapper,
 .slide-right-browser-panel > .vertical-line-wrapper {
     z-index: 100;
     margin: 15px 0 0 5px;
 }
-/*div[id$="_extra_tabs"] {*/
-/*    flex: 1 !important;*/
-/*    height: 100% !important;*/
-/*    display: flex !important;*/
-/*    flex-direction: column !important;*/
-/*}*/
 
 .nevysha-right-button-wrapper {
     position: fixed;
