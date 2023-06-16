@@ -5,7 +5,7 @@ export const LoaderContext = React.createContext({
   ready: false,
 });
 
-function observeDivChanges(targetDiv) {
+function observeDivChanges(targetDiv, prefix) {
   return new Promise((resolve) => {
     let timer; // Holds the timeout reference
 
@@ -14,7 +14,7 @@ function observeDivChanges(targetDiv) {
       timer = setTimeout(() => {
         observer.disconnect(); // Stop observing mutations
         resolve(); // Resolve the Promise
-      }, 200);
+      }, 3000);
     });
 
     observer.observe(targetDiv, { attributes: true, childList: true, subtree: true });
@@ -26,21 +26,22 @@ function observeDivChanges(targetDiv) {
   });
 }
 
-async function requireNativeBloc(prefix) {
+async function requireNativeBloc(prefix, resolve) {
 
   const triggerButton = document.querySelector(`button#${prefix}_extra_networks`)
 
   CozyLogger.debug('triggering extra network', prefix)
 
-  triggerButton.style.display = 'none'
+  // triggerButton.style.display = 'none'
+
+  const tabs = document.querySelector(`div#${prefix}_extra_networks`)
+  tabs.parentNode.style.display = 'none';
 
   triggerButton.click()
-
-  const tabs = document.querySelector(`#${prefix}_extra_tabs`)
+  resolve()
 
   //setup a mutation observer to detect when the tabs are added
-  await observeDivChanges(tabs)
-  triggerButton.click()
+  await observeDivChanges(tabs, prefix)
   CozyLogger.debug('tabs loaded', prefix)
 }
 
@@ -68,13 +69,12 @@ export function LoaderProvider({children, prefix, resolve}) {
     };
 
     (async () => {
-      await requireNativeBloc(prefix)
+      await requireNativeBloc(prefix, resolve)
       states[prefix] = {
         loaded: true,
         loading: false,
       }
       setReady(true)
-      resolve()
     })()
 
   }, [])
