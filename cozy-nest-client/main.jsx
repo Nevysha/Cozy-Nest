@@ -1,6 +1,7 @@
 import 'animate.css';
 import '@fontsource-variable/caveat';
 import sheet from './main/cozy-nest-style.css?inline' assert { type: 'css' };
+import latte from './main/latte.css' assert { type: 'css' };
 import cozyNestModuleLoader, {fetchCozyNestConfig} from './main/nevysha-cozy-nest.js'
 import SimpleTimer from "./main/SimpleTimer.js";
 import {COZY_NEST_GRADIO_LOAD_DURATION} from "./main/Constants.js";
@@ -57,7 +58,9 @@ window.cozyNestLoader = cozyNestLoader;
 
   const styleSheet = new CSSStyleSheet();
   styleSheet.replaceSync(sheet);
-  document.adoptedStyleSheets = [styleSheet];
+  const latteSheet = new CSSStyleSheet();
+  latteSheet.replaceSync(latte);
+  document.adoptedStyleSheets = [styleSheet, latteSheet];
 
   SimpleTimer.time(COZY_NEST_GRADIO_LOAD_DURATION);
 
