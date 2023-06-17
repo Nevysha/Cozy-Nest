@@ -5,7 +5,8 @@
 - Will work best on latest version of both as I'm only testing on latest version.
 
 ## Minor changes & fixes in 2.2.4
-- [x] Fix image url which was hardcoded to port 7860
+- [x] Fix image url which was hardcoded to port 7860.
+- [x] use data_dir args to locate and save settings.
 
 ## Minor changes & fixes in 2.2.3
 - [x] Differed Extra Network loading. This mean that the initial loading of Cozy Nest should be faster.
