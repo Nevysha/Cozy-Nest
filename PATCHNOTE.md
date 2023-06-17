@@ -5,7 +5,7 @@
 - Will work best on latest version of both as I'm only testing on latest version.
 
 ## Minor changes & fixes in 2.2.3
-- [x] Differed Extra Network loading
+- [x] Differed Extra Network loading. This mean that the initial loading of Cozy Nest should be faster.
 
 ## New features in 2.2.0
 - [x]  Redo the Extra Network tweaks from scratch. User experiencing issues with previous version should not experience issues anymore.

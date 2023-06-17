@@ -32,16 +32,22 @@ async function requireNativeBloc(prefix, resolve) {
 
   CozyLogger.debug('triggering extra network', prefix)
 
-  // triggerButton.style.display = 'none'
+  triggerButton.style.display = 'none'
 
   const tabs = document.querySelector(`div#${prefix}_extra_networks`)
-  tabs.parentNode.style.display = 'none';
+  tabs.style.display = 'none';
+
+  //for txt2img we need an extra tweak because of the way the DOM / element are built in gradio
+  if (prefix === 'txt2img') {
+    tabs.parentNode.style.marginBottom = 'calc(var(--layout-gap) * -1)';
+  }
 
   triggerButton.click()
   resolve()
 
   //setup a mutation observer to detect when the tabs are added
   await observeDivChanges(tabs, prefix)
+  // triggerButton.click()
   CozyLogger.debug('tabs loaded', prefix)
 }
 
