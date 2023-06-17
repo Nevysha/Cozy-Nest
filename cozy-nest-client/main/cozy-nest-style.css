@@ -764,7 +764,7 @@ button.secondary, button.primary {
 
 .nevysha.settings-wrapper {
     flex: 1;
-    margin-top: 15px;
+    margin-top: 5px;
     overflow-y: scroll;
     padding: 0 5px 15px 0;
 }
@@ -1852,4 +1852,12 @@ body.nsfw .infoModal > .image-wrapper > img {
 }
 body.nsfw .card {
     filter: blur(10px);
+}
+
+[id$="_actions_column"] {
+    gap: 0;
+}
+
+[id$="_toprow"] {
+    gap: 5px !important;
 }
