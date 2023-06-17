@@ -6,7 +6,7 @@
 
 ## New features in 2.3.0
 - [x]  Add clear button in prompt
-- [x]  Move "re-use last prompt" button
+- [x]  Move "redo last prompt" button
 - [x]  Add a secondary accent color
 - [x]  Add secondary accent color to some elements (open scripts...)
 

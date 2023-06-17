@@ -12,6 +12,7 @@ import {
 } from './main/cozy-utils.js';
 import startCozyPrompt from "./cozy-prompt/main.jsx";
 import {startExtraNetwork} from "./extra-network/main.jsx";
+import {overrideUiJs} from "./main/override_ui.js";
 window.CozyTools = {
   dummyLoraCard,
   dummyControlNetBloc,
@@ -27,8 +28,8 @@ export default async function cozyNestLoader()  {
 
 
     if (COZY_NEST_CONFIG.enable_cozy_prompt === true) {
-      startCozyPrompt('txt2img_prompt', 'cozy_nest_prompt_txt2img');
-      startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img');
+      startCozyPrompt('txt2img_prompt', 'cozy_nest_prompt_txt2img', 'txt2img');
+      startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img', 'img2img');
     }
     if (COZY_NEST_CONFIG.enable_extra_network_tweaks === true) {
       await startExtraNetwork('txt2img')
@@ -36,6 +37,8 @@ export default async function cozyNestLoader()  {
     }
 
     startCozyNestImageBrowser();
+
+    overrideUiJs();
   });
 }
 
