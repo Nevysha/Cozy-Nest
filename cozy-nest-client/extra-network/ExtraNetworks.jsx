@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 import './ExtraNetworks.css'
 import {LoaderContext} from "./LoaderContext.jsx";
 import {CozyLogger} from "../main/CozyLogger.js";
+import {Loading} from "../image-browser/App.jsx";
 
 let extraNetworksParent = null;
 
@@ -41,6 +42,9 @@ export function ExtraNetworks({prefix}) {
   }
 
   return (
-    <div ref={ref} style={{height:'100%'}} />
+    <>
+      {!ready && <Loading label="Loading Extra Networks..."/>}
+      <div ref={ref} style={{height:'100%'}} />
+    </>
   );
 }
