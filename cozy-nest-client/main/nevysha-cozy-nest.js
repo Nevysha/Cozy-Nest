@@ -3,7 +3,7 @@ import $ from "jquery";
 window.$ = window.jQuery = $;
 
 import SimpleTimer from "./SimpleTimer.js";
-import {getTheme, isUpToDate, getLuminance} from './cozy-utils.js';
+import {getTheme, isUpToDate, getLuminance, findNearestParent} from './cozy-utils.js';
 import {
   COZY_NEST_DOM_TWEAK_LOAD_DURATION,
   COZY_NEST_GRADIO_LOAD_DURATION,
@@ -994,12 +994,70 @@ function addAccordionClickHandler() {
       const isOpen = accordion.classList.contains('open');
       if (isOpen) {
         accordion.parentElement.classList.add('nevysha-accordion-open')
+        accordion.parentElement
+          .setAttribute("style"
+            , `${accordion.parentElement.getAttribute("style")} border-width: 2px 2px 0px !important;`);
       } else {
         accordion.parentElement.classList.remove('nevysha-accordion-open')
+        accordion.parentElement.setAttribute("style",
+          `${accordion.parentElement.getAttribute("style").replace('border-width: 2px 2px 0px !important;', '')}`)
       }
     });
   })
 
+}
+
+function addScriptSelectionHandler() {
+  const scriptSelects = document.querySelectorAll('#script_list');
+
+  scriptSelects.forEach(input => {
+
+    //border-width: 2px 2px 0px !important;
+    input.setAttribute("style", `${input.getAttribute("style")} border-width: 2px 2px 0px !important;`)
+
+    // add nevysha-scripts class to all next siblings until there is no more
+    let nextSibling = input.parentElement.nextElementSibling;
+
+    while (nextSibling !== null) {
+      nextSibling.classList.add('nevysha-scripts');
+      nextSibling = nextSibling.nextElementSibling;
+    }
+  })
+
+  // Create a Mutation Observer
+  const observer = new MutationObserver(mutations => {
+
+    mutations.forEach(mutation => {
+
+      if (mutation.type === 'subtree') {
+        CozyLogger.debug(`subtree mutation: ${mutation.removedNodes}`)
+      }
+
+      if (mutation.type === 'attributes') {
+        let changedInput = mutation.target;
+        if (!mutation.target instanceof HTMLInputElement) {
+          changedInput = mutation.target.querySelector('input');
+        }
+        if (!changedInput) {
+          return;
+        }
+        const newValue = changedInput.value;
+
+        if (newValue && newValue !== 'None' && newValue.length > 0) {
+          CozyLogger.debug('script: newValue', newValue);
+          findNearestParent(changedInput, '#script_list')?.classList.add('nevysha-script-selected');
+        } else if (newValue === 'None'){
+          CozyLogger.debug('script deselected');
+          findNearestParent(changedInput, '#script_list')?.classList.remove('nevysha-script-selected');
+        }
+      }
+    });
+  });
+
+  // Configure and start the observer
+  scriptSelects.forEach(input => {
+    observer.observe(input, { attributes: true, childList: true, subtree: true });
+  });
 }
 
 const onLoad = (done) => {
@@ -1126,6 +1184,9 @@ const onLoad = (done) => {
 
   //add click handler on .gradio-accordion > .label-wrap to change border top
   addAccordionClickHandler();
+
+  //add script selection handler
+  addScriptSelectionHandler();
 
   //add tab wrapper
   addTabWrapper();

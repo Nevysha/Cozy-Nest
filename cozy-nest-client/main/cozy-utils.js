@@ -46,6 +46,19 @@ export const getLuminance = (hexcolor) => {
   return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
 }
 
+export function findNearestParent(element, selector) {
+  let parent = element.parentElement;
+
+  while (parent !== null) {
+    if (parent.matches(selector)) {
+      return parent;
+    }
+    parent = parent.parentElement;
+  }
+
+  return null;
+}
+
 const COLOR_BRIGHTNESS_FACTOR = 0.75;
 export const getSubduedFontColor = (hexCode) => {
   // Remove the '#' symbol if present

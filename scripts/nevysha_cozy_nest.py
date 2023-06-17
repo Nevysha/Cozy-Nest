@@ -121,14 +121,14 @@ def get_dict_from_config():
 def get_default_settings():
     return {
         'main_menu_position': 'top',
-        'accent_generate_button': False,
+        'accent_generate_button': True,
         'font_size': 12,
         'quicksettings_position': 'split',
         'font_color': '#d4d4d4',
         'font_color_light': rgb_to_hex(71, 71, 71),
         'waves_color': rgb_to_hex(94, 26, 145),
         'bg_gradiant_color': rgb_to_hex(101, 0, 94),
-        'accent_color': rgb_to_hex(92, 175, 214),
+        'accent_color': '#37b9dd',
         'secondary_accent_color': '#b67ee1',
         'card_height': '8',
         'card_width': '13',
