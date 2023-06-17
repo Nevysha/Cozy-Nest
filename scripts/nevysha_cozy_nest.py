@@ -38,6 +38,7 @@ def hex_to_rgb(hex):
 EXTENSION_TECHNICAL_NAME = os.path.basename(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 CONFIG_FILENAME = f"extensions/{EXTENSION_TECHNICAL_NAME}/nevyui_settings.json"
+CONFIG_FILENAME = os.path.join(shared.cmd_opts.data_dir, CONFIG_FILENAME)
 
 
 def gradio_save_settings(main_menu_position,

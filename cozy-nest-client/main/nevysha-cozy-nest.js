@@ -1075,8 +1075,30 @@ const onLoad = (done) => {
   tweakButtonsIcons();
 
   //style tweak to be MORE IMPORTANT than important
-  gradioApp().querySelector('.tabs').querySelectorAll(".block.padded:not(.gradio-accordion, .gradio-dropdown, #nevyui_sh_options)").forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 10px !important;`))
+  gradioApp().querySelector('.tabs')
+    .querySelectorAll(".block.padded:not(.gradio-accordion, .gradio-dropdown, .gradio-slider, .gradio-number, #nevyui_sh_options)")
+    .forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 10px !important;`))
+
+  document.querySelectorAll('.gradio-slider, .gradio-number, .gradio-dropdown')
+    .forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 3px 10px !important;`))
+
   gradioApp().querySelectorAll('#quicksettings > div.block').forEach(elem => elem.style.padding = "0 !important")
+
+  //inline interrogate / deepdanbooru with tool button
+  const interrogateParent = document.querySelector('#interrogate').parentElement;
+  const toolsParent = document.querySelector('#img2img_clear_prompt').parentElement;
+  const postponeMove = []
+  for (const child of interrogateParent.children) {
+    //do not move child while iterating over parent children
+    postponeMove.push(
+      () => {
+        //max-width: 50px;
+        child.style.maxWidth = "50px"
+        toolsParent.appendChild(child)
+      }
+    )
+  }
+  postponeMove.forEach(f => f())
 
   //add expend to inpainting
   tweakInpainting();
