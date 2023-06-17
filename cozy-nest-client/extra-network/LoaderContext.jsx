@@ -5,7 +5,7 @@ export const LoaderContext = React.createContext({
   ready: false,
 });
 
-function observeDivChanges(targetDiv) {
+function observeDivChanges(targetDiv, prefix) {
   return new Promise((resolve) => {
     let timer; // Holds the timeout reference
 
@@ -14,7 +14,7 @@ function observeDivChanges(targetDiv) {
       timer = setTimeout(() => {
         observer.disconnect(); // Stop observing mutations
         resolve(); // Resolve the Promise
-      }, 200);
+      }, 3000);
     });
 
     observer.observe(targetDiv, { attributes: true, childList: true, subtree: true });
@@ -26,7 +26,7 @@ function observeDivChanges(targetDiv) {
   });
 }
 
-async function requireNativeBloc(prefix) {
+async function requireNativeBloc(prefix, resolve) {
 
   const triggerButton = document.querySelector(`button#${prefix}_extra_networks`)
 
@@ -34,13 +34,20 @@ async function requireNativeBloc(prefix) {
 
   triggerButton.style.display = 'none'
 
-  triggerButton.click()
+  const tabs = document.querySelector(`div#${prefix}_extra_networks`)
+  tabs.style.display = 'none';
 
-  const tabs = document.querySelector(`#${prefix}_extra_tabs`)
+  //for txt2img we need an extra tweak because of the way the DOM / element are built in gradio
+  if (prefix === 'txt2img') {
+    tabs.parentNode.style.marginBottom = 'calc(var(--layout-gap) * -1)';
+  }
+
+  triggerButton.click()
+  resolve()
 
   //setup a mutation observer to detect when the tabs are added
-  await observeDivChanges(tabs)
-  triggerButton.click()
+  await observeDivChanges(tabs, prefix)
+  // triggerButton.click()
   CozyLogger.debug('tabs loaded', prefix)
 }
 
@@ -68,13 +75,12 @@ export function LoaderProvider({children, prefix, resolve}) {
     };
 
     (async () => {
-      await requireNativeBloc(prefix)
+      await requireNativeBloc(prefix, resolve)
       states[prefix] = {
         loaded: true,
         loading: false,
       }
       setReady(true)
-      resolve()
     })()
 
   }, [])

@@ -19,7 +19,7 @@ export function Button(props) {
 }
 
 
-function Loading(props) {
+export function Loading(props) {
 
   const config = JSON.parse(localStorage.getItem('COZY_NEST_CONFIG'))
 

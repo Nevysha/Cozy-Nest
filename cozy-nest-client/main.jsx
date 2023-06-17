@@ -8,11 +8,10 @@ import {CozyLogger} from "./main/CozyLogger.js";
 import {startCozyNestImageBrowser} from "@image-browser/main.jsx";
 import startCozyNestSettings from "@settings/main.jsx";
 import {
-  dummyLoraCard, dummyControlNetBloc, dummySubdirs
+  dummyLoraCard, dummyControlNetBloc, dummySubdirs, getTheme
 } from './main/cozy-utils.js';
 import startCozyPrompt from "./cozy-prompt/main.jsx";
 import {startExtraNetwork} from "./extra-network/main.jsx";
-import Loading from "./main/Loading.js";
 window.CozyTools = {
   dummyLoraCard,
   dummyControlNetBloc,
@@ -32,8 +31,8 @@ export default async function cozyNestLoader()  {
       startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img');
     }
     if (COZY_NEST_CONFIG.enable_extra_network_tweaks === true) {
-      await startExtraNetwork('txt2img');
-      await startExtraNetwork('img2img');
+      await startExtraNetwork('txt2img')
+      await startExtraNetwork('img2img')
     }
 
     startCozyNestImageBrowser();
@@ -55,9 +54,20 @@ window.cozyNestLoader = cozyNestLoader;
     return
   }
 
-  const styleSheet = new CSSStyleSheet();
-  styleSheet.replaceSync(sheet);
-  document.adoptedStyleSheets = [styleSheet];
+  // if (getTheme() === 'dark') {
+    const styleSheet = new CSSStyleSheet();
+    styleSheet.replaceSync(sheet);
+    document.adoptedStyleSheets = [styleSheet];
+  // }
+  // else {
+  //   const {latte} = await import('./main/latte.css?inline');
+  //   const styleSheet = new CSSStyleSheet();
+  //   styleSheet.replaceSync(sheet);
+  //   const latteSheet = new CSSStyleSheet();
+  //   latteSheet.replaceSync(latte);
+  //   document.adoptedStyleSheets = [styleSheet, latteSheet];
+  // }
+
 
   SimpleTimer.time(COZY_NEST_GRADIO_LOAD_DURATION);
 
