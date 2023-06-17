@@ -986,6 +986,22 @@ const onloadSafe = (done) => {
   // }
 }
 
+function addAccordionClickHandler() {
+  const accordions = document.querySelectorAll('.gradio-accordion > .label-wrap');
+
+  accordions.forEach(accordion => {
+    accordion.addEventListener('click', () => {
+      const isOpen = accordion.classList.contains('open');
+      if (isOpen) {
+        accordion.parentElement.classList.add('nevysha-accordion-open')
+      } else {
+        accordion.parentElement.classList.remove('nevysha-accordion-open')
+      }
+    });
+  })
+
+}
+
 const onLoad = (done) => {
 
   let gradioApp = window.gradioApp;
@@ -1107,6 +1123,9 @@ const onLoad = (done) => {
 
   //load settings
   recalcOffsetFromMenuHeight();
+
+  //add click handler on .gradio-accordion > .label-wrap to change border top
+  addAccordionClickHandler();
 
   //add tab wrapper
   addTabWrapper();

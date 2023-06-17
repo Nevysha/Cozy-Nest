@@ -129,6 +129,7 @@ def get_default_settings():
         'waves_color': rgb_to_hex(94, 26, 145),
         'bg_gradiant_color': rgb_to_hex(101, 0, 94),
         'accent_color': rgb_to_hex(92, 175, 214),
+        'secondary_accent_color': '#b67ee1',
         'card_height': '8',
         'card_width': '13',
         'error_popup': True,

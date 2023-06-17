@@ -12,6 +12,7 @@ export default defineConfig({
   },
   plugins: [
     react({
+      // exclude: ['main/cozy-nest-style.css', 'main/*.js'],
       babel: {
         plugins: ['@babel/plugin-syntax-import-assertions'],
       },

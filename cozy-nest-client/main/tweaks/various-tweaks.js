@@ -33,6 +33,16 @@ export function applyAccentColor(hexColor, colorFromLuminance) {
     document.querySelector(':root').style.setProperty('--nevysha-color-from-luminance', `white`);
   }
 }
+export function applySecondaryAccentColor(hexColor) {
+  COZY_NEST_CONFIG.secondary_accent_color = hexColor;
+  const rgbColor = hexToRgb(hexColor);
+  document.querySelector(':root').style.setProperty('--secondary-accent-color', `rgb(${rgbColor})`);
+  if (getLuminance(hexColor) > 0.5) {
+    document.querySelector(':root').style.setProperty('--secondary-accent-color-from-luminance', `black`);
+  } else {
+    document.querySelector(':root').style.setProperty('--secondary-accent-color-from-luminance', `white`);
+  }
+}
 
 export const applyDisabledWavesAndGradiant = (disableWavesAndGradiant) => {
   COZY_NEST_CONFIG.disable_waves_and_gradiant = disableWavesAndGradiant;

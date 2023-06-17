@@ -2,6 +2,8 @@
     /*override by code when applying settings*/
     --nevysha-margin-left: 175px;
     --ae-primary-color: rgb(92, 175, 214);
+    --secondary-accent-color: #5e1a91;
+    --secondary-accent-color-from-luminance: white;
     --nevysha-gradiant-1: rgb(101,0,94);
     --nevysha-text-md: 12px;
     --nevysha-color-from-luminance: black;
@@ -414,7 +416,9 @@ input[type="number"]::-webkit-inner-spin-button::after {
 
 .gradio-accordion {
     background-color: var(--nevysha-light-dark) !important;
-    border: none !important;
+    border-left: none !important;
+    border-bottom: none !important;
+    border-right: none !important;
     border-radius: 3px !important;
     color: var(--secondary-text-color) !important;
     margin: 4px 0 4px 0 !important;
@@ -1860,4 +1864,15 @@ body.nsfw .card {
 
 [id$="_toprow"] {
     gap: 5px !important;
+}
+
+.gradio-accordion {
+    border-top: 1px solid var(--ae-input-border-color) !important;
+}
+.nevysha-accordion-open {
+    border-top: 1px solid var(--secondary-accent-color) !important;
+}
+
+.gradio-accordion > .label-wrap.open {
+    color: var(--secondary-accent-color) !important;
 }

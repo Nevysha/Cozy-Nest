@@ -39,7 +39,7 @@ import {
   applyFontSize,
   setCardHeight,
   setCardWidth,
-  applyMenuPosition, setQuicksettingPosition, setSfwSettings, recalcOffsetFromMenuHeight
+  applyMenuPosition, setQuicksettingPosition, setSfwSettings, recalcOffsetFromMenuHeight, applySecondaryAccentColor
 } from "../main/tweaks/various-tweaks.js";
 import {getTheme} from "../main/cozy-utils.js";
 import {WEBUI_A1111, WEBUI_SDNEXT} from "../main/Constants.js";
@@ -108,6 +108,7 @@ export function App() {
     applyBgGradiantColor(config.bg_gradiant_color);
     applyDisabledWavesAndGradiant(config.disable_waves_and_gradiant);
     applyAccentColor(config.accent_color, config.accent_color);
+    applySecondaryAccentColor(config.secondary_accent_color);
     applyAccentForGenerate(config.accent_generate_button, config.accent_color);
     applyFontSize(config.font_size)
     setCardHeight(config.card_height)
@@ -311,6 +312,10 @@ export function App() {
                           label="Accent Color"
                           color={config.accent_color}
                           onChange={(e) => updateConfig(e, 'accent_color')} />
+                      <PopoverColorPicker
+                        label="Secondary accent Color"
+                        color={config.secondary_accent_color}
+                        onChange={(e) => updateConfig(e, 'secondary_accent_color')} />
                     </RowFullWidth>
                     <RowFullWidth>
                       <Checkbox
