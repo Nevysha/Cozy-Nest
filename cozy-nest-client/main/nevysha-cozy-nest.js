@@ -408,132 +408,6 @@ async function loadVersionData() {
 
 }
 
-function createFolderListComponent() {
-  // create component to add and remove folders to scrap for images browser
-  const componentContainer = document.querySelector('#cnib_output_folder').parentElement;
-  const textarea = document.querySelector('#cnib_output_folder textarea');
-  componentContainer.classList.remove('hidden')
-  $(componentContainer).css('padding', '0 10px')
-
-  //add a label
-  const label = document.createElement('label');
-  label.classList.add('nevysha-label');
-  label.innerHTML = 'Folders to scrap for images';
-  componentContainer.appendChild(label);
-
-  function updateList(foldersList) {
-    document.querySelectorAll('.nevysha-image-browser-folder-container').forEach(el => el.remove());
-    textarea.value = JSON.stringify(foldersList);
-
-    //throw change event to update textarea
-    textarea.dispatchEvent(new Event('change'));
-    textarea.dispatchEvent(new Event('blur'));
-
-    parseAndDisplayFolderSettings();
-  }
-
-  function parseAndDisplayFolderSettings() {
-    const forldersListJson = textarea.value;
-    const foldersList = JSON.parse(forldersListJson);
-
-    for (const folderIndex in foldersList) {
-      const folder = foldersList[folderIndex];
-      const imageBrowserFolderContainer = document.createElement('div');
-      imageBrowserFolderContainer.classList.add('nevysha-image-browser-folder-container');
-      componentContainer.appendChild(imageBrowserFolderContainer);
-
-      //input for path
-      const imageBrowserFolder = document.createElement('textarea');
-      imageBrowserFolder.classList.add('nevysha-image-browser-folder');
-      imageBrowserFolder.value = folder;
-      imageBrowserFolder.setAttribute('enabled', 'false');
-      imageBrowserFolderContainer.appendChild(imageBrowserFolder);
-
-      //button to remove folder
-      const imageBrowserFolderRemoveBtn = document.createElement('button');
-      imageBrowserFolderRemoveBtn.classList.add('nevysha-image-browser-folder-btn');
-      imageBrowserFolderRemoveBtn.innerHTML = 'Remove';
-      imageBrowserFolderRemoveBtn.addEventListener('click', (e) => {
-        //prevent default behavior
-        e.preventDefault();
-        e.stopPropagation();
-
-        //remove from list using index
-        foldersList.splice(folderIndex, 1);
-        updateList(foldersList);
-
-      });
-      imageBrowserFolderContainer.appendChild(imageBrowserFolderRemoveBtn);
-
-    }
-
-    //add a last empty one to add a new folder
-    const imageBrowserFolderContainer = document.createElement('div');
-    imageBrowserFolderContainer.classList.add('nevysha-image-browser-folder-container');
-    componentContainer.appendChild(imageBrowserFolderContainer);
-
-    //input for path
-    const imageBrowserFolder = document.createElement('textarea');
-    imageBrowserFolder.classList.add('nevysha-image-browser-folder');
-    imageBrowserFolder.setAttribute("placeholder", 'Paste a folder path here...');
-    imageBrowserFolderContainer.appendChild(imageBrowserFolder);
-
-    //button to remove folder
-    const imageBrowserFolderAddBtn = document.createElement('button');
-    imageBrowserFolderAddBtn.classList.add('nevysha-image-browser-folder-btn');
-    imageBrowserFolderAddBtn.innerHTML = 'Add';
-    imageBrowserFolderAddBtn.addEventListener('click', (e) => {
-      //prevent default behavior
-      e.preventDefault();
-      e.stopPropagation();
-
-      const folder = imageBrowserFolder.value;
-      if (folder.length <= 0) {
-        showAlert('Warning',"Please enter a folder path to add.");
-        return;
-      }
-
-      const foldersListJson = textarea.value;
-      const foldersList = JSON.parse(foldersListJson);
-
-      //check if folder already exists
-      if (foldersList.includes(folder)) {
-        showAlert('Warning',"This folder is already in the list.");
-        return;
-      }
-
-      foldersList.push(folder);
-
-      updateList(foldersList);
-
-    });
-    imageBrowserFolderContainer.appendChild(imageBrowserFolderAddBtn);
-  }
-
-  parseAndDisplayFolderSettings();
-}
-
-
-function observeElementAdded(targetSelector, callback) {
-  // Create a new MutationObserver instance
-  const observer = new MutationObserver(function(mutationsList) {
-    for (const mutation of mutationsList) {
-      // Check if the target element is added
-      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-        for(const node of mutation.addedNodes) {
-          if(node.matches && node.matches(targetSelector)) {
-            observer.disconnect();
-            callback(node);
-          }
-        }
-      }
-    }
-  });
-
-  // Start observing the document body for changes
-  observer.observe(document.body, { childList: true, subtree: true });
-}
-
 const addTabWrapper = () => {
   const tabWrapper = document.createElement('button');
   //add tabWrapper after the gradio tab
@@ -750,7 +624,6 @@ function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab) {
   }
   cozyImgBrowserPanelWrapper.appendChild(lineWrapper)
 
-  //TODO refactor to factorise code bellow with extraNetwork
   //add a close button inside the line
   const closeCozyImgBrowser = document.createElement('button');
   closeCozyImgBrowser.setAttribute('id', `floating_close_${label}__panel_button`);
@@ -948,8 +821,6 @@ function addOptionsObserver() {
       options.style.bottom = (window.innerHeight - parentRect.top) + 'px';
 
     }
-
-
   }
 
   // Create a function to be called when mutations are observed
