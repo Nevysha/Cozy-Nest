@@ -50,7 +50,7 @@ export default function CozyImage({viewPort, imageHash, index}) {
   function getSrc() {
     // url encode path
     const sanitizedPath = encodeURIComponent(image.path)
-    return `${baseUrl}:${gradioPort}/cozy-nest/image?path=${sanitizedPath}`;
+    return `/cozy-nest/image?path=${sanitizedPath}`;
   }
 
   return (
