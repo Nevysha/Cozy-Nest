@@ -10,6 +10,8 @@
     --extra-network-card-width: 13em;
     --extra-network-card-height: 8em;
     --nevysha-font-color: #d4d4d4;
+    /*--nevysha-icon-fill: var(--secondary-accent-color);*/
+    --nevysha-icon-fill: var(--nevysha-font-color);
 
     --nevysha-font-color-subdued: #9ca3af;
     --menu-top-height: 1px;
@@ -626,7 +628,7 @@ input[type=range]::-webkit-slider-thumb {
 
 .nevysha.svg-icon {
     height: 20px;
-    fill: var(--nevysha-white);
+    fill: var(--nevysha-icon-fill);
     margin: 3px 0 3px 0;
 }
 
