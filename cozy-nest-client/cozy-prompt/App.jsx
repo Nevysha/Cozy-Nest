@@ -163,10 +163,6 @@ export function App({parentId, containerId, tabId}) {
           }}
         />
       </div>
-      <div
-        onMouseDown={handleMouseDown}
-        className="CozyPrompt__resize-handle"
-      />
       <Row>
         <Button onClick={prettify}>Prettify</Button>
         <Button onClick={toggleNative}>{nativeIsVisible ? "Hide" : "Show"} native textarea</Button>
@@ -180,6 +176,12 @@ export function App({parentId, containerId, tabId}) {
           onConfirm={() => clearPrompt()}
         />
       </Row>
+      <div
+        onMouseDown={handleMouseDown}
+        className="CozyPrompt__resize-handle"
+      >
+        <div className="CozyPrompt__resize-handle-line" />
+      </div>
     </Column>
   );
 }

@@ -1909,3 +1909,6 @@ body.nsfw .card {
 .nevysha-script-selected input {
     color: var(--ae-primary-color) !important;
 }
+[id$="_prompt_container"] {
+    gap: 1px !important;
+}
