@@ -4,6 +4,12 @@
 - SD.Next (Vlad's fork) from commit `beff89ba`
 - Will work best on latest version of both as I'm only testing on latest version.
 
+## New features in 2.3.0
+- [x]  Add clear button in prompt
+- [x]  Move "re-use last prompt" button
+- [x]  Add a secondary accent color
+- [x]  Add secondary accent color to some elements (open scripts...)
+
 ## Minor changes & fixes in 2.2.4
 - [x] Fix image url which was hardcoded to port 7860.
 - [x] use data_dir args to locate and save settings.
