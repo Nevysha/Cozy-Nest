@@ -2,7 +2,7 @@
     /*override by code when applying settings*/
     --nevysha-margin-left: 175px;
     --ae-primary-color: rgb(92, 175, 214);
-    --secondary-accent-color: #5e1a91;
+    --secondary-accent-color: #b67ee1;
     --secondary-accent-color-from-luminance: white;
     --nevysha-gradiant-1: rgb(101,0,94);
     --nevysha-text-md: 12px;
@@ -1868,9 +1868,18 @@ body.nsfw .card {
 
 .gradio-accordion {
     border-top: 1px solid var(--ae-input-border-color) !important;
+    border-left: 1px solid var(--block-background-fill) !important;
 }
 .nevysha-accordion-open {
     border-top: 1px solid var(--secondary-accent-color) !important;
+}
+
+[id$="_script_container"] .nevysha-accordion-open {
+    border-left: 1px solid var(--secondary-accent-color) !important;
+}
+[id$="_script_container"] .nevysha-accordion-open .nevysha-accordion-open {
+    border-top: 1px solid var(--secondary-accent-color) !important;
+    border-left: 1px solid var(--block-background-fill) !important;
 }
 
 .gradio-accordion > .label-wrap.open {
