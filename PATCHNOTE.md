@@ -5,10 +5,12 @@
 - Will work best on latest version of both as I'm only testing on latest version.
 
 ## New features in 2.3.0
+- [x]  Add a "clear" button to extras gallery
+- [x]  press escape key to close right panels
+- [x]  Color mode (light, dark) from Cozy Nest settings
 - [x]  Add clear button in prompt
-- [x]  Move "redo last prompt" button
-- [x]  Add a secondary accent color
-- [x]  Add secondary accent color to some elements (open scripts...)
+- [x]  Move prompt tools button ("redo last prompt", ...)
+- [x]  Add a secondary accent color in settings, applied to some elements (open scripts...)
 - [x]  Reworked a lots of padding for a cleaner and more compact view
 
 ## Minor changes & fixes in 2.2.4

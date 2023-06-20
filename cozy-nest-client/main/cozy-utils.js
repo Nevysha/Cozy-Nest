@@ -1,9 +1,7 @@
-export const getTheme = () => {
-  const gradioURL = window.location.href
-  if (!gradioURL.includes('?__theme=')) {
-    return 'dark'
-  }
-  return gradioURL.split('?__theme=')[1];
+export const getTheme = (modeFromConfig) => {
+  modeFromConfig = modeFromConfig || COZY_NEST_CONFIG.color_mode
+
+  return modeFromConfig;
 }
 
 export const hexToRgb = (hex) => {

@@ -668,10 +668,7 @@ function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab) {
     }
   });
 
-  //add listener to open or close the panel using jquery animate
-  cozyImgBrowserBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
+  function toggle() {
     const panel = document.querySelector(`#${label}_panel`);
     if (panel.style.display === 'none') {
       panel.style.display = 'flex'
@@ -682,10 +679,40 @@ function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab) {
         panel.style.display = 'none'
       });
     }
-  });
+  }
+  function close() {
+    const panel = document.querySelector(`#${label}_panel`);
+    if (panel.style.display !== 'none') {
+      $(panel).animate({"margin-right": `-=${panel.offsetWidth}`}, 1, () => {
+        panel.style.display = 'none'
+      });
+    }
+  }
+  function isOpen() {
+    const panel = document.querySelector(`#${label}_panel`);
+    return panel.style.display !== 'none';
+  }
+
+  rightPanelsHandler[label] = {
+    toggle,
+    close,
+    isOpen
+  };
+
+  //add listener to open or close the panel using jquery animate
+  cozyImgBrowserBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggle();
+  })
 }
 
+let rightPanelsHandler = {};
+
 function createRightWrapperDiv() {
+
+  rightPanelsHandler = {};
+
   const tab = document.querySelector(`div#tabs`);
 
   //create wrapper div for the button
@@ -706,6 +733,19 @@ function createRightWrapperDiv() {
   if (COZY_NEST_CONFIG.disable_image_browser !== true) {
     buildRightSlidePanelFor('cozy-img-browser', 'Cozy Image Browser', rightPanBtnWrapper, tab);
   }
+
+  //close all panels if one is open when user press escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      Object.values(rightPanelsHandler).forEach((handler) => {
+        if (handler.isOpen()) {
+          e.preventDefault();
+          e.stopPropagation();
+          handler.close();
+        }
+      })
+    }
+  })
 }
 
 function setButtonVisibilityFromCurrentTab(id) {
@@ -993,12 +1033,22 @@ const onLoad = (done) => {
 
   //create a wrapper div on the right for slidable panels
   createRightWrapperDiv();
+  let lastTab = get_uiCurrentTabContent().id;
   onUiTabChange(() => {
-    CozyLogger.debug("onUiTabChange", get_uiCurrentTabContent().id);
+    CozyLogger.debug(`onUiTabChange newTab:${get_uiCurrentTabContent().id}, lastTab:${lastTab}`);
+
+    if (lastTab === "tab_txt2img") {
+      rightPanelsHandler['cozy-txt2img-extra-network'].close();
+    }
+    else if (lastTab === "tab_img2img") {
+      rightPanelsHandler['cozy-img2img-extra-network'].close();
+    }
 
     if (COZY_NEST_CONFIG.enable_extra_network_tweaks) {
       setButtonVisibilityFromCurrentTab(get_uiCurrentTabContent().id);
     }
+
+    lastTab = get_uiCurrentTabContent().id;
   });
 
   //manage text2img tab
@@ -1014,6 +1064,7 @@ const onLoad = (done) => {
 
   nevysha_magic({prefix: "txt2img"});
   nevysha_magic({prefix: "img2img"});
+  clearGeneratedImage({prefix: "extras"});
 
 
   //general
@@ -1073,18 +1124,16 @@ const onLoad = (done) => {
   //add tab wrapper
   addTabWrapper();
 
-  //apply theme
-  if (getTheme() === "light") {
-    document.querySelector("body").classList.add("nevysha-light")
-    document.querySelectorAll('.gradio-accordion').forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3) !important;`))
-  }
-  else {
-    document.querySelector("body").classList.remove("nevysha-light")
-    document.querySelector("body").classList.add("dark")
-  }
-
   //add observer for .options resize
   addOptionsObserver();
+
+  //legacy : check if url contains __theme which is deprecated
+  if (window.location.href.includes('__theme')) {
+    showAlert(
+      "Warning",
+      "The __theme parameter is deprecated. Please use Cozy Nest settings instead.",
+    )
+  }
 
   /* --------------- TWEAK SOME EXTENSION --------------- */
   //if AWQ-container is present in COZY_NEST_CONFIG.extensions array from localStorage, tweak AWQ

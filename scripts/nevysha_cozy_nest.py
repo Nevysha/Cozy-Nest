@@ -145,6 +145,9 @@ def get_default_settings():
         'enable_clear_button': True,
         'enable_extra_network_tweaks': True,
         'enable_cozy_prompt': True,
+        'carret_style': 'thin',
+        'save_last_prompt_local_storage': True,
+        'color_mode': 'dark',
         'webui': 'unknown'
     }
 

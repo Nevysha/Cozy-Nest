@@ -33,7 +33,8 @@ export function App({parentId, containerId, tabId}) {
   const [nativeIsVisible, setNativeIsVisible] = useState(false);
   const nativeTextareaValue = useExternalTextareaObserver(`#${parentId} label textarea`);
 
-  const [prompt, setPrompt] = useState('');
+  const lastPrompt = '';
+  const [prompt, setPrompt] = useState(lastPrompt);
   const editor = useRef();
 
   const [height, setHeight] = useState(savedHeight);
@@ -47,6 +48,12 @@ export function App({parentId, containerId, tabId}) {
     const event = new Event('input')
     nativeTextarea.dispatchEvent(event)
   }
+
+  useEffect(() => {
+    if (COZY_NEST_CONFIG.save_last_prompt_local_storage) {
+      localStorage.setItem(`cozy-prompt-${containerId}`, prompt);
+    }
+  }, [prompt]);
 
   useEffect(() => {
 
@@ -129,13 +136,17 @@ export function App({parentId, containerId, tabId}) {
     editor.renderer.setScrollMargin(10);
   }
 
+  function isBoldCursor() {
+    return COZY_NEST_CONFIG.carret_style === 'bold'
+  }
+
   return (
     <Column
       style={{
       width: '100%'}}
     >
       <div
-        className="CozyPrompt"
+        className={isBoldCursor() ? "CozyPrompt bold-cursor" : "CozyPrompt"}
         style={{ height: `${height}px` }}
       >
         <AceEditor
