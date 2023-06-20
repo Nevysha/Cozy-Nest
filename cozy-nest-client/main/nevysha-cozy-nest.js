@@ -1019,27 +1019,38 @@ const onLoad = (done) => {
   //general
   tweakButtonsIcons();
 
-  //style tweak to be MORE IMPORTANT than important
-  gradioApp().querySelector('.tabs')
-    .querySelectorAll(".block.padded:not(.gradio-accordion, .gradio-dropdown, .gradio-slider, .gradio-number, #nevyui_sh_options)")
-    .forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 10px !important;`))
 
-  document.querySelectorAll('.gradio-slider, .gradio-number, .gradio-dropdown')
-    .forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 3px 10px !important;`))
+  const img2imgtoolsParent = document.querySelector('#img2img_clear_prompt').parentElement;
+  img2imgtoolsParent.classList.add('nevysha', 'nevysha-prompt-tools')
+  const txt2imgtoolsParent = document.querySelector('#txt2img_clear_prompt').parentElement;
+  txt2imgtoolsParent.classList.add('nevysha', 'nevysha-prompt-tools')
+  const postponeMove = []
 
-  gradioApp().querySelectorAll('#quicksettings > div.block').forEach(elem => elem.style.padding = "0 !important")
+  //inline _styles_row
+  const stylesRowTxt2img = document.querySelector('#txt2img_styles_row');
+  const stylesRowImg2img = document.querySelector('#img2img_styles_row');
+  postponeMove.push(
+    () => {
+      //add stylesRowTxt2img to begin of txt2imgtoolsParent
+      txt2imgtoolsParent.insertBefore(stylesRowTxt2img, txt2imgtoolsParent.firstChild)
+      img2imgtoolsParent.insertBefore(stylesRowImg2img, img2imgtoolsParent.firstChild)
+    })
 
   //inline interrogate / deepdanbooru with tool button
   const interrogateParent = document.querySelector('#interrogate').parentElement;
-  const toolsParent = document.querySelector('#img2img_clear_prompt').parentElement;
-  const postponeMove = []
   for (const child of interrogateParent.children) {
     //do not move child while iterating over parent children
     postponeMove.push(
       () => {
         //max-width: 50px;
-        child.style.maxWidth = "50px"
-        toolsParent.appendChild(child)
+        child.classList.add('nevysha', 'nevysha-interrogate-btn')
+        if (child.id === 'interrogate') {
+          child.innerHTML = 'CLIP'
+        }
+        else if (child.id === 'deepbooru') {
+          child.innerHTML = 'DeepBooru'
+        }
+        img2imgtoolsParent.appendChild(child)
       }
     )
   }
@@ -1069,6 +1080,7 @@ const onLoad = (done) => {
   }
   else {
     document.querySelector("body").classList.remove("nevysha-light")
+    document.querySelector("body").classList.add("dark")
   }
 
   //add observer for .options resize

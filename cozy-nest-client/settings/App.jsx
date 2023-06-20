@@ -27,6 +27,7 @@ import {
   AlertDialogOverlay,
   useDisclosure,
 } from '@chakra-ui/react'
+import { Switch } from '@chakra-ui/react'
 import {PopoverColorPicker} from "./PopoverColorPicker.jsx";
 import {OuputFolderSelector} from "./OuputFolderSelector.jsx";
 import {
@@ -145,6 +146,9 @@ export function App() {
       newConfig[what] = e
 
     setConfig(newConfig)
+  }
+  const switchColorMode = (e) => {
+    //TODO switchColorMode
   }
 
   const saveConfig = () => {
@@ -292,12 +296,20 @@ export function App() {
 
                     </RowFullWidth>
                     <RowFullWidth>
+                      <FormControl display='flex' alignItems='center'>
+                        <FormLabel htmlFor='color-mode' mb='0'>
+                          Color mode : Dark
+                        </FormLabel>
+                        <Switch id='color-mode' onChange={switchColorMode}/>
+                      </FormControl>
+                    </RowFullWidth>
+                    <RowFullWidth>
                       <PopoverColorPicker
-                          label="Font Color"
+                          label="Font Color (dark)"
                           color={config.font_color}
                           onChange={(e) => updateConfig(e, 'font_color')} />
                       <PopoverColorPicker
-                          label="Font Color"
+                          label="Font Color (light)"
                           color={config.font_color_light}
                           onChange={(e) => updateConfig(e, 'font_color_light')} />
                       <PopoverColorPicker

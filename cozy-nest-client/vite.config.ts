@@ -78,11 +78,43 @@ export default defineConfig({
         target: 'ws://127.0.0.1:7860',
         ws: true,
       },
+      //match everything that contains physton_prompt
+      // '^.*physton_prompt/.*$': 'http://127.0.0.1:7860/physton_prompt',
+      '^/cozy-nest-client/physton_prompt/.*': {
+        target: 'http://127.0.0.1:7860',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/cozy-nest-client\/physton_prompt/, '/physton_prompt'),
+      },
+      // '/cozy-nest-client/physton_prompt/*':'http://127.0.0.1:7860/physton_prompt',
+
       'http://127.0.0.1:5173/theme-cozy-json.js': 'http://127.0.0.1:5173/cozy-nest-client/image-browser/src/editor/theme-cozy-json.js',
       //route everything except /cozy-nest-client/ to localhost:7860
       '^(?!.*cozy-nest-client).*$': 'http://127.0.0.1:7860',
-      'http://127.0.0.1:5173/cozy-nest-client/assets/worker-json.js': 'http://127.0.0.1:7860/cozy-nest-client/assets/worker-json.js'
+      'http://127.0.0.1:5173/cozy-nest-client/assets/worker-json.js': 'http://127.0.0.1:7860/cozy-nest-client/assets/worker-json.js',
+
+      // ...generateProxyConfig([
+      //   'get_version',
+      //   'get_remote_versions',
+      //   'get_config',
+      //   'install_package',
+      // ]),
+
+
+
     }
   },
-  base: 'cozy-nest-client'
+  base: '/cozy-nest-client'
 })
+
+function generateProxyConfig(urls) {
+  const proxyConfig = {};
+
+  urls.forEach((url) => {
+    proxyConfig[`/${url}`] = {
+      target: `http://127.0.0.1:7860/${url}`,
+      changeOrigin: true,
+    };
+  });
+
+  return proxyConfig;
+}

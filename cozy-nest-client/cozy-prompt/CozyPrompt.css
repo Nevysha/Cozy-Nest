@@ -59,6 +59,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin: 2px 0;
 }
 .CozyPrompt__resize-handle-line {
     height: 2px;

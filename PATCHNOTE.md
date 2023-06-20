@@ -9,6 +9,7 @@
 - [x]  Move "redo last prompt" button
 - [x]  Add a secondary accent color
 - [x]  Add secondary accent color to some elements (open scripts...)
+- [x]  Reworked a lots of padding for a cleaner and more compact view
 
 ## Minor changes & fixes in 2.2.4
 - [x] Fix image url which was hardcoded to port 7860.
