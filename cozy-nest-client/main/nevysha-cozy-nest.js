@@ -3,7 +3,7 @@ import $ from "jquery";
 window.$ = window.jQuery = $;
 
 import SimpleTimer from "./SimpleTimer.js";
-import {getTheme, isUpToDate, getLuminance} from './cozy-utils.js';
+import {getTheme, isUpToDate, getLuminance, findNearestParent} from './cozy-utils.js';
 import {
   COZY_NEST_DOM_TWEAK_LOAD_DURATION,
   COZY_NEST_GRADIO_LOAD_DURATION,
@@ -28,6 +28,7 @@ import {
 import {CozyLogger} from "./CozyLogger.js";
 import clearGeneratedImage from './tweaks/clear-generated-image.js'
 import {createAlertDiv, showAlert} from "./tweaks/cozy-alert.js";
+import DOM_IDS from "./dom_ids.js";
 
 
 const addDraggable = ({prefix}) => {
@@ -408,132 +409,6 @@ async function loadVersionData() {
 
 }
 
-function createFolderListComponent() {
-  // create component to add and remove folders to scrap for images browser
-  const componentContainer = document.querySelector('#cnib_output_folder').parentElement;
-  const textarea = document.querySelector('#cnib_output_folder textarea');
-  componentContainer.classList.remove('hidden')
-  $(componentContainer).css('padding', '0 10px')
-
-  //add a label
-  const label = document.createElement('label');
-  label.classList.add('nevysha-label');
-  label.innerHTML = 'Folders to scrap for images';
-  componentContainer.appendChild(label);
-
-  function updateList(foldersList) {
-    document.querySelectorAll('.nevysha-image-browser-folder-container').forEach(el => el.remove());
-    textarea.value = JSON.stringify(foldersList);
-
-    //throw change event to update textarea
-    textarea.dispatchEvent(new Event('change'));
-    textarea.dispatchEvent(new Event('blur'));
-
-    parseAndDisplayFolderSettings();
-  }
-
-  function parseAndDisplayFolderSettings() {
-    const forldersListJson = textarea.value;
-    const foldersList = JSON.parse(forldersListJson);
-
-    for (const folderIndex in foldersList) {
-      const folder = foldersList[folderIndex];
-      const imageBrowserFolderContainer = document.createElement('div');
-      imageBrowserFolderContainer.classList.add('nevysha-image-browser-folder-container');
-      componentContainer.appendChild(imageBrowserFolderContainer);
-
-      //input for path
-      const imageBrowserFolder = document.createElement('textarea');
-      imageBrowserFolder.classList.add('nevysha-image-browser-folder');
-      imageBrowserFolder.value = folder;
-      imageBrowserFolder.setAttribute('enabled', 'false');
-      imageBrowserFolderContainer.appendChild(imageBrowserFolder);
-
-      //button to remove folder
-      const imageBrowserFolderRemoveBtn = document.createElement('button');
-      imageBrowserFolderRemoveBtn.classList.add('nevysha-image-browser-folder-btn');
-      imageBrowserFolderRemoveBtn.innerHTML = 'Remove';
-      imageBrowserFolderRemoveBtn.addEventListener('click', (e) => {
-        //prevent default behavior
-        e.preventDefault();
-        e.stopPropagation();
-
-        //remove from list using index
-        foldersList.splice(folderIndex, 1);
-        updateList(foldersList);
-
-      });
-      imageBrowserFolderContainer.appendChild(imageBrowserFolderRemoveBtn);
-
-    }
-
-    //add a last empty one to add a new folder
-    const imageBrowserFolderContainer = document.createElement('div');
-    imageBrowserFolderContainer.classList.add('nevysha-image-browser-folder-container');
-    componentContainer.appendChild(imageBrowserFolderContainer);
-
-    //input for path
-    const imageBrowserFolder = document.createElement('textarea');
-    imageBrowserFolder.classList.add('nevysha-image-browser-folder');
-    imageBrowserFolder.setAttribute("placeholder", 'Paste a folder path here...');
-    imageBrowserFolderContainer.appendChild(imageBrowserFolder);
-
-    //button to remove folder
-    const imageBrowserFolderAddBtn = document.createElement('button');
-    imageBrowserFolderAddBtn.classList.add('nevysha-image-browser-folder-btn');
-    imageBrowserFolderAddBtn.innerHTML = 'Add';
-    imageBrowserFolderAddBtn.addEventListener('click', (e) => {
-      //prevent default behavior
-      e.preventDefault();
-      e.stopPropagation();
-
-      const folder = imageBrowserFolder.value;
-      if (folder.length <= 0) {
-        showAlert('Warning',"Please enter a folder path to add.");
-        return;
-      }
-
-      const foldersListJson = textarea.value;
-      const foldersList = JSON.parse(foldersListJson);
-
-      //check if folder already exists
-      if (foldersList.includes(folder)) {
-        showAlert('Warning',"This folder is already in the list.");
-        return;
-      }
-
-      foldersList.push(folder);
-
-      updateList(foldersList);
-
-    });
-    imageBrowserFolderContainer.appendChild(imageBrowserFolderAddBtn);
-  }
-
-  parseAndDisplayFolderSettings();
-}
-
-
-function observeElementAdded(targetSelector, callback) {
-  // Create a new MutationObserver instance
-  const observer = new MutationObserver(function(mutationsList) {
-    for (const mutation of mutationsList) {
-      // Check if the target element is added
-      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-        for(const node of mutation.addedNodes) {
-          if(node.matches && node.matches(targetSelector)) {
-            observer.disconnect();
-            callback(node);
-          }
-        }
-      }
-    }
-  });
-
-  // Start observing the document body for changes
-  observer.observe(document.body, { childList: true, subtree: true });
-}
-
 const addTabWrapper = () => {
   const tabWrapper = document.createElement('button');
   //add tabWrapper after the gradio tab
@@ -750,7 +625,6 @@ function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab) {
   }
   cozyImgBrowserPanelWrapper.appendChild(lineWrapper)
 
-  //TODO refactor to factorise code bellow with extraNetwork
   //add a close button inside the line
   const closeCozyImgBrowser = document.createElement('button');
   closeCozyImgBrowser.setAttribute('id', `floating_close_${label}__panel_button`);
@@ -795,10 +669,7 @@ function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab) {
     }
   });
 
-  //add listener to open or close the panel using jquery animate
-  cozyImgBrowserBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
+  function toggle() {
     const panel = document.querySelector(`#${label}_panel`);
     if (panel.style.display === 'none') {
       panel.style.display = 'flex'
@@ -809,10 +680,40 @@ function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab) {
         panel.style.display = 'none'
       });
     }
-  });
+  }
+  function close() {
+    const panel = document.querySelector(`#${label}_panel`);
+    if (panel.style.display !== 'none') {
+      $(panel).animate({"margin-right": `-=${panel.offsetWidth}`}, 1, () => {
+        panel.style.display = 'none'
+      });
+    }
+  }
+  function isOpen() {
+    const panel = document.querySelector(`#${label}_panel`);
+    return panel.style.display !== 'none';
+  }
+
+  rightPanelsHandler[label] = {
+    toggle,
+    close,
+    isOpen
+  };
+
+  //add listener to open or close the panel using jquery animate
+  cozyImgBrowserBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggle();
+  })
 }
 
+let rightPanelsHandler = {};
+
 function createRightWrapperDiv() {
+
+  rightPanelsHandler = {};
+
   const tab = document.querySelector(`div#tabs`);
 
   //create wrapper div for the button
@@ -833,6 +734,19 @@ function createRightWrapperDiv() {
   if (COZY_NEST_CONFIG.disable_image_browser !== true) {
     buildRightSlidePanelFor('cozy-img-browser', 'Cozy Image Browser', rightPanBtnWrapper, tab);
   }
+
+  //close all panels if one is open when user press escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      Object.values(rightPanelsHandler).forEach((handler) => {
+        if (handler.isOpen()) {
+          e.preventDefault();
+          e.stopPropagation();
+          handler.close();
+        }
+      })
+    }
+  })
 }
 
 function setButtonVisibilityFromCurrentTab(id) {
@@ -948,8 +862,6 @@ function addOptionsObserver() {
       options.style.bottom = (window.innerHeight - parentRect.top) + 'px';
 
     }
-
-
   }
 
   // Create a function to be called when mutations are observed
@@ -977,20 +889,94 @@ function addOptionsObserver() {
   observer.observe(targetNode, config);
 }
 
-const onloadSafe = (done) => {
-  // try {
-  onLoad(done);
-  // } catch (e) {
-  //   console.error("Failed to init Cozy Nest", e);
-  //   done();
-  // }
+const onloadSafe = (done, error) => {
+  try {
+    onLoad(done, error);
+  } catch (e) {
+    console.error("Failed to init Cozy Nest", e);
+    error();
+  }
 }
 
-const onLoad = (done) => {
+function addAccordionClickHandler() {
+  const accordions = document.querySelectorAll('.gradio-accordion > .label-wrap');
+
+  accordions.forEach(accordion => {
+    accordion.addEventListener('click', () => {
+      const isOpen = accordion.classList.contains('open');
+      if (isOpen) {
+        accordion.parentElement.classList.add('nevysha-accordion-open')
+        accordion.parentElement
+          .setAttribute("style"
+            , `${accordion.parentElement.getAttribute("style")} border-width: 2px 2px 0px !important;`);
+      } else {
+        accordion.parentElement.classList.remove('nevysha-accordion-open')
+        accordion.parentElement.setAttribute("style",
+          `${accordion.parentElement.getAttribute("style").replace('border-width: 2px 2px 0px !important;', '')}`)
+      }
+    });
+  })
+
+}
+
+function addScriptSelectionHandler() {
+  const scriptSelects = document.querySelectorAll('#script_list');
+
+  scriptSelects.forEach(input => {
+
+    //border-width: 2px 2px 0px !important;
+    input.setAttribute("style", `${input.getAttribute("style")} border-width: 2px 2px 0px !important;`)
+
+    // add nevysha-scripts class to all next siblings until there is no more
+    let nextSibling = input.parentElement.nextElementSibling;
+
+    while (nextSibling !== null) {
+      nextSibling.classList.add('nevysha-scripts');
+      nextSibling = nextSibling.nextElementSibling;
+    }
+  })
+
+  // Create a Mutation Observer
+  const observer = new MutationObserver(mutations => {
+
+    mutations.forEach(mutation => {
+
+      if (mutation.type === 'subtree') {
+        CozyLogger.debug(`subtree mutation: ${mutation.removedNodes}`)
+      }
+
+      if (mutation.type === 'attributes') {
+        let changedInput = mutation.target;
+        if (!mutation.target instanceof HTMLInputElement) {
+          changedInput = mutation.target.querySelector('input');
+        }
+        if (!changedInput) {
+          return;
+        }
+        const newValue = changedInput.value;
+
+        if (newValue && newValue !== 'None' && newValue.length > 0) {
+          CozyLogger.debug('script: newValue', newValue);
+          findNearestParent(changedInput, '#script_list')?.classList.add('nevysha-script-selected');
+        } else if (newValue === 'None'){
+          CozyLogger.debug('script deselected');
+          findNearestParent(changedInput, '#script_list')?.classList.remove('nevysha-script-selected');
+        }
+      }
+    });
+  });
+
+  // Configure and start the observer
+  scriptSelects.forEach(input => {
+    observer.observe(input, { attributes: true, childList: true, subtree: true });
+  });
+}
+
+const onLoad = (done, error) => {
 
   let gradioApp = window.gradioApp;
   if (typeof gradioApp !== "function") {
-    setTimeout(() => onloadSafe(done), 200);
+    setTimeout(() => onloadSafe(done, error), 200);
     return
   }
 
@@ -998,7 +984,7 @@ const onLoad = (done) => {
   const quicksettings = gradioApp().getElementById("quicksettings")
 
   if (!quicksettings) {
-    setTimeout(() => onloadSafe(done), 200);
+    setTimeout(() => onloadSafe(done, error), 200);
     return
   }
 
@@ -1048,12 +1034,22 @@ const onLoad = (done) => {
 
   //create a wrapper div on the right for slidable panels
   createRightWrapperDiv();
+  let lastTab = get_uiCurrentTabContent().id;
   onUiTabChange(() => {
-    CozyLogger.debug("onUiTabChange", get_uiCurrentTabContent().id);
+    CozyLogger.debug(`onUiTabChange newTab:${get_uiCurrentTabContent().id}, lastTab:${lastTab}`);
+
+    if (lastTab === "tab_txt2img") {
+      rightPanelsHandler['cozy-txt2img-extra-network'].close();
+    }
+    else if (lastTab === "tab_img2img") {
+      rightPanelsHandler['cozy-img2img-extra-network'].close();
+    }
 
     if (COZY_NEST_CONFIG.enable_extra_network_tweaks) {
       setButtonVisibilityFromCurrentTab(get_uiCurrentTabContent().id);
     }
+
+    lastTab = get_uiCurrentTabContent().id;
   });
 
   //manage text2img tab
@@ -1069,32 +1065,44 @@ const onLoad = (done) => {
 
   nevysha_magic({prefix: "txt2img"});
   nevysha_magic({prefix: "img2img"});
+  clearGeneratedImage({prefix: "extras"});
 
 
   //general
   tweakButtonsIcons();
 
-  //style tweak to be MORE IMPORTANT than important
-  gradioApp().querySelector('.tabs')
-    .querySelectorAll(".block.padded:not(.gradio-accordion, .gradio-dropdown, .gradio-slider, .gradio-number, #nevyui_sh_options)")
-    .forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 10px !important;`))
 
-  document.querySelectorAll('.gradio-slider, .gradio-number, .gradio-dropdown')
-    .forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} padding: 3px 10px !important;`))
+  const img2imgtoolsParent = document.querySelector(`#${DOM_IDS.get('clear_prompt')('img2img')}`).parentElement;
+  img2imgtoolsParent.classList.add('nevysha', 'nevysha-prompt-tools')
+  const txt2imgtoolsParent = document.querySelector(`#${DOM_IDS.get('clear_prompt')('txt2img')}`).parentElement;
+  txt2imgtoolsParent.classList.add('nevysha', 'nevysha-prompt-tools')
+  const postponeMove = []
 
-  gradioApp().querySelectorAll('#quicksettings > div.block').forEach(elem => elem.style.padding = "0 !important")
+  //inline _styles_row
+  const stylesRowTxt2img = document.querySelector('#txt2img_styles_row');
+  const stylesRowImg2img = document.querySelector('#img2img_styles_row');
+  postponeMove.push(
+    () => {
+      //add stylesRowTxt2img to begin of txt2imgtoolsParent
+      txt2imgtoolsParent.insertBefore(stylesRowTxt2img, txt2imgtoolsParent.firstChild)
+      img2imgtoolsParent.insertBefore(stylesRowImg2img, img2imgtoolsParent.firstChild)
+    })
 
   //inline interrogate / deepdanbooru with tool button
   const interrogateParent = document.querySelector('#interrogate').parentElement;
-  const toolsParent = document.querySelector('#img2img_clear_prompt').parentElement;
-  const postponeMove = []
   for (const child of interrogateParent.children) {
     //do not move child while iterating over parent children
     postponeMove.push(
       () => {
         //max-width: 50px;
-        child.style.maxWidth = "50px"
-        toolsParent.appendChild(child)
+        child.classList.add('nevysha', 'nevysha-interrogate-btn')
+        if (child.id === 'interrogate') {
+          child.innerHTML = 'CLIP'
+        }
+        else if (child.id === 'deepbooru') {
+          child.innerHTML = 'DeepBooru'
+        }
+        img2imgtoolsParent.appendChild(child)
       }
     )
   }
@@ -1108,20 +1116,25 @@ const onLoad = (done) => {
   //load settings
   recalcOffsetFromMenuHeight();
 
+  //add click handler on .gradio-accordion > .label-wrap to change border top
+  addAccordionClickHandler();
+
+  //add script selection handler
+  addScriptSelectionHandler();
+
   //add tab wrapper
   addTabWrapper();
 
-  //apply theme
-  if (getTheme() === "light") {
-    document.querySelector("body").classList.add("nevysha-light")
-    document.querySelectorAll('.gradio-accordion').forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3) !important;`))
-  }
-  else {
-    document.querySelector("body").classList.remove("nevysha-light")
-  }
-
   //add observer for .options resize
   addOptionsObserver();
+
+  //legacy : check if url contains __theme which is deprecated
+  if (window.location.href.includes('__theme')) {
+    showAlert(
+      "Warning",
+      "The __theme parameter is deprecated. Please use Cozy Nest settings instead.",
+    )
+  }
 
   /* --------------- TWEAK SOME EXTENSION --------------- */
   //if AWQ-container is present in COZY_NEST_CONFIG.extensions array from localStorage, tweak AWQ
@@ -1166,6 +1179,7 @@ async function detectWebuiContext() {
   }
   CozyLogger.debug(`webui is ${COZY_NEST_CONFIG.webui}`)
 }
+
 
 /**
  * Need to be called after the page and the script is loaded
@@ -1215,6 +1229,31 @@ export default async function cozyNestModuleLoader(extraCozyNestModulesLoader) {
             "Cozy Nest detected that you are using SD.Next and running Cozy Nest for the first time. To ensure compatibility, please restart the server."
         )
       resolve();
+    },
+    () => {
+
+      CozyLogger.error(`ERROR loading CozyNest.`);
+
+      try {
+        //remove #nevysha-loading from DOM
+        Loading.stop();
+
+        SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
+        SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
+      }
+      catch (ignored) {}
+
+      showAlert(
+        "Error",
+        "There was an error while loading Cozy Nest. Ui will fallback to default.",
+        //reload by adding ?CozyNest=No to the url
+        () => {
+          window.location.replace(`${window.location.href}#CozyNest=No`)
+          window.location.reload()
+        }
+      )
+
+      resolve();
     });
   })
 };
@@ -1225,21 +1264,26 @@ function setupErrorHandling() {
   //set a global error handler
   window.addEventListener('error', function ({message, filename , lineno, colno, error }) {
 
-    //TODO uncomment
+    //if filename does not contains Cozy-Nest, ignore
+    if (!filename.toLowerCase().includes('cozy-nest')) return;
 
-    // // get setting_nevyui_errorPopup checkbox value
-    // const errorPopup = document.querySelector('#setting_nevyui_errorPopup').querySelector("input").checked;
-    // if (!errorPopup) return;
-    //
-    // //if filename does not contains Cozy-Nest, ignore
-    // if (!filename.toLowerCase().includes('cozy-nest')) return;
-    //
-    // // Handle the error here
-    // populateInstanceInfoDialog();
-    // document.querySelector('#cozy_nest_error_handling_display').innerHTML = `An error occurred: ${message} at ${filename } line ${lineno} column ${colno}`;
-    // document.querySelector('#cozy_nest_error_handling_display_stack').innerHTML = error.stack;
-    // document.querySelector('#cozy_nest_error_handling_display_stack').setAttribute('style', 'display: block;');
-    // showInstanceInfoDialog();
+    try {
+      //remove #nevysha-loading from DOM
+      Loading.stop();
+      SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
+      SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
+    }
+    catch (ignored) {}
+
+    showAlert(
+      "Error",
+      "There was an error while loading Cozy Nest. Ui will fallback to default.",
+      //reload by adding ?CozyNest=No to the url
+      () => {
+        window.location.replace(`${window.location.href}#CozyNest=No`)
+        window.location.reload()
+      }
+    )
   });
 }
 

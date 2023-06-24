@@ -1,8 +1,17 @@
 ## Compatibility
 
-- Automatic1111's webui 1.3.1 release.
-- SD.Next (Vlad's fork) from commit `beff89ba`
-- Will work best on latest version of both as I'm only testing on latest version.
+- Automatic1111's webui 1.3.2 release.
+
+## New features in 2.3.0
+- [x]  DROPPING SUPPORT FOR SD.NEXT. Cozy Nest is now only compatible with Automatic1111's webui. Maintaining compatibility with SD.Next was too much work for me. I'm sorry for the SD.Next users.
+- [x]  Civitai Helper and its 4 button on thumbnails should work properly.
+- [x]  Add a "clear" button to extras gallery
+- [x]  press escape key to close right panels
+- [x]  Color mode (light, dark) from Cozy Nest settings
+- [x]  Add clear button in prompt
+- [x]  Move prompt tools button ("redo last prompt", ...)
+- [x]  Add a secondary accent color in settings, applied to some elements (open scripts...)
+- [x]  Reworked a lots of padding for a cleaner and more compact view
 
 ## Minor changes & fixes in 2.2.4
 - [x] Fix image url which was hardcoded to port 7860.

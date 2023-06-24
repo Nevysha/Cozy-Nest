@@ -1,9 +1,9 @@
-export const getTheme = () => {
-  const gradioURL = window.location.href
-  if (!gradioURL.includes('?__theme=')) {
-    return 'dark'
-  }
-  return gradioURL.split('?__theme=')[1];
+import {CozyLogger} from "./CozyLogger.js";
+
+export const getTheme = (modeFromConfig) => {
+  modeFromConfig = modeFromConfig || COZY_NEST_CONFIG.color_mode
+
+  return modeFromConfig;
 }
 
 export const hexToRgb = (hex) => {
@@ -46,6 +46,19 @@ export const getLuminance = (hexcolor) => {
   return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
 }
 
+export function findNearestParent(element, selector) {
+  let parent = element.parentElement;
+
+  while (parent !== null) {
+    if (parent.matches(selector)) {
+      return parent;
+    }
+    parent = parent.parentElement;
+  }
+
+  return null;
+}
+
 const COLOR_BRIGHTNESS_FACTOR = 0.75;
 export const getSubduedFontColor = (hexCode) => {
   // Remove the '#' symbol if present
@@ -63,6 +76,24 @@ export const getSubduedFontColor = (hexCode) => {
 
   // Convert the decreased RGB values back to hex
   return `rgb(${decreasedRed},${decreasedGreen},${decreasedBlue})`;
+}
+
+export const hasCozyNestNo = () => {
+  //check if the param CozyNest=No is present in the url
+  const urlParams = new URLSearchParams(window.location.search);
+  const cozyNestParam = urlParams.get('CozyNest');
+  //if the param is present and set to No,
+  // or if url contains #CozyNest=No
+  // disable Cozy Nest
+  if (cozyNestParam === "No" || window.location.hash.includes("CozyNest=No")) {
+    CozyLogger.log("Cozy Nest disabled by url param")
+    //remove the css with Cozy-Nest in the url
+    document.querySelectorAll('link').forEach(link => {
+      if (link.href.includes("Cozy-Nest")) link.remove()
+    })
+    return true;
+  }
+  return false;
 }
 
 //dummy method

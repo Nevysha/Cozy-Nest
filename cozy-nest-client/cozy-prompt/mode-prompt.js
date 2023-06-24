@@ -1,5 +1,3 @@
-import {CozyLogger} from "../main/CozyLogger.js";
-
 ace.define("ace/mode/prompt", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text"], function (require, exports, module) {
   const oop = require("ace/lib/oop");
   const TextMode = require("ace/mode/text").Mode;
@@ -17,7 +15,6 @@ ace.define("ace/mode/prompt", ["require", "exports", "module", "ace/lib/oop", "a
   CustomMode.prototype.$id = "ace/mode/prompt";
 
   (function() {
-    CozyLogger.debug(`what is this:`,this,  arguments);
   }).call(CustomMode.prototype);
 
   // Export the mode

@@ -1,4 +1,4 @@
-import {getLuminance, getSubduedFontColor, hexToRgb} from "../cozy-utils.js";
+import {getLuminance, getSubduedFontColor, getTheme, hexToRgb} from "../cozy-utils.js";
 import $ from "jquery";
 import {WEBUI_SDNEXT} from "../Constants.js";
 
@@ -11,10 +11,28 @@ export function applyWavesColor(hexColor) {
 }
 
 export function applyFontColor(hexColor) {
-  COZY_NEST_CONFIG.font_color = hexColor;
+  if (COZY_NEST_CONFIG.color_mode === 'dark') {
+    COZY_NEST_CONFIG.font_color = hexColor;
+  }
+  else {
+    COZY_NEST_CONFIG.font_color_light = hexColor;
+  }
   const rgbColor = hexToRgb(hexColor);
   document.querySelector(':root').style.setProperty('--nevysha-font-color', `rgb(${rgbColor})`);
   document.querySelector(':root').style.setProperty('--nevysha-font-color-subdued', getSubduedFontColor(hexColor));
+}
+
+export function applyColorMode(modeFromConfig) {
+  COZY_NEST_CONFIG.color_mode = modeFromConfig;
+  //apply color mode
+  if (getTheme(modeFromConfig) === "light") {
+    document.querySelector("body").classList.add("nevysha-light")
+    // document.querySelectorAll('.gradio-accordion').forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3) !important;`))
+  }
+  else {
+    document.querySelector("body").classList.remove("nevysha-light")
+    document.querySelector("body").classList.add("dark")
+  }
 }
 
 export function applyBgGradiantColor(hexColor) {
@@ -31,6 +49,16 @@ export function applyAccentColor(hexColor, colorFromLuminance) {
     document.querySelector(':root').style.setProperty('--nevysha-color-from-luminance', `black`);
   } else {
     document.querySelector(':root').style.setProperty('--nevysha-color-from-luminance', `white`);
+  }
+}
+export function applySecondaryAccentColor(hexColor) {
+  COZY_NEST_CONFIG.secondary_accent_color = hexColor;
+  const rgbColor = hexToRgb(hexColor);
+  document.querySelector(':root').style.setProperty('--secondary-accent-color', `rgb(${rgbColor})`);
+  if (getLuminance(hexColor) > 0.5) {
+    document.querySelector(':root').style.setProperty('--secondary-accent-color-from-luminance', `black`);
+  } else {
+    document.querySelector(':root').style.setProperty('--secondary-accent-color-from-luminance', `white`);
   }
 }
 

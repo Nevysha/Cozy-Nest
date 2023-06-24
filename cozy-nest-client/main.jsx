@@ -3,15 +3,16 @@ import '@fontsource-variable/caveat';
 import sheet from './main/cozy-nest-style.css?inline' assert { type: 'css' };
 import cozyNestModuleLoader, {fetchCozyNestConfig} from './main/nevysha-cozy-nest.js'
 import SimpleTimer from "./main/SimpleTimer.js";
-import {COZY_NEST_GRADIO_LOAD_DURATION} from "./main/Constants.js";
+import {COZY_NEST_GRADIO_LOAD_DURATION, WEBUI_SDNEXT} from "./main/Constants.js";
 import {CozyLogger} from "./main/CozyLogger.js";
 import {startCozyNestImageBrowser} from "@image-browser/main.jsx";
 import startCozyNestSettings from "@settings/main.jsx";
 import {
-  dummyLoraCard, dummyControlNetBloc, dummySubdirs, getTheme
+  dummyLoraCard, dummyControlNetBloc, dummySubdirs, getTheme, hasCozyNestNo
 } from './main/cozy-utils.js';
 import startCozyPrompt from "./cozy-prompt/main.jsx";
 import {startExtraNetwork} from "./extra-network/main.jsx";
+import {OverrideUiJs} from "./main/override_ui.js";
 window.CozyTools = {
   dummyLoraCard,
   dummyControlNetBloc,
@@ -27,8 +28,10 @@ export default async function cozyNestLoader()  {
 
 
     if (COZY_NEST_CONFIG.enable_cozy_prompt === true) {
-      startCozyPrompt('txt2img_prompt', 'cozy_nest_prompt_txt2img');
-      startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img');
+      startCozyPrompt('txt2img_prompt', 'cozy_nest_prompt_txt2img', 'txt2img');
+      startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img', 'img2img');
+
+      OverrideUiJs.override_confirm_clear_prompt();
     }
     if (COZY_NEST_CONFIG.enable_extra_network_tweaks === true) {
       await startExtraNetwork('txt2img')
@@ -36,21 +39,18 @@ export default async function cozyNestLoader()  {
     }
 
     startCozyNestImageBrowser();
+
+    if (COZY_NEST_CONFIG.webui === WEBUI_SDNEXT) {
+      alert("I'm sorry, but the SDNext webui is not supported by cozy-nest atm. You should uninstall cozy-nest.");
+    }
+
   });
 }
 
 window.cozyNestLoader = cozyNestLoader;
 
 (async () => {
-  //check if the param CozyNest=No is present in the url
-  const urlParams = new URLSearchParams(window.location.search);
-  const cozyNestParam = urlParams.get('CozyNest');
-  if (cozyNestParam === "No") {
-    CozyLogger.log("Cozy Nest disabled by url param")
-    //remove the css with Cozy-Nest in the url
-    document.querySelectorAll('link').forEach(link => {
-      if (link.href.includes("Cozy-Nest")) link.remove()
-    })
+  if (hasCozyNestNo()) {
     return
   }
 

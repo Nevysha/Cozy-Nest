@@ -1,3 +1,8 @@
+/**
+ * This file is not part of the Vite build process.
+ * It MUST NOT use any ES6+ features.
+ */
+
 (() => {
 
   //check if url contains cozy-nest-client. If yes, stop here cause we are in dev mode
