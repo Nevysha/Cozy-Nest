@@ -12,7 +12,7 @@ Cozy Nest is a UI extension for Automatic's sd-webui.
 
 - From Automatic1111's webui 1.3.2 release.
  
-**DROPPING SUPPORT FOR SD.NEXT. Cozy Nest is now only compatible with Automatic1111's webui. Maintaining compatibility with SD.Next was too much work for me. I'm sorry for the SD.Next users.**
+![](https://placehold.co/15x15/f03c15/f03c15.png) **DROPPING SUPPORT FOR SD.NEXT. Cozy Nest is now only compatible with Automatic1111's webui. Maintaining compatibility with SD.Next was too much work for me. I'm sorry for the SD.Next users.**
 
 ## Features:
 - [x]  Fully integrated Image Browser. Lots of bugs and missing features. Please be kind with Github issues.
@@ -62,8 +62,6 @@ Tested in Chrome, should work in Firefox with minor bug. I plan to fix it later.
 - [ ]  Metadata display in image browser may display "Error parsing metadata"
 - [ ]  Partial compatibility with Firefox and Opera GX
 - [ ]  Most tweak will not support a live window resize (nor F11 to go fullscreen)
-- [ ]  Some user report a missing scrollbar in Extra network tab
-- [ ]  Some user report an crash when attempting to open Extra Network tab
 
 It's made by being a bit hacky on the DOM to tweaks Gradio default features and existing css of Auto1111. It will probably break with each update of auto1111, but I'll try to keep it up to date.
 
@@ -75,10 +73,10 @@ It's made by being a bit hacky on the DOM to tweaks Gradio default features and 
    https://github.com/Nevysha/Cozy-Nest
 
 Or search for Cozy Nest in the extension tab 
-(you'll have to check ads because of my ko-fi link inside the extension).
 
 # Looks
 
+![Screenshot 2023-06-24 154827](https://github.com/Nevysha/Cozy-Nest/assets/122687716/7db13230-6a27-4f16-98fd-3df84e83c8ff)
 ![](https://github.com/Nevysha/Cozy-Nest/blob/main/screenshots/chrome-capture-2023-4-2%20(1).png?raw=true)
 ![](https://github.com/Nevysha/Cozy-Nest/blob/main/screenshots/Screenshot%202023-05-03%20100850.png?raw=true)
 
