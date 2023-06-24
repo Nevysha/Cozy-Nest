@@ -295,9 +295,14 @@ def on_ui_tabs():
         if version['app'] == 'sd.next':
             config['webui'] = 'sd.next'
             config['fetch_output_folder_from_a1111_settings'] = False
+            config['enable_cozy_prompt'] = False
         else:
             config['webui'] = 'auto1111'
         save_settings(config)
+
+    if config['webui'] == 'sd.next':
+        config['enable_cozy_prompt'] = False
+        config['fetch_output_folder_from_a1111_settings'] = False
 
     # check if cnib_output_folder is empty and/or need to be fetched from a1111 settings
     cnib_output_folder = config.get('cnib_output_folder')
@@ -395,13 +400,6 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
         "/cozy-nest-client/",
         StaticFiles(directory=f"{cwd}/client/"),
         name="cozy-nest-client",
-    )
-
-    # route for /cozy-nest-client/cozy-prompt/<file>
-    app.mount(
-        "/cozy-nest-client/cozy-prompt/",
-        StaticFiles(directory=f"{cwd}/cozy-nest-client/cozy-prompt/"),
-        name="cozy-prompt",
     )
 
     @app.post("/cozy-nest/config")
