@@ -393,8 +393,10 @@ export function App() {
                   </TabPanel>
 
                   <TabPanel css={nevyshaScrollbar}>
+                    {config.webui === WEBUI_SDNEXT && <span style={{color:'#fd4141', fontWeight:'bold'}}>Cozy Prompt is not available in SD.Next</span>}
                     <Checkbox
                       isChecked={config.enable_cozy_prompt}
+                      isDisabled={config.webui === WEBUI_SDNEXT}
                       onChange={(e) => setConfig({...config, enable_cozy_prompt: e.target.checked})}
                     >Enable Cozy Prompt (Reload UI required)</Checkbox>
                     <Column>
@@ -433,8 +435,9 @@ export function App() {
                       >Enable extra network tweaks</Checkbox>
                       <Checkbox
                           isChecked={config.enable_cozy_prompt}
+                          isDisabled={config.webui === WEBUI_SDNEXT}
                           onChange={(e) => setConfig({...config, enable_cozy_prompt: e.target.checked})}
-                      >Enable Cozy Prompt</Checkbox>
+                      >Enable Cozy Prompt{config.webui === WEBUI_SDNEXT ? ' (not available in SD.Next.)' : ''}</Checkbox>
                     </Column>
                   </TabPanel>
                 </TabPanels>
