@@ -131,7 +131,7 @@ def get_default_settings():
         'accent_color': '#37b9dd',
         'secondary_accent_color': '#b67ee1',
         'card_height': '8',
-        'card_width': '13',
+        'card_width': '16',
         'error_popup': True,
         'disable_image_browser': True,
         'disable_waves_and_gradiant': False,
