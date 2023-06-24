@@ -8,6 +8,7 @@ body:
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report! 
+        **PLEASE NOT THAT COZY NEST DOES NOT SUPPORT SD.NEXT WEBUI anymore (at least atm)**
         **Please include as much information as possible, including screenshots, logs, and steps to reproduce the issue.**
   - type: markdown
     attributes:
@@ -38,7 +39,7 @@ body:
       description: Which webui are you using?
       options:
         - Automatic1111's webui
-        - Vlad's fork webui (SD.Next)
+        - Vlad's fork webui (SD.Next) UNSUPPORTED!!!
     validations:
       required: true
   - type: dropdown

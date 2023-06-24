@@ -3,7 +3,7 @@ import '@fontsource-variable/caveat';
 import sheet from './main/cozy-nest-style.css?inline' assert { type: 'css' };
 import cozyNestModuleLoader, {fetchCozyNestConfig} from './main/nevysha-cozy-nest.js'
 import SimpleTimer from "./main/SimpleTimer.js";
-import {COZY_NEST_GRADIO_LOAD_DURATION} from "./main/Constants.js";
+import {COZY_NEST_GRADIO_LOAD_DURATION, WEBUI_SDNEXT} from "./main/Constants.js";
 import {CozyLogger} from "./main/CozyLogger.js";
 import {startCozyNestImageBrowser} from "@image-browser/main.jsx";
 import startCozyNestSettings from "@settings/main.jsx";
@@ -39,6 +39,11 @@ export default async function cozyNestLoader()  {
     }
 
     startCozyNestImageBrowser();
+
+    if (COZY_NEST_CONFIG.webui === WEBUI_SDNEXT) {
+      alert("I'm sorry, but the SDNext webui is not supported by cozy-nest atm. You should uninstall cozy-nest.");
+    }
+
   });
 }
 
