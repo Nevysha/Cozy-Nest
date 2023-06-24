@@ -2,12 +2,16 @@
     /*override by code when applying settings*/
     --nevysha-margin-left: 175px;
     --ae-primary-color: rgb(92, 175, 214);
+    --secondary-accent-color: #b67ee1;
+    --secondary-accent-color-from-luminance: white;
     --nevysha-gradiant-1: rgb(101,0,94);
     --nevysha-text-md: 12px;
     --nevysha-color-from-luminance: black;
     --extra-network-card-width: 13em;
     --extra-network-card-height: 8em;
     --nevysha-font-color: #d4d4d4;
+    /*--nevysha-icon-fill: var(--secondary-accent-color);*/
+    --nevysha-icon-fill: var(--nevysha-font-color);
 
     --nevysha-font-color-subdued: #9ca3af;
     --menu-top-height: 1px;
@@ -339,7 +343,7 @@
     --tab-nav-background-color: var(--nevysha-light-dark);
     --tab-nav-background-color-selected: var(--nevysha-dark);
     --border-color-primary: #acacac;
-    --input-border-color: var(--border-color-primary);
+    --input-border-color: #acacac;
     --block-border-color: var(--border-color-primary);
     --input-border-color-focus: var(--ae-primary-color);
 
@@ -414,10 +418,12 @@ input[type="number"]::-webkit-inner-spin-button::after {
 
 .gradio-accordion {
     background-color: var(--nevysha-light-dark) !important;
-    border: none !important;
+    border-left: none !important;
+    border-bottom: none !important;
+    border-right: none !important;
     border-radius: 3px !important;
     color: var(--secondary-text-color) !important;
-    margin: 4px 0 4px 0 !important;
+    margin: 6px 0 !important;
 }
 
 .gradio-slider input[type=range] {
@@ -587,7 +593,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 #quicksettings > .gradio-button.tool {
-    height: 33px;
+    height: 38px;
     margin-left: -20px;
 }
 #quicksettings.centered-quicksettings {
@@ -622,7 +628,7 @@ input[type=range]::-webkit-slider-thumb {
 
 .nevysha.svg-icon {
     height: 20px;
-    fill: var(--nevysha-white);
+    fill: var(--nevysha-icon-fill);
     margin: 3px 0 3px 0;
 }
 
@@ -1860,4 +1866,116 @@ body.nsfw .card {
 
 [id$="_toprow"] {
     gap: 5px !important;
+}
+
+.gradio-accordion {
+    /*border-top: 1px solid var(--ae-input-border-color) !important;*/
+    border-left: 2px solid var(--block-background-fill) !important;
+}
+.nevysha-accordion-open {
+    border-top: 2px solid var(--secondary-accent-color) !important;
+    border-image: linear-gradient(to right, var(--secondary-accent-color) 100px, var(--block-background-fill) 70%) 1;
+}
+
+[id$="_script_container"] .gradio-accordion:before {
+    content: '' !important;
+    background-color: var(--ae-input-border-color) !important;
+    height: 1px !important;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    left: 0;
+    margin-top: -2px;
+    margin-left: -2px;
+}
+[id$="_script_container"] .nevysha-accordion-open.gradio-accordion:before {
+    margin-top: -3px;
+}
+
+[id$="_script_container"] .nevysha-accordion-open {
+    border-left: 2px solid var(--secondary-accent-color) !important;
+}
+[id$="_script_container"] .nevysha-accordion-open .nevysha-accordion-open {
+    border-top: 2px solid var(--secondary-accent-color) !important;
+    border-left: 2px solid var(--block-background-fill) !important;
+    border-image: none;
+}
+
+.gradio-accordion > .label-wrap.open {
+    color: var(--ae-primary-color) !important;
+    margin-bottom: 20px;
+}
+
+.nevysha-scripts {
+    border-left: 2px solid var(--secondary-accent-color) !important;
+    background-color: var(--background-fill-primary);
+    padding: 15px;
+    margin-top: -10px !important;
+}
+.nevysha-script-selected {
+    border-top: 2px solid var(--secondary-accent-color) !important;
+    border-left: 2px solid var(--secondary-accent-color) !important;
+    border-image: linear-gradient(to right, var(--secondary-accent-color) 100px, var(--block-background-fill) 70%) 1;
+    color: var(--ae-primary-color) !important;
+}
+
+.nevysha-script-selected label > span {
+    color: var(--ae-primary-color) !important;
+    margin-bottom: 20px;
+}
+.nevysha-script-selected input {
+    color: var(--ae-primary-color) !important;
+}
+[id$="_prompt_container"] {
+    gap: 1px !important;
+}
+
+.checkboxes-row, .gradio-group {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+.gradio-button.tool {
+    height: 3em;
+}
+
+.tab-nav > button.selected {
+    border-top: 2px solid var(--secondary-accent-color);
+}
+
+.nevysha.settings-wrapper > :not([id$="_toprow"]):not([id$="_script_container"]) {
+    padding: 5px 5px !important;
+}
+[id$="_container_aspect_ratio"] {
+    padding: 5px 5px !important;
+}
+[id$="_script_container"] > div {
+    background-color: var(--block-background-fill);
+}
+
+.nevysha-prompt-tools {
+    align-items: flex-end;
+}
+.nevysha-interrogate-btn {
+    max-width: 55px;
+    height: 38px;
+    width: 20px;
+    min-width: 75px !important;
+}
+button#interrogate {
+    margin: 0 3px 0 5px !important;
+}
+
+
+[id$="_styles_row"] {
+    margin-right: 5px;
+}
+[id$="_styles_row"] button {
+    padding: 0 !important;
+}
+[id$="_styles_row"] > div {
+    gap: 0 !important;
+}
+
+#script_list {
+    padding: 5px !important;
 }

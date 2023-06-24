@@ -20,9 +20,11 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import './CozyPrompt.css'
 import useExternalTextareaObserver from "./useExternalTextareaObserver.js";
 import {Button} from "../image-browser/App.jsx";
-import {Row} from "../main/Utils.jsx";
+import {Column, Row} from "../main/Utils.jsx";
+import {ButtonWithConfirmDialog} from "../chakra/ButtonWithConfirmDialog.jsx";
+import DOM_IDS from "../main/dom_ids.js";
 
-export function App({parentId, containerId}) {
+export function App({parentId, containerId, tabId}) {
 
   let savedHeight = localStorage.getItem(`cozy-prompt-height-${containerId}`);
   savedHeight = savedHeight ? parseInt(savedHeight) : 200;
@@ -32,7 +34,8 @@ export function App({parentId, containerId}) {
   const [nativeIsVisible, setNativeIsVisible] = useState(false);
   const nativeTextareaValue = useExternalTextareaObserver(`#${parentId} label textarea`);
 
-  const [prompt, setPrompt] = useState('');
+  const lastPrompt = '';
+  const [prompt, setPrompt] = useState(lastPrompt);
   const editor = useRef();
 
   const [height, setHeight] = useState(savedHeight);
@@ -48,6 +51,16 @@ export function App({parentId, containerId}) {
   }
 
   useEffect(() => {
+    if (COZY_NEST_CONFIG.save_last_prompt_local_storage) {
+      localStorage.setItem(`cozy-prompt-${containerId}`, prompt);
+    }
+  }, [prompt]);
+
+  useEffect(() => {
+
+    //hide native button
+    document.querySelector(`#${DOM_IDS.get('clear_prompt')(tabId)}`).style.display = 'none';
+    document.querySelector(`#tab_${tabId} button#paste`).style.display = 'none';
 
     const handlePromptChange = (event) => {
       setPrompt(event.target.value)
@@ -112,49 +125,75 @@ export function App({parentId, containerId}) {
     setPrompt(prompt.replaceAll('),', '),\n'))
   }
 
+  function clearPrompt() {
+    document.querySelector(`#${tabId}_clear_prompt`).click()
+  }
+  function redoLastPrompt() {
+    document.querySelector(`#tab_${tabId} button#paste`).click()
+  }
+
   function onLoadEditor(editor) {
     editor.renderer.setPadding(10);
     editor.renderer.setScrollMargin(10);
   }
 
+  function isBoldCursor() {
+    return COZY_NEST_CONFIG.carret_style === 'bold'
+  }
+
   return (
-    <div
-      className="CozyPrompt"
-      style={{ height: `${height}px` }}
+    <Column
+      style={{
+      width: '100%'}}
     >
-      <AceEditor
-        ref={editor}
-        onLoad={onLoadEditor}
-        mode="prompt"
-        theme="github_dark"
-        showPrintMargin={false}
-        onChange={setPrompt}
-        onBlur={propagate}
-        value={prompt}
-        name="ace-prompt-editor"
-        editorProps={{ $blockScrolling: true }}
-        style={{width: "100%", height: "100%"}}
-        setOptions={{
-          animatedScroll: true,
-          enableSnippets: true,
-          cursorStyle: "smooth",
-          behavioursEnabled: true,
-          wrapBehavioursEnabled: true,
-          autoScrollEditorIntoView: true,
-          wrap: true,
-          fontSize: "15px",
-          fontFamily: "monospace",
-        }}
-      />
       <div
-        onMouseDown={handleMouseDown}
-        className="CozyPrompt__resize-handle"
-       />
+        className={isBoldCursor() ? "CozyPrompt bold-cursor" : "CozyPrompt"}
+        style={{ height: `${height}px` }}
+      >
+        <AceEditor
+          ref={editor}
+          onLoad={onLoadEditor}
+          mode="prompt"
+          theme="github_dark"
+          showPrintMargin={false}
+          onChange={setPrompt}
+          onBlur={propagate}
+          value={prompt}
+          name="ace-prompt-editor"
+          editorProps={{ $blockScrolling: true }}
+          style={{width: "100%", height: "100%"}}
+          setOptions={{
+            animatedScroll: true,
+            enableSnippets: true,
+            cursorStyle: "smooth",
+            behavioursEnabled: true,
+            wrapBehavioursEnabled: true,
+            autoScrollEditorIntoView: true,
+            wrap: true,
+            fontSize: "15px",
+            fontFamily: "monospace",
+          }}
+        />
+      </div>
       <Row>
         <Button onClick={prettify}>Prettify</Button>
         <Button onClick={toggleNative}>{nativeIsVisible ? "Hide" : "Show"} native textarea</Button>
+        <Button onClick={redoLastPrompt}>Redo last prompt</Button>
+        <ButtonWithConfirmDialog
+          style={{height: '100%'}}
+          message='Delete prompt ?'
+          confirmLabel='Yes'
+          buttonLabel='Clear prompt'
+          cancelLabel="No"
+          onConfirm={() => clearPrompt()}
+        />
       </Row>
-
-    </div>
+      <div
+        onMouseDown={handleMouseDown}
+        className="CozyPrompt__resize-handle"
+      >
+        <div className="CozyPrompt__resize-handle-line" />
+      </div>
+    </Column>
   );
 }

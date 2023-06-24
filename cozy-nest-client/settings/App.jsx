@@ -27,6 +27,7 @@ import {
   AlertDialogOverlay,
   useDisclosure,
 } from '@chakra-ui/react'
+import { Switch } from '@chakra-ui/react'
 import {PopoverColorPicker} from "./PopoverColorPicker.jsx";
 import {OuputFolderSelector} from "./OuputFolderSelector.jsx";
 import {
@@ -39,7 +40,12 @@ import {
   applyFontSize,
   setCardHeight,
   setCardWidth,
-  applyMenuPosition, setQuicksettingPosition, setSfwSettings, recalcOffsetFromMenuHeight
+  applyMenuPosition,
+  setQuicksettingPosition,
+  setSfwSettings,
+  recalcOffsetFromMenuHeight,
+  applySecondaryAccentColor,
+  applyColorMode
 } from "../main/tweaks/various-tweaks.js";
 import {getTheme} from "../main/cozy-utils.js";
 import {WEBUI_A1111, WEBUI_SDNEXT} from "../main/Constants.js";
@@ -99,15 +105,17 @@ export function App() {
   const [config, setConfig] = useState(COZY_NEST_CONFIG)
 
   function applySettings() {
+    applyColorMode(config.color_mode);
     applyWavesColor(config.waves_color);
     applyFontColor(
-      getTheme() === "dark" ?
+      config.color_mode === "dark" ?
         config.font_color :
         config.font_color_light
     )
     applyBgGradiantColor(config.bg_gradiant_color);
     applyDisabledWavesAndGradiant(config.disable_waves_and_gradiant);
     applyAccentColor(config.accent_color, config.accent_color);
+    applySecondaryAccentColor(config.secondary_accent_color);
     applyAccentForGenerate(config.accent_generate_button, config.accent_color);
     applyFontSize(config.font_size)
     setCardHeight(config.card_height)
@@ -144,6 +152,15 @@ export function App() {
       newConfig[what] = e
 
     setConfig(newConfig)
+  }
+  const switchColorMode = (e) => {
+    if (e.target.checked) {
+      setConfig({...config, color_mode: 'dark'})
+    }
+    else {
+      setConfig({...config, color_mode: 'light'})
+    }
+    applySettings();
   }
 
   const saveConfig = () => {
@@ -197,6 +214,7 @@ export function App() {
                 <TabList style={{backgroundColor: 'var(--tab-nav-background-color)'}}>
                   <Tab>Main Settings</Tab>
                   <Tab>Image Browser Settings</Tab>
+                  <Tab>Cozy Prompt Settings</Tab>
                   <Tab>Others</Tab>
                 </TabList>
 
@@ -291,14 +309,26 @@ export function App() {
 
                     </RowFullWidth>
                     <RowFullWidth>
-                      <PopoverColorPicker
-                          label="Font Color"
-                          color={config.font_color}
-                          onChange={(e) => updateConfig(e, 'font_color')} />
-                      <PopoverColorPicker
-                          label="Font Color"
-                          color={config.font_color_light}
-                          onChange={(e) => updateConfig(e, 'font_color_light')} />
+                      <FormControl display='flex' alignItems='center'>
+                        <FormLabel htmlFor='color-mode' mb='0'>
+                          Color mode : {config.color_mode}
+                        </FormLabel>
+                        <Switch
+                          id='color-mode'
+                          onChange={switchColorMode}
+                          isChecked={config.color_mode === 'dark'}
+                        />
+                      </FormControl>
+                    </RowFullWidth>
+                    <RowFullWidth>
+                      {config.color_mode === "dark" && <PopoverColorPicker
+                        label="Font Color (dark)"
+                        color={config.font_color}
+                        onChange={(e) => updateConfig(e, 'font_color')}/>}
+                      {config.color_mode !== "dark" && <PopoverColorPicker
+                        label="Font Color (light)"
+                        color={config.font_color_light}
+                        onChange={(e) => updateConfig(e, 'font_color_light')}/>}
                       <PopoverColorPicker
                           label="Waves Color"
                           color={config.waves_color}
@@ -311,6 +341,10 @@ export function App() {
                           label="Accent Color"
                           color={config.accent_color}
                           onChange={(e) => updateConfig(e, 'accent_color')} />
+                      <PopoverColorPicker
+                        label="Secondary accent Color"
+                        color={config.secondary_accent_color}
+                        onChange={(e) => updateConfig(e, 'secondary_accent_color')} />
                     </RowFullWidth>
                     <RowFullWidth>
                       <Checkbox
@@ -323,9 +357,9 @@ export function App() {
                   <TabPanel css={nevyshaScrollbar}>
                     <RowFullWidth>
                       <Checkbox
-                          isChecked={config.disable_image_browser}
-                          onChange={(e) => setConfig({...config, disable_image_browser: e.target.checked})}
-                      >Disable image browser (Reload UI required)</Checkbox>
+                          isChecked={!config.disable_image_browser}
+                          onChange={(e) => setConfig({...config, disable_image_browser: !e.target.checked})}
+                      >Enable image browser (Reload UI required)</Checkbox>
                     </RowFullWidth>
                     <RowFullWidth>
                       <FormControl style={{width: "30%"}}>
@@ -359,6 +393,29 @@ export function App() {
                   </TabPanel>
 
                   <TabPanel css={nevyshaScrollbar}>
+                    <Checkbox
+                      isChecked={config.enable_cozy_prompt}
+                      onChange={(e) => setConfig({...config, enable_cozy_prompt: e.target.checked})}
+                    >Enable Cozy Prompt (Reload UI required)</Checkbox>
+                    <Column>
+                      <label>Carret style</label>
+                      <RadioGroup
+                        value={config.carret_style}
+                        onChange={(value) => setConfig({...config, carret_style: value})}
+                      >
+                        <Stack direction='row'>
+                          <Radio value='thin'>Thin</Radio>
+                          <Radio value='bold'>Bold</Radio>
+                        </Stack>
+                      </RadioGroup>
+                    </Column>
+                    <Checkbox
+                      isChecked={config.save_last_prompt_local_storage}
+                      onChange={(e) => setConfig({...config, save_last_prompt_local_storage: e.target.checked})}
+                    >Save last prompt in local storage</Checkbox>
+                  </TabPanel>
+
+                  <TabPanel css={nevyshaScrollbar}>
                     <p>Those settings are heavy on DOM modification and might conflict with some others extensions</p>
                     <p>Reload UI needed to apply</p>
                     <Column>
@@ -366,6 +423,10 @@ export function App() {
                           isChecked={config.enable_clear_button}
                           onChange={(e) => setConfig({...config, enable_clear_button: e.target.checked})}
                       >Enable clear gallery button in txt2img and img2img tabs</Checkbox>
+                      <Checkbox
+                        isChecked={!config.disable_image_browser}
+                        onChange={(e) => setConfig({...config, disable_image_browser: !e.target.checked})}
+                      >Enable image browser (Reload UI required)</Checkbox>
                       <Checkbox
                           isChecked={config.enable_extra_network_tweaks}
                           onChange={(e) => setConfig({...config, enable_extra_network_tweaks: e.target.checked})}

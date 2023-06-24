@@ -8,12 +8,14 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   AlertDialogCloseButton,
-  Button,
 } from '@chakra-ui/react'
+import {Button} from "../image-browser/App.jsx";
 
-export function ButtonWithConfirmDialog({message, confirmLabel, cancelLabel, onConfirm, style}) {
+export function ButtonWithConfirmDialog({message, buttonLabel, confirmLabel, cancelLabel, onConfirm, style}) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = useRef()
+
+  const _buttonLabel = buttonLabel || confirmLabel
 
   if (style) {
     style = {...style, width: '100%'}
@@ -23,11 +25,11 @@ export function ButtonWithConfirmDialog({message, confirmLabel, cancelLabel, onC
 
   return (
     <>
-      <button
+      <Button
         className="btn-settings"
         style={style}
         onClick={onOpen}
-      >{confirmLabel}</button>
+      >{_buttonLabel}</Button>
 
       <AlertDialog
         isOpen={isOpen}

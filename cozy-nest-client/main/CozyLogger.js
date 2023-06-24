@@ -26,6 +26,10 @@ export class CozyLogger {
     console.log('CozyNest:',...args);
   }
 
+  static error(...args) {
+    console.error('CozyNest:',...args);
+  }
+
   constructor(enabled) {
     this.enabled = enabled;
   }

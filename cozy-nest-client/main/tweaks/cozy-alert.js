@@ -20,12 +20,20 @@ export function createAlertDiv() {
   alertMsg = document.querySelector('#cozy-alert-msg');
   document.querySelector('#cozy-alert-close').addEventListener('click', () => {
     alertDiv.setAttribute('style', 'display: none;');
+    if (onClose) {
+      onClose();
+      onClose = null;
+    }
   });
 }
 
-export function showAlert(title, msg) {
+let onClose = null;
+
+export function showAlert(title, msg, _onClose) {
   alertTitle.innerHTML = title;
   alertMsg.innerHTML = msg;
   alertDiv.setAttribute('style', 'display: flex;');
+
+  onClose = _onClose;
 }
 window.showAlert = showAlert;

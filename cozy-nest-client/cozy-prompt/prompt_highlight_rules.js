@@ -33,12 +33,27 @@ ace.define("ace/mode/prompt_highlight_rules", ["require", "exports", "module", "
           next: "start"
         },
         { regex: /<lora:/, token: "lora-begin", next: "lora" },
+        { regex: /<hypernetwork:/, token: "hypernetwork-begin", next: "hypernetwork" },
+        { regex: /<hypernet:/, token: "hypernet-begin", next: "hypernet" },
+        { regex: /<lyco:/, token: "lyco-begin", next: "lyco" },
         { regex: /[,|:]/, token: "token" },
         { regex: /\w+/, token: "text" },
       ],
       lora: [
         { regex: '>', token: "lora-end", next: "start" },
         { regex: /\w+/, token: "lora-inner" },
+      ],
+      hypernetwork: [
+        { regex: '>', token: "hypernetwork-end", next: "start" },
+        { regex: /\w+/, token: "hypernetwork-inner" },
+      ],
+      hypernet: [
+        { regex: '>', token: "hypernet-end", next: "start" },
+        { regex: /\w+/, token: "hypernet-inner" },
+      ],
+      lyco: [
+        { regex: '>', token: "lyco-end", next: "start" },
+        { regex: /\w+/, token: "lyco-inner" },
       ],
       inner: [
         {

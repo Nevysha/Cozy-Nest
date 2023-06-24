@@ -1,5 +1,6 @@
 import React from 'react';
 import {CozyLogger} from "../main/CozyLogger.js";
+import DOM_IDS from "../main/dom_ids.js";
 
 export const LoaderContext = React.createContext({
   ready: false,
@@ -28,11 +29,11 @@ function observeDivChanges(targetDiv, prefix) {
 
 async function requireNativeBloc(prefix, resolve) {
 
-  const triggerButton = document.querySelector(`button#${prefix}_extra_networks`)
+
+  const triggerButton = document.querySelector(`button#${DOM_IDS.get('extra_networks_btn')(prefix)}`)
+  triggerButton.style.display = 'none'
 
   CozyLogger.debug('triggering extra network', prefix)
-
-  triggerButton.style.display = 'none'
 
   const tabs = document.querySelector(`div#${prefix}_extra_networks`)
   tabs.style.display = 'none';
