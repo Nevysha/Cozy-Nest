@@ -3,6 +3,8 @@ import './ExtraNetworks.css'
 import {LoaderContext} from "./LoaderContext.jsx";
 import {CozyLogger} from "../main/CozyLogger.js";
 import {Loading} from "../image-browser/App.jsx";
+import DOM_IDS from "../main/dom_ids.js";
+import {WEBUI_SDNEXT} from "../main/Constants.js";
 
 let extraNetworksParent = null;
 let hasCivitaiHelper = false;
@@ -32,11 +34,17 @@ export function ExtraNetworks({prefix}) {
     const tabs = document.querySelector(`#${prefix}_extra_tabs`)
     extraNetworksParent = tabs.parentNode
 
-    const triggerButton = document.querySelector(`button#${prefix}_extra_networks`)
+    const triggerButton = document.querySelector(`button#${DOM_IDS.get('extra_networks_btn')(prefix)}`)
     triggerButton.style.display = 'none'
 
     const extraN = document.querySelector(`div#${prefix}_extra_networks`)
     extraN.style.display = 'none';
+
+    if (COZY_NEST_CONFIG.webui === WEBUI_SDNEXT) {
+      //txt2img_extra_close
+      const close = document.querySelector(`button#${prefix}_extra_close`)
+      close.style.display = 'none'
+    }
 
     //for txt2img we need an extra tweak because of the way the DOM / element are built in gradio
     let civitaiHelperRefresh = document.querySelector(`#civitai-helper-refresh-${prefix}`)
