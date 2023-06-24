@@ -888,13 +888,13 @@ function addOptionsObserver() {
   observer.observe(targetNode, config);
 }
 
-const onloadSafe = (done) => {
-  // try {
-  onLoad(done);
-  // } catch (e) {
-  //   console.error("Failed to init Cozy Nest", e);
-  //   done();
-  // }
+const onloadSafe = (done, error) => {
+  try {
+    onLoad(done, error);
+  } catch (e) {
+    console.error("Failed to init Cozy Nest", e);
+    error();
+  }
 }
 
 function addAccordionClickHandler() {
@@ -971,11 +971,11 @@ function addScriptSelectionHandler() {
   });
 }
 
-const onLoad = (done) => {
+const onLoad = (done, error) => {
 
   let gradioApp = window.gradioApp;
   if (typeof gradioApp !== "function") {
-    setTimeout(() => onloadSafe(done), 200);
+    setTimeout(() => onloadSafe(done, error), 200);
     return
   }
 
@@ -983,7 +983,7 @@ const onLoad = (done) => {
   const quicksettings = gradioApp().getElementById("quicksettings")
 
   if (!quicksettings) {
-    setTimeout(() => onloadSafe(done), 200);
+    setTimeout(() => onloadSafe(done, error), 200);
     return
   }
 
@@ -1226,6 +1226,21 @@ export default async function cozyNestModuleLoader(extraCozyNestModulesLoader) {
             "Warning",
             "Cozy Nest detected that you are using SD.Next and running Cozy Nest for the first time. To ensure compatibility, please restart the server."
         )
+      resolve();
+    },
+    () => {
+      //remove #nevysha-loading from DOM
+      Loading.stop();
+      CozyLogger.error(`ERROR loading CozyNest.`);
+
+      SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
+      SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
+      showAlert(
+          "Error",
+          "There was an error while loading Cozy Nest. Ui will fallback to default.",
+          //reload by adding ?CozyNest=No to the url
+          () => window.location.replace(`${window.location.href}?CozyNest=No`)
+      )
       resolve();
     });
   })
