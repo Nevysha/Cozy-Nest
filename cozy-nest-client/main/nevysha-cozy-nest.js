@@ -28,6 +28,7 @@ import {
 import {CozyLogger} from "./CozyLogger.js";
 import clearGeneratedImage from './tweaks/clear-generated-image.js'
 import {createAlertDiv, showAlert} from "./tweaks/cozy-alert.js";
+import DOM_IDS from "./dom_ids.js";
 
 
 const addDraggable = ({prefix}) => {
@@ -1071,9 +1072,9 @@ const onLoad = (done, error) => {
   tweakButtonsIcons();
 
 
-  const img2imgtoolsParent = document.querySelector('#img2img_clear_prompt').parentElement;
+  const img2imgtoolsParent = document.querySelector(`#${DOM_IDS.get('clear_prompt')('img2img')}`).parentElement;
   img2imgtoolsParent.classList.add('nevysha', 'nevysha-prompt-tools')
-  const txt2imgtoolsParent = document.querySelector('#txt2img_clear_prompt').parentElement;
+  const txt2imgtoolsParent = document.querySelector(`#${DOM_IDS.get('clear_prompt')('txt2img')}`).parentElement;
   txt2imgtoolsParent.classList.add('nevysha', 'nevysha-prompt-tools')
   const postponeMove = []
 
@@ -1179,6 +1180,7 @@ async function detectWebuiContext() {
   CozyLogger.debug(`webui is ${COZY_NEST_CONFIG.webui}`)
 }
 
+
 /**
  * Need to be called after the page and the script is loaded
  * either from main.js for Dev or from the loader in the extension folder
@@ -1229,18 +1231,28 @@ export default async function cozyNestModuleLoader(extraCozyNestModulesLoader) {
       resolve();
     },
     () => {
-      //remove #nevysha-loading from DOM
-      Loading.stop();
+
       CozyLogger.error(`ERROR loading CozyNest.`);
 
-      SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
-      SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
+      try {
+        //remove #nevysha-loading from DOM
+        Loading.stop();
+
+        SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
+        SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
+      }
+      catch (ignored) {}
+
       showAlert(
-          "Error",
-          "There was an error while loading Cozy Nest. Ui will fallback to default.",
-          //reload by adding ?CozyNest=No to the url
-          () => window.location.replace(`${window.location.href}?CozyNest=No`)
+        "Error",
+        "There was an error while loading Cozy Nest. Ui will fallback to default.",
+        //reload by adding ?CozyNest=No to the url
+        () => {
+          window.location.replace(`${window.location.href}#CozyNest=No`)
+          window.location.reload()
+        }
       )
+
       resolve();
     });
   })
@@ -1252,21 +1264,26 @@ function setupErrorHandling() {
   //set a global error handler
   window.addEventListener('error', function ({message, filename , lineno, colno, error }) {
 
-    //TODO uncomment
+    //if filename does not contains Cozy-Nest, ignore
+    if (!filename.toLowerCase().includes('cozy-nest')) return;
 
-    // // get setting_nevyui_errorPopup checkbox value
-    // const errorPopup = document.querySelector('#setting_nevyui_errorPopup').querySelector("input").checked;
-    // if (!errorPopup) return;
-    //
-    // //if filename does not contains Cozy-Nest, ignore
-    // if (!filename.toLowerCase().includes('cozy-nest')) return;
-    //
-    // // Handle the error here
-    // populateInstanceInfoDialog();
-    // document.querySelector('#cozy_nest_error_handling_display').innerHTML = `An error occurred: ${message} at ${filename } line ${lineno} column ${colno}`;
-    // document.querySelector('#cozy_nest_error_handling_display_stack').innerHTML = error.stack;
-    // document.querySelector('#cozy_nest_error_handling_display_stack').setAttribute('style', 'display: block;');
-    // showInstanceInfoDialog();
+    try {
+      //remove #nevysha-loading from DOM
+      Loading.stop();
+      SimpleTimer.end(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
+      SimpleTimer.end(COZY_NEST_GRADIO_LOAD_DURATION);
+    }
+    catch (ignored) {}
+
+    showAlert(
+      "Error",
+      "There was an error while loading Cozy Nest. Ui will fallback to default.",
+      //reload by adding ?CozyNest=No to the url
+      () => {
+        window.location.replace(`${window.location.href}#CozyNest=No`)
+        window.location.reload()
+      }
+    )
   });
 }
 

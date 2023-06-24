@@ -22,6 +22,7 @@ import useExternalTextareaObserver from "./useExternalTextareaObserver.js";
 import {Button} from "../image-browser/App.jsx";
 import {Column, Row} from "../main/Utils.jsx";
 import {ButtonWithConfirmDialog} from "../chakra/ButtonWithConfirmDialog.jsx";
+import DOM_IDS from "../main/dom_ids.js";
 
 export function App({parentId, containerId, tabId}) {
 
@@ -58,7 +59,7 @@ export function App({parentId, containerId, tabId}) {
   useEffect(() => {
 
     //hide native button
-    document.querySelector(`#${tabId}_clear_prompt`).style.display = 'none';
+    document.querySelector(`#${DOM_IDS.get('clear_prompt')(tabId)}`).style.display = 'none';
     document.querySelector(`#tab_${tabId} button#paste`).style.display = 'none';
 
     const handlePromptChange = (event) => {

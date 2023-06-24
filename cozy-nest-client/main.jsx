@@ -8,7 +8,7 @@ import {CozyLogger} from "./main/CozyLogger.js";
 import {startCozyNestImageBrowser} from "@image-browser/main.jsx";
 import startCozyNestSettings from "@settings/main.jsx";
 import {
-  dummyLoraCard, dummyControlNetBloc, dummySubdirs, getTheme
+  dummyLoraCard, dummyControlNetBloc, dummySubdirs, getTheme, hasCozyNestNo
 } from './main/cozy-utils.js';
 import startCozyPrompt from "./cozy-prompt/main.jsx";
 import {startExtraNetwork} from "./extra-network/main.jsx";
@@ -45,15 +45,7 @@ export default async function cozyNestLoader()  {
 window.cozyNestLoader = cozyNestLoader;
 
 (async () => {
-  //check if the param CozyNest=No is present in the url
-  const urlParams = new URLSearchParams(window.location.search);
-  const cozyNestParam = urlParams.get('CozyNest');
-  if (cozyNestParam === "No") {
-    CozyLogger.log("Cozy Nest disabled by url param")
-    //remove the css with Cozy-Nest in the url
-    document.querySelectorAll('link').forEach(link => {
-      if (link.href.includes("Cozy-Nest")) link.remove()
-    })
+  if (hasCozyNestNo()) {
     return
   }
 
