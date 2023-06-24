@@ -397,6 +397,13 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
         name="cozy-nest-client",
     )
 
+    # route for /cozy-nest-client/cozy-prompt/<file>
+    app.mount(
+        "/cozy-nest-client/cozy-prompt/",
+        StaticFiles(directory=f"{cwd}/cozy-nest-client/cozy-prompt/"),
+        name="cozy-prompt",
+    )
+
     @app.post("/cozy-nest/config")
     async def save_config(request: Request):
         # Access POST parameters
