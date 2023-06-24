@@ -9,6 +9,8 @@
 - [x]  press escape key to close right panels
 - [x]  Color mode (light, dark) from Cozy Nest settings
 - [x]  Add clear button in prompt
+- [x]  Customize caret size for prompt
+- [x]  Color for lycoris and hypernetworks in prompt
 - [x]  Move prompt tools button ("redo last prompt", ...)
 - [x]  Add a secondary accent color in settings, applied to some elements (open scripts...)
 - [x]  Reworked a lots of padding for a cleaner and more compact view
