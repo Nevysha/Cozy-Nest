@@ -1,10 +1,9 @@
 ## Compatibility
 
-- Automatic1111's webui 1.3.1 release.
-- SD.Next (Vlad's fork) from commit `beff89ba`
-- Will work best on latest version of both as I'm only testing on latest version.
+- Automatic1111's webui 1.3.2 release.
 
 ## New features in 2.3.0
+- [x]  DROPPING SUPPORT FOR SD.NEXT. Cozy Nest is now only compatible with Automatic1111's webui. Maintaining compatibility with SD.Next was too much work for me. I'm sorry for the SD.Next users.
 - [x]  Civitai Helper and its 4 button on thumbnails should work properly.
 - [x]  Add a "clear" button to extras gallery
 - [x]  press escape key to close right panels
