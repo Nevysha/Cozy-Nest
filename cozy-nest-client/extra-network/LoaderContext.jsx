@@ -29,10 +29,9 @@ function observeDivChanges(targetDiv, prefix) {
 async function requireNativeBloc(prefix, resolve) {
 
   const triggerButton = document.querySelector(`button#${prefix}_extra_networks`)
+  triggerButton.style.display = 'none'
 
   CozyLogger.debug('triggering extra network', prefix)
-
-  triggerButton.style.display = 'none'
 
   const tabs = document.querySelector(`div#${prefix}_extra_networks`)
   tabs.style.display = 'none';

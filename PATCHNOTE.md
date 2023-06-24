@@ -5,6 +5,7 @@
 - Will work best on latest version of both as I'm only testing on latest version.
 
 ## New features in 2.3.0
+- [x]  Civitai Helper and its 4 button on thumbnails should work properly.
 - [x]  Add a "clear" button to extras gallery
 - [x]  press escape key to close right panels
 - [x]  Color mode (light, dark) from Cozy Nest settings

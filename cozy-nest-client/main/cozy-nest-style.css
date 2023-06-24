@@ -343,7 +343,7 @@
     --tab-nav-background-color: var(--nevysha-light-dark);
     --tab-nav-background-color-selected: var(--nevysha-dark);
     --border-color-primary: #acacac;
-    --input-border-color: var(--border-color-primary);
+    --input-border-color: #acacac;
     --block-border-color: var(--border-color-primary);
     --input-border-color-focus: var(--ae-primary-color);
 

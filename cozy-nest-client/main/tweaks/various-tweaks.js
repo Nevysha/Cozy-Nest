@@ -27,7 +27,7 @@ export function applyColorMode(modeFromConfig) {
   //apply color mode
   if (getTheme(modeFromConfig) === "light") {
     document.querySelector("body").classList.add("nevysha-light")
-    document.querySelectorAll('.gradio-accordion').forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3) !important;`))
+    // document.querySelectorAll('.gradio-accordion').forEach(elem => elem.setAttribute("style", `${elem.getAttribute("style")} box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3) !important;`))
   }
   else {
     document.querySelector("body").classList.remove("nevysha-light")
