@@ -22,6 +22,7 @@ window.CozyTools = {
 
 
 export default async function cozyNestLoader()  {
+
   await fetchCozyNestConfig();
   await cozyNestModuleLoader(async () => {
     startCozyNestSettings();
@@ -39,11 +40,6 @@ export default async function cozyNestLoader()  {
     }
 
     startCozyNestImageBrowser();
-
-    // if (COZY_NEST_CONFIG.webui === WEBUI_SDNEXT) {
-    //   alert("I'm sorry, but the SDNext webui is not supported by cozy-nest atm. You should uninstall cozy-nest.");
-    // }
-
   });
 }
 
