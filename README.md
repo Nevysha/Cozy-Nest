@@ -11,8 +11,7 @@ Cozy Nest is a UI extension for Automatic's sd-webui.
 ## Compatibility
 
 - From Automatic1111's webui 1.3.2 release.
- 
-![](https://placehold.co/15x15/f03c15/f03c15.png) **DROPPING SUPPORT FOR SD.NEXT. Cozy Nest is now only compatible with Automatic1111's webui. Maintaining compatibility with SD.Next was too much work for me. I'm sorry for the SD.Next users.**
+- SD Next (Vlad's fork) Version: 4867dafa Fri Jun 23.
 
 ## Features:
 - [x]  Fully integrated Image Browser. Lots of bugs and missing features. Please be kind with Github issues.
