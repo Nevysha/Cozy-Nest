@@ -295,13 +295,11 @@ def on_ui_tabs():
         if version['app'] == 'sd.next':
             config['webui'] = 'sd.next'
             config['fetch_output_folder_from_a1111_settings'] = False
-            config['enable_cozy_prompt'] = False
         else:
             config['webui'] = 'auto1111'
         save_settings(config)
 
     if config['webui'] == 'sd.next':
-        config['enable_cozy_prompt'] = False
         config['fetch_output_folder_from_a1111_settings'] = False
 
     # check if cnib_output_folder is empty and/or need to be fetched from a1111 settings
