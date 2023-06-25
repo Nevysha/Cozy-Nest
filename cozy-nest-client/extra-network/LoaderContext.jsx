@@ -1,6 +1,7 @@
 import React from 'react';
 import {CozyLogger} from "../main/CozyLogger.js";
 import DOM_IDS from "../main/dom_ids.js";
+import CozyNestEventBus from "../CozyNestEventBus.js";
 
 export const LoaderContext = React.createContext({
   ready: false,
@@ -27,8 +28,14 @@ function observeDivChanges(targetDiv, prefix) {
   });
 }
 
-async function requireNativeBloc(prefix, resolve) {
+function hideNativeUiElement(prefix) {
+  const triggerButton = document.querySelector(`button#${DOM_IDS.get('extra_networks_btn')(prefix)}`)
+  triggerButton.style.display = 'none'
+  const tabs = document.querySelector(`div#${prefix}_extra_networks`)
+  tabs.style.display = 'none';
+}
 
+async function requireNativeBloc(prefix) {
 
   const triggerButton = document.querySelector(`button#${DOM_IDS.get('extra_networks_btn')(prefix)}`)
   triggerButton.style.display = 'none'
@@ -44,7 +51,6 @@ async function requireNativeBloc(prefix, resolve) {
   }
 
   triggerButton.click()
-  resolve()
 
   //setup a mutation observer to detect when the tabs are added
   await observeDivChanges(tabs, prefix)
@@ -55,9 +61,10 @@ async function requireNativeBloc(prefix, resolve) {
 //we use a local not hook to avoid async issues and double call
 const states = {}
 
-export function LoaderProvider({children, prefix, resolve}) {
+export function LoaderProvider({children, prefix}) {
 
   const [ready, setReady] = React.useState(false)
+  const [loadRequired, setLoadRequired] = React.useState(false)
 
   if (!states[prefix]) {
     states[prefix] = {
@@ -67,6 +74,22 @@ export function LoaderProvider({children, prefix, resolve}) {
   }
 
   React.useEffect(() => {
+    hideNativeUiElement(prefix)
+
+    CozyNestEventBus.once(`extra_network-open:${prefix}`, (p) => {
+      CozyLogger.debug(`extra network load event received for ${p}`)
+      setLoadRequired(true)
+    })
+
+    return () => {
+      CozyNestEventBus.off(`extra_network-open:${prefix}`)
+    }
+  }, [])
+
+  React.useEffect(() => {
+
+    if (!loadRequired) return;
+
     const {ready, loading} = states[prefix];
     if (ready || loading) return;
 
@@ -76,7 +99,7 @@ export function LoaderProvider({children, prefix, resolve}) {
     };
 
     (async () => {
-      await requireNativeBloc(prefix, resolve)
+      await requireNativeBloc(prefix)
       states[prefix] = {
         loaded: true,
         loading: false,
@@ -84,7 +107,7 @@ export function LoaderProvider({children, prefix, resolve}) {
       setReady(true)
     })()
 
-  }, [])
+  }, [loadRequired])
 
   const value = {
     ready,

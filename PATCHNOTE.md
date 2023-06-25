@@ -1,6 +1,10 @@
 ## Compatibility
 
 - Automatic1111's webui 1.3.2 release.
+- SD Next (Vlad's fork) Version: 4867dafa Fri Jun 23.
+
+## Minor changes & fixes in 2.3.3
+- [x]  Do not preload Extra Network tab but wait for a user click
 
 ## Minor changes & fixes in 2.3.2
 - [x]  Fix Cozy Prompt for SD.Next compatibility

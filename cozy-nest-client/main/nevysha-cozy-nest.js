@@ -29,6 +29,7 @@ import {CozyLogger} from "./CozyLogger.js";
 import clearGeneratedImage from './tweaks/clear-generated-image.js'
 import {createAlertDiv, showAlert} from "./tweaks/cozy-alert.js";
 import DOM_IDS from "./dom_ids.js";
+import CozyNestEventBus from "../CozyNestEventBus.js";
 
 
 const addDraggable = ({prefix}) => {
@@ -598,7 +599,7 @@ const addTabWrapper = () => {
 
 }
 
-function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab) {
+function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab, prefix) {
   const cozyImgBrowserBtn = document.createElement('button');
   cozyImgBrowserBtn.setAttribute('id', `${label}_right_button`);
   cozyImgBrowserBtn.classList.add('nevysha', 'lg', 'primary', 'gradio-button');
@@ -704,6 +705,7 @@ function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab) {
   cozyImgBrowserBtn.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
+    CozyNestEventBus.emit(`extra_network-open:${prefix}`, prefix);
     toggle();
   })
 }
@@ -724,10 +726,12 @@ function createRightWrapperDiv() {
   tab.insertAdjacentElement('beforeend', rightPanBtnWrapper);
 
   if (COZY_NEST_CONFIG.enable_extra_network_tweaks === true) {
-    buildRightSlidePanelFor('cozy-txt2img-extra-network', 'Extra Network', rightPanBtnWrapper, tab);
+    buildRightSlidePanelFor('cozy-txt2img-extra-network', 'Extra Network'
+      , rightPanBtnWrapper, tab, 'txt2img');
     document.getElementById('cozy-txt2img-extra-network-react').classList.add('cozy-extra-network')
 
-    buildRightSlidePanelFor('cozy-img2img-extra-network', 'Extra Network', rightPanBtnWrapper, tab);
+    buildRightSlidePanelFor('cozy-img2img-extra-network', 'Extra Network'
+      , rightPanBtnWrapper, tab, 'img2img');
     document.getElementById('cozy-img2img-extra-network-react').classList.add('cozy-extra-network')
     document.querySelector(`#cozy-img2img-extra-network_right_button`).style.display = 'none';
   }

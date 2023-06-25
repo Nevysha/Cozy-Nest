@@ -20,10 +20,11 @@ function _startExtraNetwork(prefix, resolve) {
     setTimeout(() => _startExtraNetwork(), 200)
     return
   }
+  resolve()
 
   ReactDOM.createRoot(document.getElementById(`cozy-${prefix}-extra-network-react`)).render(
     <React.StrictMode>
-      <LoaderProvider prefix={prefix} resolve={resolve}>
+      <LoaderProvider prefix={prefix}>
         <ExtraNetworks prefix={prefix} />
       </LoaderProvider>
     </React.StrictMode>,
