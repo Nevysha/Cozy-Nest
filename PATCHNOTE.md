@@ -2,11 +2,13 @@
 
 - Automatic1111's webui 1.3.2 release.
 
+## Minor changes & fixes in 2.3.2
+- [x]  Fix Cozy Prompt for SD.Next compatibility
+
 ## Minor changes & fixes in 2.3.1
 - [x]  May work in SD.Next. Cozy Prompt is disabled in SD.Next.
 
 ## New features in 2.3.0
-- [x]  DROPPING SUPPORT FOR SD.NEXT. Cozy Nest is now only compatible with Automatic1111's webui. Maintaining compatibility with SD.Next was too much work for me. I'm sorry for the SD.Next users.
 - [x]  Civitai Helper and its 4 button on thumbnails should work properly.
 - [x]  Add a "clear" button to extras gallery
 - [x]  press escape key to close right panels
