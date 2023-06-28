@@ -103,6 +103,9 @@
     font-weight: bold;
     /*margin: 0 3px;*/
 }
+.ace_attention {
+    color: #f35a5a;
+}
 .ace_lora-begin, .ace_lora-end, .ace_lora-inner {
     color: #08c2d3;
 }
@@ -112,6 +115,10 @@
 }
 .ace_lyco-begin, .ace_lyco-end, .ace_lyco-inner {
     color: #c444d5;
+}
+.ace_wildcard-begin, .ace_wildcard-end, .ace_wildcard-inner {
+    color: #4cd041;
+    font-style: italic;
 }
 .ace_lora-begin, .ace_lora-end,
 .ace_hypernetwork-begin, .ace_hypernetwork-end,

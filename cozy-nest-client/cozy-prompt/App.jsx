@@ -1,16 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 
 import 'ace-builds'
-// ace.config.setModuleUrl(
-//   "ace/mode/json_worker",
-//   'cozy-nest-client/node_modules/ace-builds/src-noconflict/worker-json.js')
-ace.config.setModuleUrl(
-  "ace/mode/prompt_highlight_rules",
-  "cozy-nest-client/cozy-prompt/prompt_highlight_rules.js");
-ace.config.setModuleUrl(
-  "ace/mode/prompt",
-  "cozy-nest-client/cozy-prompt/mode-prompt.js");
-
 import AceEditor from "react-ace";
 import "./prompt_highlight_rules.js";
 import "./mode-prompt.js";
@@ -23,6 +13,16 @@ import {Button} from "../image-browser/App.jsx";
 import {Column, Row} from "../main/Utils.jsx";
 import {ButtonWithConfirmDialog} from "../chakra/ButtonWithConfirmDialog.jsx";
 import DOM_IDS from "../main/dom_ids.js";
+import {Range as AceRange} from "ace-builds/src-noconflict/ace";
+// ace.config.setModuleUrl(
+//   "ace/mode/json_worker",
+//   'cozy-nest-client/node_modules/ace-builds/src-noconflict/worker-json.js')
+ace.config.setModuleUrl(
+  "ace/mode/prompt_highlight_rules",
+  "cozy-nest-client/cozy-prompt/prompt_highlight_rules.js");
+ace.config.setModuleUrl(
+  "ace/mode/prompt",
+  "cozy-nest-client/cozy-prompt/mode-prompt.js");
 
 export function App({parentId, containerId, tabId}) {
 
@@ -133,8 +133,152 @@ export function App({parentId, containerId, tabId}) {
   }
 
   function onLoadEditor(editor) {
+    window[`${containerId}_editor`] = editor;
+    CozyLogger.debug(`${containerId}_editor`)
+
     editor.renderer.setPadding(10);
     editor.renderer.setScrollMargin(10);
+
+    // Define the command for Ctrl-Up
+    editor.commands.addCommand({
+      name: "incrementItem",
+      bindKey: { win: "Ctrl-Up", mac: "Command-Up" },
+      exec: function(editor) {
+        editor.clearSelection();
+        const currentPosition = editor.getCursorPosition();
+        const currentLine = editor.session.getLine(currentPosition.row);
+        const newItem = incrementItem(currentLine, currentPosition.column);
+        const range = new AceRange(
+            currentPosition.row,
+            0,
+            currentPosition.row,
+            currentLine.length
+        );
+        editor.session.replace(range, newItem);
+        editor.moveCursorToPosition({row:currentPosition.row, column:currentPosition.column});
+      }
+    });
+
+// Define the command for Ctrl-Down
+    editor.commands.addCommand({
+      name: "decrementItem",
+      bindKey: { win: "Ctrl-Down", mac: "Command-Down" },
+      exec: function(editor) {
+        editor.clearSelection();
+        const currentPosition = editor.getCursorPosition();
+        const currentLine = editor.session.getLine(currentPosition.row);
+        const newItem = decrementItem(currentLine, currentPosition.column);
+        const range = new AceRange(
+            currentPosition.row,
+            0,
+            currentPosition.row,
+            currentLine.length
+        );
+        editor.session.replace(range, newItem);
+        editor.moveCursorToPosition({row:currentPosition.row, column:currentPosition.column});
+      }
+    });
+
+  }
+
+// Helper function to increment the item
+  function incrementItem(line, column) {
+    const items = line.split(",");
+    const index = getItemIndex(items, column);
+    if (index !== -1) {
+      const item = items[index];
+      items[index] = updateItemCount(item, (count, strength) => count + strength);
+    }
+    return items.join(",");
+  }
+
+// Helper function to decrement the item
+  function decrementItem(line, column) {
+    const items = line.split(",");
+    const index = getItemIndex(items, column);
+    if (index !== -1) {
+      const item = items[index];
+      items[index] = updateItemCount(item, (count, strength) => count - strength);
+    }
+    return items.join(",");
+  }
+
+// Helper function to get the index of the item based on the column position
+  function getItemIndex(items, column) {
+    let index = -1;
+    let currentPosition = 0;
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (column >= currentPosition && column <= currentPosition + item.length) {
+        index = i;
+        break;
+      }
+      currentPosition += item.length + 1; // Add 1 for the comma
+    }
+    return index;
+  }
+
+  // Helper function to increment the count of the item
+  function updateItemCount(item, updaterFn) {
+
+    const itemStartWithSpace = item.startsWith(' ');
+    const itemEndsWithSpace = item.endsWith(' ');
+    let startSpace = itemStartWithSpace ? ' ' : '';
+    let endSpace = itemEndsWithSpace ? ' ' : '';
+
+    function reWrap(updatedItem) {
+      return `${startSpace}${updatedItem}${endSpace}`
+    }
+
+    /**
+     * Update the value of the item
+     * @param _match
+     * @param strength
+     * @param isSpecial - true if the item is a special one (like lora)
+     * @returns {*}
+     */
+    function updateValue(_match, strength, isSpecial) {
+      const count = parseFloat(_match[2]);
+
+      const precision = strength * 10 === 1 ? 10 : 100;
+      const decimalCount = parseInt(String(precision), 2) / 2
+
+      const incrementedCount = Math.round(updaterFn(count, strength) * precision) / precision;
+
+      if (incrementedCount === 1 && !isSpecial) {
+        // remove :1.0
+        // remove first and last character
+        return item.replace(`:${_match[2]}`, '').slice(1, -1);
+      }
+
+      return item.replace(_match[2], incrementedCount.toFixed(decimalCount));
+    }
+
+    item = item.trim();
+
+    //if item does not contains '(' or '<' then it is a simple item
+    if (!item.includes('(') && !item.includes('<')) {
+      let baseCount = updaterFn(1.0, 0.1)
+      const updatedItem = `(${item}:${baseCount.toFixed(1)})`;
+      return reWrap(updatedItem);
+    }
+
+    //basic token
+    let countRegex = /\(([^:]+):(\d+(\.\d+)?)\)/g;
+    let match = countRegex.exec(item);
+    if (match) {
+      const updatedItem = updateValue(match, 0.1);
+      return reWrap(updatedItem);
+    }
+
+    //token like lora, etc,
+    countRegex = /<([^>]+):(\d+(\.\d+)?)>/g;
+    match = countRegex.exec(item);
+    if (match) {
+      const updatedItem = updateValue(match, 0.05, true);
+      return reWrap(updatedItem);
+    }
+
   }
 
   function isBoldCursor() {
