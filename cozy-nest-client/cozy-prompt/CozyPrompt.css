@@ -34,8 +34,22 @@
     60% { opacity: 0; }
     85% { opacity: 0; }
 }
-.CozyPrompt .ace_active-line {
+.ace_active-line {
     background: #ffffff0d !important;
+}
+.ace_completion-highlight {
+    color: var(--ae-primary-color) !important;
+}
+.ace_editor.ace_autocomplete {
+    width: 400px !important;
+}
+div.ace_editor.ace_autocomplete.ace_dark.ace-github-dark > div.ace_scroller > div > div.ace_layer.ace_text-layer > div.ace_line {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 380px !important;
+}
+div.ace_editor.ace_autocomplete.ace_dark.ace-github-dark > div.ace_scroller > div > div.ace_layer.ace_text-layer > div.ace_line > span.ace_completion-spacer {
+    flex:1 !important;
 }
 .CozyPrompt {
     /*padding: 10px;*/

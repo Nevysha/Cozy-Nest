@@ -25,12 +25,15 @@ ace.config.setModuleUrl(
   "ace/mode/prompt",
   "cozy-nest-client/cozy-prompt/mode-prompt.js");
 
+const langTools = ace.require("ace/ext/language_tools");
+
 export function App({parentId, containerId, tabId}) {
 
   let savedHeight = localStorage.getItem(`cozy-prompt-height-${containerId}`);
   savedHeight = savedHeight ? parseInt(savedHeight) : 200;
 
   const nativeTextarea = document.querySelector(`#${parentId} label textarea`);
+  const textareaParent = nativeTextarea.parentElement;
 
   const [nativeIsVisible, setNativeIsVisible] = useState(false);
   const nativeTextareaValue = useExternalTextareaObserver(`#${parentId} label textarea`);
@@ -56,6 +59,7 @@ export function App({parentId, containerId, tabId}) {
       localStorage.setItem(`cozy-prompt-${containerId}`, prompt);
     }
     propagate();
+
   }, [prompt]);
 
   useEffect(() => {
@@ -80,10 +84,10 @@ export function App({parentId, containerId, tabId}) {
   }, [nativeTextareaValue]);
   useEffect(() => {
     if (!nativeIsVisible) {
-      nativeTextarea.style.display = 'none';
+      textareaParent.style.display = 'none';
     }
     else {
-      nativeTextarea.style.display = 'block';
+      textareaParent.style.display = 'block';
       //margin-top: 40px;
       nativeTextarea.style.marginTop = '40px';
     }
@@ -134,20 +138,30 @@ export function App({parentId, containerId, tabId}) {
     document.querySelector(`#tab_${tabId} button#paste`).click()
   }
 
+  function hasTAC() {
+    return document.querySelector(`#${parentId} .autocompleteResults.${tabId}`) !== null
+  }
+
   function setupCompleters() {
-    const langTools = ace.require("ace/ext/language_tools");
 
     const completer = {
       activated: true,
       autoShown: true,
       getCompletions: function (editor, session, pos, prefix, callback) {
 
+        if (!hasTAC()) {
+          CozyLogger.debug('setupCompleters: TAC not found')
+          return;
+        }
+
         setTimeout(() => {
           const completions = [];
 
           CozyLogger.group('getCompletions')
 
-          document.querySelectorAll('#txt2img_prompt .autocompleteResults.txt2img ul li').forEach((el) => {
+          let score = 0;
+
+          document.querySelectorAll(`#${editor.parentId} .autocompleteResults.${editor.tabId} ul li`).forEach((el) => {
 
             let caption = el.querySelector('.acListItem').innerText;
             let value = el.querySelector('.acListItem').innerText;
@@ -158,7 +172,7 @@ export function App({parentId, containerId, tabId}) {
 
             let meta = el.querySelector('.acMetaText').innerText;
 
-            const completion = {caption: caption, value: value, meta: meta};
+            const completion = {caption: caption, value: value, meta: meta, $score: score--};
             CozyLogger.debug(completion)
             completions.push(completion)
           })
@@ -166,7 +180,7 @@ export function App({parentId, containerId, tabId}) {
           CozyLogger.groupEnd('getCompletions')
 
           callback(null, completions);
-        }, 200);
+        }, 700);
       }
     }
     langTools.setCompleters([completer]);
@@ -176,8 +190,16 @@ export function App({parentId, containerId, tabId}) {
     window[`${containerId}_editor`] = editor;
     CozyLogger.debug(`${containerId}_editor`)
 
+    //keep context of editor inside autocomplete
+    editor.parentId = parentId;
+    editor.tabId = tabId;
+
     editor.renderer.setPadding(10);
     editor.renderer.setScrollMargin(10);
+
+    editor.on('change', function(event, editor) { // sync for each change
+      CozyLogger.debug('CHANGE:', event, editor)
+    });
 
     // Define the command for Ctrl-Up
     editor.commands.addCommand({
@@ -199,8 +221,6 @@ export function App({parentId, containerId, tabId}) {
       }
     });
 
-    setupCompleters();
-
     // Define the command for Ctrl-Down
     editor.commands.addCommand({
       name: "decrementItem",
@@ -221,6 +241,8 @@ export function App({parentId, containerId, tabId}) {
       }
     });
 
+    setupCompleters();
+
     editor.setOptions({
       animatedScroll: true,
       cursorStyle: "smooth",
@@ -230,13 +252,12 @@ export function App({parentId, containerId, tabId}) {
       wrap: true,
       fontSize: "15px",
       fontFamily: "monospace",
-      enableBasicAutocompletion: true,
-      // enableLiveAutocompletion: true
+      enableBasicAutocompletion: true
     })
 
   }
 
-// Helper function to increment the item
+  // Helper function to increment the item
   function incrementItem(line, column) {
     const items = line.split(",");
     const index = getItemIndex(items, column);
@@ -247,7 +268,7 @@ export function App({parentId, containerId, tabId}) {
     return items.join(",");
   }
 
-// Helper function to decrement the item
+  // Helper function to decrement the item
   function decrementItem(line, column) {
     const items = line.split(",");
     const index = getItemIndex(items, column);
@@ -258,7 +279,7 @@ export function App({parentId, containerId, tabId}) {
     return items.join(",");
   }
 
-// Helper function to get the index of the item based on the column position
+  // Helper function to get the index of the item based on the column position
   function getItemIndex(items, column) {
     let index = -1;
     let currentPosition = 0;
@@ -341,7 +362,41 @@ export function App({parentId, containerId, tabId}) {
   }
 
   function onChange(newValue) {
+    closeAutoComplete();
     setPrompt(newValue);
+  }
+
+  function closeAutoComplete() {
+    if (hasTAC()
+        && editor.current
+        && editor.current.editor
+        && editor.current.editor.completer) {
+      editor.current.editor.completer.detach();
+    }
+  }
+
+  //force trigger autocomplete
+  function triggerAutocomplete(event) {
+
+    if (!hasTAC()) {
+      CozyLogger.debug('setupCompleters: TAC not found')
+      return;
+    }
+
+    if (!prompt || prompt === '') {
+      return
+    }
+
+    //trim the prompt and check if last character is a comma
+    const trimmedPrompt = prompt.trim();
+    const lastChar = trimmedPrompt[trimmedPrompt.length - 1];
+    if (lastChar === ',') {
+      return;
+    }
+
+    const Autocomplete = ace.require("ace/autocomplete").Autocomplete;
+    Autocomplete.startCommand.exec(editor.current.editor, {});
+
   }
 
   return (
@@ -361,6 +416,7 @@ export function App({parentId, containerId, tabId}) {
           showPrintMargin={false}
           onChange={onChange}
           onBlur={propagate}
+          onInput={triggerAutocomplete}
           value={prompt}
           name="ace-prompt-editor"
           editorProps={{ $blockScrolling: true }}

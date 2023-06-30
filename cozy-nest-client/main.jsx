@@ -13,6 +13,7 @@ import {
 import startCozyPrompt from "./cozy-prompt/main.jsx";
 import {startExtraNetwork} from "./extra-network/main.jsx";
 import {OverrideUiJs} from "./main/override_ui.js";
+import CozyNestEventBus from "./CozyNestEventBus.js";
 window.CozyTools = {
   dummyLoraCard,
   dummyControlNetBloc,
@@ -40,6 +41,9 @@ export default async function cozyNestLoader()  {
     }
 
     startCozyNestImageBrowser();
+
+    CozyNestEventBus.emit('cozy-nest-loaded');
+
   });
 }
 
