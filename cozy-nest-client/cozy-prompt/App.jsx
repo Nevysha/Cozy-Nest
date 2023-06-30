@@ -14,6 +14,7 @@ import {Column, Row} from "../main/Utils.jsx";
 import {ButtonWithConfirmDialog} from "../chakra/ButtonWithConfirmDialog.jsx";
 import DOM_IDS from "../main/dom_ids.js";
 import {Range as AceRange} from "ace-builds/src-noconflict/ace";
+import {CozyLogger} from "../main/CozyLogger.js";
 // ace.config.setModuleUrl(
 //   "ace/mode/json_worker",
 //   'cozy-nest-client/node_modules/ace-builds/src-noconflict/worker-json.js')
@@ -54,6 +55,7 @@ export function App({parentId, containerId, tabId}) {
     if (COZY_NEST_CONFIG.save_last_prompt_local_storage) {
       localStorage.setItem(`cozy-prompt-${containerId}`, prompt);
     }
+    propagate();
   }, [prompt]);
 
   useEffect(() => {
@@ -132,6 +134,44 @@ export function App({parentId, containerId, tabId}) {
     document.querySelector(`#tab_${tabId} button#paste`).click()
   }
 
+  function setupCompleters() {
+    const langTools = ace.require("ace/ext/language_tools");
+
+    const completer = {
+      activated: true,
+      autoShown: true,
+      getCompletions: function (editor, session, pos, prefix, callback) {
+
+        setTimeout(() => {
+          const completions = [];
+
+          CozyLogger.group('getCompletions')
+
+          document.querySelectorAll('#txt2img_prompt .autocompleteResults.txt2img ul li').forEach((el) => {
+
+            let caption = el.querySelector('.acListItem').innerText;
+            let value = el.querySelector('.acListItem').innerText;
+            //if value contains ➝, keep only the part after
+            if (value.includes('➝')) {
+              value = value.split('➝')[1].trim();
+            }
+
+            let meta = el.querySelector('.acMetaText').innerText;
+
+            const completion = {caption: caption, value: value, meta: meta};
+            CozyLogger.debug(completion)
+            completions.push(completion)
+          })
+
+          CozyLogger.groupEnd('getCompletions')
+
+          callback(null, completions);
+        }, 200);
+      }
+    }
+    langTools.setCompleters([completer]);
+  }
+
   function onLoadEditor(editor) {
     window[`${containerId}_editor`] = editor;
     CozyLogger.debug(`${containerId}_editor`)
@@ -159,7 +199,9 @@ export function App({parentId, containerId, tabId}) {
       }
     });
 
-// Define the command for Ctrl-Down
+    setupCompleters();
+
+    // Define the command for Ctrl-Down
     editor.commands.addCommand({
       name: "decrementItem",
       bindKey: { win: "Ctrl-Down", mac: "Command-Down" },
@@ -178,6 +220,19 @@ export function App({parentId, containerId, tabId}) {
         editor.moveCursorToPosition({row:currentPosition.row, column:currentPosition.column});
       }
     });
+
+    editor.setOptions({
+      animatedScroll: true,
+      cursorStyle: "smooth",
+      behavioursEnabled: true,
+      wrapBehavioursEnabled: true,
+      autoScrollEditorIntoView: true,
+      wrap: true,
+      fontSize: "15px",
+      fontFamily: "monospace",
+      enableBasicAutocompletion: true,
+      // enableLiveAutocompletion: true
+    })
 
   }
 
@@ -285,6 +340,10 @@ export function App({parentId, containerId, tabId}) {
     return COZY_NEST_CONFIG.carret_style === 'bold'
   }
 
+  function onChange(newValue) {
+    setPrompt(newValue);
+  }
+
   return (
     <Column
       style={{
@@ -300,23 +359,12 @@ export function App({parentId, containerId, tabId}) {
           mode="prompt"
           theme="github_dark"
           showPrintMargin={false}
-          onChange={setPrompt}
+          onChange={onChange}
           onBlur={propagate}
           value={prompt}
           name="ace-prompt-editor"
           editorProps={{ $blockScrolling: true }}
           style={{width: "100%", height: "100%"}}
-          setOptions={{
-            animatedScroll: true,
-            enableSnippets: true,
-            cursorStyle: "smooth",
-            behavioursEnabled: true,
-            wrapBehavioursEnabled: true,
-            autoScrollEditorIntoView: true,
-            wrap: true,
-            fontSize: "15px",
-            fontFamily: "monospace",
-          }}
         />
       </div>
       <Row>

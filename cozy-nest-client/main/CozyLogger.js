@@ -16,6 +16,17 @@ export class CozyLogger {
     CozyLogger._instance.enabled = false;
   }
 
+  static group(name) {
+    if (CozyLogger._instance.enabled) {
+      console.group(name);
+    }
+  }
+  static groupEnd() {
+    if (CozyLogger._instance.enabled) {
+      console.groupEnd();
+    }
+  }
+
   static debug(...args) {
     if (CozyLogger._instance.enabled) {
       console.log('CozyNest:DEBUG:',...args);
