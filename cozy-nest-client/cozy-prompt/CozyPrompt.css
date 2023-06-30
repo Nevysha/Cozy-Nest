@@ -116,7 +116,7 @@
 .ace_lyco-begin, .ace_lyco-end, .ace_lyco-inner {
     color: #c444d5;
 }
-.ace_wildcard-begin, .ace_wildcard-end, .ace_wildcard-inner {
+.ace_wildcard {
     color: #4cd041;
     font-style: italic;
 }

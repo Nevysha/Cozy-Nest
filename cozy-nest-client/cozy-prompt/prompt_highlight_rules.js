@@ -36,7 +36,7 @@ ace.define("ace/mode/prompt_highlight_rules", ["require", "exports", "module", "
         { regex: /<hypernetwork:/, token: "hypernetwork-begin", next: "hypernetwork" },
         { regex: /<hypernet:/, token: "hypernet-begin", next: "hypernet" },
         { regex: /<lyco:/, token: "lyco-begin", next: "lyco" },
-        // { regex: /__/, token: "wildcard-begin", next: "wildcard" },
+        { regex: /__.+__/, token: "wildcard" },
         { regex: /[,|:]/, token: "token" },
         { regex: /\w+/, token: "text" },
       ],
@@ -75,6 +75,7 @@ ace.define("ace/mode/prompt_highlight_rules", ["require", "exports", "module", "
         },
         { regex: /:\d+(\.\d+)?/, token: "attention" },
         { regex: /[,|:]/, token: "token" },
+        { regex: /__.+__/, token: "wildcard" },
         { regex: /\w+/, token: "inner-bracket" },
         {
           token: () => {

@@ -3,6 +3,11 @@
 - Automatic1111's webui 1.3.2 release.
 - SD Next (Vlad's fork) Version: 4867dafa Fri Jun 23.
 
+## Minor changes & fixes in 2.3.4
+- [x]  Synthax color in prompt for wildcard (ie: '__devilkkw/body-1/eyes_iris_colors__')
+- [x]  Synthax color in prompt for attention value (':1.1', ':2.3', ...)
+- [x]  Keybinding to increase or decrease attention value (ctrl+up, ctrl+down)
+
 ## Minor changes & fixes in 2.3.3
 - [x]  Do not preload Extra Network tab but wait for a user click
 
