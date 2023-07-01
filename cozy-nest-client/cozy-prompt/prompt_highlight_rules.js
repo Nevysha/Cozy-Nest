@@ -36,23 +36,32 @@ ace.define("ace/mode/prompt_highlight_rules", ["require", "exports", "module", "
         { regex: /<hypernetwork:/, token: "hypernetwork-begin", next: "hypernetwork" },
         { regex: /<hypernet:/, token: "hypernet-begin", next: "hypernet" },
         { regex: /<lyco:/, token: "lyco-begin", next: "lyco" },
+        { regex: /__.+__/, token: "wildcard" },
         { regex: /[,|:]/, token: "token" },
         { regex: /\w+/, token: "text" },
       ],
+      // wildcard: [
+      //   { regex: '__', token: "wildcard-end", next: "start" },
+      //   { regex: /\w+/, token: "wildcard-inner" },
+      // ],
       lora: [
         { regex: '>', token: "lora-end", next: "start" },
+        { regex: /:\d+(\.\d+)?/, token: "attention" },
         { regex: /\w+/, token: "lora-inner" },
       ],
       hypernetwork: [
         { regex: '>', token: "hypernetwork-end", next: "start" },
+        { regex: /:\d+(\.\d+)?/, token: "attention" },
         { regex: /\w+/, token: "hypernetwork-inner" },
       ],
       hypernet: [
         { regex: '>', token: "hypernet-end", next: "start" },
+        { regex: /:\d+(\.\d+)?/, token: "attention" },
         { regex: /\w+/, token: "hypernet-inner" },
       ],
       lyco: [
         { regex: '>', token: "lyco-end", next: "start" },
+        { regex: /:\d+(\.\d+)?/, token: "attention" },
         { regex: /\w+/, token: "lyco-inner" },
       ],
       inner: [
@@ -64,7 +73,9 @@ ace.define("ace/mode/prompt_highlight_rules", ["require", "exports", "module", "
           regex: openBracket,
           next: "inner"
         },
+        { regex: /:\d+(\.\d+)?/, token: "attention" },
         { regex: /[,|:]/, token: "token" },
+        { regex: /__.+__/, token: "wildcard" },
         { regex: /\w+/, token: "inner-bracket" },
         {
           token: () => {
