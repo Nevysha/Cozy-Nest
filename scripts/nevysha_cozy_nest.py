@@ -148,6 +148,7 @@ def get_default_settings():
         'carret_style': 'thin',
         'save_last_prompt_local_storage': True,
         'color_mode': 'dark',
+        'log_enabled': False,
         'webui': 'unknown'
     }
 
@@ -536,6 +537,13 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
         pass
 
 
+def init_extra_networks(_: Any, app: FastAPI, **kwargs):
+    from scripts.cozy_extra_network import CozyExtraNetworksClass
+
+    CozyExtraNetworks = CozyExtraNetworksClass(get_dict_from_config())
+    CozyExtraNetworks.create_api_route(app)
+
 
 script_callbacks.on_ui_tabs(on_ui_tabs)
 script_callbacks.on_app_started(cozy_nest_api)
+script_callbacks.on_app_started(init_extra_networks)

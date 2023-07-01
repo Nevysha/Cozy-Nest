@@ -14,6 +14,7 @@ import startCozyPrompt from "./cozy-prompt/main.jsx";
 import {startExtraNetwork} from "./extra-network/main.jsx";
 import {OverrideUiJs} from "./main/override_ui.js";
 import CozyNestEventBus from "./CozyNestEventBus.js";
+import {startCozyExtraNetwork} from "./cozy_extra_network/main.jsx";
 window.CozyTools = {
   dummyLoraCard,
   dummyControlNetBloc,
@@ -38,6 +39,7 @@ export default async function cozyNestLoader()  {
     if (COZY_NEST_CONFIG.enable_extra_network_tweaks === true) {
       await startExtraNetwork('txt2img')
       await startExtraNetwork('img2img')
+      await startCozyExtraNetwork()
     }
 
     startCozyNestImageBrowser();
