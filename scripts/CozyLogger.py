@@ -13,3 +13,6 @@ class CozyLoggerClass:
     def debug(self, message: str):
         if self.log_enabled:
             print(f"[{self.name}:DEBUG] {message}")
+
+    def warning(self, message: str):
+        print(f"[{self.name}:WARNING] {message}")

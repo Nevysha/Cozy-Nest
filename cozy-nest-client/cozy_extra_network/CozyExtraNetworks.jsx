@@ -17,49 +17,43 @@ const nevyshaScrollbar = {
   },
 }
 
-function ExtraNetworksPanel({items}) {
+function ExtraNetworksPanel({item}) {
 
   const [isHovered, setIsHovered] = React.useState(false)
 
   return (
-    <div className="CozyExtraNetworksPanels">
-      {items.map((item, index) => {
-        return (
-          <div
-            className="CozyExtraNetworksCard"
-            key={index}
-          >
-
-            <div className="en-preview-wrapper">
-              {item.previewPath &&
-                <img
-                  className="en-preview-thumbnail"
-                  src={`./sd_extra_networks/thumb?filename=${encodeURIComponent(item.previewPath)}&amp;mtime=${new Date().getTime()}`}
-                  loading="lazy"
-                  alt={item.name}
-                />
-              }
-              {!item.previewPath &&
-                <div className="en-preview-thumbnail black">
-                  No preview
-                </div>
-              }
-              <div className="cozy-en-info">
-                {isHovered &&
-                  <div className="cozy-en-actions">
-                    <button title="Replace preview image">R</button>
-                    <button title="Open model in civitai">V</button>
-                    <button title="Add trigger words to prompt">T</button>
-                    <button title="Use prompt from preview image">P</button>
-                  </div>
-                }
-                <span className="en-preview-name">{item.name || item}</span>
-              </div>
-            </div>
-
+    <div
+      className="CozyExtraNetworksCard"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="en-preview-wrapper">
+        {item.previewPath &&
+          <img
+            className="en-preview-thumbnail"
+            src={`./sd_extra_networks/thumb?filename=${encodeURIComponent(item.previewPath)}&amp;mtime=${new Date().getTime()}`}
+            loading="lazy"
+            alt={item.name}
+          />
+        }
+        {!item.previewPath &&
+          <div className="en-preview-thumbnail black">
+            No preview
           </div>
-        )
-      })}
+        }
+        <div className="cozy-en-info">
+          {isHovered &&
+            <div className="cozy-en-actions">
+              <button title="Replace preview image">R</button>
+              <button title="Open model in civitai">V</button>
+              <button title="Add trigger words to prompt">T</button>
+              <button title="Use prompt from preview image">P</button>
+            </div>
+          }
+          <span className="en-preview-name">{item.name || item}</span>
+        </div>
+      </div>
+
     </div>
   );
 }
@@ -94,10 +88,13 @@ export function CozyExtraNetworks() {
       )
       EnTabPanels.push(
         <TabPanel css={nevyshaScrollbar} key={index}>
-          <ExtraNetworksPanel items={extraNetworks[network]}/>
+          <div className="CozyExtraNetworksPanels">
+            {extraNetworks[network].map((item, index) => {
+              return <ExtraNetworksPanel key={index} item={item}/>
+            })}
+          </div>
         </TabPanel>
       )
-
     })
 
     return {EnTabs, EnTabPanels}

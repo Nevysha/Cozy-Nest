@@ -1,8 +1,11 @@
 import glob
+import importlib
+import json
 import os
 from pathlib import Path
 from modules import script_callbacks, scripts, sd_hijack, shared, sd_models
 from scripts.CozyLogger import CozyLoggerClass
+from fastapi import Response
 
 
 def format_path_array(paths, type, validator):
@@ -169,6 +172,18 @@ class CozyExtraNetworksClass:
 
         return results
 
+    # def search_for_civitai(self):
+    #     extensions_path = Path(os.path.join(self.FILE_DIR, "extensions"))
+    #
+    #     # get through all folder. inside, get the "scripts" folder and look for "civitai_helper.py"
+    #     for folder in extensions_path.iterdir():
+    #         if folder.is_dir():
+    #             scripts_folder = folder.joinpath("scripts")
+    #             if scripts_folder.exists():
+    #                 civitai_helper = scripts_folder.joinpath("civitai_helper.py")
+    #                 if civitai_helper.exists():
+    #                     return True
+
     def create_api_route(self, app):
         @app.get("/cozy-nest/valid_extra_networks")
         def valid_extra_networks():
@@ -227,3 +242,17 @@ class CozyExtraNetworksClass:
                 result["lyco"] = lyco
 
             return result
+
+        @app.get("/cozy-nest/extra_network/")
+        def extra_network(path: str):
+            path = Path(path[:path.rfind('.')] + '.civitai.info')
+            if not path.exists():
+                return Response(status_code=404, content="Info file not found")
+
+            with open(path, 'r') as f:
+                try:
+                    info = json.load(f)
+                except Exception as e:
+                    return Response(status_code=500, content="Could not read info file")
+
+                return info
