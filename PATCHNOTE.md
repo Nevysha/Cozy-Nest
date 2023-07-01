@@ -1,7 +1,7 @@
 ## Compatibility
 
 - Automatic1111's webui 1.3.2 release.
-- SD Next (Vlad's fork) Version: 4867dafa Fri Jun 23.
+- SD Next (Vlad's fork) Version: 4867dafa Fri Jun 23. (Not compatible with latest!)
 
 ## Minor changes & fixes in 2.3.4
 - [x]  Compatibility with https://github.com/DominikDoom/a1111-sd-webui-tagcomplete (ctrl+space to autocomplete tags in Cozy Prompt)
