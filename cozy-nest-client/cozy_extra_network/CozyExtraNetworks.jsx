@@ -49,20 +49,42 @@ function ExtraNetworksPanel({item}) {
   }, [isHovered])
 
   function addTriggerWordsToPrompt() {
-
     if (info.trainedWords.length === 0) return
+
+    setAndPropagatePrompt(info.trainedWords.join(', '))
+  }
+
+  function setAndPropagatePrompt(newValue, negativePrompt) {
+
+    if (!newValue || newValue.length === 0) return
 
     const currentTab = get_uiCurrentTabContent().id
 
     let textarea = null
     if (currentTab.includes('txt2img')) {
-      textarea = document.querySelector(`#txt2img_prompt label textarea`)
+      if (negativePrompt) {
+        textarea = document.querySelector(`#txt2img_neg_prompt label textarea`)
+      }
+      else
+        textarea = document.querySelector(`#txt2img_prompt label textarea`)
     }
     else if (currentTab.includes('img2txt')) {
-      textarea = document.querySelector(`#img2img_prompt label textarea`)
+      if (negativePrompt) {
+        textarea = document.querySelector(`#img2img_neg_prompt label textarea`)
+      }
+      else
+        textarea = document.querySelector(`#img2img_prompt label textarea`)
     }
 
-    textarea.value = `${textarea.value}\n${info.trainedWords.join(', ')}`
+    let value = textarea.value
+    if (value.length !== 0) {
+      value = `${textarea.value}\n${newValue}`
+    }
+    else {
+      value = newValue
+    }
+
+    textarea.value = value
 
     //trigger input event
     const event = new Event('input')
@@ -75,6 +97,31 @@ function ExtraNetworksPanel({item}) {
 
     const url = `${CIVITAI_URL.modelPage}/${info.modelId}`
     window.open(url, '_blank')
+  }
+
+  function usePromptFromPreview() {
+    // image prompt are in info.images[?].meta.prompt (if any)
+    // go through all images until we find one with a prompt
+
+    if (!info.images) return
+
+    for (const image of info.images) {
+      if (image.meta && image.meta.prompt) {
+        setAndPropagatePrompt(image.meta.prompt)
+
+        if (image.meta.negativePrompt) {
+          setAndPropagatePrompt(image.meta.negativePrompt, true)
+        }
+
+        return
+      }
+    }
+
+    //TODO show alert if no prompt found
+  }
+
+  function replaceImage() {
+    //TODO
   }
 
   const hasTriggerWords = info.trainedWords && info.trainedWords.length > 0;
@@ -105,6 +152,7 @@ function ExtraNetworksPanel({item}) {
             <div className="cozy-en-actions">
               <button
                 title="Replace preview image"
+                onClick={replaceImage}
               >
                 R
               </button>
@@ -122,6 +170,7 @@ function ExtraNetworksPanel({item}) {
               </button>}
               <button
                 title="Use prompt from preview image"
+                onClick={usePromptFromPreview}
               >
                 P
               </button>
