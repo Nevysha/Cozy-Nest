@@ -609,7 +609,7 @@ function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab, pr
   //create a panel to display Cozy Image Browser
   const cozyImgBrowserPanel =
     `<div id="${label}_panel" class="nevysha slide-right-browser-panel" style="display: none">
-      <div class="nevysha slide-right-browser-panel-container nevysha-scrollable">
+      <div class="nevysha slide-right-browser-panel-container nevysha-scrollable ${label}_panel_inner">
         <div class="nevysha" id="${label}-react"/>
       </div>
     </div>`;
@@ -623,6 +623,11 @@ function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab, pr
   const cozyImgBrowserPanelWidth = localStorage.getItem(`${label}_panelWidth`);
   if (cozyImgBrowserPanelWidth) {
     cozyImgBrowserPanelWrapper.style.width = cozyImgBrowserPanelWidth;
+  }
+  else {
+    //get window width
+    const width = window.innerWidth;
+    cozyImgBrowserPanelWrapper.style.width = `${Math.round(width / 2)}px`;
   }
   cozyImgBrowserPanelWrapper.appendChild(lineWrapper)
 
