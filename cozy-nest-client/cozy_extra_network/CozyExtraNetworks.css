@@ -72,6 +72,7 @@
     background-color: var(--ae-input-bg-color);
     opacity: 0.9;
     width: 100%;
+    text-align: center;
 }
 .en-preview-name {
     width: 100%;
