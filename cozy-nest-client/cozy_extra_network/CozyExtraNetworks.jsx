@@ -20,6 +20,26 @@ const nevyshaScrollbar = {
 function ExtraNetworksPanel({item}) {
 
   const [isHovered, setIsHovered] = React.useState(false)
+  const [infoLoaded, setInfoLoaded] = React.useState(false)
+  const [info, setInfo] = React.useState({})
+  const [validInfo, setValidInfo] = React.useState(false)
+
+  useEffect(() => {
+    if (infoLoaded || !isHovered) return
+
+    (async () => {
+      const response = await fetch(`/cozy-nest/extra_network?path=${encodeURIComponent(item.path)}`)
+      if (response.status !== 200) {
+        CozyLogger.error('Failed to fetch extra network info', response)
+        return
+      }
+      const info = await response.json()
+      setInfo(info)
+      setInfoLoaded(true)
+      setValidInfo(info !== null)
+    })();
+
+  }, [isHovered])
 
   return (
     <div
@@ -42,7 +62,7 @@ function ExtraNetworksPanel({item}) {
           </div>
         }
         <div className="cozy-en-info">
-          {isHovered &&
+          {isHovered && infoLoaded && validInfo &&
             <div className="cozy-en-actions">
               <button title="Replace preview image">R</button>
               <button title="Open model in civitai">V</button>
