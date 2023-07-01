@@ -1,7 +1,30 @@
 import glob
+import os
 from pathlib import Path
 from modules import script_callbacks, scripts, sd_hijack, shared, sd_models
 from scripts.CozyLogger import CozyLoggerClass
+
+
+def format_path_array(paths, type, validator):
+    all_paths = []
+    for path in paths:
+        if validator(path):
+
+            name = str(path.name)[:str(path.name).rfind('.')]
+
+            previewPath = os.path.join(path.parent, str(name)) + ".preview.png"
+            if not os.path.exists(previewPath):
+                previewPath = None
+
+            all_paths.append({
+                "name": name,
+                "type": type,
+                "path": str(path),
+                # preview path if it exists os.path.join(path.parent, str(path.name))}.preview.png
+                "previewPath": previewPath
+            })
+
+    return sorted(all_paths, key=lambda x: x['name'].lower())
 
 
 # gather extra network folders
@@ -57,33 +80,29 @@ class CozyExtraNetworksClass:
 
         # Get a list of all hypernetworks in the folder
         hyp_paths = [Path(h) for h in glob.glob(self.HYP_PATH.joinpath("**/*").as_posix(), recursive=True)]
-        all_hypernetworks = [str(h.name) for h in hyp_paths if h.suffix in {".pt"}]
-        # Remove file extensions
-        return sorted([h[:h.rfind('.')] for h in all_hypernetworks], key=lambda x: x.lower())
+
+        return format_path_array(hyp_paths, 'hyper', lambda x: x.suffix in {".pt"})
 
     def get_lora(self):
         """Write a list of all lora"""
 
         # Get a list of all lora in the folder
         lora_paths = [Path(l) for l in glob.glob(self.LORA_PATH.joinpath("**/*").as_posix(), recursive=True)]
-        all_lora = [str(l.name) for l in lora_paths if l.suffix in {".safetensors", ".ckpt", ".pt"}]
-        # Remove file extensions
-        return sorted([l[:l.rfind('.')] for l in all_lora], key=lambda x: x.lower())
+
+        return format_path_array(lora_paths, 'lora', lambda x: x.suffix in {".safetensors", ".ckpt", ".pt"})
 
     def get_lyco(self):
         """Write a list of all LyCORIS/LOHA from https://github.com/KohakuBlueleaf/a1111-sd-webui-lycoris"""
 
         # Get a list of all LyCORIS in the folder
         lyco_paths = [Path(ly) for ly in glob.glob(self.LYCO_PATH.joinpath("**/*").as_posix(), recursive=True)]
-        all_lyco = [str(ly.name) for ly in lyco_paths if ly.suffix in {".safetensors", ".ckpt", ".pt"}]
-        # Remove file extensions
-        return sorted([ly[:ly.rfind('.')] for ly in all_lyco], key=lambda x: x.lower())
+
+        return format_path_array(lyco_paths, 'lyco', lambda x: x.suffix in {".safetensors", ".ckpt", ".pt"})
 
     def get_models(self):
         models_paths = [Path(m) for m in glob.glob(self.MODEL_PATH.joinpath("**/*").as_posix(), recursive=True)]
-        all_models = [str(m.name) for m in models_paths if m.suffix in {".ckpt", ".safetensors"}]
-        # Remove file extensions
-        return sorted(all_models, key=lambda x: x.lower())
+        # all_models = [str(m.name) for m in models_paths if m.suffix in {".ckpt", ".safetensors"}]
+        return format_path_array(models_paths, 'ckp', lambda x: x.suffix in {".ckpt", ".safetensors"})
 
     def get_embeddings(self):
         """Write a list of all embeddings with their version"""
@@ -118,11 +137,30 @@ class CozyExtraNetworksClass:
             elif emb_b_shape == V2_SHAPE:
                 emb_v2 = list(emb_type_b.keys())
 
-            results = sorted([e + ",v1" for e in emb_v1] + [e + ",v2" for e in emb_v2], key=lambda x: x.lower())
+            for e in emb_v1:
+                results.append({
+                    "name": e,
+                    "version": "v1",
+                    "type": "ti",
+                    "path": os.path.join(self.EMB_PATH, e + ".pt"),
+                    "parentFolder": os.path.join(self.EMB_PATH, e)
+                })
+
+            for e in emb_v2:
+                results.append({
+                    "name": e,
+                    "type": "ti",
+                    "path": os.path.join(self.EMB_PATH, e + ".pt"),
+                    "parentFolder": os.path.join(self.EMB_PATH, e)
+                })
+
+            results = sorted(results, key=lambda x: x["name"].lower())
         except AttributeError:
-            print("tag_autocomplete_helper: Old webui version or unrecognized model shape, using fallback for embedding completion.")
+            print(
+                "tag_autocomplete_helper: Old webui version or unrecognized model shape, using fallback for embedding completion.")
             # Get a list of all embeddings in the folder
-            all_embeds = [str(e.relative_to(self.EMB_PATH)) for e in self.EMB_PATH.rglob("*") if e.suffix in {".bin", ".pt", ".png",'.webp', '.jxl', '.avif'}]
+            all_embeds = [str(e.relative_to(self.EMB_PATH)) for e in self.EMB_PATH.rglob("*") if
+                          e.suffix in {".bin", ".pt", ".png", '.webp', '.jxl', '.avif'}]
             # Remove files with a size of 0
             all_embeds = [e for e in all_embeds if self.EMB_PATH.joinpath(e).stat().st_size > 0]
             # Remove file extensions
@@ -189,6 +227,3 @@ class CozyExtraNetworksClass:
                 result["lyco"] = lyco
 
             return result
-
-
-

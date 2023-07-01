@@ -7,6 +7,9 @@ class CozyLoggerClass:
         self.name = name
         self.log_enabled = config["log_enabled"]
 
+        if self.log_enabled:
+            print(f"[{self.name}:DEBUG] Logger enabled. Disable in nevyui_settings.json")
+
     def debug(self, message: str):
         if self.log_enabled:
-            print(f"[{self.name}] {message}")
+            print(f"[{self.name}:DEBUG] {message}")

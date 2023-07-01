@@ -18,11 +18,46 @@ const nevyshaScrollbar = {
 }
 
 function ExtraNetworksPanel({items}) {
+
+  const [isHovered, setIsHovered] = React.useState(false)
+
   return (
     <div className="CozyExtraNetworksPanels">
       {items.map((item, index) => {
         return (
-          <div key={index}>{item}</div>
+          <div
+            className="CozyExtraNetworksCard"
+            key={index}
+          >
+
+            <div className="en-preview-wrapper">
+              {item.previewPath &&
+                <img
+                  className="en-preview-thumbnail"
+                  src={`./sd_extra_networks/thumb?filename=${encodeURIComponent(item.previewPath)}&amp;mtime=${new Date().getTime()}`}
+                  loading="lazy"
+                  alt={item.name}
+                />
+              }
+              {!item.previewPath &&
+                <div className="en-preview-thumbnail black">
+                  No preview
+                </div>
+              }
+              <div className="cozy-en-info">
+                {isHovered &&
+                  <div className="cozy-en-actions">
+                    <button title="Replace preview image">R</button>
+                    <button title="Open model in civitai">V</button>
+                    <button title="Add trigger words to prompt">T</button>
+                    <button title="Use prompt from preview image">P</button>
+                  </div>
+                }
+                <span className="en-preview-name">{item.name || item}</span>
+              </div>
+            </div>
+
+          </div>
         )
       })}
     </div>
