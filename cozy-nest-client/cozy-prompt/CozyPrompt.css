@@ -34,8 +34,22 @@
     60% { opacity: 0; }
     85% { opacity: 0; }
 }
-.CozyPrompt .ace_active-line {
+.ace_active-line {
     background: #ffffff0d !important;
+}
+.ace_completion-highlight {
+    color: var(--ae-primary-color) !important;
+}
+.ace_editor.ace_autocomplete {
+    width: 400px !important;
+}
+div.ace_editor.ace_autocomplete.ace_dark.ace-github-dark > div.ace_scroller > div > div.ace_layer.ace_text-layer > div.ace_line {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 380px !important;
+}
+div.ace_editor.ace_autocomplete.ace_dark.ace-github-dark > div.ace_scroller > div > div.ace_layer.ace_text-layer > div.ace_line > span.ace_completion-spacer {
+    flex:1 !important;
 }
 .CozyPrompt {
     /*padding: 10px;*/
@@ -103,6 +117,9 @@
     font-weight: bold;
     /*margin: 0 3px;*/
 }
+.ace_attention {
+    color: #f35a5a;
+}
 .ace_lora-begin, .ace_lora-end, .ace_lora-inner {
     color: #08c2d3;
 }
@@ -112,6 +129,10 @@
 }
 .ace_lyco-begin, .ace_lyco-end, .ace_lyco-inner {
     color: #c444d5;
+}
+.ace_wildcard {
+    color: #4cd041;
+    font-style: italic;
 }
 .ace_lora-begin, .ace_lora-end,
 .ace_hypernetwork-begin, .ace_hypernetwork-end,

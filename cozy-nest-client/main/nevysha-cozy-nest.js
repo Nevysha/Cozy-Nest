@@ -1265,8 +1265,18 @@ export default async function cozyNestModuleLoader(extraCozyNestModulesLoader) {
 
 function setupErrorHandling() {
 
+  let isLoading = false;
+  CozyNestEventBus.on('cozy-nest-loaded', () => {
+    isLoading = false;
+  })
+
   //set a global error handler
   window.addEventListener('error', function ({message, filename , lineno, colno, error }) {
+
+    if (!isLoading) {
+      CozyLogger.error(error);
+      return;
+    }
 
     //if filename does not contains Cozy-Nest, ignore
     if (!filename.toLowerCase().includes('cozy-nest')) return;
