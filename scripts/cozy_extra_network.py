@@ -7,7 +7,6 @@ from modules import script_callbacks, scripts, sd_hijack, shared, sd_models
 from scripts.CozyLogger import CozyLoggerClass
 from fastapi import Response
 
-
 def format_path_array(paths, type, validator):
     all_paths = []
     for path in paths:

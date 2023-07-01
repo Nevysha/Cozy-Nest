@@ -17,6 +17,13 @@ const nevyshaScrollbar = {
   },
 }
 
+const CIVITAI_URL = {
+  "modelPage":"https://civitai.com/models/",
+  "modelId": "https://civitai.com/api/v1/models/",
+  "modelVersionId": "https://civitai.com/api/v1/model-versions/",
+  "hash": "https://civitai.com/api/v1/model-versions/by-hash/"
+}
+
 function ExtraNetworksPanel({item}) {
 
   const [isHovered, setIsHovered] = React.useState(false)
@@ -62,7 +69,16 @@ function ExtraNetworksPanel({item}) {
     textarea.dispatchEvent(event)
   }
 
-  const hasTriggerWords = info.trainedWords && info.trainedWords.length > 0
+  function openCivitai() {
+
+    if (!info.modelId) return
+
+    const url = `${CIVITAI_URL.modelPage}/${info.modelId}`
+    window.open(url, '_blank')
+  }
+
+  const hasTriggerWords = info.trainedWords && info.trainedWords.length > 0;
+  const hasModelId = info.modelId !== undefined;
 
   return (
     <div
@@ -92,11 +108,12 @@ function ExtraNetworksPanel({item}) {
               >
                 R
               </button>
-              <button
+              {hasModelId && <button
                 title="Open model in civitai"
+                onClick={openCivitai}
               >
                 V
-              </button>
+              </button>}
               {hasTriggerWords && <button
                 title="Add trigger words to prompt"
                 onClick={addTriggerWordsToPrompt}
