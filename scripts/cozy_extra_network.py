@@ -168,7 +168,10 @@ class CozyExtraNetworksClass:
 
             result = {}
 
-            # Get a list of all embeddings in the folder
+            if self.MODEL_PATH is not None:
+                model = self.get_models()
+                result["models"] = model
+
             if self.EMB_PATH is not None:
                 emb = self.get_embeddings()
                 result["embeddings"] = emb
@@ -184,10 +187,6 @@ class CozyExtraNetworksClass:
             if self.LYCO_PATH is not None:
                 lyco = self.get_lyco()
                 result["lyco"] = lyco
-
-            if self.MODEL_PATH is not None:
-                model = self.get_models()
-                result["models"] = model
 
             return result
 
