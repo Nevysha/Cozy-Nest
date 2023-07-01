@@ -1145,7 +1145,7 @@ const onLoad = (done, error) => {
   if (window.location.href.includes('__theme')) {
     showAlert(
       "Warning",
-      "The __theme parameter is deprecated. Please use Cozy Nest settings instead.",
+      "The __theme parameter is deprecated for CozyNest. Please remove it from URL and use Cozy Nest settings instead.",
     )
   }
 

@@ -41,6 +41,29 @@ function ExtraNetworksPanel({item}) {
 
   }, [isHovered])
 
+  function addTriggerWordsToPrompt() {
+
+    if (info.trainedWords.length === 0) return
+
+    const currentTab = get_uiCurrentTabContent().id
+
+    let textarea = null
+    if (currentTab.includes('txt2img')) {
+      textarea = document.querySelector(`#txt2img_prompt label textarea`)
+    }
+    else if (currentTab.includes('img2txt')) {
+      textarea = document.querySelector(`#img2img_prompt label textarea`)
+    }
+
+    textarea.value = `${textarea.value}\n${info.trainedWords.join(', ')}`
+
+    //trigger input event
+    const event = new Event('input')
+    textarea.dispatchEvent(event)
+  }
+
+  const hasTriggerWords = info.trainedWords && info.trainedWords.length > 0
+
   return (
     <div
       className="CozyExtraNetworksCard"
@@ -64,10 +87,27 @@ function ExtraNetworksPanel({item}) {
         <div className="cozy-en-info">
           {isHovered && infoLoaded && validInfo &&
             <div className="cozy-en-actions">
-              <button title="Replace preview image">R</button>
-              <button title="Open model in civitai">V</button>
-              <button title="Add trigger words to prompt">T</button>
-              <button title="Use prompt from preview image">P</button>
+              <button
+                title="Replace preview image"
+              >
+                R
+              </button>
+              <button
+                title="Open model in civitai"
+              >
+                V
+              </button>
+              {hasTriggerWords && <button
+                title="Add trigger words to prompt"
+                onClick={addTriggerWordsToPrompt}
+              >
+                T
+              </button>}
+              <button
+                title="Use prompt from preview image"
+              >
+                P
+              </button>
             </div>
           }
           <span className="en-preview-name">{item.name || item}</span>
