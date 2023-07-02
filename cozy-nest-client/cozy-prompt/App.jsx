@@ -27,7 +27,7 @@ ace.config.setModuleUrl(
 
 const langTools = ace.require("ace/ext/language_tools");
 
-export function App({parentId, containerId, tabId}) {
+export function App({parentId, containerId, tabId, resolve}) {
 
   let savedHeight = localStorage.getItem(`cozy-prompt-height-${containerId}`);
   savedHeight = savedHeight ? parseInt(savedHeight) : 200;
@@ -254,6 +254,10 @@ export function App({parentId, containerId, tabId}) {
       fontFamily: "monospace",
       enableBasicAutocompletion: true
     })
+
+    setTimeout(() => {
+      resolve()
+    }, 200);
 
   }
 

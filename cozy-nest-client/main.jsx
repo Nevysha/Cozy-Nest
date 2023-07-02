@@ -31,8 +31,8 @@ export default async function cozyNestLoader()  {
 
 
     if (COZY_NEST_CONFIG.enable_cozy_prompt === true) {
-      startCozyPrompt('txt2img_prompt', 'cozy_nest_prompt_txt2img', 'txt2img');
-      startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img', 'img2img');
+      await startCozyPrompt('txt2img_prompt', 'cozy_nest_prompt_txt2img', 'txt2img');
+      await startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img', 'img2img');
 
       OverrideUiJs.override_confirm_clear_prompt();
     }
