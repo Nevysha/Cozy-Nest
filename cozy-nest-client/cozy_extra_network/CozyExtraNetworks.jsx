@@ -132,7 +132,7 @@ function ExtraNetworksPanel({item}) {
       setAndPropagatePrompt(item.name)
     }
     else if (item.type === 'lora' || item.type === 'lyco' || item.type === 'hypernet') {
-      setAndPropagatePrompt(`<${item.type}:${item.name}:1.00>`)
+      setAndPropagatePrompt(`<${item.type}:${item.name}:1.00>, `)
     }
   }
 
