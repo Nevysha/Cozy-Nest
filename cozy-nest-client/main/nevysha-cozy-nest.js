@@ -690,7 +690,7 @@ function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab, pr
   function close() {
     const panel = document.querySelector(`#${label}_panel`);
     if (panel.style.display !== 'none') {
-      $(panel).animate({"margin-right": `-=${panel.offsetWidth}`}, 1, () => {
+      $(panel).animate({"margin-right": `-=${panel.offsetWidth}`}, 150, () => {
         panel.style.display = 'none'
       });
     }
