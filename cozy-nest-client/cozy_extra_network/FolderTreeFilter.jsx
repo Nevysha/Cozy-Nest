@@ -6,6 +6,8 @@ import './FolderTreeFilter.scss'
 
 export function FolderTreeFilter({hasSubFolders, folder}) {
 
+    //TODO manage scroll if needed
+
     if (!hasSubFolders) {
         return (
             <div className="EmptyFolderTreeFilter"></div>
