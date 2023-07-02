@@ -125,7 +125,15 @@ function ExtraNetworksPanel({item}) {
   }
 
   function loadExtraNetwork() {
-    //TODO
+    if (item.type === 'ckp') {
+      selectCheckpoint(item.fullName)
+    }
+    else if (item.type === 'ti') {
+      setAndPropagatePrompt(item.name)
+    }
+    else if (item.type === 'lora' || item.type === 'lyco' || item.type === 'hypernet') {
+      setAndPropagatePrompt(`<${item.type}:${item.name}:1.00>`)
+    }
   }
 
   const hasTriggerWords = info.trainedWords && info.trainedWords.length > 0;
@@ -214,8 +222,12 @@ export function CozyExtraNetworks() {
     const EnTabPanels = [];
 
     Object.keys(extraNetworks).forEach((network, index) => {
+      let tabName = String(network);
+      if (network === 'embeddings') {
+        tabName = 'Textual Inversion'
+      }
       EnTabs.push(
-        <Tab key={index}>{network}</Tab>
+        <Tab key={index}>{tabName}</Tab>
       )
       EnTabPanels.push(
         <TabPanel css={nevyshaScrollbar} key={index}>

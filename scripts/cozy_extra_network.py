@@ -15,6 +15,7 @@ def format_path_array(paths, _type, validator):
     for path in paths:
         if validator(path):
 
+            fullName = str(path.name)
             name = str(path.name)[:str(path.name).rfind('.')]
 
             previewPath = os.path.join(path.parent, str(name)) + ".preview.png"
@@ -23,6 +24,7 @@ def format_path_array(paths, _type, validator):
 
             all_paths.append({
                 "name": name,
+                "fullName": fullName,
                 "type": _type,
                 "path": str(path),
                 # preview path if it exists os.path.join(path.parent, str(path.name))}.preview.png
@@ -88,7 +90,7 @@ class CozyExtraNetworksClass:
         # Get a list of all hypernetworks in the folder
         hyp_paths = [Path(h) for h in glob.glob(self.HYP_PATH.joinpath("**/*").as_posix(), recursive=True)]
 
-        return format_path_array(hyp_paths, 'hyper', lambda x: x.suffix in {".pt"})
+        return format_path_array(hyp_paths, 'hypernet', lambda x: x.suffix in {".pt"})
 
     def get_lora(self):
         """Write a list of all lora"""
