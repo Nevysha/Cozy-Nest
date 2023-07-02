@@ -1,13 +1,15 @@
 import glob
-import importlib
 import json
 import os
 from pathlib import Path
-from modules import script_callbacks, scripts, sd_hijack, shared, sd_models
-from scripts.CozyLogger import CozyLoggerClass
+
 from fastapi import Response
 
-def format_path_array(paths, type, validator):
+from modules import sd_hijack, shared, sd_models
+from scripts.CozyLogger import CozyLoggerClass
+
+
+def format_path_array(paths, _type, validator):
     all_paths = []
     for path in paths:
         if validator(path):
@@ -20,7 +22,7 @@ def format_path_array(paths, type, validator):
 
             all_paths.append({
                 "name": name,
-                "type": type,
+                "type": _type,
                 "path": str(path),
                 # preview path if it exists os.path.join(path.parent, str(path.name))}.preview.png
                 "previewPath": previewPath
@@ -35,13 +37,17 @@ class CozyExtraNetworksClass:
     def __init__(self, config):
         try:
             from modules.paths import extensions_dir, script_path
+        except ImportError:
+            extensions_dir = None
+            script_path = None
 
+        if extensions_dir is not None and script_path is not None:
             # Webui root path
             self.FILE_DIR = Path(script_path)
 
             # The extension base path
             self.EXT_PATH = Path(extensions_dir)
-        except ImportError:
+        else:
             # Webui root path
             self.FILE_DIR = Path().absolute()
             # The extension base path
@@ -66,7 +72,7 @@ class CozyExtraNetworksClass:
         except AttributeError or TypeError:
             self.MODEL_PATH = None
 
-        CozyLogger = CozyLoggerClass("CozyLogger", config)
+        CozyLogger = CozyLoggerClass("CozyLogger", config.get('log_enabled'))
 
         # print all paths
         CozyLogger.debug(f"FILE_DIR: {self.FILE_DIR}")
@@ -89,7 +95,7 @@ class CozyExtraNetworksClass:
         """Write a list of all lora"""
 
         # Get a list of all lora in the folder
-        lora_paths = [Path(l) for l in glob.glob(self.LORA_PATH.joinpath("**/*").as_posix(), recursive=True)]
+        lora_paths = [Path(lo) for lo in glob.glob(self.LORA_PATH.joinpath("**/*").as_posix(), recursive=True)]
 
         return format_path_array(lora_paths, 'lora', lambda x: x.suffix in {".safetensors", ".ckpt", ".pt"})
 
@@ -187,29 +193,19 @@ class CozyExtraNetworksClass:
         @app.get("/cozy-nest/valid_extra_networks")
         def valid_extra_networks():
             valid = {}
-            if self.MODEL_PATH is None:
-                valid["MODEL_PATH"] = False
-            else:
+            if self.MODEL_PATH is not None:
                 valid["MODEL_PATH"] = self.MODEL_PATH
 
-            if self.EMB_PATH is None:
-                valid["EMB_PATH"] = False
-            else:
+            if self.EMB_PATH is not None:
                 valid["EMB_PATH"] = self.EMB_PATH
 
-            if self.HYP_PATH is None:
-                valid["HYP_PATH"] = False
-            else:
+            if self.HYP_PATH is not None:
                 valid["HYP_PATH"] = self.HYP_PATH
 
-            if self.LORA_PATH is None:
-                valid["LORA_PATH"] = False
-            else:
+            if self.LORA_PATH is not None:
                 valid["LORA_PATH"] = self.LORA_PATH
 
-            if self.LYCO_PATH is None:
-                valid["LYCO_PATH"] = False
-            else:
+            if self.LYCO_PATH is not None:
                 valid["LYCO_PATH"] = self.LYCO_PATH
 
             return valid
@@ -251,7 +247,7 @@ class CozyExtraNetworksClass:
             with open(path, 'r') as f:
                 try:
                     info = json.load(f)
-                except Exception as e:
+                except Exception:
                     return Response(status_code=500, content="Could not read info file")
 
                 return info
