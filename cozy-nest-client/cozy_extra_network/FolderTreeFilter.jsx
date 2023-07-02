@@ -7,6 +7,7 @@ import './FolderTreeFilter.scss'
 export function FolderTreeFilter({hasSubFolders, folder}) {
 
     //TODO manage scroll if needed
+    //TODO handle select to trigger filter
 
     if (!hasSubFolders) {
         return (
