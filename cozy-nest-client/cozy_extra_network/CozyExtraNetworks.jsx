@@ -6,6 +6,7 @@ import './CozyExtraNetworks.css'
 import {ExtraNetworksCard} from "./ExtraNetworksCard.jsx";
 import {Column, Row, RowFullWidth} from "../main/Utils.jsx";
 import {SvgForReact} from "../main/svg_for_react.jsx";
+import {FolderTreeFilter} from "./FolderTreeFilter.jsx";
 
 const nevyshaScrollbar = {
   '&::-webkit-scrollbar': {
@@ -87,11 +88,14 @@ export function CozyExtraNetworks() {
       )
       EnTabPanels.push(
         <TabPanel css={nevyshaScrollbar} key={index} style={style}>
+          <Row>
+          {displayFolderFilter && <FolderTreeFilter />}
           <div className="CozyExtraNetworksPanels">
             {extraNetworks[network].map((item, index) => {
               return <ExtraNetworksCard key={index} item={item} searchString={searchString} nsfwFilter={nsfwFilter}/>
             })}
           </div>
+          </Row>
         </TabPanel>
       )
     })
