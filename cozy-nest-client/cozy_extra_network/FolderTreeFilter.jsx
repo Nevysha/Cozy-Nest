@@ -6,8 +6,7 @@ import './FolderTreeFilter.scss'
 
 export function FolderTreeFilter({hasSubFolders, folder}) {
 
-    if (!hasSubFolders
-        || (!folder || !folder.children || folder.children.length <= 0)) {
+    if (!hasSubFolders) {
         return (
             <div className="EmptyFolderTreeFilter"></div>
         )

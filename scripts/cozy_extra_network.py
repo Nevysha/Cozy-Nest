@@ -263,53 +263,6 @@ class CozyExtraNetworksClass:
 
             return folder_tree
 
-        def build_main_folder_tree_for(_main_path, main_items):
-            # walk through all models and build the folder tree structure from self.MODEL_PATH downwards
-            models_folder_tree = {
-                "name": "",
-                "children": []
-            }
-            for m in main_items:
-                # split the path into its parts
-                rel_path = Path(m["path"]).relative_to(_main_path)
-                path_parts = str(rel_path).split(os.sep)
-                if len(path_parts) == 1:
-                    # if the model is in the root folder, skip it
-                    continue
-
-                # remove the last part, which is the filename
-                path_parts.pop(-1)
-
-                # get the folder tree
-                models_folder_tree = add_folder_to_tree(models_folder_tree, path_parts)
-            return models_folder_tree
-
-        def add_folder_to_tree(folder_tree, path_parts):
-            # if there are no more parts, we are done
-            if len(path_parts) == 0:
-                return folder_tree
-
-            # get the first part of the path
-            part = path_parts.pop(0)
-
-            # check if the part is already in the folder tree
-            for child in folder_tree["children"]:
-                if child["name"] == part:
-                    # if it is, add the rest of the path to the child
-                    add_folder_to_tree(child, path_parts)
-                    return folder_tree
-
-            # if the part is not in the folder tree, add it
-            folder_tree["children"].append({
-                "name": part,
-                "children": []
-            })
-
-            # add the rest of the path to the new child
-            add_folder_to_tree(folder_tree["children"][-1], path_parts)
-
-            return folder_tree
-
         @app.get("/cozy-nest/extra_networks/full")
         def extra_networks():
             # get all extra networks by walking through all directories recursively
@@ -463,3 +416,55 @@ def get_info(path: str):
 
 def get_civitai_info_path(path):
     return Path(path[:path.rfind('.')] + '.civitai.info')
+
+
+def build_main_folder_tree_for(_main_path, main_items):
+    # walk through all models and build the folder tree structure from self.MODEL_PATH downwards
+    models_folder_tree = {
+        "name": "all",
+        "empty": True,
+        "children": []
+    }
+    for m in main_items:
+        # split the path into its parts
+        rel_path = Path(m["path"]).relative_to(_main_path)
+        path_parts = str(rel_path).split(os.sep)
+        if len(path_parts) == 1:
+            # if the model is in the root folder, skip it
+            continue
+
+        models_folder_tree["empty"] = False
+
+        # remove the last part, which is the filename
+        path_parts.pop(-1)
+
+        # get the folder tree
+        models_folder_tree = add_folder_to_tree(models_folder_tree, path_parts)
+    return models_folder_tree
+
+
+def add_folder_to_tree(folder_tree, path_parts):
+    # if there are no more parts, we are done
+    if len(path_parts) == 0:
+        return folder_tree
+
+    # get the first part of the path
+    part = path_parts.pop(0)
+
+    # check if the part is already in the folder tree
+    for child in folder_tree["children"]:
+        if child["name"] == part:
+            # if it is, add the rest of the path to the child
+            add_folder_to_tree(child, path_parts)
+            return folder_tree
+
+    # if the part is not in the folder tree, add it
+    folder_tree["children"].append({
+        "name": part,
+        "children": []
+    })
+
+    # add the rest of the path to the new child
+    add_folder_to_tree(folder_tree["children"][-1], path_parts)
+
+    return folder_tree

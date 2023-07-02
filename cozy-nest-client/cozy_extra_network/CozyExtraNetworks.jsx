@@ -118,7 +118,7 @@ export function CozyExtraNetworks() {
 
   const Ui = buildExtraNetworks()
 
-  const hasSubFolders = folders[selectedTab] && folders[selectedTab].children && folders[selectedTab].children.length > 0
+  const hasSubFolders = folders[selectedTab] && !folders[selectedTab].empty
 
   return (
     <div className="CozyExtraNetworks">
