@@ -1359,6 +1359,9 @@ textarea.nevysha-image-browser-folder {
 .markdown-body > ul > li {
     margin-bottom: 10px;
 }
+.markdown-body em {
+    font-style: italic;
+}
 
 
 /*Style to apply when #nevysha_other_tabs is empty*/
