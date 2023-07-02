@@ -63,7 +63,7 @@
     position: absolute;
     bottom: 0;
     z-index: 2;
-    background-color: var(--ae-input-bg-color);
+    background-color: var(--block-background-fill);
     opacity: 0.9;
     width: 100%;
     text-align: center;
