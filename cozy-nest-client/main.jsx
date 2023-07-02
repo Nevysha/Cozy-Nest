@@ -29,7 +29,6 @@ export default async function cozyNestLoader()  {
   await cozyNestModuleLoader(async () => {
     startCozyNestSettings();
 
-
     if (COZY_NEST_CONFIG.enable_cozy_prompt === true) {
       await startCozyPrompt('txt2img_prompt', 'cozy_nest_prompt_txt2img', 'txt2img');
       await startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img', 'img2img');
@@ -39,6 +38,8 @@ export default async function cozyNestLoader()  {
     if (COZY_NEST_CONFIG.enable_extra_network_tweaks === true) {
       await startExtraNetwork('txt2img')
       await startExtraNetwork('img2img')
+    }
+    if (COZY_NEST_CONFIG.enable_cozy_extra_networks === true) {
       await startCozyExtraNetwork()
     }
 

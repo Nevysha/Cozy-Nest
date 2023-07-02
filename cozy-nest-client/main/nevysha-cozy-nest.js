@@ -731,7 +731,7 @@ function createRightWrapperDiv() {
   tab.insertAdjacentElement('beforeend', rightPanBtnWrapper);
 
   if (COZY_NEST_CONFIG.enable_extra_network_tweaks === true) {
-    buildRightSlidePanelFor('cozy-txt2img-extra-network', 'Extra Network'
+    buildRightSlidePanelFor('cozy-txt2img-extra-network', 'Extra Networks'
       , rightPanBtnWrapper, tab, 'txt2img');
     document.getElementById('cozy-txt2img-extra-network-react').classList.add('cozy-extra-network')
 
@@ -739,9 +739,10 @@ function createRightWrapperDiv() {
       , rightPanBtnWrapper, tab, 'img2img');
     document.getElementById('cozy-img2img-extra-network-react').classList.add('cozy-extra-network')
     document.querySelector(`#cozy-img2img-extra-network_right_button`).style.display = 'none';
-
+  }
+  if (COZY_NEST_CONFIG.enable_cozy_extra_networks === true) {
     //Cozy Nest reimplementation of extra networks
-    buildRightSlidePanelFor('cozy-extra-network', 'cozy-extra-network', rightPanBtnWrapper, tab);
+    buildRightSlidePanelFor('cozy-extra-network', 'Extra Networks', rightPanBtnWrapper, tab);
   }
   if (COZY_NEST_CONFIG.disable_image_browser !== true) {
     buildRightSlidePanelFor('cozy-img-browser', 'Cozy Image Browser', rightPanBtnWrapper, tab);

@@ -215,7 +215,7 @@ export function App() {
                   <Tab>Main Settings</Tab>
                   <Tab>Image Browser Settings</Tab>
                   <Tab>Cozy Prompt Settings</Tab>
-                  <Tab>Others</Tab>
+                  <Tab>Cozy Nest Modules</Tab>
                 </TabList>
 
                 <TabPanels>
@@ -428,13 +428,21 @@ export function App() {
                         onChange={(e) => setConfig({...config, disable_image_browser: !e.target.checked})}
                       >Enable image browser (Reload UI required)</Checkbox>
                       <Checkbox
-                          isChecked={config.enable_extra_network_tweaks}
-                          onChange={(e) => setConfig({...config, enable_extra_network_tweaks: e.target.checked})}
-                      >Enable extra network tweaks</Checkbox>
-                      <Checkbox
                           isChecked={config.enable_cozy_prompt}
                           onChange={(e) => setConfig({...config, enable_cozy_prompt: e.target.checked})}
                       >Enable Cozy Prompt</Checkbox>
+
+                      <span style={{marginTop: '25px'}}>Extra Networks</span>
+                      <span>You probably only want one of those</span>
+                      <Checkbox
+                          isChecked={config.enable_extra_network_tweaks}
+                          onChange={(e) => setConfig({...config, enable_extra_network_tweaks: e.target.checked})}
+                      >Tweaks existing : just move existing component in side panel</Checkbox>
+                      <Checkbox
+                          isChecked={config.enable_cozy_extra_networks}
+                          onChange={(e) => setConfig({...config, enable_cozy_extra_networks: e.target.checked})}
+                      >Cozy Nest Extra Network new implementation</Checkbox>
+
                     </Column>
                   </TabPanel>
                 </TabPanels>
