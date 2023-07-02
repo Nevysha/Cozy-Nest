@@ -16,7 +16,14 @@ export function Row(props) {
 }
 
 export const RowFullWidth = (props) => {
-    return <Row {...props} style={{width: '100%', justifyContent: 'space-between', gap: '30px'}}/>
+
+    const style = {width: '100%', justifyContent: 'space-between', gap: '30px'}
+
+    if (props.style) {
+        Object.assign(style, props.style)
+    }
+
+    return <Row {...props} style={style}/>
 }
 
 //component to wrap flex column

@@ -1,10 +1,10 @@
 import React from "react";
 import {useEffect} from "react";
 import {Loading} from "../image-browser/App.jsx";
-import {Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/react";
+import {Checkbox, Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/react";
 import './CozyExtraNetworks.css'
 import {ExtraNetworksCard} from "./ExtraNetworksCard.jsx";
-import {Column} from "../main/Utils.jsx";
+import {Column, RowFullWidth} from "../main/Utils.jsx";
 
 const nevyshaScrollbar = {
   '&::-webkit-scrollbar': {
@@ -27,6 +27,8 @@ export function CozyExtraNetworks() {
   const [ready, setReady] = React.useState(false)
 
   const [searchString, setSearchString] = React.useState('')
+  const [displayFolderFilter, setDisplayFolderFilter] = React.useState(false)
+  const [nsfwFilter, setNsfwFilter] = React.useState(false)
 
   useEffect(() => {
     (async () => {
@@ -83,6 +85,17 @@ export function CozyExtraNetworks() {
                     data-gramm="false"
                     style={{resize: 'none'}}
                     onChange={(e) => setSearchString(e.target.value)}/>
+          <RowFullWidth style={{margin:'3px 0'}}>
+            <Checkbox
+                isChecked={displayFolderFilter}
+                onChange={(e) => setDisplayFolderFilter(e.target.checked)}
+            >Display folder filter</Checkbox>
+            <button
+                onClick={() => setNsfwFilter(!nsfwFilter)}
+                title="WARNING : this will take time as it will compute the info of all extra networks"
+                className="btn-settings"
+            >Toggle nsfw filter</button>
+          </RowFullWidth>
           <Tabs variant='nevysha'>
             <TabList style={{backgroundColor: 'var(--tab-nav-background-color)'}}>
               {Ui.EnTabs}

@@ -83,3 +83,9 @@
     flex-direction: row;
     justify-content: space-evenly;
 }
+
+.CozyExtraNetworks .btn-settings {
+    background-color: var(--ae-input-bg-color) !important;
+    width: 150px;
+    height: 20px;
+}
