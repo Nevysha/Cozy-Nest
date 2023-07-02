@@ -742,7 +742,9 @@ function createRightWrapperDiv() {
   }
   if (COZY_NEST_CONFIG.enable_cozy_extra_networks === true) {
     //Cozy Nest reimplementation of extra networks
-    buildRightSlidePanelFor('cozy-extra-network', 'Extra Networks', rightPanBtnWrapper, tab);
+    //if both are enabled, we use the Cozy Extra Networks label
+    const buttonLabel = COZY_NEST_CONFIG.enable_extra_network_tweaks ? 'Cozy Extra Networks' : 'Extra Networks';
+    buildRightSlidePanelFor('cozy-extra-network', buttonLabel, rightPanBtnWrapper, tab);
   }
   if (COZY_NEST_CONFIG.disable_image_browser !== true) {
     buildRightSlidePanelFor('cozy-img-browser', 'Cozy Image Browser', rightPanBtnWrapper, tab);
