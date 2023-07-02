@@ -104,7 +104,7 @@ export function CozyExtraNetworks() {
     <div className="CozyExtraNetworks">
       {!ready && <Loading label="Loading Extra Networks..."/>}
       {ready &&
-        <Column>
+        <Column style={{width: '100%'}}>
           <textarea data-testid="textbox"
                     placeholder="Search..."
                     rows="1"

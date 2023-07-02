@@ -18,7 +18,8 @@ import {startCozyExtraNetwork} from "./cozy_extra_network/main.jsx";
 window.CozyTools = {
   dummyLoraCard,
   dummyControlNetBloc,
-  dummySubdirs
+  dummySubdirs,
+  stop:() => setTimeout(function(){debugger;}, 5000),
 }
 
 

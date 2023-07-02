@@ -37,7 +37,6 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
 
         if (nsfwFilter
             && info
-            && !info.empty
             && info.model
             && info.model.nsfw) {
             setMatchFilter(false)
@@ -46,6 +45,10 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
 
         setMatchFilter(filterCard(searchString))
     }, [searchString, nsfwFilter, info])
+
+    function isNsfw() {
+        return info && info.model && info.model.nsfw
+    }
 
     function filterCard(searchString) {
         if (searchString === '') return true
@@ -243,7 +246,7 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
                                 title="Mark as NSFW"
                                 onClick={toggleNSFW}
                             >
-                                nsfw
+                                {isNsfw() ? 'nsfw' : 'sfw'}
                             </button>
                         </div>
                     }

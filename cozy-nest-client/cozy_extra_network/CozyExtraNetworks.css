@@ -81,6 +81,12 @@
     flex-direction: row;
     justify-content: space-evenly;
 }
+.cozy-en-actions > button {
+    min-width: 25px;
+}
+.cozy-en-actions > button:hover {
+    color: var(--ae-primary-color);
+}
 
 .CozyExtraNetworks .btn-settings {
     background-color: var(--ae-input-bg-color) !important;

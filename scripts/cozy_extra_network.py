@@ -148,19 +148,27 @@ class CozyExtraNetworksClass:
                 emb_v2 = list(emb_type_b.keys())
 
             for e in emb_v1:
+                emb_path = os.path.join(self.EMB_PATH, e)
+                previewPath = f"{emb_path}.preview.png"
+
                 results.append({
                     "name": e,
                     "version": "v1",
                     "type": "ti",
-                    "path": os.path.join(self.EMB_PATH, e + ".pt"),
+                    "path": f"{emb_path}.pt",
+                    "previewPath": previewPath if os.path.isfile(previewPath) else None,
                     "parentFolder": os.path.join(self.EMB_PATH, e)
                 })
 
             for e in emb_v2:
+                emb_path = os.path.join(self.EMB_PATH, e)
+                previewPath = f"{emb_path}.preview.png"
                 results.append({
                     "name": e,
+                    "version": "v2",
                     "type": "ti",
-                    "path": os.path.join(self.EMB_PATH, e + ".pt"),
+                    "path": f"{emb_path}.pt",
+                    "previewPath": previewPath if os.path.isfile(previewPath) else None,
                     "parentFolder": os.path.join(self.EMB_PATH, e)
                 })
 
@@ -178,18 +186,6 @@ class CozyExtraNetworksClass:
             results = [e + "," for e in all_embeds]
 
         return results
-
-    # def search_for_civitai(self):
-    #     extensions_path = Path(os.path.join(self.FILE_DIR, "extensions"))
-    #
-    #     # get through all folder. inside, get the "scripts" folder and look for "civitai_helper.py"
-    #     for folder in extensions_path.iterdir():
-    #         if folder.is_dir():
-    #             scripts_folder = folder.joinpath("scripts")
-    #             if scripts_folder.exists():
-    #                 civitai_helper = scripts_folder.joinpath("civitai_helper.py")
-    #                 if civitai_helper.exists():
-    #                     return True
 
     def create_api_route(self, app):
         @app.get("/cozy-nest/valid_extra_networks")
