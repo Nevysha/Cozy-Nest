@@ -48,7 +48,10 @@ function ExtraNetworksPanel({item}) {
 
   }, [isHovered])
 
-  function addTriggerWordsToPrompt() {
+  function addTriggerWordsToPrompt(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
     if (info.trainedWords.length === 0) return
 
     setAndPropagatePrompt(info.trainedWords.join(', '))
@@ -98,7 +101,9 @@ function ExtraNetworksPanel({item}) {
     textarea.dispatchEvent(event)
   }
 
-  function openCivitai() {
+  function openCivitai(event) {
+    event.preventDefault();
+    event.stopPropagation();
 
     if (!info.modelId) return
 
@@ -106,34 +111,41 @@ function ExtraNetworksPanel({item}) {
     window.open(url, '_blank')
   }
 
-  function usePromptFromPreview() {
+  function usePromptFromPreview(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
     // image prompt are in info.images[?].meta.prompt (if any)
     // go through all images until we find one with a prompt
+    if (info.images) {
+      for (const image of info.images) {
+        if (image.meta && image.meta.prompt) {
+          clearPrompt()
+          setAndPropagatePrompt(image.meta.prompt)
 
-    if (!info.images) return
+          if (image.meta.negativePrompt) {
+            clearPrompt(true)
+            setAndPropagatePrompt(image.meta.negativePrompt, true)
+          }
 
-    for (const image of info.images) {
-      if (image.meta && image.meta.prompt) {
-        clearPrompt()
-        setAndPropagatePrompt(image.meta.prompt)
-
-        if (image.meta.negativePrompt) {
-          clearPrompt(true)
-          setAndPropagatePrompt(image.meta.negativePrompt, true)
+          return
         }
-
-        return
       }
     }
 
-    //TODO show alert if no prompt found
+    //TODO better alert
+    alert('No prompt found in preview images')
   }
 
-  function replaceImage() {
+  function replaceImage(event) {
+    event.preventDefault();
+    event.stopPropagation();
     //TODO
   }
 
-  function loadExtraNetwork() {
+  function loadExtraNetwork(event) {
+    event.preventDefault();
+    event.stopPropagation();
     if (item.type === 'ckp') {
       selectCheckpoint(item.fullName)
     }
