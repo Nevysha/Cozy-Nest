@@ -164,6 +164,13 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
         }
     }
 
+    function markAsNSFW(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        //TODO
+    }
+
     const hasTriggerWords = info.trainedWords && info.trainedWords.length > 0;
     const hasModelId = info.modelId !== undefined;
 
@@ -215,6 +222,12 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
                             >
                                 P
                             </button>
+                            {/*<button*/}
+                            {/*    title="Mark as NSFW"*/}
+                            {/*    onClick={markAsNSFW}*/}
+                            {/*>*/}
+                            {/*    nsfw*/}
+                            {/*</button>*/}
                         </div>
                     }
                     <span className="en-preview-name">{item.name || item}</span>
