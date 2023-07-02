@@ -54,27 +54,34 @@ function ExtraNetworksPanel({item}) {
     setAndPropagatePrompt(info.trainedWords.join(', '))
   }
 
-  function setAndPropagatePrompt(newValue, negativePrompt) {
-
-    if (!newValue || newValue.length === 0) return
-
+  function getActiveTextarea(negativePrompt) {
     const currentTab = get_uiCurrentTabContent().id
 
     let textarea = null
     if (currentTab.includes('txt2img')) {
       if (negativePrompt) {
         textarea = document.querySelector(`#txt2img_neg_prompt label textarea`)
-      }
-      else
+      } else
         textarea = document.querySelector(`#txt2img_prompt label textarea`)
-    }
-    else if (currentTab.includes('img2txt')) {
+    } else if (currentTab.includes('img2txt')) {
       if (negativePrompt) {
         textarea = document.querySelector(`#img2img_neg_prompt label textarea`)
-      }
-      else
+      } else
         textarea = document.querySelector(`#img2img_prompt label textarea`)
     }
+    return textarea;
+  }
+
+  function clearPrompt(negativePrompt) {
+    let textarea = getActiveTextarea(negativePrompt);
+    textarea.value = ''
+  }
+
+  function setAndPropagatePrompt(newValue, negativePrompt) {
+
+    if (!newValue || newValue.length === 0) return
+
+    let textarea = getActiveTextarea(negativePrompt);
 
     let value = textarea.value
     if (value.length !== 0) {
@@ -107,9 +114,11 @@ function ExtraNetworksPanel({item}) {
 
     for (const image of info.images) {
       if (image.meta && image.meta.prompt) {
+        clearPrompt()
         setAndPropagatePrompt(image.meta.prompt)
 
         if (image.meta.negativePrompt) {
+          clearPrompt(true)
           setAndPropagatePrompt(image.meta.negativePrompt, true)
         }
 
