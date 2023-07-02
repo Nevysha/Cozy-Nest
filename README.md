@@ -76,6 +76,7 @@ Or search for Cozy Nest in the extension tab
 # Looks
 
 ![Screenshot 2023-06-24 154827](https://github.com/Nevysha/Cozy-Nest/assets/122687716/7db13230-6a27-4f16-98fd-3df84e83c8ff)
+![Cozy-Prompt-Demo](https://github.com/Nevysha/Cozy-Nest/assets/122687716/af97707e-d686-45bf-a28d-08584a2a067c)
 ![](https://github.com/Nevysha/Cozy-Nest/blob/main/screenshots/chrome-capture-2023-4-2%20(1).png?raw=true)
 ![](https://github.com/Nevysha/Cozy-Nest/blob/main/screenshots/Screenshot%202023-05-03%20100850.png?raw=true)
 
