@@ -18,9 +18,14 @@ import websockets
 from modules import script_callbacks, shared, call_queue, scripts
 
 from scripts import tools
+from scripts.CozyLogger import CozyLoggerClass
 from scripts.CozyNestConfig import CozyNestConfig
 from scripts.cozynest_image_browser import start_server
 from scripts.tools import output_folder_array
+
+CozyLogger = CozyLoggerClass("CozyLogger")
+if CozyLogger.log_enabled:
+    CozyLogger.warning("Logger enabled. delete 'log_enabled' file to disable")
 
 
 def request_restart():
@@ -132,6 +137,10 @@ def on_ui_tabs():
     global _server_port
 
     config = CozyNestConfig()
+    config.init()
+    config.migrate()
+
+    CozyLogger.info(f"version: {config.get('version')}")
 
     # check if the user has disabled the image browser
     disable_image_browser_value = config.get('disable_image_browser')

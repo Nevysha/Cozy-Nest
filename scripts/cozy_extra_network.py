@@ -7,6 +7,7 @@ from fastapi import Response
 
 from modules import sd_hijack, shared, sd_models
 from scripts.CozyLogger import CozyLoggerClass
+CozyLoggerExtNe = CozyLoggerClass("CozyLogger:ExtNe")
 
 
 def format_path_array(paths, _type, validator):
@@ -72,16 +73,14 @@ class CozyExtraNetworksClass:
         except AttributeError or TypeError:
             self.MODEL_PATH = None
 
-        CozyLogger = CozyLoggerClass("CozyLogger", config.get('log_enabled'))
-
         # print all paths
-        CozyLogger.debug(f"FILE_DIR: {self.FILE_DIR}")
-        CozyLogger.debug(f"EXT_PATH: {self.EXT_PATH}")
-        CozyLogger.debug(f"EMB_PATH: {self.EMB_PATH}")
-        CozyLogger.debug(f"HYP_PATH: {self.HYP_PATH}")
-        CozyLogger.debug(f"LORA_PATH: {self.LORA_PATH}")
-        CozyLogger.debug(f"LYCO_PATH: {self.LYCO_PATH}")
-        CozyLogger.debug(f"MODEL_PATH: {self.MODEL_PATH}")
+        CozyLoggerExtNe.debug(f"FILE_DIR: {self.FILE_DIR}")
+        CozyLoggerExtNe.debug(f"EXT_PATH: {self.EXT_PATH}")
+        CozyLoggerExtNe.debug(f"EMB_PATH: {self.EMB_PATH}")
+        CozyLoggerExtNe.debug(f"HYP_PATH: {self.HYP_PATH}")
+        CozyLoggerExtNe.debug(f"LORA_PATH: {self.LORA_PATH}")
+        CozyLoggerExtNe.debug(f"LYCO_PATH: {self.LYCO_PATH}")
+        CozyLoggerExtNe.debug(f"MODEL_PATH: {self.MODEL_PATH}")
 
     def get_hypernetworks(self):
         """Write a list of all hypernetworks"""

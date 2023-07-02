@@ -3,11 +3,16 @@ import os
 
 from modules import shared
 from scripts.tools import output_folder_array
+from scripts.CozyLogger import CozyLoggerClass
+CozyLoggerConfig = CozyLoggerClass("CozyLogger:Config")
 
 EXTENSION_FOLDER_NAME = os.path.basename(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 CONFIG_FILENAME = f"extensions/{EXTENSION_FOLDER_NAME}/nevyui_settings.json"
 CONFIG_FILENAME = os.path.join(shared.cmd_opts.data_dir, CONFIG_FILENAME)
+
+VERSION_FILENAME = f"extensions/{EXTENSION_FOLDER_NAME}/version_data.json"
+VERSION_FILENAME = os.path.join(shared.cmd_opts.data_dir, VERSION_FILENAME)
 
 
 class CozyNestConfig:
@@ -44,6 +49,44 @@ class CozyNestConfig:
         # save the merged settings
         self.save_settings(self.config)
 
+    def migrate(self):
+        current_version = CozyNestConfig.get_version()
+        current_version_code = CozyNestConfig.normalize_version(current_version)
+
+        local_version = self.config.get('version')
+        if not local_version:
+            local_version = '0.0.0'
+        local_version_code = CozyNestConfig.normalize_version(local_version)
+
+        if local_version_code < current_version_code:
+            CozyLoggerConfig.debug(f"current_version: {current_version} current_version_code: {current_version_code}")
+            CozyLoggerConfig.debug(f"local_version: {local_version} local_version_code: {local_version_code}")
+            if local_version_code < CozyNestConfig.normalize_version('2.4.0'):
+                self.config['enable_extra_network_tweaks'] = False
+                self.config['enable_cozy_extra_networks'] = True
+
+            self.config['version'] = current_version
+
+            self.simple_save_settings()
+
+    @staticmethod
+    def get_version():
+        with open(VERSION_FILENAME, 'r') as f:
+            version = json.loads(f.read())
+            f.close()
+        current_version = version['version']
+        return current_version
+
+    @staticmethod
+    def normalize_version(version):
+        # normalize version ie 2.3.4 => 2003004
+        components = [int(x) for x in version.split(".")]
+        normalized_number = 0
+        for i, component in enumerate(components):
+            normalized_number += component * (100 ** (len(components) - i - 1))
+
+        return normalized_number
+
     def get(self, key):
         return self.config.get(key)
 
@@ -68,13 +111,15 @@ class CozyNestConfig:
     def get_dict_from_config(self):
         if not os.path.exists(CONFIG_FILENAME):
             self.reset_settings()
+            # set version if config file was just created exist
+            self.config['version'] = CozyNestConfig.get_version(),
             # return default config
-            return self.get_default_settings()
+            return self.config
 
         with open(CONFIG_FILENAME, 'r') as f:
-            config = json.loads(f.read())
+            self.config = json.loads(f.read())
             f.close()
-            return config
+            return self.config
 
     def reset_settings(self):
         self.config = CozyNestConfig.get_default_settings()
@@ -106,13 +151,14 @@ class CozyNestConfig:
             'archive_path': '',
             'sfw_mode': False,
             'enable_clear_button': True,
-            'enable_extra_network_tweaks': True,
+            'enable_extra_network_tweaks': False,
+            'enable_cozy_extra_networks': True,
             'enable_cozy_prompt': True,
             'carret_style': 'thin',
             'save_last_prompt_local_storage': True,
             'color_mode': 'dark',
             'log_enabled': False,
-            'webui': 'unknown'
+            'webui': 'unknown',
         }
 
 
