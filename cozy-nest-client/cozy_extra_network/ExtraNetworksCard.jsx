@@ -35,6 +35,8 @@ function NsfwButton({onClick, nsfw}) {
 
 export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
 
+    //TODO nsfwFilter not applying when changing tab
+
     const [isHovered, setIsHovered] = React.useState(false)
     const [info, setInfo] = React.useState(item.info || {})
     const [infoLoaded, setInfoLoaded] = React.useState(item.info !== undefined)

@@ -118,6 +118,8 @@ export function CozyExtraNetworks() {
 
   const Ui = buildExtraNetworks()
 
+  const hasSubFolders = folders[selectedTab] && folders[selectedTab].children && folders[selectedTab].children.length > 0
+
   return (
     <div className="CozyExtraNetworks">
       {!ready && <Loading label="Loading Extra Networks..."/>}
@@ -133,6 +135,7 @@ export function CozyExtraNetworks() {
           <RowFullWidth style={{margin:'3px 0'}}>
             <Checkbox
                 isChecked={displayFolderFilter}
+                disabled={!hasSubFolders}
                 onChange={(e) => setDisplayFolderFilter(e.target.checked)}
             >Display folder filter</Checkbox>
             <div style={{flex:1}}/>
@@ -145,7 +148,7 @@ export function CozyExtraNetworks() {
             </button>
           </RowFullWidth>
           <Row>
-            {displayFolderFilter && <FolderTreeFilter folder={folders[selectedTab]}/>}
+            {displayFolderFilter && <FolderTreeFilter hasSubFolders={hasSubFolders} folder={folders[selectedTab]}/>}
             <Tabs variant='nevysha' isLazy onChange={onTabSelect}>
               <TabList style={{backgroundColor: 'var(--tab-nav-background-color)'}}>
                 {Ui.EnTabs}

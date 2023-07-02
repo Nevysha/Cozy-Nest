@@ -4,9 +4,10 @@ import { CiFolderOff } from "react-icons/ci";
 import TreeView, { flattenTree } from "react-accessible-treeview";
 import './FolderTreeFilter.scss'
 
-export function FolderTreeFilter({folder}) {
+export function FolderTreeFilter({hasSubFolders, folder}) {
 
-    if (!folder || folder.length <= 0) {
+    if (!hasSubFolders
+        || (!folder || !folder.children || folder.children.length <= 0)) {
         return (
             <div className="EmptyFolderTreeFilter"></div>
         )
