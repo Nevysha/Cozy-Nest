@@ -54,7 +54,7 @@ function ExtraNetworksPanel({item}) {
 
     if (info.trainedWords.length === 0) return
 
-    setAndPropagatePrompt(info.trainedWords.join(', '))
+    setAndPropagatePrompt(`${info.trainedWords.join(', ')}, `)
   }
 
   function getActiveTextarea(negativePrompt) {
@@ -121,11 +121,11 @@ function ExtraNetworksPanel({item}) {
       for (const image of info.images) {
         if (image.meta && image.meta.prompt) {
           clearPrompt()
-          setAndPropagatePrompt(image.meta.prompt)
+          setAndPropagatePrompt(`${image.meta.prompt}, `)
 
           if (image.meta.negativePrompt) {
             clearPrompt(true)
-            setAndPropagatePrompt(image.meta.negativePrompt, true)
+            setAndPropagatePrompt(`${image.meta.negativePrompt}, `, true)
           }
 
           return
@@ -150,7 +150,7 @@ function ExtraNetworksPanel({item}) {
       selectCheckpoint(item.fullName)
     }
     else if (item.type === 'ti') {
-      setAndPropagatePrompt(item.name)
+      setAndPropagatePrompt(`${item.name}, `)
     }
     else if (item.type === 'lora' || item.type === 'lyco' || item.type === 'hypernet') {
       setAndPropagatePrompt(`<${item.type}:${item.name}:1.00>, `)
