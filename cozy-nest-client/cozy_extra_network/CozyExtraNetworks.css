@@ -101,7 +101,12 @@
     height: 20px;
 }
 
-button.forceSfwFilterInfo {
+span.sfwFilterInfo {
     fill: var(--nevysha-font-color);
-    margin-right: 5px;
+    margin-left: 5px;
+}
+button.toggleNsfwFilter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }

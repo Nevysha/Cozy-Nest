@@ -32,8 +32,6 @@ export function CozyExtraNetworks() {
   const [displayFolderFilter, setDisplayFolderFilter] = React.useState(false)
   const [nsfwFilter, setNsfwFilter] = React.useState(false)
 
-  const [forceSfwFilterInfo, setForceSfwFilterInfo] = React.useState(false)
-
   useEffect(() => {
     (async () => {
       const response = await fetch('/cozy-nest/extra_networks')
@@ -121,20 +119,13 @@ export function CozyExtraNetworks() {
                 onChange={(e) => setDisplayFolderFilter(e.target.checked)}
             >Display folder filter</Checkbox>
             <div style={{flex:1}}/>
-            <Row style={{width: 'auto'}}>
-              <button
-                  title="Click me to display sfw icon regardless of the nsfw filter status"
-                  onClick={() => setForceSfwFilterInfo(!forceSfwFilterInfo)}
-                  className="forceSfwFilterInfo"
-              >
-                {!nsfwFilter && !forceSfwFilterInfo ? SvgForReact.eyeSlash : SvgForReact.eye }
-              </button>
-              <button
-                  onClick={() => setNsfwFilter(!nsfwFilter)}
-                  title="WARNING : this will take time as it will compute the info of all extra networks"
-                  className="btn-settings"
-              >Toggle nsfw filter</button>
-            </Row>
+            <button
+                onClick={() => setNsfwFilter(!nsfwFilter)}
+                title="WARNING : this will take time as it will compute the info of all extra networks"
+                className="btn-settings toggleNsfwFilter"
+            >Toggle nsfw filter
+              <span className="sfwFilterInfo">{!nsfwFilter ? SvgForReact.eyeSlash : SvgForReact.eye }</span>
+            </button>
           </RowFullWidth>
           <Tabs variant='nevysha'>
             <TabList style={{backgroundColor: 'var(--tab-nav-background-color)'}}>
