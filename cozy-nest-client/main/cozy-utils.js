@@ -1,4 +1,5 @@
 import {CozyLogger} from "./CozyLogger.js";
+import DOM_IDS from "./dom_ids.js";
 
 export const getTheme = (modeFromConfig) => {
   modeFromConfig = modeFromConfig || COZY_NEST_CONFIG.color_mode
@@ -94,6 +95,13 @@ export const hasCozyNestNo = () => {
     return true;
   }
   return false;
+}
+
+export function hideNativeUiExtraNetworkElement(prefix) {
+  const triggerButton = document.querySelector(`button#${DOM_IDS.get('extra_networks_btn')(prefix)}`)
+  triggerButton.style.display = 'none'
+  const tabs = document.querySelector(`div#${prefix}_extra_networks`)
+  tabs.style.display = 'none';
 }
 
 //dummy method

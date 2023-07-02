@@ -73,7 +73,7 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
                 textarea = document.querySelector(`#txt2img_neg_prompt label textarea`)
             } else
                 textarea = document.querySelector(`#txt2img_prompt label textarea`)
-        } else if (currentTab.includes('img2txt')) {
+        } else if (currentTab.includes('img2img')) {
             if (negativePrompt) {
                 textarea = document.querySelector(`#img2img_neg_prompt label textarea`)
             } else

@@ -4,6 +4,7 @@ import {CozyLogger} from "../main/CozyLogger.js";
 import {CozyExtraNetworks} from "./CozyExtraNetworks.jsx";
 import {ChakraProvider} from '@chakra-ui/react'
 import {theme} from "../chakra/chakra-theme.ts";
+import {hideNativeUiExtraNetworkElement} from "../main/cozy-utils.js";
 
 export function startCozyExtraNetwork() {
     return new Promise((resolve, reject) => {
@@ -21,6 +22,9 @@ function _startExtraNetwork(resolve) {
         return
     }
     resolve()
+
+    hideNativeUiExtraNetworkElement('txt2img')
+    hideNativeUiExtraNetworkElement('img2img')
 
     ReactDOM.createRoot(document.getElementById(`cozy-extra-network-react`)).render(
         <React.StrictMode>

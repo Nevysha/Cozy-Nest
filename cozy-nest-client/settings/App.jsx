@@ -437,7 +437,7 @@ export function App() {
                       <Checkbox
                           isChecked={config.enable_extra_network_tweaks}
                           onChange={(e) => setConfig({...config, enable_extra_network_tweaks: e.target.checked})}
-                      >Tweaks existing : just move existing component in side panel</Checkbox>
+                      >Tweaks existing : just move existing component in side panel (will drop support soon)</Checkbox>
                       <Checkbox
                           isChecked={config.enable_cozy_extra_networks}
                           onChange={(e) => setConfig({...config, enable_cozy_extra_networks: e.target.checked})}

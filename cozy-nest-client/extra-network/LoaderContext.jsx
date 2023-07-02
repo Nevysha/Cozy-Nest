@@ -2,6 +2,7 @@ import React from 'react';
 import {CozyLogger} from "../main/CozyLogger.js";
 import DOM_IDS from "../main/dom_ids.js";
 import CozyNestEventBus from "../CozyNestEventBus.js";
+import {hideNativeUiExtraNetworkElement} from "../main/cozy-utils.js";
 
 export const LoaderContext = React.createContext({
   ready: false,
@@ -26,13 +27,6 @@ function observeDivChanges(targetDiv, prefix) {
       resolve();
     }
   });
-}
-
-function hideNativeUiElement(prefix) {
-  const triggerButton = document.querySelector(`button#${DOM_IDS.get('extra_networks_btn')(prefix)}`)
-  triggerButton.style.display = 'none'
-  const tabs = document.querySelector(`div#${prefix}_extra_networks`)
-  tabs.style.display = 'none';
 }
 
 async function requireNativeBloc(prefix) {
@@ -74,7 +68,7 @@ export function LoaderProvider({children, prefix}) {
   }
 
   React.useEffect(() => {
-    hideNativeUiElement(prefix)
+    hideNativeUiExtraNetworkElement(prefix)
 
     CozyNestEventBus.once(`extra_network-open:${prefix}`, (p) => {
       CozyLogger.debug(`extra network load event received for ${p}`)
