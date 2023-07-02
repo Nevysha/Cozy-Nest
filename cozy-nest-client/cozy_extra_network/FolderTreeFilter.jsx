@@ -1,41 +1,50 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { DiCss3, DiJavascript, DiNpm } from "react-icons/di";
 import { FaList, FaRegFolder, FaRegFolderOpen } from "react-icons/fa";
 import TreeView, { flattenTree } from "react-accessible-treeview";
 import './FolderTreeFilter.scss'
 
-const folder = {
-    name: "",
-    children: [
-        {
-            name: "src",
-            children: [{ name: "index.js" }, { name: "styles.css" }],
-        },
-        {
-            name: "node_modules",
-            children: [
-                {
-                    name: "react-accessible-treeview",
-                    children: [{ name: "index.js" }],
-                },
-                { name: "react", children: [{ name: "index.js" }] },
-            ],
-        },
-        {
-            name: ".npmignore",
-        },
-        {
-            name: "package.json",
-        },
-        {
-            name: "webpack.config.js",
-        },
-    ],
-};
+// const folder = {
+//     name: "",
+//     children: [
+//         {
+//             name: "src",
+//             children: [{ name: "index.js" }, { name: "styles.css" }],
+//         },
+//         {
+//             name: "node_modules",
+//             children: [
+//                 {
+//                     name: "react-accessible-treeview",
+//                     children: [{ name: "index.js" }],
+//                 },
+//                 { name: "react", children: [{ name: "index.js" }] },
+//             ],
+//         },
+//         {
+//             name: ".npmignore",
+//         },
+//         {
+//             name: "package.json",
+//         },
+//         {
+//             name: "webpack.config.js",
+//         },
+//     ],
+// };
+//
+// const data = flattenTree(folder);
 
-const data = flattenTree(folder);
+export function FolderTreeFilter({folders}) {
 
-export function FolderTreeFilter() {
+    const data = flattenTree(folders)
+
+    if (data.length <= 0) {
+        return (
+            <div className="EmptyFolderTreeFilter"></div>
+        )
+    }
+
     return (
         <div className="FolderTreeFilter">
             <div className="directory">

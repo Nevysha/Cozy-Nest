@@ -21,11 +21,12 @@ const nevyshaScrollbar = {
   },
 }
 
-
+const indexRef = []
 
 export function CozyExtraNetworks() {
 
   const [extraNetworks, setExtraNetworks] = React.useState([])
+  const [folders, setFolders] = React.useState([])
   const [ready, setReady] = React.useState(false)
   const [fullyLoaded, setFullyLoaded] = React.useState(false)
 
@@ -33,17 +34,27 @@ export function CozyExtraNetworks() {
   const [displayFolderFilter, setDisplayFolderFilter] = React.useState(false)
   const [nsfwFilter, setNsfwFilter] = React.useState(false)
 
+  const [tabIndex, setTabIndex] = React.useState(0)
+
   useEffect(() => {
     (async () => {
       const response = await fetch('/cozy-nest/extra_networks')
-      if (response.status === 200) {
-        const json = await response.json()
-        setExtraNetworks(json)
-        setReady(true)
-      }
-      else {
+      if (response.status !== 200) {
         CozyLogger.error('failed to fetch extra networks', response)
+        return;
       }
+      const _enJson = await response.json()
+
+      const responseFolders = await fetch('/cozy-nest/extra_networks/folders')
+      if (responseFolders.status !== 200) {
+        CozyLogger.error('failed to fetch extra networks folders', responseFolders)
+        return;
+      }
+      const _folders = await responseFolders.json()
+
+      setFolders(_folders)
+      setExtraNetworks(_enJson)
+      setReady(true)
     })()
   }, [])
 
@@ -80,6 +91,7 @@ export function CozyExtraNetworks() {
 
     Object.keys(extraNetworks).forEach((network, index) => {
       let tabName = String(network);
+      indexRef.push(network)
       if (network === 'embeddings') {
         tabName = 'Textual Inversion'
       }
@@ -88,19 +100,20 @@ export function CozyExtraNetworks() {
       )
       EnTabPanels.push(
         <TabPanel css={nevyshaScrollbar} key={index} style={style}>
-          <Row>
-          {displayFolderFilter && <FolderTreeFilter />}
           <div className="CozyExtraNetworksPanels">
             {extraNetworks[network].map((item, index) => {
               return <ExtraNetworksCard key={index} item={item} searchString={searchString} nsfwFilter={nsfwFilter}/>
             })}
           </div>
-          </Row>
         </TabPanel>
       )
     })
 
     return {EnTabs, EnTabPanels}
+  }
+
+  function onTabSelect(index) {
+
   }
 
   const Ui = buildExtraNetworks()
@@ -131,14 +144,17 @@ export function CozyExtraNetworks() {
               <span className="sfwFilterInfo">{!nsfwFilter ? SvgForReact.eyeSlash : SvgForReact.eye }</span>
             </button>
           </RowFullWidth>
-          <Tabs variant='nevysha'>
-            <TabList style={{backgroundColor: 'var(--tab-nav-background-color)'}}>
-              {Ui.EnTabs}
-            </TabList>
-            <TabPanels>
-              {Ui.EnTabPanels}
-            </TabPanels>
-          </Tabs>
+          <Row>
+            {displayFolderFilter && <FolderTreeFilter folders={folders} />}
+            <Tabs variant='nevysha' isLazy onChange={onTabSelect}>
+              <TabList style={{backgroundColor: 'var(--tab-nav-background-color)'}}>
+                {Ui.EnTabs}
+              </TabList>
+              <TabPanels>
+                {Ui.EnTabPanels}
+              </TabPanels>
+            </Tabs>
+          </Row>
         </Column>
       }
     </div>
