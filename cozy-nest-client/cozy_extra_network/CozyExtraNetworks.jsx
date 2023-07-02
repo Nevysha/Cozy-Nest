@@ -124,6 +124,10 @@ function ExtraNetworksPanel({item}) {
     //TODO
   }
 
+  function loadExtraNetwork() {
+    //TODO
+  }
+
   const hasTriggerWords = info.trainedWords && info.trainedWords.length > 0;
   const hasModelId = info.modelId !== undefined;
 
@@ -132,6 +136,7 @@ function ExtraNetworksPanel({item}) {
       className="CozyExtraNetworksCard"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={loadExtraNetwork}
     >
       <div className="en-preview-wrapper">
         {item.previewPath &&
