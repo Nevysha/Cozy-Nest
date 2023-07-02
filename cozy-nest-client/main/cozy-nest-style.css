@@ -1043,11 +1043,15 @@ canvas.nevysha {
     background-color: var(--block-background-fill) !important;
     width: 75vw;
     right: 0;
-    height: calc(100% - (100px + var(--menu-top-height)));
+    height: calc(100% - (95px + var(--menu-top-height)));
     top: calc(75px + var(--menu-top-height));
     padding-right: 15px;
     display: flex;
     flex-direction: row;
+    border: 1px solid #3f3f3f;
+}
+.nevysha-light .slide-right-browser-panel {
+    border: 1px solid var(--ae-input-border-color);
 }
 .extra-network-subdirs {
     overflow: scroll;

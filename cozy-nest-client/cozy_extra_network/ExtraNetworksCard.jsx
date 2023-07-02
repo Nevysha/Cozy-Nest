@@ -180,6 +180,7 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onClick={loadExtraNetwork}
+            title={item.name || item}
         >
             {matchFilter && <div className="en-preview-wrapper">
                 {item.previewPath &&
@@ -230,7 +231,7 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
                             {/*</button>*/}
                         </div>
                     }
-                    <span className="en-preview-name">{item.name || item}</span>
+                    <div className="en-preview-name">{item.name || item}</div>
                 </div>
             </div>}
 

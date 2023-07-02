@@ -71,6 +71,11 @@ export function CozyExtraNetworks() {
     const EnTabs = [];
     const EnTabPanels = [];
 
+    const style = {
+      border:'none',
+      height:'880px'
+    }; //TODO ! ffs I hate css
+
     Object.keys(extraNetworks).forEach((network, index) => {
       let tabName = String(network);
       if (network === 'embeddings') {
@@ -80,7 +85,7 @@ export function CozyExtraNetworks() {
         <Tab key={index}>{tabName}</Tab>
       )
       EnTabPanels.push(
-        <TabPanel css={nevyshaScrollbar} key={index}>
+        <TabPanel css={nevyshaScrollbar} key={index} style={style}>
           <div className="CozyExtraNetworksPanels">
             {extraNetworks[network].map((item, index) => {
               return <ExtraNetworksCard key={index} item={item} searchString={searchString} nsfwFilter={nsfwFilter}/>
