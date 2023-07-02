@@ -80,6 +80,12 @@
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+
+    height: 100%;
+    background-color: var(--ae-input-bg-color);
+    opacity: 0.8;
+    z-index: 2;
+
 }
 .cozy-en-actions > button {
     min-width: 25px;

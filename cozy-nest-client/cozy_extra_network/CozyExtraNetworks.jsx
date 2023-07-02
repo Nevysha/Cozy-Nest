@@ -143,7 +143,7 @@ export function CozyExtraNetworks() {
                 onClick={() => setNsfwFilter(!nsfwFilter)}
                 title="WARNING : this will take time as it will compute the info of all extra networks"
                 className="btn-settings toggleNsfwFilter"
-            >Toggle nsfw filter
+            >Toggle sfw filter
               <span className="sfwFilterInfo">{!nsfwFilter ? SvgForReact.eyeSlash : SvgForReact.eye }</span>
             </button>
           </RowFullWidth>

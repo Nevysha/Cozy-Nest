@@ -238,6 +238,35 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
             style={{display: matchFilter ? 'flex' : 'none'}}
         >
             {matchFilter && <div className="en-preview-wrapper">
+                {isHovered && infoLoaded && validInfo &&
+                    <div className="cozy-en-actions">
+                        <button
+                            title="Replace preview image"
+                            onClick={replaceImage}
+                        >
+                            {SvgForReact.image}
+                        </button>
+                        {hasModelId && <button
+                            title="Open model in civitai"
+                            onClick={openCivitai}
+                        >
+                            {SvgForReact.link}
+                        </button>}
+                        {hasTriggerWords && <button
+                            title="Add trigger words to prompt"
+                            onClick={addTriggerWordsToPrompt}
+                        >
+                            {SvgForReact.magicWand}
+                        </button>}
+                        <button
+                            title="Use prompt from preview image"
+                            onClick={usePromptFromPreview}
+                        >
+                            {SvgForReact.arrow}
+                        </button>
+                        <NsfwButton onClick={toggleNSFW} nsfw={isNsfw()}/>
+                    </div>
+                }
                 {item.previewPath &&
                     <img
                         className="en-preview-thumbnail"
@@ -252,35 +281,6 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
                     </div>
                 }
                 <div className="cozy-en-info">
-                    {isHovered && infoLoaded && validInfo &&
-                        <div className="cozy-en-actions">
-                            <button
-                                title="Replace preview image"
-                                onClick={replaceImage}
-                            >
-                                {SvgForReact.image}
-                            </button>
-                            {hasModelId && <button
-                                title="Open model in civitai"
-                                onClick={openCivitai}
-                            >
-                                {SvgForReact.link}
-                            </button>}
-                            {hasTriggerWords && <button
-                                title="Add trigger words to prompt"
-                                onClick={addTriggerWordsToPrompt}
-                            >
-                                {SvgForReact.magicWand}
-                            </button>}
-                            <button
-                                title="Use prompt from preview image"
-                                onClick={usePromptFromPreview}
-                            >
-                                {SvgForReact.arrow}
-                            </button>
-                            <NsfwButton onClick={toggleNSFW} nsfw={isNsfw()}/>
-                        </div>
-                    }
                     <div className="en-preview-name">{item.name || item}</div>
                 </div>
             </div>}
