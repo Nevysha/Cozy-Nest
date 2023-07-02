@@ -7,14 +7,14 @@ const CIVITAI_URL = {
     "hash": "https://civitai.com/api/v1/model-versions/by-hash/"
 }
 
-export function ExtraNetworksCard({item, searchString}) {
+export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
 
     const [isHovered, setIsHovered] = React.useState(false)
-    const [infoLoaded, setInfoLoaded] = React.useState(false)
-    const [info, setInfo] = React.useState({})
-    const [validInfo, setValidInfo] = React.useState(false)
+    const [info, setInfo] = React.useState(item.info || {})
+    const [infoLoaded, setInfoLoaded] = React.useState(item.info !== undefined)
+    const [validInfo, setValidInfo] = React.useState(info !== undefined && info !== null)
 
-    const [matchSearch, setMatchSearch] = React.useState(true)
+    const [matchFilter, setMatchFilter] = React.useState(true)
 
     useEffect(() => {
         if (infoLoaded || !isHovered) return
@@ -34,8 +34,18 @@ export function ExtraNetworksCard({item, searchString}) {
     }, [isHovered])
 
     useEffect(() => {
-        setMatchSearch(filterCard(searchString))
-    }, [searchString])
+
+        if (nsfwFilter
+            && item.info
+            && !item.info.empty
+            && item.info.model
+            && item.info.model.nsfw) {
+            setMatchFilter(false)
+            return;
+        }
+
+        setMatchFilter(filterCard(searchString))
+    }, [searchString, nsfwFilter])
 
     function filterCard(searchString) {
         if (searchString === '') return true
@@ -164,7 +174,7 @@ export function ExtraNetworksCard({item, searchString}) {
             onMouseLeave={() => setIsHovered(false)}
             onClick={loadExtraNetwork}
         >
-            {matchSearch && <div className="en-preview-wrapper">
+            {matchFilter && <div className="en-preview-wrapper">
                 {item.previewPath &&
                     <img
                         className="en-preview-thumbnail"

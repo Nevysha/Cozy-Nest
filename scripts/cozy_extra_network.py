@@ -239,16 +239,115 @@ class CozyExtraNetworksClass:
 
             return result
 
+        @app.get("/cozy-nest/extra_networks/full")
+        def extra_networks():
+            # get all extra networks by walking through all directories recursively
+
+            result = {}
+
+            if self.MODEL_PATH is not None:
+                model = self.get_models()
+
+                # for each model, get the info
+                for m in model:
+                    try:
+                        info = get_info(m["path"])
+                        m["info"] = info
+                    except InfoUnavailableException:
+                        m["info"] = {
+                            "empty": True
+                        }
+
+                result["models"] = model
+
+            if self.EMB_PATH is not None:
+                emb = self.get_embeddings()
+
+                # for each embedding, get the info
+                for e in emb:
+                    try:
+                        info = get_info(e["path"])
+                        e["info"] = info
+                    except InfoUnavailableException:
+                        e["info"] = {
+                            "empty": True
+                        }
+
+                result["embeddings"] = emb
+
+            if self.HYP_PATH is not None:
+                hyp = self.get_hypernetworks()
+
+                # for each hypernetwork, get the info
+                for h in hyp:
+                    try:
+                        info = get_info(h["path"])
+                        h["info"] = info
+                    except InfoUnavailableException:
+                        h["info"] = {
+                            "empty": True
+                        }
+
+                result["hypernetworks"] = hyp
+
+            if self.LORA_PATH is not None:
+                lora = self.get_lora()
+
+                # for each lora, get the info
+                for l in lora:
+                    try:
+                        info = get_info(l["path"])
+                        l["info"] = info
+                    except InfoUnavailableException:
+                        l["info"] = {
+                            "empty": True
+                        }
+
+                result["lora"] = lora
+
+            if self.LYCO_PATH is not None:
+                lyco = self.get_lyco()
+
+                # for each lyco, get the info
+                for ly in lyco:
+                    try:
+                        info = get_info(ly["path"])
+                        ly["info"] = info
+                    except InfoUnavailableException:
+                        ly["info"] = {
+                            "empty": True
+                        }
+
+                result["lyco"] = lyco
+
+            return result
+
         @app.get("/cozy-nest/extra_network/")
         def extra_network(path: str):
-            path = Path(path[:path.rfind('.')] + '.civitai.info')
-            if not path.exists():
-                return Response(status_code=404, content="Info file not found")
-
-            with open(path, 'r') as f:
-                try:
-                    info = json.load(f)
-                except Exception:
-                    return Response(status_code=500, content="Could not read info file")
-
+            try:
+                info = get_info(path)
                 return info
+            except InfoUnavailableException as e:
+                return Response(status_code=e.code, content=e.message)
+
+
+class InfoUnavailableException(Exception):
+    # add a code attribute to the exception
+    def __init__(self, message, code):
+        super().__init__(message)
+        self.message = message
+        self.code = code
+
+
+def get_info(path: str):
+    path = Path(path[:path.rfind('.')] + '.civitai.info')
+    if not path.exists():
+        raise InfoUnavailableException("Info file not found", 404)
+
+    with open(path, 'r') as f:
+        try:
+            info = json.load(f)
+        except Exception:
+            raise InfoUnavailableException("Could not read info file", 500)
+
+        return info

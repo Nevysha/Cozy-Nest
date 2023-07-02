@@ -25,6 +25,7 @@ export function CozyExtraNetworks() {
 
   const [extraNetworks, setExtraNetworks] = React.useState([])
   const [ready, setReady] = React.useState(false)
+  const [fullyLoaded, setFullyLoaded] = React.useState(false)
 
   const [searchString, setSearchString] = React.useState('')
   const [displayFolderFilter, setDisplayFolderFilter] = React.useState(false)
@@ -44,6 +45,27 @@ export function CozyExtraNetworks() {
     })()
   }, [])
 
+  useEffect(() => {
+
+    if (!nsfwFilter) return;
+    if (fullyLoaded) return;
+
+    setReady(false);
+
+    (async () => {
+      const response = await fetch('/cozy-nest/extra_networks/full')
+      if (response.status === 200) {
+        const json = await response.json()
+        setExtraNetworks(json)
+        setReady(true)
+        setFullyLoaded(true)
+      }
+      else {
+        CozyLogger.error('failed to fetch full extra networks info', response)
+      }
+    })()
+  }, [nsfwFilter])
+
   function buildExtraNetworks() {
 
     const EnTabs = [];
@@ -61,7 +83,7 @@ export function CozyExtraNetworks() {
         <TabPanel css={nevyshaScrollbar} key={index}>
           <div className="CozyExtraNetworksPanels">
             {extraNetworks[network].map((item, index) => {
-              return <ExtraNetworksCard key={index} item={item} searchString={searchString}/>
+              return <ExtraNetworksCard key={index} item={item} searchString={searchString} nsfwFilter={nsfwFilter}/>
             })}
           </div>
         </TabPanel>
