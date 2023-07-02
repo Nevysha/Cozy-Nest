@@ -1,6 +1,5 @@
 import React, {useEffect} from "react";
 import {SvgForReact} from "../main/svg_for_react.jsx";
-import * as PropTypes from "prop-types";
 
 const CIVITAI_URL = {
     "modelPage":"https://civitai.com/models/",
@@ -33,11 +32,6 @@ function NsfwButton({onClick, nsfw}) {
         {getIcon()}
     </button>;
 }
-
-NsfwButton.propTypes = {
-    onClick: PropTypes.func,
-    nsfw: PropTypes.any
-};
 
 export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
 

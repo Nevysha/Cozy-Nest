@@ -100,3 +100,8 @@
     width: 150px;
     height: 20px;
 }
+
+button.forceSfwFilterInfo {
+    fill: var(--nevysha-font-color);
+    margin-right: 5px;
+}

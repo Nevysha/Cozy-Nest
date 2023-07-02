@@ -4,7 +4,8 @@ import {Loading} from "../image-browser/App.jsx";
 import {Checkbox, Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/react";
 import './CozyExtraNetworks.css'
 import {ExtraNetworksCard} from "./ExtraNetworksCard.jsx";
-import {Column, RowFullWidth} from "../main/Utils.jsx";
+import {Column, Row, RowFullWidth} from "../main/Utils.jsx";
+import {SvgForReact} from "../main/svg_for_react.jsx";
 
 const nevyshaScrollbar = {
   '&::-webkit-scrollbar': {
@@ -30,6 +31,8 @@ export function CozyExtraNetworks() {
   const [searchString, setSearchString] = React.useState('')
   const [displayFolderFilter, setDisplayFolderFilter] = React.useState(false)
   const [nsfwFilter, setNsfwFilter] = React.useState(false)
+
+  const [forceSfwFilterInfo, setForceSfwFilterInfo] = React.useState(false)
 
   useEffect(() => {
     (async () => {
@@ -117,11 +120,21 @@ export function CozyExtraNetworks() {
                 isChecked={displayFolderFilter}
                 onChange={(e) => setDisplayFolderFilter(e.target.checked)}
             >Display folder filter</Checkbox>
-            <button
-                onClick={() => setNsfwFilter(!nsfwFilter)}
-                title="WARNING : this will take time as it will compute the info of all extra networks"
-                className="btn-settings"
-            >Toggle nsfw filter</button>
+            <div style={{flex:1}}/>
+            <Row style={{width: 'auto'}}>
+              <button
+                  title="Click me to display sfw icon regardless of the nsfw filter status"
+                  onClick={() => setForceSfwFilterInfo(!forceSfwFilterInfo)}
+                  className="forceSfwFilterInfo"
+              >
+                {!nsfwFilter && !forceSfwFilterInfo ? SvgForReact.eyeSlash : SvgForReact.eye }
+              </button>
+              <button
+                  onClick={() => setNsfwFilter(!nsfwFilter)}
+                  title="WARNING : this will take time as it will compute the info of all extra networks"
+                  className="btn-settings"
+              >Toggle nsfw filter</button>
+            </Row>
           </RowFullWidth>
           <Tabs variant='nevysha'>
             <TabList style={{backgroundColor: 'var(--tab-nav-background-color)'}}>
