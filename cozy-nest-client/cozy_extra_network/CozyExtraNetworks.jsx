@@ -34,7 +34,7 @@ export function CozyExtraNetworks() {
   const [displayFolderFilter, setDisplayFolderFilter] = React.useState(false)
   const [nsfwFilter, setNsfwFilter] = React.useState(false)
 
-  const [tabIndex, setTabIndex] = React.useState(0)
+  const [selectedTab, setSelectedTab] = React.useState(null)
 
   useEffect(() => {
     (async () => {
@@ -113,7 +113,7 @@ export function CozyExtraNetworks() {
   }
 
   function onTabSelect(index) {
-
+    setSelectedTab(indexRef[index])
   }
 
   const Ui = buildExtraNetworks()
@@ -145,7 +145,7 @@ export function CozyExtraNetworks() {
             </button>
           </RowFullWidth>
           <Row>
-            {displayFolderFilter && <FolderTreeFilter folders={folders} />}
+            {displayFolderFilter && <FolderTreeFilter folder={folders[selectedTab]}/>}
             <Tabs variant='nevysha' isLazy onChange={onTabSelect}>
               <TabList style={{backgroundColor: 'var(--tab-nav-background-color)'}}>
                 {Ui.EnTabs}
