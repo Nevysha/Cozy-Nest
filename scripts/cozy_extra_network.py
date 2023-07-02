@@ -346,12 +346,14 @@ class CozyExtraNetworksClass:
                 with open(info_file, 'w') as f:
                     json.dump(info, f)
 
-            # nsfw data is there : info.model.nsfw. change the value to false or true and create each layer if it does not exist
+            # nsfw data is there : info.model.nsfw. change the value to false or true
+            # and create each layer if it does not exist
             if "model" not in info or "nsfw" not in info["model"]:
                 if "model" not in info:
                     info["model"] = {}
                 if "nsfw" not in info["model"]:
-                    info["model"]["nsfw"] = False
+                    # since default is considered false set it to true
+                    info["model"]["nsfw"] = True
             else:
                 info["model"]["nsfw"] = not info["model"]["nsfw"]
 

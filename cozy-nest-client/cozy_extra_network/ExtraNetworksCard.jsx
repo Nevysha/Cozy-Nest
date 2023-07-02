@@ -1,4 +1,6 @@
 import React, {useEffect} from "react";
+import {SvgForReact} from "../main/svg_for_react.jsx";
+import * as PropTypes from "prop-types";
 
 const CIVITAI_URL = {
     "modelPage":"https://civitai.com/models/",
@@ -6,6 +8,36 @@ const CIVITAI_URL = {
     "modelVersionId": "https://civitai.com/api/v1/model-versions/",
     "hash": "https://civitai.com/api/v1/model-versions/by-hash/"
 }
+
+function NsfwButton({onClick, nsfw}) {
+
+    const [isHovered, setIsHovered] = React.useState(false)
+
+    function getIcon() {
+        let iconName;
+        if (nsfw) {
+            iconName = isHovered ? "eye" : "eyeSlash"
+        }
+        else {
+            iconName = isHovered ? "eyeSlash" : "eye"
+        }
+        return SvgForReact[iconName];
+    }
+
+    return <button
+        title={nsfw ? "Mark as SFW" : "Mark as NSFW"}
+        onClick={onClick}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+    >
+        {getIcon()}
+    </button>;
+}
+
+NsfwButton.propTypes = {
+    onClick: PropTypes.func,
+    nsfw: PropTypes.any
+};
 
 export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
 
@@ -45,6 +77,13 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
 
         setMatchFilter(filterCard(searchString))
     }, [searchString, nsfwFilter, info])
+
+    useEffect(() => {
+        //when hiding card, reset hover state
+        if (!matchFilter) {
+            setIsHovered(false)
+        }
+    }, [matchFilter])
 
     function isNsfw() {
         return info && info.model && info.model.nsfw
@@ -200,6 +239,7 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
             onMouseLeave={() => setIsHovered(false)}
             onClick={loadExtraNetwork}
             title={item.name || item}
+            style={{display: matchFilter ? 'flex' : 'none'}}
         >
             {matchFilter && <div className="en-preview-wrapper">
                 {item.previewPath &&
@@ -222,32 +262,27 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
                                 title="Replace preview image"
                                 onClick={replaceImage}
                             >
-                                R
+                                {SvgForReact.image}
                             </button>
                             {hasModelId && <button
                                 title="Open model in civitai"
                                 onClick={openCivitai}
                             >
-                                V
+                                {SvgForReact.link}
                             </button>}
                             {hasTriggerWords && <button
                                 title="Add trigger words to prompt"
                                 onClick={addTriggerWordsToPrompt}
                             >
-                                T
+                                {SvgForReact.magicWand}
                             </button>}
                             <button
                                 title="Use prompt from preview image"
                                 onClick={usePromptFromPreview}
                             >
-                                P
+                                {SvgForReact.arrow}
                             </button>
-                            <button
-                                title="Mark as NSFW"
-                                onClick={toggleNSFW}
-                            >
-                                {isNsfw() ? 'nsfw' : 'sfw'}
-                            </button>
+                            <NsfwButton onClick={toggleNSFW} nsfw={isNsfw()}/>
                         </div>
                     }
                     <div className="en-preview-name">{item.name || item}</div>

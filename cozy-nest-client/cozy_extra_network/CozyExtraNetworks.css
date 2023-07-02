@@ -87,6 +87,13 @@
 .cozy-en-actions > button:hover {
     color: var(--ae-primary-color);
 }
+.cozy-en-actions > button > svg {
+    fill: var(--nevysha-font-color);
+    height: 15px;
+}
+.cozy-en-actions > button > svg:hover {
+    fill: var(--ae-primary-color);
+}
 
 .CozyExtraNetworks .btn-settings {
     background-color: var(--ae-input-bg-color) !important;
