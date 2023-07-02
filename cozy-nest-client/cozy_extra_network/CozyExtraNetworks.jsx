@@ -102,7 +102,9 @@ export function CozyExtraNetworks() {
         <TabPanel css={nevyshaScrollbar} key={index} style={style}>
           <div className="CozyExtraNetworksPanels">
             {extraNetworks[network].map((item, index) => {
-              return <ExtraNetworksCard key={index} item={item} searchString={searchString} nsfwFilter={nsfwFilter}/>
+              return (
+                <ExtraNetworksCard key={item.path} item={item} searchString={searchString} nsfwFilter={nsfwFilter}/>
+              )
             })}
           </div>
         </TabPanel>

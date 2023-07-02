@@ -1,5 +1,6 @@
 import React, {useEffect} from "react";
 import {SvgForReact} from "../main/svg_for_react.jsx";
+import {LazyComponent} from "./LazyComponent.jsx";
 
 const CIVITAI_URL = {
     "modelPage":"https://civitai.com/models/",
@@ -268,12 +269,13 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
                     </div>
                 }
                 {item.previewPath &&
-                    <img
-                        className="en-preview-thumbnail"
-                        src={`./sd_extra_networks/thumb?filename=${encodeURIComponent(item.previewPath)}&amp;mtime=${new Date().getTime()}`}
-                        loading="lazy"
-                        alt={item.name}
-                    />
+                    <LazyComponent placeholderClassName="en-preview-thumbnail">
+                        <img
+                            className="en-preview-thumbnail"
+                            src={`./sd_extra_networks/thumb?filename=${encodeURIComponent(item.previewPath)}&amp;mtime=${new Date().getTime()}`}
+                            alt={item.name}
+                        />
+                    </LazyComponent>
                 }
                 {!item.previewPath &&
                     <div className="en-preview-thumbnail black">
