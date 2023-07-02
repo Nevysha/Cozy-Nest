@@ -3,10 +3,11 @@ import json
 import os
 from pathlib import Path
 
-from fastapi import Response
+from fastapi import Response, Request
 
 from modules import sd_hijack, shared, sd_models
 from scripts.CozyLogger import CozyLoggerClass
+
 CozyLoggerExtNe = CozyLoggerClass("CozyLogger:ExtNe")
 
 
@@ -330,6 +331,41 @@ class CozyExtraNetworksClass:
             except InfoUnavailableException as e:
                 return Response(status_code=e.code, content=e.message)
 
+        @app.post("/cozy-nest/extra_network/toggle-nsfw")
+        async def extra_network_info(request: Request):
+            try:
+                request_json = await request.json()
+                path = request_json["path"]
+            except Exception as e:
+                return Response(status_code=405, content="Invalid request body")
+
+            if path is None:
+                return Response(status_code=405, content="Invalid request body")
+
+            try:
+                info = get_info(path)
+            except InfoUnavailableException as e:
+                info = {}
+                info_file = get_civitai_info_path(path)
+                with open(info_file, 'w') as f:
+                    json.dump(info, f)
+
+            # nsfw data is there : info.model.nsfw. change the value to false or true and create each layer if it does not exist
+            if "model" not in info or "nsfw" not in info["model"]:
+                if "model" not in info:
+                    info["model"] = {}
+                if "nsfw" not in info["model"]:
+                    info["model"]["nsfw"] = False
+            else:
+                info["model"]["nsfw"] = not info["model"]["nsfw"]
+
+            # save the info
+            info_file = get_civitai_info_path(path)
+            with open(info_file, 'w') as f:
+                json.dump(info, f)
+
+            return info
+
 
 class InfoUnavailableException(Exception):
     # add a code attribute to the exception
@@ -340,7 +376,7 @@ class InfoUnavailableException(Exception):
 
 
 def get_info(path: str):
-    path = Path(path[:path.rfind('.')] + '.civitai.info')
+    path = get_civitai_info_path(path)
     if not path.exists():
         raise InfoUnavailableException("Info file not found", 404)
 
@@ -351,3 +387,7 @@ def get_info(path: str):
             raise InfoUnavailableException("Could not read info file", 500)
 
         return info
+
+
+def get_civitai_info_path(path):
+    return Path(path[:path.rfind('.')] + '.civitai.info')

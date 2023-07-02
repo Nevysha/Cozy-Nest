@@ -36,21 +36,21 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
     useEffect(() => {
 
         if (nsfwFilter
-            && item.info
-            && !item.info.empty
-            && item.info.model
-            && item.info.model.nsfw) {
+            && info
+            && !info.empty
+            && info.model
+            && info.model.nsfw) {
             setMatchFilter(false)
             return;
         }
 
         setMatchFilter(filterCard(searchString))
-    }, [searchString, nsfwFilter])
+    }, [searchString, nsfwFilter, info])
 
     function filterCard(searchString) {
         if (searchString === '') return true
 
-        if (JSON.stringify(item).includes(searchString)) {
+        if (JSON.stringify(item.path).includes(searchString)) {
             return true
         }
     }
@@ -164,11 +164,27 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
         }
     }
 
-    function markAsNSFW(event) {
+    async function toggleNSFW(event) {
         event.preventDefault();
         event.stopPropagation();
 
-        //TODO
+        //send POST request to toggle nsfw
+        const response = await fetch(`/cozy-nest/extra_network/toggle-nsfw`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                path: item.path,
+            })
+        })
+        if (response.status !== 200) {
+            CozyLogger.error('Failed to toggle nsfw', response)
+            return
+        }
+        const info = await response.json()
+        item.info = info
+        setInfo(info)
     }
 
     const hasTriggerWords = info.trainedWords && info.trainedWords.length > 0;
@@ -223,12 +239,12 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
                             >
                                 P
                             </button>
-                            {/*<button*/}
-                            {/*    title="Mark as NSFW"*/}
-                            {/*    onClick={markAsNSFW}*/}
-                            {/*>*/}
-                            {/*    nsfw*/}
-                            {/*</button>*/}
+                            <button
+                                title="Mark as NSFW"
+                                onClick={toggleNSFW}
+                            >
+                                nsfw
+                            </button>
                         </div>
                     }
                     <div className="en-preview-name">{item.name || item}</div>
