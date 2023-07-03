@@ -1,6 +1,8 @@
 import React, {useEffect} from "react";
 import {SvgForReact} from "../main/svg_for_react.jsx";
 import {LazyComponent} from "./LazyComponent.jsx";
+import {ImageUploadAlert} from "./ImageUploadAlert.jsx";
+import {Button} from "@chakra-ui/react";
 
 const CIVITAI_URL = {
     "modelPage":"https://civitai.com/models/",
@@ -43,6 +45,8 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
 
     const [matchFilter, setMatchFilter] = React.useState(true)
 
+    const [showFileUpload, setShowFileUpload] = React.useState(false)
+
     useEffect(() => {
         if (infoLoaded || !isHovered) return
 
@@ -78,7 +82,11 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
         if (!matchFilter) {
             setIsHovered(false)
         }
-    }, [matchFilter])
+        //when showing card, reset hover state
+        if (showFileUpload) {
+            setIsHovered(false)
+        }
+    }, [matchFilter, showFileUpload])
 
     function isNsfw() {
         return info && info.model && info.model.nsfw
@@ -184,7 +192,8 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
     function replaceImage(event) {
         event.preventDefault();
         event.stopPropagation();
-        //TODO replaceImage
+
+        setShowFileUpload(!showFileUpload)
     }
 
     function loadExtraNetwork(event) {
@@ -222,6 +231,12 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
         const info = await response.json()
         item.info = info
         setInfo(info)
+    }
+
+    function onPreviewSaved(previewPath) {
+        //update preview path
+        item.previewPath = previewPath
+        setShowFileUpload(false)
     }
 
     const hasTriggerWords = info.trainedWords && info.trainedWords.length > 0;
@@ -278,6 +293,27 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
                 {!item.previewPath &&
                     <div className="en-preview-thumbnail black">
                         No preview
+                    </div>
+                }
+                {showFileUpload &&
+                    <div style={{zIndex:4}}>
+                        <ImageUploadAlert
+                            visible={showFileUpload}
+                            name={item.name}
+                            path={item.path}
+                            cancel={
+                                <Button
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        setShowFileUpload(false)
+                                    }}
+                                >Cancel</Button>
+                            }
+                            callback={onPreviewSaved}
+                        >
+
+                        </ImageUploadAlert>
                     </div>
                 }
                 <div className="cozy-en-info">

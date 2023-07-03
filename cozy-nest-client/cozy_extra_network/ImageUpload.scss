@@ -1,0 +1,48 @@
+.ImageUploadAlert {
+  background-color: var(--ae-input-bg-color);
+  color: var(--nevysha-font-color);
+  padding: 15px;
+  border-radius: 3px;
+
+  .name {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  label {
+    border: 2px dashed var(--secondary-accent-color);
+
+    svg {
+      path {
+        fill: var(--secondary-accent-color);
+      }
+    }
+
+    div {
+      span {
+        color: var(--nevysha-font-color);
+        filter: brightness(0.8);
+      }
+    }
+  }
+
+  .actions {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 15px;
+
+    button {
+      padding: 10px;
+      height: 25px;
+      border-radius: 1px;
+      border: 1px solid var(--ae-input-border-color) !important;
+      background: var(--ae-input-bg-color) !important;
+      color: var(--ae-input-color) !important;
+      font-size: var(--nevysha-text-md);
+    }
+  }
+}

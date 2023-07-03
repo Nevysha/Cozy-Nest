@@ -53,7 +53,7 @@ import {saveCozyNestConfig} from "../main/nevysha-cozy-nest.js";
 import {ButtonWithConfirmDialog} from "../chakra/ButtonWithConfirmDialog.jsx";
 
 
-function DialogWrapper({children, isVisible}) {
+export function DialogWrapper({children, isVisible}) {
   const { isOpen, onOpen, onClose } = useDisclosure({isOpen: isVisible})
   const cancelRef = useRef()
 

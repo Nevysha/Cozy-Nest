@@ -173,7 +173,7 @@ def scrap_image_folders(images_folders):
 
 def new_image(data):
     # Add the image to the cache
-    with open(Static.CACHE_FILENAME, 'rw') as f:
+    with open(Static.CACHE_FILENAME, 'r+') as f:
         cache = json.loads(f.read())
         cache['images'].insert(0, data)
         f.write(json.dumps(cache))

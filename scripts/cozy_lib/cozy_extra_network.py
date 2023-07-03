@@ -1,6 +1,7 @@
 import glob
 import json
 import os
+import shutil
 from pathlib import Path
 
 from fastapi import Response, Request
@@ -351,6 +352,37 @@ class CozyExtraNetworksClass:
                 return info
             except InfoUnavailableException as e:
                 return Response(status_code=e.code, content=e.message)
+
+        @app.post("/cozy-nest/extra_network/preview")
+        async def extra_network_preview(request: Request):
+            # path and file are in body as FormData
+            try:
+                form = await request.form()
+                path = form["path"]
+                upload_file = form["file"]
+            except Exception:
+                return Response(status_code=405, content="Invalid request body")
+            if path is None or upload_file is None:
+                return Response(status_code=405, content="Invalid request body")
+
+            try:
+                file_type = upload_file.content_type[upload_file.content_type.rfind("/") + 1:]
+                valid = ["png"]
+                if file_type not in valid:
+                    return Response(status_code=405, content="Invalid file type")
+
+                path = Path(f"{str(path)[:str(path).rfind('.')]}.preview.{file_type}")
+                # save the file
+                with open(path, "wb") as buffer:
+                    shutil.copyfileobj(upload_file.file, buffer)
+
+            except Exception as e:
+                print(e)
+                return Response(status_code=500, content="Failed to create file")
+
+            return Response(status_code=200, content=json.dumps({
+                "previewPath": f"{path}"
+            }))
 
         @app.post("/cozy-nest/extra_network/toggle-nsfw")
         async def extra_network_info(request: Request):
