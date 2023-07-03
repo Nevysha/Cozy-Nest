@@ -1,5 +1,4 @@
 .App {
-    /*TODO calc this*/
     width: max(800px, 50vw);
     height: fit-content;
     min-height: 150px;
