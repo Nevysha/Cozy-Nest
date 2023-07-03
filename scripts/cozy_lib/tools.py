@@ -1,11 +1,14 @@
 import hashlib
 import json
 import os
+import sys
+import time
 
 from PIL import Image
 
 from modules import shared, scripts
 from scripts.cozy_lib import Static
+from scripts.cozy_lib.CozyLogger import CozyLoggerImageBrowser as Logger
 
 
 def output_folder_array():
@@ -118,15 +121,37 @@ def scrap_image_folders(images_folders):
             return json.loads(f.read())
 
     # scrape the images folder recursively
+    Logger.debug('Scraping images folders...')
     # TODO store images as hash=>data in index
-    images = []
+
+    # gather all the images paths
+    images_path = []
     for images_folder in images_folders:
         for root, dirs, files in os.walk(images_folder):
             for file in files:
                 if file.endswith(".png") or file.endswith(".jpg") or file.endswith(".jpeg"):
-                    # get exif data
-                    img = get_exif(os.path.join(root, file))
-                    images.append(img)
+                    images_path.append(os.path.join(root, file))
+
+    Logger.info(f"Creating images index for {len(images_path)} images...")
+
+    # get the exif data for each image
+    images = []
+    start_time = time.time()
+    for i, path in enumerate(images_path):
+        # get exif data
+        img = get_exif(path)
+        images.append(img)
+
+        # Calculate progress and elapsed time
+        elapsed_time = time.time() - start_time
+        progress = (i + 1) / len(images_path)
+
+        # Display progress bar with elapsed time and estimated time remaining
+        # only each ten images or if it's the last image
+        if i % 10 == 0:
+            display_progress_bar(progress, elapsed_time)
+        elif i == len(images_path) - 1:
+            display_progress_bar(1, elapsed_time)
 
     # sort the images by date (newest first) metadata.date
     images.sort(key=lambda x: x['metadata']['date'], reverse=True)
@@ -152,3 +177,13 @@ def new_image(data):
         cache = json.loads(f.read())
         cache['images'].insert(0, data)
         f.write(json.dumps(cache))
+
+
+def display_progress_bar(progress, elapsed_time):
+    bar_length = 40
+    filled_length = int(bar_length * progress)
+    bar = '█' * filled_length + '-' * (bar_length - filled_length)
+    percentage = progress * 100
+    progress_bar = f'[Cozy:ImageBrowser:INFO] Indexing: |{bar}| {percentage:.1f}% Complete | Elapsed: {elapsed_time:.2f}s'
+    sys.stdout.write('\r' + progress_bar)
+    sys.stdout.flush()
