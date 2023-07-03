@@ -6,26 +6,22 @@ import socket
 import subprocess
 import sys
 import threading
+from typing import Any
 
 import gradio as gr
 import modules
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
-from typing import Any
 from fastapi import FastAPI, Response, Request
 from fastapi.staticfiles import StaticFiles
 import websockets
 from modules import script_callbacks, shared, call_queue, scripts
 
-from scripts import tools
-from scripts.CozyLogger import CozyLoggerClass
-from scripts.CozyNestConfig import CozyNestConfig
-from scripts.cozynest_image_browser import start_server
-from scripts.tools import output_folder_array
-
-CozyLogger = CozyLoggerClass("CozyLogger")
-if CozyLogger.log_enabled:
-    CozyLogger.warning("Logger enabled. delete 'log_enabled' file to disable")
+from scripts.cozy_lib import tools
+from scripts.cozy_lib.CozyLogger import CozyLogger
+from scripts.cozy_lib.CozyNestConfig import CozyNestConfig
+from scripts.cozy_lib.cozynest_image_browser import start_server
+from scripts.cozy_lib.tools import output_folder_array
 
 
 def request_restart():
@@ -359,9 +355,9 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
 
 
 def init_extra_networks(_: Any, app: FastAPI, **kwargs):
-    from scripts.cozy_extra_network import CozyExtraNetworksClass
+    from scripts.cozy_lib.cozy_extra_network import CozyExtraNetworksClass
 
-    CozyExtraNetworks = CozyExtraNetworksClass(CozyNestConfig())
+    CozyExtraNetworks = CozyExtraNetworksClass()
     CozyExtraNetworks.create_api_route(app)
 
 

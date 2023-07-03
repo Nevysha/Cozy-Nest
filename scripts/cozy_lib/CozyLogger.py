@@ -17,7 +17,6 @@ def is_log_enabled():
 # This is a simple logger class that will be used to log messages stdout
 # check the config if log is enabled
 class CozyLoggerClass:
-
     LOG_ENABLED = is_log_enabled()
 
     def __init__(self, name: str):
@@ -34,3 +33,11 @@ class CozyLoggerClass:
     def info(self, message: str):
         print(f"[{self.name}:INFO] {message}")
 
+
+CozyLogger = CozyLoggerClass("Cozy")
+if CozyLoggerClass.LOG_ENABLED:
+    CozyLogger.warning("Logger enabled. delete 'log_enabled' file to disable")
+
+CozyLoggerExtNe = CozyLoggerClass("Cozy:ExtNe")
+CozyLoggerConfig = CozyLoggerClass("Cozy:Config")
+CozyLoggerImageBrowser = CozyLoggerClass("Cozy:ImageBrowser")

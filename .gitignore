@@ -1,4 +1,4 @@
 Cozy-Nest.iml
 nevyui_settings.json
 data/images.cache
-/scripts/log_enabled
+/scripts/cozy_lib/log_enabled

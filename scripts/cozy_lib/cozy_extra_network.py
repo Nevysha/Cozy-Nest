@@ -6,9 +6,7 @@ from pathlib import Path
 from fastapi import Response, Request
 
 from modules import sd_hijack, shared, sd_models
-from scripts.CozyLogger import CozyLoggerClass
-
-CozyLoggerExtNe = CozyLoggerClass("CozyLogger:ExtNe")
+from scripts.cozy_lib.CozyLogger import CozyLoggerExtNe
 
 
 def format_path_array(paths, _type, validator):
@@ -38,7 +36,7 @@ def format_path_array(paths, _type, validator):
 # gather extra network folders
 # credit to https://github.com/DominikDoom/a1111-sd-webui-tagcomplete
 class CozyExtraNetworksClass:
-    def __init__(self, config):
+    def __init__(self):
         try:
             from modules.paths import extensions_dir, script_path
         except ImportError:
@@ -318,12 +316,12 @@ class CozyExtraNetworksClass:
                 lora = self.get_lora()
 
                 # for each lora, get the info
-                for l in lora:
+                for lo in lora:
                     try:
-                        info = get_info(l["path"])
-                        l["info"] = info
+                        info = get_info(lo["path"])
+                        lo["info"] = info
                     except InfoUnavailableException:
-                        l["info"] = {
+                        lo["info"] = {
                             "empty": True
                         }
 
@@ -359,7 +357,7 @@ class CozyExtraNetworksClass:
             try:
                 request_json = await request.json()
                 path = request_json["path"]
-            except Exception as e:
+            except Exception:
                 return Response(status_code=405, content="Invalid request body")
 
             if path is None:
@@ -367,7 +365,7 @@ class CozyExtraNetworksClass:
 
             try:
                 info = get_info(path)
-            except InfoUnavailableException as e:
+            except InfoUnavailableException:
                 info = {}
                 info_file = get_civitai_info_path(path)
                 with open(info_file, 'w') as f:

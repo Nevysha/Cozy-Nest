@@ -5,6 +5,7 @@ import os
 from PIL import Image
 
 from modules import shared, scripts
+from scripts.cozy_lib import Static
 
 
 def output_folder_array():
@@ -77,7 +78,7 @@ def get_exif(path):
 
 def update_img_data(path):
     # get the corresponding image in the cache, update its metadata and save it back to the cache in the same position
-    with open(CACHE_FILENAME, 'r') as f:
+    with open(Static.CACHE_FILENAME, 'r') as f:
         cache = json.loads(f.read())
         for img in cache['images']:
             if img['path'] == path:
@@ -87,39 +88,33 @@ def update_img_data(path):
                     'exif': exif,
                 }
                 break
-        with open(CACHE_FILENAME, 'w') as fw:
+        with open(Static.CACHE_FILENAME, 'w') as fw:
             fw.write(json.dumps(cache, indent=4))
 
 
 def delete_img_data(path):
     # get the corresponding image in the cache and remove it
-    with open(CACHE_FILENAME, 'r') as f:
+    with open(Static.CACHE_FILENAME, 'r') as f:
         cache = json.loads(f.read())
         for img in cache['images']:
             if img['path'] == path:
                 cache['images'].remove(img)
                 break
-        with open(CACHE_FILENAME, 'w') as fw:
+        with open(Static.CACHE_FILENAME, 'w') as fw:
             fw.write(json.dumps(cache))
 
 
 def delete_index():
     # delete the cache file
-    if os.path.exists(CACHE_FILENAME):
-        os.remove(CACHE_FILENAME)
-
-
-EXTENSION_TECHNICAL_NAME = os.path.basename(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-# TODO use db instead of cache file
-CACHE_FILENAME = f"extensions/{EXTENSION_TECHNICAL_NAME}/data/images.cache"
+    if os.path.exists(Static.CACHE_FILENAME):
+        os.remove(Static.CACHE_FILENAME)
 
 
 def scrap_image_folders(images_folders):
 
     # if the cache file exists, read it and return the data
-    if os.path.exists(CACHE_FILENAME):
-        with open(CACHE_FILENAME, 'r') as f:
+    if os.path.exists(Static.CACHE_FILENAME):
+        with open(Static.CACHE_FILENAME, 'r') as f:
             return json.loads(f.read())
 
     # scrape the images folder recursively
@@ -142,10 +137,10 @@ def scrap_image_folders(images_folders):
         'images': images
     }
 
-    if not os.path.exists(CACHE_FILENAME):
-        open(CACHE_FILENAME, 'w').close()
+    if not os.path.exists(Static.CACHE_FILENAME):
+        open(Static.CACHE_FILENAME, 'w').close()
 
-    with open(CACHE_FILENAME, 'w') as f:
+    with open(Static.CACHE_FILENAME, 'w') as f:
         f.write(json.dumps(data))
 
     return data
@@ -153,8 +148,7 @@ def scrap_image_folders(images_folders):
 
 def new_image(data):
     # Add the image to the cache
-    with open(CACHE_FILENAME, 'r') as f:
+    with open(Static.CACHE_FILENAME, 'rw') as f:
         cache = json.loads(f.read())
         cache['images'].insert(0, data)
-        with open(CACHE_FILENAME, 'w') as f:
-            f.write(json.dumps(cache))
+        f.write(json.dumps(cache))

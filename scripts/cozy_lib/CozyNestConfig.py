@@ -2,17 +2,9 @@ import json
 import os
 
 from modules import shared
-from scripts.tools import output_folder_array
-from scripts.CozyLogger import CozyLoggerClass
-CozyLoggerConfig = CozyLoggerClass("CozyLogger:Config")
-
-EXTENSION_FOLDER_NAME = os.path.basename(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-CONFIG_FILENAME = f"extensions/{EXTENSION_FOLDER_NAME}/nevyui_settings.json"
-CONFIG_FILENAME = os.path.join(shared.cmd_opts.data_dir, CONFIG_FILENAME)
-
-VERSION_FILENAME = f"extensions/{EXTENSION_FOLDER_NAME}/version_data.json"
-VERSION_FILENAME = os.path.join(shared.cmd_opts.data_dir, VERSION_FILENAME)
+from scripts.cozy_lib import Static
+from scripts.cozy_lib.tools import output_folder_array
+from scripts.cozy_lib.CozyLogger import CozyLoggerConfig
 
 
 class CozyNestConfig:
@@ -71,7 +63,7 @@ class CozyNestConfig:
 
     @staticmethod
     def get_version():
-        with open(VERSION_FILENAME, 'r') as f:
+        with open(Static.VERSION_FILENAME, 'r') as f:
             version = json.loads(f.read())
             f.close()
         current_version = version['version']
@@ -92,10 +84,10 @@ class CozyNestConfig:
 
     def simple_save_settings(self):
         # create the file in extensions/Cozy-Nest if it doesn't exist
-        if not os.path.exists(CONFIG_FILENAME):
-            open(CONFIG_FILENAME, 'w').close()
+        if not os.path.exists(Static.CONFIG_FILENAME):
+            open(Static.CONFIG_FILENAME, 'w').close()
         # save each settings inside the file
-        with open(CONFIG_FILENAME, 'w') as f:
+        with open(Static.CONFIG_FILENAME, 'w') as f:
             f.write(json.dumps(self.config, indent=2))
             f.close()
 
@@ -109,14 +101,14 @@ class CozyNestConfig:
         self.simple_save_settings()
 
     def get_dict_from_config(self):
-        if not os.path.exists(CONFIG_FILENAME):
+        if not os.path.exists(Static.CONFIG_FILENAME):
             self.reset_settings()
             # set version if config file was just created exist
             self.config['version'] = CozyNestConfig.get_version(),
             # return default config
             return self.config
 
-        with open(CONFIG_FILENAME, 'r') as f:
+        with open(Static.CONFIG_FILENAME, 'r') as f:
             self.config = json.loads(f.read())
             f.close()
             return self.config
