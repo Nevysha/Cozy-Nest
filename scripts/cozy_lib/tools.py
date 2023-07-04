@@ -2,6 +2,7 @@ import hashlib
 import json
 import os
 import sys
+import threading
 import time
 
 from PIL import Image
@@ -135,24 +136,49 @@ def scrap_image_folders(images_folders):
     Logger.info(f"Creating images index for {len(images_path)} images...")
 
     # get the exif data for each image
-    # TODO NEVYSHA try to use multiprocessing
+
+    # split the images_path list into chunks and process each chunk in a separate thread
+    thread_count = os.cpu_count()
+    Logger.debug(f"Using {thread_count} threads to process the images...")
+    split_count = (len(images_path) + 1) // thread_count
+    splited = [images_path[i * split_count:(i + 1) * split_count] for i in range(thread_count)]
+
     images = []
     start_time = time.time()
-    for i, path in enumerate(images_path):
-        # get exif data
-        img = get_exif(path)
-        images.append(img)
+
+    def process_chunk(_chunk):
+        for i, path in enumerate(_chunk):
+            # get exif data
+            img = get_exif(path)
+            images.append(img)
+
+    # create a thread for each chunk
+    threads = []
+    for chunk in splited:
+        t = threading.Thread(target=process_chunk, args=(chunk,))
+        t.start()
+        threads.append(t)
+
+    # wait for all the threads to finish
+    # loop to check if the threads are done
+    while True:
+        elapsed_time = time.time() - start_time
+        if not any([t.is_alive() for t in threads]):
+            display_progress_bar(1, elapsed_time)
+            break
 
         # Calculate progress and elapsed time
-        elapsed_time = time.time() - start_time
+        i = len(images)
         progress = (i + 1) / len(images_path)
 
         # Display progress bar with elapsed time and estimated time remaining
         # only each ten images or if it's the last image
-        if i % 10 == 0:
-            display_progress_bar(progress, elapsed_time)
-        elif i == len(images_path) - 1:
+        if i == len(images_path) - 1:
             display_progress_bar(1, elapsed_time)
+        else:
+            display_progress_bar(progress, elapsed_time)
+
+        time.sleep(0.1)
 
     # sort the images by date (newest first) metadata.date
     images.sort(key=lambda x: x['metadata']['date'], reverse=True)
