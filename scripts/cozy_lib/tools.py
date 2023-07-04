@@ -122,7 +122,7 @@ def scrap_image_folders(images_folders):
 
     # scrape the images folder recursively
     Logger.debug('Scraping images folders...')
-    # TODO store images as hash=>data in index
+    # TODO NEVYSHA store images as hash=>data in index
 
     # gather all the images paths
     images_path = []
@@ -135,7 +135,7 @@ def scrap_image_folders(images_folders):
     Logger.info(f"Creating images index for {len(images_path)} images...")
 
     # get the exif data for each image
-    # TODO nevysha try to use multiprocessing
+    # TODO NEVYSHA try to use multiprocessing
     images = []
     start_time = time.time()
     for i, path in enumerate(images_path):

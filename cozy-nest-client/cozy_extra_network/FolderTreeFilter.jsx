@@ -6,7 +6,7 @@ import './FolderTreeFilter.scss'
 
 export function FolderTreeFilter({hasSubFolders, folder, selectHandler}) {
 
-    //TODO manage scroll if needed
+    //TODO NEVYSHA manage scroll if needed
 
     if (!hasSubFolders) {
         return (

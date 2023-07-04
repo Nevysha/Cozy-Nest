@@ -336,11 +336,11 @@ async function loadVersionData() {
 
   //regex to replace [x] with a checkmark
   const regex = /\[x\]/g;
-  remote_patchnote = remote_patchnote.replace(regex, ""); //TODO add icon ?
+  remote_patchnote = remote_patchnote.replace(regex, ""); //TODO NEVYSHA add icon ?
 
   //regex to replace [ ] with a cross
   const regex2 = /\[ \]/g;
-  remote_patchnote = remote_patchnote.replace(regex2, ""); //TODO add icon ?
+  remote_patchnote = remote_patchnote.replace(regex2, ""); //TODO NEVYSHA add icon ?
 
 
   const converter = new showdown.Converter();

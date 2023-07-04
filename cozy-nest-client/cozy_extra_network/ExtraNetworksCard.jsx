@@ -200,7 +200,7 @@ export function ExtraNetworksCard({item, searchString, selectedFolder, nsfwFilte
             }
         }
 
-        //TODO better alert
+        //TODO NEVYSHA better alert
         alert('No prompt found in preview images')
     }
 

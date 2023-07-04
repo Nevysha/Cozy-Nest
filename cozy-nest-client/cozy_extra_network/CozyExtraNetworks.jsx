@@ -87,7 +87,7 @@ export function CozyExtraNetworks() {
     const style = {
       border:'none',
       height:'880px'
-    }; //TODO ! ffs I hate css
+    }; //TODO NEVYSHA ffs I hate css
 
     Object.keys(extraNetworks).forEach((network, index) => {
       let tabName = String(network);
