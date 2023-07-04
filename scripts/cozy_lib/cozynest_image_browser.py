@@ -1,18 +1,10 @@
 import asyncio
 import json
-import multiprocessing
-import os
-import threading
 
-from PIL import Image
-from PIL.ExifTags import TAGS
-from modules import script_callbacks
-import modules.extras
-import modules.images
 import websockets
 from websockets.server import serve
 
-from scripts import tools
+from scripts.cozy_lib import tools
 
 
 async def start_server(images_folders, server_port, stopper):
@@ -21,11 +13,9 @@ async def start_server(images_folders, server_port, stopper):
     CLIENTS = set()
 
     async def handle_client(websocket, path):
-
         try:
             CLIENTS.add(websocket)
             while True:
-
                 if stopper.is_set():
                     print(f"CozyNestSocket: Stopping socket server on localhost:{server_port}...")
                     break
@@ -38,7 +28,8 @@ async def start_server(images_folders, server_port, stopper):
                 try:
                     res = await process(data)
                 except Exception as e:
-                    print(f"CozyNestSocket: Error while processing data: {e}")
+                    print(f"CozyNestSocket: Error while processing data: {data}")
+                    print(e)
                     res = json.dumps({
                         'what': 'error',
                         'data': 'None',

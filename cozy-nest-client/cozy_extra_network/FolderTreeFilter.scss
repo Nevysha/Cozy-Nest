@@ -1,0 +1,59 @@
+.FolderTreeFilter {
+
+  min-width: 200px;
+  overflow-y: auto;
+  height: 100%;
+  margin-right: 10px;
+
+  .directory {
+    background: #242322;
+    font-family: monospace;
+    color: var(--nevysha-font-color);
+    user-select: none;
+    padding: 10px 0 10px 10px;
+    //margin: 0 8px 0 -8px;
+  }
+
+  .directory .tree,
+  .directory .tree-node,
+  .directory .tree-node-group {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .directory .tree-branch-wrapper,
+  .directory .tree-node__leaf {
+    outline: none;
+  }
+
+  .directory .tree-node {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .directory .tree-node:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .directory .tree .tree-node--focused {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .directory .tree .tree-node--selected {
+    background: var(--secondary-accent-color);
+    color: var(--secondary-accent-color-from-luminance)
+  }
+
+  .directory .tree-node__branch {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .directory .icon {
+    vertical-align: middle;
+    padding-right: 5px;
+    font-size: calc(var(--nevysha-text-md) * 1.5);
+  }
+}

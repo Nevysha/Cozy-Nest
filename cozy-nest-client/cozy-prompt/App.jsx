@@ -14,7 +14,7 @@ import {Column, Row} from "../main/Utils.jsx";
 import {ButtonWithConfirmDialog} from "../chakra/ButtonWithConfirmDialog.jsx";
 import DOM_IDS from "../main/dom_ids.js";
 import {Range as AceRange} from "ace-builds/src-noconflict/ace";
-import {CozyLogger} from "../main/CozyLogger.js";
+import {CozyLoggerPrompt as CozyLogger} from "../main/CozyLogger.js";
 // ace.config.setModuleUrl(
 //   "ace/mode/json_worker",
 //   'cozy-nest-client/node_modules/ace-builds/src-noconflict/worker-json.js')
@@ -27,7 +27,7 @@ ace.config.setModuleUrl(
 
 const langTools = ace.require("ace/ext/language_tools");
 
-export function App({parentId, containerId, tabId}) {
+export function App({parentId, containerId, tabId, resolve}) {
 
   let savedHeight = localStorage.getItem(`cozy-prompt-height-${containerId}`);
   savedHeight = savedHeight ? parseInt(savedHeight) : 200;
@@ -254,6 +254,10 @@ export function App({parentId, containerId, tabId}) {
       fontFamily: "monospace",
       enableBasicAutocompletion: true
     })
+
+    setTimeout(() => {
+      resolve()
+    }, 200);
 
   }
 

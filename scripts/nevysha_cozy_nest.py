@@ -6,155 +6,22 @@ import socket
 import subprocess
 import sys
 import threading
+from typing import Any
 
 import gradio as gr
 import modules
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
-from typing import Any
 from fastapi import FastAPI, Response, Request
 from fastapi.staticfiles import StaticFiles
 import websockets
 from modules import script_callbacks, shared, call_queue, scripts
 
-from scripts import tools
-from scripts.cozynest_image_browser import start_server
-
-
-def rgb_to_hex(r, g, b):
-    return '#{:02x}{:02x}{:02x}'.format(r, g, b)
-
-
-def hex_to_rgb(hex):
-    rgb = []
-    for i in (0, 2, 4):
-        decimal = int(hex[i:i + 2], 16)
-        rgb.append(decimal)
-
-    return tuple(rgb)
-
-
-# check parent folder name (2 level above) to ensure compatibility after repo rename
-EXTENSION_TECHNICAL_NAME = os.path.basename(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-CONFIG_FILENAME = f"extensions/{EXTENSION_TECHNICAL_NAME}/nevyui_settings.json"
-CONFIG_FILENAME = os.path.join(shared.cmd_opts.data_dir, CONFIG_FILENAME)
-
-
-def gradio_save_settings(main_menu_position,
-                         quicksettings_position,
-                         accent_generate_button,
-                         font_size,
-                         font_color,
-                         font_color_light,
-                         waves_color,
-                         bg_gradiant_color,
-                         accent_color,
-                         card_height,
-                         card_width,
-                         error_popup,
-                         disable_image_browser,
-                         disable_waves_and_gradiant,
-                         server_default_port,
-                         auto_search_port,
-                         auto_start_server,
-                         fetch_output_folder_from_a1111_settings,
-                         archive_path,
-                         sfw_mode,
-                         enable_clear_button,
-                         enable_extra_network_tweaks,
-                         ):
-    settings = {
-        'main_menu_position': main_menu_position,
-        'quicksettings_position': quicksettings_position,
-        'accent_generate_button': accent_generate_button,
-        'font_size': font_size,
-        'font_color': font_color,
-        'font_color_light': font_color_light,
-        'waves_color': waves_color,
-        'bg_gradiant_color': bg_gradiant_color,
-        'accent_color': accent_color,
-        'card_height': card_height,
-        'card_width': card_width,
-        'error_popup': error_popup,
-        'disable_image_browser': disable_image_browser,
-        'disable_waves_and_gradiant': disable_waves_and_gradiant,
-        'server_default_port': server_default_port,
-        'auto_search_port': auto_search_port,
-        'auto_start_server': auto_start_server,
-        'fetch_output_folder_from_a1111_settings': fetch_output_folder_from_a1111_settings,
-        'sfw_mode': sfw_mode,
-        'enable_clear_button': enable_clear_button,
-        'enable_extra_network_tweaks': enable_extra_network_tweaks,
-        'archive_path': archive_path,
-    }
-
-    current_config = get_dict_from_config()
-
-    settings = {**current_config, **settings}
-
-    save_settings(settings)
-
-
-def save_settings(settings):
-    # create the file in extensions/Cozy-Nest if it doesn't exist
-    if not os.path.exists(CONFIG_FILENAME):
-        open(CONFIG_FILENAME, 'w').close()
-    # save each settings inside the file
-    with open(CONFIG_FILENAME, 'w') as f:
-        f.write(json.dumps(settings, indent=2))
-        f.close()
-
-
-def get_dict_from_config():
-    if not os.path.exists(CONFIG_FILENAME):
-        reset_settings()
-        # return default config
-        return get_default_settings()
-
-    with open(CONFIG_FILENAME, 'r') as f:
-        config = json.loads(f.read())
-        f.close()
-        return config
-
-
-def get_default_settings():
-    return {
-        'main_menu_position': 'top',
-        'accent_generate_button': True,
-        'font_size': 12,
-        'quicksettings_position': 'split',
-        'font_color': '#d4d4d4',
-        'font_color_light': rgb_to_hex(71, 71, 71),
-        'waves_color': rgb_to_hex(94, 26, 145),
-        'bg_gradiant_color': rgb_to_hex(101, 0, 94),
-        'accent_color': '#37b9dd',
-        'secondary_accent_color': '#b67ee1',
-        'card_height': '8',
-        'card_width': '16',
-        'error_popup': True,
-        'disable_image_browser': True,
-        'disable_waves_and_gradiant': False,
-        'server_default_port': 3333,
-        'auto_search_port': True,
-        'auto_start_server': True,
-        'fetch_output_folder_from_a1111_settings': False,
-        'cnib_output_folder': [],
-        'archive_path': '',
-        'sfw_mode': False,
-        'enable_clear_button': True,
-        'enable_extra_network_tweaks': True,
-        'enable_cozy_prompt': True,
-        'carret_style': 'thin',
-        'save_last_prompt_local_storage': True,
-        'color_mode': 'dark',
-        'webui': 'unknown'
-    }
-
-
-def reset_settings():
-    save_settings(
-        get_default_settings())
+from scripts.cozy_lib import tools
+from scripts.cozy_lib.CozyLogger import CozyLogger
+from scripts.cozy_lib.CozyNestConfig import CozyNestConfig
+from scripts.cozy_lib.cozynest_image_browser import start_server
+from scripts.cozy_lib.tools import output_folder_array
 
 
 def request_restart():
@@ -216,26 +83,6 @@ def serv_img_browser_socket(server_port=3333, auto_search_port=True, cnib_output
         print(e)
 
 
-def output_folder_array():
-    outdir_txt2img_samples = shared.opts.data['outdir_txt2img_samples']
-    outdir_img2img_samples = shared.opts.data['outdir_img2img_samples']
-    outdir_extras_samples = shared.opts.data['outdir_extras_samples']
-    base_dir = scripts.basedir()
-    # check if outdir_txt2img_samples is a relative path
-    if not os.path.isabs(outdir_txt2img_samples):
-        outdir_txt2img_samples = os.path.normpath(os.path.join(base_dir, outdir_txt2img_samples))
-    if not os.path.isabs(outdir_img2img_samples):
-        outdir_img2img_samples = os.path.normpath(os.path.join(base_dir, outdir_img2img_samples))
-    if not os.path.isabs(outdir_extras_samples):
-        outdir_extras_samples = os.path.normpath(os.path.join(base_dir, outdir_extras_samples))
-    images_folders = [
-        outdir_txt2img_samples,
-        outdir_img2img_samples,
-        outdir_extras_samples,
-    ]
-    return images_folders
-
-
 def start_server_in_dedicated_process(_images_folders, server_port):
     def run_server():
         asyncio.run(start_server(_images_folders, server_port, stopper))
@@ -284,38 +131,12 @@ _server_port = None
 
 def on_ui_tabs():
     global _server_port
-    # shared options
-    config = get_dict_from_config()
-    # merge default settings with user settings
-    config = {**get_default_settings(), **config}
 
-    if config['webui'] == 'unknown' and hasattr(shared, 'get_version'):
-        version = shared.get_version()
-        # check if the 'app' is 'sd.next'
-        if version['app'] == 'sd.next':
-            config['webui'] = 'sd.next'
-            config['fetch_output_folder_from_a1111_settings'] = False
-        else:
-            config['webui'] = 'auto1111'
-        save_settings(config)
+    config = CozyNestConfig()
+    config.init()
+    config.migrate()
 
-    if config['webui'] == 'sd.next':
-        config['fetch_output_folder_from_a1111_settings'] = False
-
-    # check if cnib_output_folder is empty and/or need to be fetched from a1111 settings
-    cnib_output_folder = config.get('cnib_output_folder')
-    is_empty = cnib_output_folder == []
-    if not cnib_output_folder or is_empty:
-        cnib_output_folder = []
-
-    if config.get('fetch_output_folder_from_a1111_settings'):
-        # merge cnib_output_folder output_folder_array()
-        cnib_output_folder = cnib_output_folder + list(set(output_folder_array()) - set(cnib_output_folder))
-
-    config['cnib_output_folder'] = cnib_output_folder
-
-    # save the merged settings
-    save_settings(config)
+    CozyLogger.info(f"version: {config.get('version')}")
 
     # check if the user has disabled the image browser
     disable_image_browser_value = config.get('disable_image_browser')
@@ -346,12 +167,12 @@ def on_ui_tabs():
         if not any([path.startswith(folder) for folder in images_folders]):
             return
 
-        data = tools.get_exif(path)
-        tools.new_image(data)
+        _new_img_data = tools.get_exif(path)
+        tools.new_image(_new_img_data)
 
         asyncio.run(send_to_socket({
             'what': 'image_saved',
-            'data': data,
+            'data': _new_img_data,
         }, server_port))
 
     if not disable_image_browser_value:
@@ -389,7 +210,7 @@ async def send_to_socket(data, server_port):
                 await websocket.close()
                 break
 
-        except websockets.exceptions.ConnectionClosed:
+        except Exception:
             pass
 
 
@@ -405,19 +226,16 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
         # Access POST parameters
         data = await request.json()
 
-        # shared options
-        config = get_dict_from_config()
-        # merge default settings with user settings
-        config = {**get_default_settings(), **config,
-                  **data}
+        config = CozyNestConfig()
 
-        save_settings(config)
+        config.save_settings(data)
 
         return {"message": "Config saved successfully"}
 
     @app.delete("/cozy-nest/config")
     async def delete_config():
-        reset_settings()
+        config = CozyNestConfig()
+        config.reset_settings()
         return {"message": "Config deleted successfully"}
 
     @app.get("/cozy-nest/reloadui")
@@ -457,7 +275,7 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
     async def delete_index():
         global _server_port
 
-        config = get_dict_from_config()
+        config = CozyNestConfig()
         cnib_output_folder = config.get('cnib_output_folder')
         if cnib_output_folder and cnib_output_folder != "":
             tools.delete_index()
@@ -487,7 +305,7 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
                 # do nothing for now
                 return Response(status_code=501, content="unimplemented")
 
-            config = get_dict_from_config()
+            config = CozyNestConfig()
             archive_path = config.get('archive_path')
             if not archive_path or archive_path == "":
                 # return {"message": "archive path not set"}
@@ -536,6 +354,13 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
         pass
 
 
+def init_extra_networks(_: Any, app: FastAPI, **kwargs):
+    from scripts.cozy_lib.cozy_extra_network import CozyExtraNetworksClass
+
+    CozyExtraNetworks = CozyExtraNetworksClass()
+    CozyExtraNetworks.create_api_route(app)
+
 
 script_callbacks.on_ui_tabs(on_ui_tabs)
 script_callbacks.on_app_started(cozy_nest_api)
+script_callbacks.on_app_started(init_extra_networks)

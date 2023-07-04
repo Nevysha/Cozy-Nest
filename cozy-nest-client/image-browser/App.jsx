@@ -282,6 +282,7 @@ function App() {
                     rows="1"
                     spellCheck="false"
                     data-gramm="false"
+                    style={{resize: 'none'}}
                     onChange={(e) => setSearchStr(e.target.value)}/>
           <CozyTagsSelect setActiveTags={setActiveTags} />
         </Row>

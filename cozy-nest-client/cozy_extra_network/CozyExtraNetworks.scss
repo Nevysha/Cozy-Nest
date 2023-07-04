@@ -1,0 +1,121 @@
+#cozy-extra-network-react {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+}
+
+.CozyExtraNetworks {
+    width: 100%;
+    display: flex;
+    height: 100%;
+
+    .chakra-tabs {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .chakra-tabs__tab-panels {
+        height: 100%;
+    }
+}
+
+.CozyExtraNetworksPanels {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    row-gap: 5px;
+    column-gap: 2px;
+}
+.CozyExtraNetworksCard {
+    background-color: var(--ae-input-bg-color);
+    border-radius: 3px;
+}
+.CozyExtraNetworksCard:hover {
+    filter: brightness(1.2);
+}
+
+.en-preview-wrapper {
+    position: relative;
+    width: var(--extra-network-card-width);
+    height: var(--extra-network-card-height);
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--ae-input-border-color);
+    border-radius: 3px;
+}
+.en-preview-thumbnail {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100% !important;
+    object-fit: cover; /* Maintain aspect ratio while covering the entire container */
+}
+.en-preview-thumbnail.black {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+}
+.cozy-en-info {
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    background-color: var(--block-background-fill);
+    opacity: 0.9;
+    width: 100%;
+    text-align: center;
+    padding: 4px;
+}
+.en-preview-name {
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.cozy-en-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    height: 100%;
+    background-color: var(--ae-input-bg-color);
+    opacity: 0.8;
+    z-index: 2;
+    align-content: center;
+    flex-wrap: wrap;
+
+}
+.cozy-en-actions > button {
+    min-width: 25px;
+}
+.cozy-en-actions > button:hover {
+    color: var(--ae-primary-color);
+}
+.cozy-en-actions > button > svg {
+    fill: var(--nevysha-font-color);
+    height: 15px;
+}
+.cozy-en-actions > button > svg:hover {
+    fill: var(--ae-primary-color);
+}
+
+.CozyExtraNetworks .btn-settings {
+    background-color: var(--ae-input-bg-color) !important;
+    width: 150px;
+    height: 20px;
+}
+
+span.sfwFilterInfo {
+    fill: var(--nevysha-font-color);
+    margin-left: 5px;
+}
+button.toggleNsfwFilter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
