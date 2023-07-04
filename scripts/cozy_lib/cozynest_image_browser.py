@@ -28,7 +28,8 @@ async def start_server(images_folders, server_port, stopper):
                 try:
                     res = await process(data)
                 except Exception as e:
-                    print(f"CozyNestSocket: Error while processing data: {e}")
+                    print(f"CozyNestSocket: Error while processing data: {data}")
+                    print(e)
                     res = json.dumps({
                         'what': 'error',
                         'data': 'None',
