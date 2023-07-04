@@ -36,7 +36,7 @@ function NsfwButton({onClick, nsfw}) {
     </button>;
 }
 
-export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
+export function ExtraNetworksCard({item, searchString, selectedFolder, nsfwFilter}) {
 
     const [isHovered, setIsHovered] = React.useState(false)
     const [info, setInfo] = React.useState(item.info || {})
@@ -74,8 +74,8 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
             return;
         }
 
-        setMatchFilter(filterCard(searchString))
-    }, [searchString, nsfwFilter, info])
+        setMatchFilter(filterCard(searchString, selectedFolder))
+    }, [selectedFolder, searchString, nsfwFilter, info])
 
     useEffect(() => {
         //when hiding card, reset hover state
@@ -92,12 +92,27 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
         return info && info.model && info.model.nsfw
     }
 
-    function filterCard(searchString) {
-        if (searchString === '') return true
+    function filterCard(searchString, selectedFolder) {
+        const hasSelectFolder = selectedFolder && selectedFolder !== ''
 
-        if (JSON.stringify(item.path).includes(searchString)) {
-            return true
+        function normalizePath(path) {
+            return path.replace(/[\/\\:]/g, '')
         }
+
+        if (searchString !== '' || hasSelectFolder) {
+            //only search string
+            if (!hasSelectFolder) {
+                return normalizePath(item.path).includes(searchString)
+            }
+            //only selected folder
+            else if (searchString === '') {
+                return normalizePath(item.path).includes(normalizePath(selectedFolder))
+            }
+            //both
+            return (normalizePath(item.path).includes(searchString)
+                || normalizePath(item.path).includes(normalizePath(selectedFolder)))
+        }
+        return true
     }
 
     function addTriggerWordsToPrompt(event) {

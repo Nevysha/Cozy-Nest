@@ -469,32 +469,36 @@ def build_main_folder_tree_for(_main_path, main_items):
         path_parts.pop(-1)
 
         # get the folder tree
-        models_folder_tree = add_folder_to_tree(models_folder_tree, path_parts)
+        models_folder_tree = add_folder_to_tree(_main_path, models_folder_tree, path_parts)
     return models_folder_tree
 
 
-def add_folder_to_tree(folder_tree, path_parts):
+def add_folder_to_tree(full_path_to_leaf, folder_tree, path_parts):
     # if there are no more parts, we are done
     if len(path_parts) == 0:
         return folder_tree
 
     # get the first part of the path
     part = path_parts.pop(0)
+    full_path_to_leaf = Path(full_path_to_leaf, part)
 
     # check if the part is already in the folder tree
     for child in folder_tree["children"]:
         if child["name"] == part:
             # if it is, add the rest of the path to the child
-            add_folder_to_tree(child, path_parts)
+            add_folder_to_tree(full_path_to_leaf, child, path_parts)
             return folder_tree
 
     # if the part is not in the folder tree, add it
     folder_tree["children"].append({
         "name": part,
-        "children": []
+        "metadata": {
+            "path": str(full_path_to_leaf),
+        },
+        "children": [],
     })
 
     # add the rest of the path to the new child
-    add_folder_to_tree(folder_tree["children"][-1], path_parts)
+    add_folder_to_tree(full_path_to_leaf, folder_tree["children"][-1], path_parts)
 
     return folder_tree
