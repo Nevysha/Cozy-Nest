@@ -18,6 +18,13 @@
     .chakra-tabs__tab-panels {
         height: 100%;
     }
+
+    .refreshEnBtn {
+        background-color: var(--ae-input-bg-color);
+        padding: 0 10px;
+        border-radius: 1px;
+        margin-right: -20px;
+    }
 }
 
 .CozyExtraNetworksPanels {

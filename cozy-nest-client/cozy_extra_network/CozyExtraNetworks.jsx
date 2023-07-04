@@ -7,6 +7,7 @@ import {ExtraNetworksCard} from "./ExtraNetworksCard.jsx";
 import {Column, Row, RowFullWidth} from "../main/Utils.jsx";
 import {SvgForReact} from "../main/svg_for_react.jsx";
 import {FolderTreeFilter} from "./FolderTreeFilter.jsx";
+import {FiRefreshCcw as RefreshIcon} from "react-icons/fi";
 
 const nevyshaScrollbar = {
   '&::-webkit-scrollbar': {
@@ -38,26 +39,41 @@ export function CozyExtraNetworks() {
 
   useEffect(() => {
     (async () => {
-      const response = await fetch('/cozy-nest/extra_networks')
-      if (response.status !== 200) {
-        CozyLogger.error('failed to fetch extra networks', response)
-        return;
-      }
-      const _enJson = await response.json()
-
-      const responseFolders = await fetch('/cozy-nest/extra_networks/folders')
-      if (responseFolders.status !== 200) {
-        CozyLogger.error('failed to fetch extra networks folders', responseFolders)
-        return;
-      }
-      const _folders = await responseFolders.json()
-
-      setFolders(_folders)
-      setExtraNetworks(_enJson)
-      setReady(true)
-    })()
-
+      await load()
+    })();
   }, [])
+
+  const load = async () => {
+    const response = await fetch('/cozy-nest/extra_networks')
+    if (response.status !== 200) {
+      CozyLogger.error('failed to fetch extra networks', response)
+      return;
+    }
+    const _enJson = await response.json()
+
+    const responseFolders = await fetch('/cozy-nest/extra_networks/folders')
+    if (responseFolders.status !== 200) {
+      CozyLogger.error('failed to fetch extra networks folders', responseFolders)
+      return;
+    }
+    const _folders = await responseFolders.json()
+
+    setFolders(_folders)
+    setExtraNetworks(_enJson)
+    setReady(true)
+  }
+
+  const reload = async () => {
+    setFolders([])
+    setExtraNetworks([])
+    setReady(false)
+    setFullyLoaded(false)
+    setSelectedTab(null)
+
+    await load()
+  }
+
+
 
   useEffect(() => {
 
@@ -163,6 +179,12 @@ export function CozyExtraNetworks() {
                 onChange={(e) => setDisplayFolderFilter(e.target.checked)}
             >Display folder filter</Checkbox>
             <div style={{flex:1}}/>
+            <button
+                className='refreshEnBtn'
+              onClick={reload}
+            >
+              <RefreshIcon color="00d9ff" className="icon"/>
+            </button>
             <button
                 onClick={() => setNsfwFilter(!nsfwFilter)}
                 title="WARNING : this will take time as it will compute the info of all extra networks"

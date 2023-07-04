@@ -3,6 +3,9 @@
 - Automatic1111's webui 1.3.2 release.
 - SD Next (Vlad's fork) Version: 4867dafa Fri Jun 23. (Not compatible with latest!)
 
+## Minor changes & fixes in 2.4.1
+- [x]  Small various fix
+
 ## New features in 2.4.0
 - [x]  Dedicated Extra Network component which *should* be more stable and faster.
   - [x]  Compatible with Civitai Helper (and hard requirement to generate civitai.info file)
