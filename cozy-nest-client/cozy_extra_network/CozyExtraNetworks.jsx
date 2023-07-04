@@ -72,6 +72,7 @@ export function CozyExtraNetworks() {
         setExtraNetworks(json)
         setReady(true)
         setFullyLoaded(true)
+        setSelectedTab(indexRef[0])
       }
       else {
         CozyLogger.error('failed to fetch full extra networks info', response)
