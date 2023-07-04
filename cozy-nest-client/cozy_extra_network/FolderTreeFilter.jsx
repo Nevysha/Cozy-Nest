@@ -52,7 +52,7 @@ export function FolderTreeFilter({hasSubFolders, folder, selectHandler, forNetwo
     //add a fake 'all' folder as first element of children
     //check if first element is 'all'. If not, add it
     const _folder = {...folder};
-    if (hasSubFolders && folder.children[0].name === 'all') {
+    if (hasSubFolders && folder.children[0].name !== 'all') {
         _folder.children = [{name: 'all', children: []}, ..._folder.children];
     }
 
