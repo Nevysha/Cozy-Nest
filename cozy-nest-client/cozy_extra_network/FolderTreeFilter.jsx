@@ -13,7 +13,7 @@ class StoreClass {
 
         //load from localstorage
         const _networks = localStorage.getItem('CozyNest/FolderTreeFilter');
-        if (_networks && _networks !== {}) {
+        if (_networks) {
             this.networks = new Map(Object.entries(JSON.parse(_networks)));
         }
         else {
