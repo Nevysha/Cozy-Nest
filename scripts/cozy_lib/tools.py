@@ -135,6 +135,7 @@ def scrap_image_folders(images_folders):
     Logger.info(f"Creating images index for {len(images_path)} images...")
 
     # get the exif data for each image
+    # TODO nevysha try to use multiprocessing
     images = []
     start_time = time.time()
     for i, path in enumerate(images_path):
@@ -171,13 +172,13 @@ def scrap_image_folders(images_folders):
     return data
 
 
-def new_image(data):
-    # TODO seems broken
+def new_image(_new_img_data):
     # Add the image to the cache
-    with open(Static.CACHE_FILENAME, 'r+') as f:
-        cache = json.loads(f.read())
-        cache['images'].insert(0, data)
-        f.write(json.dumps(cache))
+    with open(Static.CACHE_FILENAME, 'r') as fr:
+        cache = json.loads(fr.read())
+        cache['images'].insert(0, _new_img_data)
+        with open(Static.CACHE_FILENAME, 'w') as fw:
+            fw.write(json.dumps(cache))
 
 
 def display_progress_bar(progress, elapsed_time):

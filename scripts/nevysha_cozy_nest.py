@@ -167,12 +167,12 @@ def on_ui_tabs():
         if not any([path.startswith(folder) for folder in images_folders]):
             return
 
-        data = tools.get_exif(path)
-        tools.new_image(data)
+        _new_img_data = tools.get_exif(path)
+        tools.new_image(_new_img_data)
 
         asyncio.run(send_to_socket({
             'what': 'image_saved',
-            'data': data,
+            'data': _new_img_data,
         }, server_port))
 
     if not disable_image_browser_value:
