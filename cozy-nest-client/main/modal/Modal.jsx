@@ -1,49 +1,52 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import {theme} from "../../chakra/chakra-theme.ts";
-import {ChakraProvider} from "@chakra-ui/react";
+import React, {useEffect} from "react";
+import EventEmitter from 'eventemitter3';
 
-const _ready = false;
+class EventBusClass extends EventEmitter{
+    constructor() {
+        super();
+    }
+}
+const EventBus = new EventBusClass();
 
-function CozyModalSimple() {
+function CozyModalRoot({listen, children}) {
+
+    useEffect(() => {
+        // listen to events on listen
+
+        const _eventFn = () => {
+            CozyLogger.debug("CozyModalRoot event", listen);
+        }
+
+        EventBus.on(listen, _eventFn)
+        return () => {
+            // unlisten to events on listen
+            EventBus.off(listen, _eventFn)
+        }
+    }, [])
+
     return (
-        <div className="CozyModalSimple">
+        <div className="CozyModal">
+            {children}
         </div>
     )
 }
 
-function CozyModalRich() {
+export function CozyModalSimple() {
     return (
-        <div className="CozyModalRich">
-        </div>
+        <CozyModalRoot listen='CozyModalSimple'>
+            <div className="CozyModalSimple">
+            </div>
+        </CozyModalRoot>
     )
 }
 
-function prepareReactHost() {
-    // insert a div at the end of the body
-    const _host =
-        `<div id="CozyModalSimple"/>
-        <div id="CozyModalRich"/>`;
-    document.body.insertAdjacentHTML("beforeend", _host);
-
-    ReactDOM.createRoot(document.getElementById(`CozyModalSimple`)).render(
-        <React.StrictMode>
-            <ChakraProvider theme={theme} >
-                <CozyModalSimple />
-            </ChakraProvider>
-        </React.StrictMode>,
-    )
-
-    ReactDOM.createRoot(document.getElementById(`CozyModalRich`)).render(
-        <React.StrictMode>
-            <ChakraProvider theme={theme} >
-                <CozyModalRich />
-            </ChakraProvider>
-        </React.StrictMode>,
+export function CozyModalRich() {
+    return (
+        <CozyModalRoot listen='CozyModalRich'>
+            <div className="CozyModalRich">
+            </div>
+        </CozyModalRoot>
     )
 }
 
-let CozyModal  = {
-    prepareReactHost,
-};
-export default CozyModal
+

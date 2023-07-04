@@ -30,7 +30,7 @@ import clearGeneratedImage from './tweaks/clear-generated-image.js'
 import {createAlertDiv, showAlert} from "./tweaks/cozy-alert.js";
 import DOM_IDS from "./dom_ids.js";
 import CozyNestEventBus from "../CozyNestEventBus.js";
-import Modal from './modal/Modal.jsx'
+import Modal from './modal/Module.jsx'
 
 
 const addDraggable = ({prefix}) => {
