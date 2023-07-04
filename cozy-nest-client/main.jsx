@@ -58,19 +58,9 @@ window.cozyNestLoader = cozyNestLoader;
     return
   }
 
-  // if (getTheme() === 'dark') {
-    const styleSheet = new CSSStyleSheet();
-    styleSheet.replaceSync(sheet);
-    document.adoptedStyleSheets = [styleSheet];
-  // }
-  // else {
-  //   const {latte} = await import('./main/latte.css?inline');
-  //   const styleSheet = new CSSStyleSheet();
-  //   styleSheet.replaceSync(sheet);
-  //   const latteSheet = new CSSStyleSheet();
-  //   latteSheet.replaceSync(latte);
-  //   document.adoptedStyleSheets = [styleSheet, latteSheet];
-  // }
+  const styleSheet = new CSSStyleSheet();
+  styleSheet.replaceSync(sheet);
+  document.adoptedStyleSheets = [styleSheet];
 
 
   SimpleTimer.time(COZY_NEST_GRADIO_LOAD_DURATION);

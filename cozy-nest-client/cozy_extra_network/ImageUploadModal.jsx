@@ -8,7 +8,7 @@ import {Button} from "@chakra-ui/react";
 
 const fileTypes = ["PNG"];
 
-export function ImageUploadAlert({visible, cancel, name, path, callback}) {
+export function ImageUploadModal({visible, cancel, name, path, callback}) {
     const [file, setFile] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
 
@@ -37,9 +37,10 @@ export function ImageUploadAlert({visible, cancel, name, path, callback}) {
         <>
             {visible &&
                 <DialogWrapper isVisible={isVisible}>
-                    <div className="ImageUploadAlert">
+                    <div className="ImageUploadModal">
                         <div className="name">
-                            {name}
+                            <h1>Upload preview image</h1>
+                            <span>{name}</span>
                         </div>
                         <FileUploader
                             handleChange={handleChange}

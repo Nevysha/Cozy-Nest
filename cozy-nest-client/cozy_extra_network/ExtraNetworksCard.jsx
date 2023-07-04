@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {SvgForReact} from "../main/svg_for_react.jsx";
 import {LazyComponent} from "./LazyComponent.jsx";
-import {ImageUploadAlert} from "./ImageUploadAlert.jsx";
+import {ImageUploadModal} from "./ImageUploadModal.jsx";
 import {Button} from "@chakra-ui/react";
 
 const CIVITAI_URL = {
@@ -297,7 +297,7 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
                 }
                 {showFileUpload &&
                     <div style={{zIndex:4}}>
-                        <ImageUploadAlert
+                        <ImageUploadModal
                             visible={showFileUpload}
                             name={item.name}
                             path={item.path}
@@ -313,7 +313,7 @@ export function ExtraNetworksCard({item, searchString, nsfwFilter}) {
                             callback={onPreviewSaved}
                         >
 
-                        </ImageUploadAlert>
+                        </ImageUploadModal>
                     </div>
                 }
                 <div className="cozy-en-info">

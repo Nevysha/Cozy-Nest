@@ -1,14 +1,29 @@
-.ImageUploadAlert {
+.ImageUploadModal {
   background-color: var(--ae-input-bg-color);
   color: var(--nevysha-font-color);
   padding: 15px;
   border-radius: 3px;
+  border: 1px solid var(--ae-input-border-color);
 
   .name {
-    margin-bottom: 15px;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    flex-direction: column;
+
+    h1 {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      font-size: var(--nevysha-text-lg);
+    }
+    span {
+      margin-bottom: 25px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      font-size: var(--nevysha-text-md);
+      filter: brightness(0.7);
+    }
+
   }
 
   label {

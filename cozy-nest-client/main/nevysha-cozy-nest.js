@@ -30,6 +30,7 @@ import clearGeneratedImage from './tweaks/clear-generated-image.js'
 import {createAlertDiv, showAlert} from "./tweaks/cozy-alert.js";
 import DOM_IDS from "./dom_ids.js";
 import CozyNestEventBus from "../CozyNestEventBus.js";
+import Modal from './modal/Modal.jsx'
 
 
 const addDraggable = ({prefix}) => {
@@ -1005,6 +1006,9 @@ const onLoad = (done, error) => {
 
   // log time for onLoad execution after gradio has loaded
   SimpleTimer.time(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
+
+  // load modal module
+  Modal.prepareReactHost();
 
   // check for gradio theme (vlad's fork)
   if (document.querySelector('#setting_gradio_theme input')) {
