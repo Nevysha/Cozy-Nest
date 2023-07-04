@@ -1,20 +1,29 @@
 import React, {useEffect} from "react";
-import EventEmitter from 'eventemitter3';
+import {EventBus} from "./Module.jsx";
+import {
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    Button,
+    useDisclosure, useToast
+} from "@chakra-ui/react";
 
-class EventBusClass extends EventEmitter{
-    constructor() {
-        super();
-    }
-}
-const EventBus = new EventBusClass();
+export function CozyModalSimple() {
 
-function CozyModalRoot({listen, children}) {
+    const listen = 'CozyModalSimple'
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [text, setText] = React.useState('')
 
     useEffect(() => {
         // listen to events on listen
 
-        const _eventFn = () => {
-            CozyLogger.debug("CozyModalRoot event", listen);
+        const _eventFn = ({msg}) => {
+            setText(msg)
+            onOpen()
         }
 
         EventBus.on(listen, _eventFn)
@@ -25,27 +34,78 @@ function CozyModalRoot({listen, children}) {
     }, [])
 
     return (
-        <div className="CozyModal">
-            {children}
-        </div>
-    )
-}
+        <>
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Modal Title</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <p>{text}</p>
+                    </ModalBody>
 
-export function CozyModalSimple() {
-    return (
-        <CozyModalRoot listen='CozyModalSimple'>
-            <div className="CozyModalSimple">
-            </div>
-        </CozyModalRoot>
+                    <ModalFooter>
+                        <Button colorScheme='blue' mr={3} onClick={onClose}>
+                            Close
+                        </Button>
+                        <Button variant='ghost'>Secondary Action</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </>
     )
 }
 
 export function CozyModalRich() {
+
+    const listen = 'CozyModalRich'
+
+    useEffect(() => {
+        // listen to events on listen
+
+        const _eventFn = (args) => {
+            CozyLogger.debug("CozyModalRoot event", listen, args);
+        }
+
+        EventBus.on(listen, _eventFn)
+        return () => {
+            // unlisten to events on listen
+            EventBus.off(listen, _eventFn)
+        }
+    }, [])
+
     return (
-        <CozyModalRoot listen='CozyModalRich'>
-            <div className="CozyModalRich">
-            </div>
-        </CozyModalRoot>
+        <div className="CozyModalRich">
+        </div>
+    )
+}
+
+export function CozyToast() {
+    const listen = 'CozyToast'
+    const toast = useToast()
+
+    useEffect(() => {
+        // listen to events on listen
+
+        const _eventFn = ({title, msg, status}) => {
+            toast({
+                title: title,
+                description: msg,
+                status: status,
+                duration: 9000,
+                isClosable: true,
+            })
+        }
+
+        EventBus.on(listen, _eventFn)
+        return () => {
+            // unlisten to events on listen
+            EventBus.off(listen, _eventFn)
+        }
+    }, [])
+
+    return (
+        <div className="CozyToast" />
     )
 }
 

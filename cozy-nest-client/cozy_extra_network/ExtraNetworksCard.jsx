@@ -3,6 +3,7 @@ import {SvgForReact} from "../main/svg_for_react.jsx";
 import {LazyComponent} from "./LazyComponent.jsx";
 import {ImageUploadModal} from "./ImageUploadModal.jsx";
 import {Button} from "@chakra-ui/react";
+import CozyModal from "../main/modal/Module.jsx";
 
 const CIVITAI_URL = {
     "modelPage":"https://civitai.com/models/",
@@ -200,8 +201,7 @@ export function ExtraNetworksCard({item, searchString, selectedFolder, nsfwFilte
             }
         }
 
-        //TODO NEVYSHA better alert
-        alert('No prompt found in preview images')
+        CozyModal.showToast('warning', 'Not available', 'No prompt found in preview')
     }
 
     function replaceImage(event) {
