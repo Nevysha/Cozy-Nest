@@ -30,6 +30,7 @@ import clearGeneratedImage from './tweaks/clear-generated-image.js'
 import {createAlertDiv, showAlert} from "./tweaks/cozy-alert.js";
 import DOM_IDS from "./dom_ids.js";
 import CozyNestEventBus from "../CozyNestEventBus.js";
+import Modal from './modal/Module.jsx'
 
 
 const addDraggable = ({prefix}) => {
@@ -335,11 +336,11 @@ async function loadVersionData() {
 
   //regex to replace [x] with a checkmark
   const regex = /\[x\]/g;
-  remote_patchnote = remote_patchnote.replace(regex, ""); //TODO add icon ?
+  remote_patchnote = remote_patchnote.replace(regex, ""); //TODO NEVYSHA add icon ?
 
   //regex to replace [ ] with a cross
   const regex2 = /\[ \]/g;
-  remote_patchnote = remote_patchnote.replace(regex2, ""); //TODO add icon ?
+  remote_patchnote = remote_patchnote.replace(regex2, ""); //TODO NEVYSHA add icon ?
 
 
   const converter = new showdown.Converter();
@@ -609,7 +610,7 @@ function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab, pr
   //create a panel to display Cozy Image Browser
   const cozyImgBrowserPanel =
     `<div id="${label}_panel" class="nevysha slide-right-browser-panel" style="display: none">
-      <div class="nevysha slide-right-browser-panel-container nevysha-scrollable">
+      <div class="nevysha slide-right-browser-panel-container nevysha-scrollable ${label}_panel_inner">
         <div class="nevysha" id="${label}-react"/>
       </div>
     </div>`;
@@ -623,6 +624,11 @@ function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab, pr
   const cozyImgBrowserPanelWidth = localStorage.getItem(`${label}_panelWidth`);
   if (cozyImgBrowserPanelWidth) {
     cozyImgBrowserPanelWrapper.style.width = cozyImgBrowserPanelWidth;
+  }
+  else {
+    //get window width
+    const width = window.innerWidth;
+    cozyImgBrowserPanelWrapper.style.width = `${Math.round(width / 2)}px`;
   }
   cozyImgBrowserPanelWrapper.appendChild(lineWrapper)
 
@@ -685,7 +691,7 @@ function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab, pr
   function close() {
     const panel = document.querySelector(`#${label}_panel`);
     if (panel.style.display !== 'none') {
-      $(panel).animate({"margin-right": `-=${panel.offsetWidth}`}, 1, () => {
+      $(panel).animate({"margin-right": `-=${panel.offsetWidth}`}, 150, () => {
         panel.style.display = 'none'
       });
     }
@@ -726,7 +732,7 @@ function createRightWrapperDiv() {
   tab.insertAdjacentElement('beforeend', rightPanBtnWrapper);
 
   if (COZY_NEST_CONFIG.enable_extra_network_tweaks === true) {
-    buildRightSlidePanelFor('cozy-txt2img-extra-network', 'Extra Network'
+    buildRightSlidePanelFor('cozy-txt2img-extra-network', 'Extra Networks'
       , rightPanBtnWrapper, tab, 'txt2img');
     document.getElementById('cozy-txt2img-extra-network-react').classList.add('cozy-extra-network')
 
@@ -734,6 +740,12 @@ function createRightWrapperDiv() {
       , rightPanBtnWrapper, tab, 'img2img');
     document.getElementById('cozy-img2img-extra-network-react').classList.add('cozy-extra-network')
     document.querySelector(`#cozy-img2img-extra-network_right_button`).style.display = 'none';
+  }
+  if (COZY_NEST_CONFIG.enable_cozy_extra_networks === true) {
+    //Cozy Nest reimplementation of extra networks
+    //if both are enabled, we use the Cozy Extra Networks label
+    const buttonLabel = COZY_NEST_CONFIG.enable_extra_network_tweaks ? 'Cozy Extra Networks' : 'Extra Networks';
+    buildRightSlidePanelFor('cozy-extra-network', buttonLabel, rightPanBtnWrapper, tab);
   }
   if (COZY_NEST_CONFIG.disable_image_browser !== true) {
     buildRightSlidePanelFor('cozy-img-browser', 'Cozy Image Browser', rightPanBtnWrapper, tab);
@@ -995,6 +1007,9 @@ const onLoad = (done, error) => {
   // log time for onLoad execution after gradio has loaded
   SimpleTimer.time(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
 
+  // load modal module
+  Modal.prepareReactHost();
+
   // check for gradio theme (vlad's fork)
   if (document.querySelector('#setting_gradio_theme input')) {
     const gradioTheme = document.querySelector('#setting_gradio_theme input').value
@@ -1038,6 +1053,7 @@ const onLoad = (done, error) => {
 
   //create a wrapper div on the right for slidable panels
   createRightWrapperDiv();
+
   let lastTab = get_uiCurrentTabContent().id;
   onUiTabChange(() => {
     CozyLogger.debug(`onUiTabChange newTab:${get_uiCurrentTabContent().id}, lastTab:${lastTab}`);
@@ -1136,7 +1152,7 @@ const onLoad = (done, error) => {
   if (window.location.href.includes('__theme')) {
     showAlert(
       "Warning",
-      "The __theme parameter is deprecated. Please use Cozy Nest settings instead.",
+      "The __theme parameter is deprecated for CozyNest. Please remove it from URL and use Cozy Nest settings instead.",
     )
   }
 

@@ -1,43 +1,38 @@
-export class CozyLogger {
-
-  static _instance = null;
+class CozyLoggerClass {
 
   static init(enabled) {
-    if (!CozyLogger._instance) {
-      CozyLogger._instance = new CozyLogger(enabled);
-    }
-    return CozyLogger._instance;
+    return new CozyLoggerClass(enabled);
   }
 
-  static enable() {
-    CozyLogger._instance.enabled = true;
+  enable() {
+    this.enabled = true;
   }
-  static disable() {
-    CozyLogger._instance.enabled = false;
+  disable() {
+    this.enabled = false;
   }
 
-  static group(name) {
-    if (CozyLogger._instance.enabled) {
+  group(name) {
+    if (this.enabled) {
       console.group(name);
     }
   }
-  static groupEnd() {
-    if (CozyLogger._instance.enabled) {
+  groupEnd() {
+    if (this.enabled) {
       console.groupEnd();
     }
   }
 
-  static debug(...args) {
-    if (CozyLogger._instance.enabled) {
+  debug(...args) {
+    if (this.enabled) {
       console.log('CozyNest:DEBUG:',...args);
     }
   }
 
-  static log(...args) {
+  log(...args) {
     console.log('CozyNest:',...args);
   }
 
-  static error(...args) {
+  error(...args) {
     console.error('CozyNest:',...args);
   }
 
@@ -46,11 +41,8 @@ export class CozyLogger {
   }
 }
 
-if (import.meta.env.VITE_CONTEXT === 'DEV') {
-  CozyLogger.init(true);
-}
-else {
-  CozyLogger.init(false);
-}
+const isDev = import.meta.env.VITE_CONTEXT === 'DEV'
+export const CozyLogger = CozyLoggerClass.init(isDev);
+export const CozyLoggerPrompt = CozyLoggerClass.init(import.meta.env.PROMPT_LOGGING === 1);
 
 window.CozyLogger = CozyLogger;

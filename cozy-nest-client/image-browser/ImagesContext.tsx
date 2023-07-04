@@ -71,7 +71,7 @@ export function ImagesProvider({ children }: { children: ReactNode[] }) {
 
     const updateExifInState = (image: Image) => {
 
-        const {metadata: {exif, hash}} = image
+        const {metadata: {exif}, hash} = image
         const newImages = images.map(image => {
             if (image.hash === hash) {
                 image.metadata.exif = exif

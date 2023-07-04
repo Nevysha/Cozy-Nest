@@ -109,5 +109,6 @@ Feel free to contribute to this project. I'm sure there are a lot of things that
 I'll try to keep this extension up to date with the latest version of auto1111.
 
 # Credits
+* [DominikDoom](https://github.com/DominikDoom/a1111-sd-webui-tagcomplete) used part of is code to retrieve valid extra networks
 * [anapnoe](https://github.com/anapnoe/stable-diffusion-webui-ux)'s incredible work on its fork of sd-webui
 * [AUTOMATIC1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui)'s work on sd-webui

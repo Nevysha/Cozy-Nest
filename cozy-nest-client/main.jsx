@@ -14,10 +14,12 @@ import startCozyPrompt from "./cozy-prompt/main.jsx";
 import {startExtraNetwork} from "./extra-network/main.jsx";
 import {OverrideUiJs} from "./main/override_ui.js";
 import CozyNestEventBus from "./CozyNestEventBus.js";
+import {startCozyExtraNetwork} from "./cozy_extra_network/main.jsx";
 window.CozyTools = {
   dummyLoraCard,
   dummyControlNetBloc,
-  dummySubdirs
+  dummySubdirs,
+  stop:() => setTimeout(function(){debugger;}, 5000),
 }
 
 
@@ -28,16 +30,18 @@ export default async function cozyNestLoader()  {
   await cozyNestModuleLoader(async () => {
     startCozyNestSettings();
 
-
     if (COZY_NEST_CONFIG.enable_cozy_prompt === true) {
-      startCozyPrompt('txt2img_prompt', 'cozy_nest_prompt_txt2img', 'txt2img');
-      startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img', 'img2img');
+      await startCozyPrompt('txt2img_prompt', 'cozy_nest_prompt_txt2img', 'txt2img');
+      await startCozyPrompt('img2img_prompt', 'cozy_nest_prompt_img2img', 'img2img');
 
       OverrideUiJs.override_confirm_clear_prompt();
     }
     if (COZY_NEST_CONFIG.enable_extra_network_tweaks === true) {
       await startExtraNetwork('txt2img')
       await startExtraNetwork('img2img')
+    }
+    if (COZY_NEST_CONFIG.enable_cozy_extra_networks === true) {
+      await startCozyExtraNetwork()
     }
 
     startCozyNestImageBrowser();
@@ -54,19 +58,9 @@ window.cozyNestLoader = cozyNestLoader;
     return
   }
 
-  // if (getTheme() === 'dark') {
-    const styleSheet = new CSSStyleSheet();
-    styleSheet.replaceSync(sheet);
-    document.adoptedStyleSheets = [styleSheet];
-  // }
-  // else {
-  //   const {latte} = await import('./main/latte.css?inline');
-  //   const styleSheet = new CSSStyleSheet();
-  //   styleSheet.replaceSync(sheet);
-  //   const latteSheet = new CSSStyleSheet();
-  //   latteSheet.replaceSync(latte);
-  //   document.adoptedStyleSheets = [styleSheet, latteSheet];
-  // }
+  const styleSheet = new CSSStyleSheet();
+  styleSheet.replaceSync(sheet);
+  document.adoptedStyleSheets = [styleSheet];
 
 
   SimpleTimer.time(COZY_NEST_GRADIO_LOAD_DURATION);
