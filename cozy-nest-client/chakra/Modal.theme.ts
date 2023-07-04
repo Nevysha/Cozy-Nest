@@ -18,11 +18,7 @@ export const modalTheme = defineMultiStyleConfig({
             marginLeft: 'auto',
             transform: 'none',
             maxWidth: 'fit-content',
-            border: '1px solid var(--ae-input-border-color)',
-            backgroundColor: 'var(--block-background-fill)',
-            color: 'var(--body-text-color)',
-            borderRadius: '0 !important',
-            fontSize: 'var(--body-text-size)',
+            background: 'none',
           },
         }),
     'nevysha-confirm':
