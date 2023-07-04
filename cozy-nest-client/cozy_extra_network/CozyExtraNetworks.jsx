@@ -172,7 +172,11 @@ export function CozyExtraNetworks() {
           </RowFullWidth>
           <Row style={{height: 'calc(100% - 90px)'}}>
             {displayFolderFilter &&
-                <FolderTreeFilter hasSubFolders={hasSubFolders} folder={folders[selectedTab]} selectHandler={folderSelectHandler}/>
+                <FolderTreeFilter
+                    hasSubFolders={hasSubFolders}
+                    folder={folders[selectedTab]}
+                    forNetwork={selectedTab}
+                    selectHandler={folderSelectHandler}/>
             }
             <Tabs variant='nevysha' onChange={onTabSelect}>
               <TabList style={{backgroundColor: 'var(--tab-nav-background-color)'}}>
