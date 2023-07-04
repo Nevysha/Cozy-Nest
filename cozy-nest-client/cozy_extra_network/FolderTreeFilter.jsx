@@ -4,10 +4,9 @@ import { CiFolderOff } from "react-icons/ci";
 import TreeView, { flattenTree } from "react-accessible-treeview";
 import './FolderTreeFilter.scss'
 
-export function FolderTreeFilter({hasSubFolders, folder}) {
+export function FolderTreeFilter({hasSubFolders, folder, selectHandler}) {
 
     //TODO manage scroll if needed
-    //TODO handle select to trigger filter
 
     if (!hasSubFolders) {
         return (
@@ -21,12 +20,17 @@ export function FolderTreeFilter({hasSubFolders, folder}) {
 
     const data = flattenTree(_folder);
 
+    function onNodeSelect({element}) {
+        selectHandler({element})
+    }
+
     return (
         <div className="FolderTreeFilter">
             <div className="directory">
                 <TreeView
                     data={data}
                     aria-label="directory tree"
+                    onNodeSelect={onNodeSelect}
                     nodeRenderer={({
                                        element,
                                        isBranch,

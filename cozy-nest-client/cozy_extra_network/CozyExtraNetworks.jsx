@@ -103,7 +103,12 @@ export function CozyExtraNetworks() {
           <div className="CozyExtraNetworksPanels">
             {extraNetworks[network].map((item, index) => {
               return (
-                <ExtraNetworksCard key={item.path} item={item} searchString={searchString} nsfwFilter={nsfwFilter}/>
+                <ExtraNetworksCard
+                    key={item.path}
+                    item={item}
+                    searchString={searchString}
+                    selectedFolder={selectedFolder}
+                    nsfwFilter={nsfwFilter}/>
               )
             })}
           </div>
@@ -116,6 +121,18 @@ export function CozyExtraNetworks() {
 
   function onTabSelect(index) {
     setSelectedTab(indexRef[index])
+  }
+
+  const [selectedFolder, setSelectedFolder] = React.useState(null)
+  function folderSelectHandler({element}) {
+    CozyLogger.debug('folderSelectHandler', {element})
+
+    if (element.name === 'all' || !element.metadata) {
+      setSelectedFolder(null)
+      return
+    }
+    setSelectedFolder(element.metadata.path)
+
   }
 
   const Ui = buildExtraNetworks()
@@ -150,7 +167,9 @@ export function CozyExtraNetworks() {
             </button>
           </RowFullWidth>
           <Row>
-            {displayFolderFilter && <FolderTreeFilter hasSubFolders={hasSubFolders} folder={folders[selectedTab]}/>}
+            {displayFolderFilter &&
+                <FolderTreeFilter hasSubFolders={hasSubFolders} folder={folders[selectedTab]} selectHandler={folderSelectHandler}/>
+            }
             <Tabs variant='nevysha' isLazy onChange={onTabSelect}>
               <TabList style={{backgroundColor: 'var(--tab-nav-background-color)'}}>
                 {Ui.EnTabs}
