@@ -15,7 +15,11 @@ export function FolderTreeFilter({hasSubFolders, folder}) {
         )
     }
 
-    const data = flattenTree(folder);
+    //add a fake 'all' folder as first element of children
+    const _folder = {...folder};
+    _folder.children = [{name: 'all', children: []}, ..._folder.children];
+
+    const data = flattenTree(_folder);
 
     return (
         <div className="FolderTreeFilter">
