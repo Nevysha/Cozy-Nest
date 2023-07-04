@@ -6,14 +6,6 @@ import './FolderTreeFilter.scss'
 
 export function FolderTreeFilter({hasSubFolders, folder, selectHandler}) {
 
-    //TODO NEVYSHA manage scroll if needed
-
-    if (!hasSubFolders) {
-        return (
-            <div className="EmptyFolderTreeFilter"></div>
-        )
-    }
-
     //add a fake 'all' folder as first element of children
     const _folder = {...folder};
     _folder.children = [{name: 'all', children: []}, ..._folder.children];
@@ -22,6 +14,12 @@ export function FolderTreeFilter({hasSubFolders, folder, selectHandler}) {
 
     function onNodeSelect({element}) {
         selectHandler({element})
+    }
+
+    if (!hasSubFolders) {
+        return (
+            <div className="EmptyFolderTreeFilter"></div>
+        )
     }
 
     return (

@@ -174,7 +174,7 @@ export function CozyExtraNetworks() {
             {displayFolderFilter &&
                 <FolderTreeFilter hasSubFolders={hasSubFolders} folder={folders[selectedTab]} selectHandler={folderSelectHandler}/>
             }
-            <Tabs variant='nevysha' isLazy onChange={onTabSelect}>
+            <Tabs variant='nevysha' onChange={onTabSelect}>
               <TabList style={{backgroundColor: 'var(--tab-nav-background-color)'}}>
                 {Ui.EnTabs}
               </TabList>
