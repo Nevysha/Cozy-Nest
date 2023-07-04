@@ -14,7 +14,7 @@ import {Column, Row} from "../main/Utils.jsx";
 import {ButtonWithConfirmDialog} from "../chakra/ButtonWithConfirmDialog.jsx";
 import DOM_IDS from "../main/dom_ids.js";
 import {Range as AceRange} from "ace-builds/src-noconflict/ace";
-import {CozyLogger} from "../main/CozyLogger.js";
+import {CozyLoggerPrompt as CozyLogger} from "../main/CozyLogger.js";
 // ace.config.setModuleUrl(
 //   "ace/mode/json_worker",
 //   'cozy-nest-client/node_modules/ace-builds/src-noconflict/worker-json.js')
