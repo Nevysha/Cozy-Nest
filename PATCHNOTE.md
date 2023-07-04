@@ -10,6 +10,7 @@
   - [x]  NSFW filter
   - [x]  Mark as NSFW
   - [x]  Folder tree view (toggleable)
+- [x]  Multithread image indexer for image browser
 
 ## Minor changes & fixes in 2.3.4
 - [x]  Compatibility with https://github.com/DominikDoom/a1111-sd-webui-tagcomplete (ctrl+space to autocomplete tags in Cozy Prompt)
