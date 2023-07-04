@@ -125,6 +125,7 @@ export function CozyExtraNetworks() {
 
   function onTabSelect(index) {
     setSelectedTab(indexRef[index])
+    setSelectedFolder(null)
   }
 
   const [selectedFolder, setSelectedFolder] = React.useState(null)
