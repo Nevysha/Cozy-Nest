@@ -1,8 +1,8 @@
-import React from "react";
+import React, {useContext} from "react";
 import {useEffect} from "react";
 import {Loading} from "../image-browser/App.jsx";
 import {Checkbox, Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/react";
-import './CozyExtraNetworks.css'
+import './CozyExtraNetworks.scss'
 import {ExtraNetworksCard} from "./ExtraNetworksCard.jsx";
 import {Column, Row, RowFullWidth} from "../main/Utils.jsx";
 import {SvgForReact} from "../main/svg_for_react.jsx";
@@ -56,6 +56,7 @@ export function CozyExtraNetworks() {
       setExtraNetworks(_enJson)
       setReady(true)
     })()
+
   }, [])
 
   useEffect(() => {
@@ -86,9 +87,11 @@ export function CozyExtraNetworks() {
     const EnTabPanels = [];
 
     const style = {
-      border:'none',
-      height:'880px'
-    }; //TODO NEVYSHA ffs I hate css
+      border: 'none',
+      height: '100%',
+      borderBottom: '1px solid var(--ae-input-border-color)',
+      borderTop: '1px solid var(--tab-nav-background-color-selected)',
+    };
 
     Object.keys(extraNetworks).forEach((network, index) => {
       let tabName = String(network);
@@ -150,7 +153,7 @@ export function CozyExtraNetworks() {
                     rows="1"
                     spellCheck="false"
                     data-gramm="false"
-                    style={{resize: 'none'}}
+                    style={{resize: 'none', minHeight: '35px'}}
                     onChange={(e) => setSearchString(e.target.value)}/>
           <RowFullWidth style={{margin:'3px 0'}}>
             <Checkbox
@@ -167,7 +170,7 @@ export function CozyExtraNetworks() {
               <span className="sfwFilterInfo">{!nsfwFilter ? SvgForReact.eyeSlash : SvgForReact.eye }</span>
             </button>
           </RowFullWidth>
-          <Row>
+          <Row style={{height: 'calc(100% - 90px)'}}>
             {displayFolderFilter &&
                 <FolderTreeFilter hasSubFolders={hasSubFolders} folder={folders[selectedTab]} selectHandler={folderSelectHandler}/>
             }

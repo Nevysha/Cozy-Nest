@@ -1,14 +1,17 @@
 .FolderTreeFilter {
 
   min-width: 200px;
+  overflow-y: auto;
+  height: 100%;
+  margin-right: 10px;
 
   .directory {
     background: #242322;
     font-family: monospace;
     color: var(--nevysha-font-color);
     user-select: none;
-    padding: 10px;
-    margin: 0 8px 0 -8px;
+    padding: 10px 0 10px 10px;
+    //margin: 0 8px 0 -8px;
   }
 
   .directory .tree,

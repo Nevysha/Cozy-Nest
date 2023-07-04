@@ -25,7 +25,7 @@ export function FolderTreeFilter({hasSubFolders, folder, selectHandler}) {
     }
 
     return (
-        <div className="FolderTreeFilter">
+        <div className="FolderTreeFilter nevysha nevysha-scrollable">
             <div className="directory">
                 <TreeView
                     data={data}
