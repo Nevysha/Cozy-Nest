@@ -6,7 +6,7 @@ import {DialogWrapper} from "../settings/App.jsx";
 import {RowFullWidth} from "../main/Utils.jsx";
 import {Button} from "@chakra-ui/react";
 
-const fileTypes = ["PNG"];
+const fileTypes = ["PNG", "JPG", "JPEG", "WEBP"];
 
 export function ImageUploadModal({visible, cancel, name, path, callback}) {
     const [file, setFile] = useState(null);

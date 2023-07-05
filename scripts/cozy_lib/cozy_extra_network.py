@@ -18,9 +18,7 @@ def format_path_array(paths, _type, validator):
             fullName = str(path.name)
             name = str(path.name)[:str(path.name).rfind('.')]
 
-            previewPath = os.path.join(path.parent, str(name)) + ".preview.png"
-            if not os.path.exists(previewPath):
-                previewPath = None
+            previewPath = get_preview_path(path)
 
             all_paths.append({
                 "name": name,
@@ -148,26 +146,26 @@ class CozyExtraNetworksClass:
 
             for e in emb_v1:
                 emb_path = os.path.join(self.EMB_PATH, e)
-                previewPath = f"{emb_path}.preview.png"
+                previewPath = get_preview_path(Path(emb_path))
 
                 results.append({
                     "name": e,
                     "version": "v1",
                     "type": "ti",
                     "path": f"{emb_path}.pt",
-                    "previewPath": previewPath if os.path.isfile(previewPath) else None,
+                    "previewPath": previewPath,
                     "parentFolder": os.path.join(self.EMB_PATH, e)
                 })
 
             for e in emb_v2:
                 emb_path = os.path.join(self.EMB_PATH, e)
-                previewPath = f"{emb_path}.preview.png"
+                previewPath = get_preview_path(Path(emb_path))
                 results.append({
                     "name": e,
                     "version": "v2",
                     "type": "ti",
                     "path": f"{emb_path}.pt",
-                    "previewPath": previewPath if os.path.isfile(previewPath) else None,
+                    "previewPath": previewPath,
                     "parentFolder": os.path.join(self.EMB_PATH, e)
                 })
 
@@ -367,7 +365,7 @@ class CozyExtraNetworksClass:
 
             try:
                 file_type = upload_file.content_type[upload_file.content_type.rfind("/") + 1:]
-                valid = ["png"]
+                valid = ["png", "jpg", "jpeg", "webp"]
                 if file_type not in valid:
                     return Response(status_code=405, content="Invalid file type")
 
@@ -502,3 +500,25 @@ def add_folder_to_tree(full_path_to_leaf, folder_tree, path_parts):
     add_folder_to_tree(full_path_to_leaf, folder_tree["children"][-1], path_parts)
 
     return folder_tree
+
+
+def get_preview_path(path: Path):
+    directory = path.parent
+    # check if path end with an extension and remove it
+    if path.name.rfind('.') != -1:
+        base_name = path.name[:path.name.rfind('.')]
+    else:
+        base_name = path.name
+
+    extensions = ['.png', '.jpg', '.jpeg', '.webp']
+    files = []
+    for ext in extensions:
+        preview_candidate = Path(directory, f"{base_name}.preview{ext}")
+        if preview_candidate.exists():
+            files.append(preview_candidate)
+
+    if not files or len(files) == 0:
+        return None
+
+    sorted_files = sorted(files, key=os.path.getmtime, reverse=True)
+    return Path(sorted_files[0])
