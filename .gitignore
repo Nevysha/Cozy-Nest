@@ -2,3 +2,5 @@ Cozy-Nest.iml
 nevyui_settings.json
 data/images.cache
 /scripts/cozy_lib/log_enabled
+/scripts/__pycache__/
+/scripts/cozy_lib/__pycache__/
