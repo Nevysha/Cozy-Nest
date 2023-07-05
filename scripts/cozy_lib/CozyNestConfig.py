@@ -145,6 +145,7 @@ class CozyNestConfig:
             'enable_clear_button': True,
             'enable_extra_network_tweaks': False,
             'enable_cozy_extra_networks': True,
+            'deferred_cozy_extra_networks_loading': False,
             'enable_cozy_prompt': True,
             'carret_style': 'thin',
             'save_last_prompt_local_storage': True,
