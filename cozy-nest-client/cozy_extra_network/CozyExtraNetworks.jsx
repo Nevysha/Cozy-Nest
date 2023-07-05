@@ -32,7 +32,9 @@ export function CozyExtraNetworks() {
   const [fullyLoaded, setFullyLoaded] = React.useState(false)
 
   const [searchString, setSearchString] = React.useState('')
-  const [displayFolderFilter, setDisplayFolderFilter] = React.useState(false)
+  const [displayFolderFilter, setDisplayFolderFilter] = React.useState({
+    'models': false,
+  })
   const [nsfwFilter, setNsfwFilter] = React.useState(false)
 
   const [selectedTab, setSelectedTab] = React.useState(null)
@@ -55,6 +57,12 @@ export function CozyExtraNetworks() {
     }
     const _enJson = await response.json()
 
+    const _displayFolderFilter = {}
+    Object.keys(_enJson).forEach((network, index) => {
+      network = String(network);
+      _displayFolderFilter[network] = false
+    })
+
     const responseFolders = await fetch('/cozy-nest/extra_networks/folders')
     if (responseFolders.status !== 200) {
       CozyLogger.error('failed to fetch extra networks folders', responseFolders)
@@ -64,6 +72,7 @@ export function CozyExtraNetworks() {
 
     setFolders(_folders)
     setExtraNetworks(_enJson)
+    setDisplayFolderFilter(_displayFolderFilter)
     setReady(true)
     if (!COZY_NEST_CONFIG.deferred_cozy_extra_networks_loading) {
       setFullyLoaded(true)
@@ -163,6 +172,11 @@ export function CozyExtraNetworks() {
 
   }
 
+  function changeFolderFilterForTab(selectedTabName, value) {
+    displayFolderFilter[selectedTabName] = value
+    setDisplayFolderFilter({...displayFolderFilter})
+  }
+
   const Ui = buildExtraNetworks()
 
   const hasSubFolders = folders[selectedTab] && !folders[selectedTab].empty
@@ -181,9 +195,9 @@ export function CozyExtraNetworks() {
                     onChange={(e) => setSearchString(e.target.value)}/>
           <RowFullWidth style={{margin:'3px 0'}}>
             <Checkbox
-                isChecked={displayFolderFilter}
+                isChecked={displayFolderFilter[selectedTab || "models"]}
                 disabled={!hasSubFolders}
-                onChange={(e) => setDisplayFolderFilter(e.target.checked)}
+                onChange={(e) => changeFolderFilterForTab(selectedTab, e.target.checked)}
             >Display folder filter</Checkbox>
             <div style={{flex:1}}/>
             <button
@@ -202,7 +216,7 @@ export function CozyExtraNetworks() {
             </button>
           </RowFullWidth>
           <Row style={{height: 'calc(100% - 90px)'}}>
-            {displayFolderFilter &&
+            {displayFolderFilter[selectedTab] &&
                 <FolderTreeFilter
                     hasSubFolders={hasSubFolders}
                     folder={folders[selectedTab]}

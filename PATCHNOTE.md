@@ -7,6 +7,7 @@
 - [x]  Sort folder tree by name
 - [x]  Allow for preview in those format '.png', '.jpg', '.jpeg', '.webp' (it will take the most recent available)
 - [x]  Choose between full or deferred loading for Extra Network (default to full as you need a LOT of items to see a difference)
+- [x]  Small bug fix
 
 ## Minor changes & fixes in 2.4.1
 - [x]  Small various fix
