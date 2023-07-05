@@ -24,7 +24,7 @@ Cozy Nest is a UI extension for Automatic's sd-webui.
    - [x]  manage new image generated
    - [x]  Automatically get image output folder (without grid folder)
    - [x]  Drag and drop image
-   - [x]  Multithread image indexer for fast startup after first load
+   - [x]  Multithread image indexer for fast startup after first load (~20s for 2150 images on a stock i7-9700K)
 - [x]  Dedicated Extra Network component more stable and faster.
   - [x]  Moved in a dedicated right slidable panel 
   - [x]  Compatible with Civitai Helper (and hard requirement to generate civitai.info file)
