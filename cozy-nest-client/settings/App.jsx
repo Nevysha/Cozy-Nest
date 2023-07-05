@@ -442,6 +442,12 @@ export function App() {
                           isChecked={config.enable_cozy_extra_networks}
                           onChange={(e) => setConfig({...config, enable_cozy_extra_networks: e.target.checked})}
                       >Cozy Nest Extra Network new implementation</Checkbox>
+                      <Checkbox
+                          style={{marginLeft: '25px'}}
+                          isDisabled={!config.enable_cozy_extra_networks}
+                          isChecked={config.deferred_cozy_extra_networks_loading}
+                          onChange={(e) => setConfig({...config, deferred_cozy_extra_networks_loading: e.target.checked})}
+                      >Deferred loading : this will only load minimal data on startup but will need to refresh if you want to enable sfw filtering</Checkbox>
 
                     </Column>
                   </TabPanel>

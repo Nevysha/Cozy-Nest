@@ -44,7 +44,11 @@ export function CozyExtraNetworks() {
   }, [])
 
   const load = async () => {
-    const response = await fetch('/cozy-nest/extra_networks')
+
+    const endpoint = COZY_NEST_CONFIG.deferred_cozy_extra_networks_loading ?
+        '/cozy-nest/extra_networks' : '/cozy-nest/extra_networks/full'
+
+    const response = await fetch(endpoint)
     if (response.status !== 200) {
       CozyLogger.error('failed to fetch extra networks', response)
       return;
@@ -61,6 +65,9 @@ export function CozyExtraNetworks() {
     setFolders(_folders)
     setExtraNetworks(_enJson)
     setReady(true)
+    if (!COZY_NEST_CONFIG.deferred_cozy_extra_networks_loading) {
+      setFullyLoaded(true)
+    }
   }
 
   const reload = async () => {
