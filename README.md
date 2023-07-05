@@ -24,7 +24,18 @@ Cozy Nest is a UI extension for Automatic's sd-webui.
    - [x]  manage new image generated
    - [x]  Automatically get image output folder (without grid folder)
    - [x]  Drag and drop image
+   - [x]  Multithread image indexer for fast startup after first load
+- [x]  Dedicated Extra Network component more stable and faster.
+  - [x]  Compatible with Civitai Helper (and hard requirement to generate civitai.info file)
+  - [x]  Search field
+  - [x]  NSFW filter
+  - [x]  Mark as NSFW
+  - [x]  Folder tree view (toggleable)
 - [x]  Enhanced prompt editor with color (in txt2img and img2img) - It can be disabled through settings
+  - [x]  Compatibility with https://github.com/DominikDoom/a1111-sd-webui-tagcomplete (ctrl+space to autocomplete tags in Cozy Prompt)
+  - [x]  Synthax color in prompt for wildcard (ie: '\_\_devilkkw/body-1/eyes_iris_colors\_\_')
+  - [x]  Synthax color in prompt for attention value (':1.1', ':2.3', ...)
+  - [x]  Keybinding to increase or decrease attention value (ctrl+up, ctrl+down)
 - [x]  Resizable panels
 - [x]  Full Screen Inpainting
 - [x]  Customizable tab menu position (top, left, centered)
