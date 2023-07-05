@@ -13,6 +13,11 @@ Cozy Nest is a UI extension for Automatic's sd-webui.
 - From Automatic1111's webui 1.3.2 release.
 - SD Next (Vlad's fork) Version: 4867dafa Fri Jun 23.
 
+## Requirements
+Cozy Nest rely on two others popular extensions which HAVE to be installed : 
+ - [Tag Complete](https://github.com/DominikDoom/a1111-sd-webui-tagcomplete)
+ - [Civitai Helper](https://github.com/butaixianran/Stable-Diffusion-Webui-Civitai-Helper)
+
 ## Features:
 - [x]  Fully integrated Image Browser. Lots of bugs and missing features. Please be kind with Github issues.
    - [x]  Send to txt2img / img2img / …
@@ -105,14 +110,7 @@ Or search for Cozy Nest in the extension tab
 
 # Contribution
 
-As you may have notice, most of the JS source here are minified. I'm using Vite to bundle the extension.
-The source code is available in the cozy-nest-client folder. [README](https://github.com/Nevysha/Cozy-Nest/blob/main/cozy-nest-client/README.md).
-
-My roadmap is available here : [Notion Roadmap](https://exclusive-drink-8c5.notion.site/Nevysha-Cozy-Nest-f95f333908f0406f990ed603b424780c).
-Please note that this is the draft I use to keep track of suggestions, issue, or idea that I get. I'm not sure I'll implement everything.
-
-Feel free to contribute to this project. I'm sure there are a lot of things that can be improved. 
-I'll try to keep this extension up to date with the latest version of auto1111.
+Not allowing contribution. Pull Request will be rejected.
 
 # Credits
 * [DominikDoom](https://github.com/DominikDoom/a1111-sd-webui-tagcomplete) used part of is code to retrieve valid extra networks
