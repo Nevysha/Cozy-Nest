@@ -180,8 +180,9 @@ export function CozyExtraNetworks() {
             >Display folder filter</Checkbox>
             <div style={{flex:1}}/>
             <button
-                className='refreshEnBtn'
+              className='refreshEnBtn'
               onClick={reload}
+              title='Reload extra networks'
             >
               <RefreshIcon color="00d9ff" className="icon"/>
             </button>
