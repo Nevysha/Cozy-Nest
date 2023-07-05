@@ -66,7 +66,7 @@ class CozyNestConfig:
         with open(Static.VERSION_FILENAME, 'r') as f:
             version = json.loads(f.read())
             f.close()
-        current_version = version['version']
+        current_version = str(version['version'])
         return current_version
 
     @staticmethod
@@ -104,7 +104,7 @@ class CozyNestConfig:
         if not os.path.exists(Static.CONFIG_FILENAME):
             self.reset_settings()
             # set version if config file was just created exist
-            self.config['version'] = CozyNestConfig.get_version(),
+            self.config['version'] = CozyNestConfig.get_version()
             # return default config
             return self.config
 
