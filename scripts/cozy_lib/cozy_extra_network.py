@@ -468,7 +468,7 @@ def build_main_folder_tree_for(_main_path, main_items):
 
         # get the folder tree
         models_folder_tree = add_folder_to_tree(_main_path, models_folder_tree, path_parts)
-    return models_folder_tree
+    return sort_folder_tree(models_folder_tree)
 
 
 def add_folder_to_tree(full_path_to_leaf, folder_tree, path_parts):
@@ -498,6 +498,17 @@ def add_folder_to_tree(full_path_to_leaf, folder_tree, path_parts):
 
     # add the rest of the path to the new child
     add_folder_to_tree(full_path_to_leaf, folder_tree["children"][-1], path_parts)
+
+    return folder_tree
+
+
+def sort_folder_tree(folder_tree):
+    # sort the folder tree alphabetically
+    folder_tree["children"] = sorted(folder_tree["children"], key=lambda x: str(x["name"]).lower())
+
+    # sort the children of each child
+    for child in folder_tree["children"]:
+        sort_folder_tree(child)
 
     return folder_tree
 
