@@ -112,6 +112,12 @@ Or search for Cozy Nest in the extension tab
 
 Not allowing contribution. Pull Request will be rejected.
 
+# Licence
+AGPLv3
+
+Need a specific licence for integration in a commercial project ? 
+Contact me on discord.
+
 # Credits
 * [DominikDoom](https://github.com/DominikDoom/a1111-sd-webui-tagcomplete) used part of is code to retrieve valid extra networks
 * [anapnoe](https://github.com/anapnoe/stable-diffusion-webui-ux)'s incredible work on its fork of sd-webui
