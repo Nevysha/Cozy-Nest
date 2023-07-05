@@ -20,17 +20,18 @@ Cozy Nest is a UI extension for Automatic's sd-webui.
    - [x]  Tag your images and filter by tag
    - [x]  Edit exif metadata
    - [x]  Archive, hide or delete images
-   - [x]  Clean memory for image not visible (unload them / replace with dummy div) clean filteredImages and loadedImage Array
+   - [x]  Optimized web browser memory usage for image not visible (unload them / replace with dummy div)
    - [x]  manage new image generated
    - [x]  Automatically get image output folder (without grid folder)
    - [x]  Drag and drop image
    - [x]  Multithread image indexer for fast startup after first load
 - [x]  Dedicated Extra Network component more stable and faster.
+  - [x]  Moved in a dedicated right slidable panel 
   - [x]  Compatible with Civitai Helper (and hard requirement to generate civitai.info file)
   - [x]  Search field
   - [x]  NSFW filter
   - [x]  Mark as NSFW
-  - [x]  Folder tree view (toggleable)
+  - [x]  Folder tree view filter (toggleable)
 - [x]  Enhanced prompt editor with color (in txt2img and img2img) - It can be disabled through settings
   - [x]  Compatibility with https://github.com/DominikDoom/a1111-sd-webui-tagcomplete (ctrl+space to autocomplete tags in Cozy Prompt)
   - [x]  Synthax color in prompt for wildcard (ie: '\_\_devilkkw/body-1/eyes_iris_colors\_\_')
@@ -38,28 +39,22 @@ Cozy Nest is a UI extension for Automatic's sd-webui.
   - [x]  Keybinding to increase or decrease attention value (ctrl+up, ctrl+down)
 - [x]  Resizable panels
 - [x]  Full Screen Inpainting
-- [x]  Customizable tab menu position (top, left, centered)
-- [x]  Cozy look with dark or light theme (add `?__theme=light` in url or set `--theme=light` in Auto1111 start arguments to switch to light theme)
-- [x]  Bypass Cozy Nest by adding `CozyNest=No` in URL param (ie: http://localhost:8501/?CozyNest=No) - useful for mobile
-- [x]  Save resize bar position / panel ratio in local storage
-- [x]  Customize font color  
-- [x]  Customize accent color
-- [x]  Add or remove accent to the generate buttons
-- [x]  Customize font size
-- [x]  Move settings in a dedicated collapsible and movable tab
-- [x]  Smaller bottom padding bar to get a bit more screen space
-- [x]  Setting to center the top menu tabs
-- [x]  Setting to remove the gap between checkpoint and other quicksetting
-- [x]  Setting to center quicksetting
-- [x]  Loading screen with estimated percentage based on previous loading time
-- [x]  make settings tab movable
-- [x]  Extra network in a dedicated tab:
-   - [x]  Resizable side panel
-   - [x]  Customizable card size
-- [x]  Drag and Drop tab button inside or outside a “tab container” to bring them or move them from/out main menu
-- [x]  Extra Networks left sided tab.
-- [x]  Close Extra Network tab with escape key
-- [x]  Fetch version from a desicated json file hosted directly in the repo to an easier view of update of Cozy Nest.
+- [x]  Enhanced Ui
+  - [x]  Customizable tab menu position (top, left, centered)
+  - [x]  Closable side panel with esc key
+  - [x]  Dark or Light theme through Cozy Nest settings
+  - [x]  Save resize bar position / panel ratio in local storage
+  - [x]  Customize font color  
+  - [x]  Customize accent color
+  - [x]  Add or remove accent to the generate buttons
+  - [x]  Customize font size
+  - [x]  Setting to center the top menu tabs
+  - [x]  Setting to remove the gap between checkpoint and other quicksetting
+  - [x]  Setting to center quicksetting
+  - [x]  Loading screen with estimated percentage based on previous loading time
+  - [x]  Drag and Drop tab button inside or outside a “tab container” to bring them or move them from/out main menu
+- [x]  Bypass Cozy Nest by adding `CozyNest=No` in URL param (ie: http://localhost:7860/?CozyNest=No) - useful for mobile
+- [x]  Fetch version from a dedicated json file hosted directly in the repo to an easier view of update of Cozy Nest.
 
 <hr>
 
