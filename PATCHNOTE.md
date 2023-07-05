@@ -3,6 +3,9 @@
 - Automatic1111's webui 1.3.2 release.
 - SD Next (Vlad's fork) Version: 4867dafa Fri Jun 23. (Not compatible with latest!)
 
+## Minor changes & fixes in 2.4.2
+- [x]  Allow for preview in those format '.png', '.jpg', '.jpeg', '.webp' (it will take the most recent available)
+
 ## Minor changes & fixes in 2.4.1
 - [x]  Small various fix
 
