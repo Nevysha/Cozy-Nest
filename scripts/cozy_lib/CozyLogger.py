@@ -2,16 +2,13 @@ import json
 import os
 from pathlib import Path
 
+from modules import shared
+
 
 def is_log_enabled():
-    # check if the file log_enabled exists (in the same folder)
-    # if it does, then check log_enabled value (as json)
-    try:
-        log_config_file = Path(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'log_enabled'))
-        if log_config_file.is_file():
-            return True
-    except Exception:
-        return False
+    if shared.cmd_opts.cozy_nest_debug:
+        return True
+    return False
 
 
 # This is a simple logger class that will be used to log messages stdout
@@ -36,7 +33,7 @@ class CozyLoggerClass:
 
 CozyLogger = CozyLoggerClass("Cozy")
 if CozyLoggerClass.LOG_ENABLED:
-    CozyLogger.warning("Logger enabled. delete 'log_enabled' file to disable")
+    CozyLogger.warning("Logger enabled")
 
 CozyLoggerExtNe = CozyLoggerClass("Cozy:ExtNe")
 CozyLoggerConfig = CozyLoggerClass("Cozy:Config")
