@@ -11,7 +11,7 @@ Cozy Nest is a UI extension for Automatic's sd-webui.
 ## Compatibility
 
 - From Automatic1111's webui 1.4.0 release.
-- SD Next (Vlad's fork) Version: 4867dafa Fri Jun 23.
+- SD Next on commit: 3bcca6f9 06/07/2023
 
 ## Requirements
 Cozy Nest rely on two others popular extensions which HAVE to be installed : 
