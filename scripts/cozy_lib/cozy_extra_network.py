@@ -171,7 +171,7 @@ class CozyExtraNetworksClass:
 
             results = sorted(results, key=lambda x: x["name"].lower())
         except AttributeError:
-            print(
+            CozyLoggerExtNe.warning(
                 "tag_autocomplete_helper: Old webui version or unrecognized model shape, using fallback for embedding completion.")
             # Get a list of all embeddings in the folder
             all_embeds = [str(e.relative_to(self.EMB_PATH)) for e in self.EMB_PATH.rglob("*") if
