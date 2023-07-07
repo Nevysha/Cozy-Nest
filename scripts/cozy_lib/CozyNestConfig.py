@@ -62,9 +62,6 @@ class CozyNestConfig:
         local_version_code = CozyNestConfig.normalize_version(local_version)
 
         if local_version_code < current_version_code:
-            from scripts.cozy_lib.CozyLogger import CozyLoggerConfig
-            CozyLoggerConfig.debug(f"current_version: {current_version} current_version_code: {current_version_code}")
-            CozyLoggerConfig.debug(f"local_version: {local_version} local_version_code: {local_version_code}")
             if local_version_code < CozyNestConfig.normalize_version('2.4.0'):
                 self.config['enable_extra_network_tweaks'] = False
                 self.config['enable_cozy_extra_networks'] = True
