@@ -21,7 +21,7 @@ from scripts.cozy_lib import tools
 from scripts.cozy_lib.CozyLogger import CozyLogger
 from scripts.cozy_lib.CozyNestConfig import CozyNestConfig
 from scripts.cozy_lib.cozynest_image_browser import start_server
-from scripts.cozy_lib.tools import output_folder_array
+from scripts.cozy_lib.Static import output_folder_array
 
 
 def request_restart():
@@ -43,7 +43,7 @@ def update():
 
     # perform git pull in the extension folder
     output = subprocess.check_output([git, '-C', subdir, 'pull', '--autostash'])
-    print(output.decode('utf-8'))
+    CozyLogger.info(output.decode('utf-8'))
 
 
 def is_port_free(port):
@@ -62,13 +62,13 @@ def is_port_free(port):
 
 def serv_img_browser_socket(server_port=3333, auto_search_port=True, cnib_output_folder=None):
     if cnib_output_folder is None or cnib_output_folder == []:
-        print("CozyNest: No output folder specified for image browser. Aborting.")
+        CozyLogger.error("CozyNest: No output folder specified for image browser. Aborting.")
         return
 
     # check if port is free
     if auto_search_port:
         while not is_port_free(server_port) and server_port < 64000:
-            print(f"CozyNest: Port {server_port} is already in use. Searching for a free port.")
+            CozyLogger.info(f"CozyNest: Port {server_port} is already in use. Searching for a free port.")
             server_port += 1
 
     try:
@@ -79,8 +79,7 @@ def serv_img_browser_socket(server_port=3333, auto_search_port=True, cnib_output
         start_server_in_dedicated_process(cnib_output_folder, server_port)
         return server_port
     except Exception as e:
-        print("CozyNest: Error while starting socket server")
-        print(e)
+        CozyLogger.error("CozyNest: Error while starting socket server", e)
 
 
 def start_server_in_dedicated_process(_images_folders, server_port):
@@ -132,11 +131,9 @@ _server_port = None
 def on_ui_tabs():
     global _server_port
 
-    config = CozyNestConfig()
-    config.init()
-    config.migrate()
+    config = CozyNestConfig.instance()
 
-    CozyLogger.info(f"version: {config.get('version')}")
+    CozyLogger.info(f"version: {config.get('version')} on {config.get('webui')}")
 
     # check if the user has disabled the image browser
     disable_image_browser_value = config.get('disable_image_browser')
@@ -152,7 +149,7 @@ def on_ui_tabs():
         )
         _server_port = server_port
     else:
-        print("CozyNest: Image browser is disabled. To enable it, go to the CozyNest settings.")
+        CozyLogger.info("CozyNest: Image browser is disabled. To enable it, go to the CozyNest settings.")
 
     def on_image_saved(gen_params: script_callbacks.ImageSaveParams):
         base_dir = scripts.basedir()
@@ -226,7 +223,7 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
         # Access POST parameters
         data = await request.json()
 
-        config = CozyNestConfig()
+        config = CozyNestConfig.instance()
 
         config.save_settings(data)
 
@@ -234,7 +231,7 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
 
     @app.delete("/cozy-nest/config")
     async def delete_config():
-        config = CozyNestConfig()
+        config = CozyNestConfig.instance()
         config.reset_settings()
         return {"message": "Config deleted successfully"}
 
@@ -275,7 +272,7 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
     async def delete_index():
         global _server_port
 
-        config = CozyNestConfig()
+        config = CozyNestConfig.instance()
         cnib_output_folder = config.get('cnib_output_folder')
         if cnib_output_folder and cnib_output_folder != "":
             tools.delete_index()
@@ -305,7 +302,7 @@ def cozy_nest_api(_: Any, app: FastAPI, **kwargs):
                 # do nothing for now
                 return Response(status_code=501, content="unimplemented")
 
-            config = CozyNestConfig()
+            config = CozyNestConfig.instance()
             archive_path = config.get('archive_path')
             if not archive_path or archive_path == "":
                 # return {"message": "archive path not set"}

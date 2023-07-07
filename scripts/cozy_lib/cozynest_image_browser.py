@@ -5,10 +5,11 @@ import websockets
 from websockets.server import serve
 
 from scripts.cozy_lib import tools
+from scripts.cozy_lib.CozyLogger import CozyLoggerImageBrowser as CozyLogger
 
 
 async def start_server(images_folders, server_port, stopper):
-    print(f"CozyNestSocket: Starting socket server on localhost:{server_port}...")
+    CozyLogger.info(f"CozyNestSocket: Starting socket server on localhost:{server_port}...")
 
     CLIENTS = set()
 
@@ -17,7 +18,7 @@ async def start_server(images_folders, server_port, stopper):
             CLIENTS.add(websocket)
             while True:
                 if stopper.is_set():
-                    print(f"CozyNestSocket: Stopping socket server on localhost:{server_port}...")
+                    CozyLogger.info(f"CozyNestSocket: Stopping socket server on localhost:{server_port}...")
                     break
 
                 # Receive data from the client
@@ -28,8 +29,7 @@ async def start_server(images_folders, server_port, stopper):
                 try:
                     res = await process(data)
                 except Exception as e:
-                    print(f"CozyNestSocket: Error while processing data: {data}")
-                    print(e)
+                    CozyLogger.error(f"CozyNestSocket: Error while processing data: {data}", e)
                     res = json.dumps({
                         'what': 'error',
                         'data': 'None',
@@ -64,7 +64,7 @@ async def start_server(images_folders, server_port, stopper):
             })
 
         else:
-            print(f"CozyNestSocket: Unknown data: {data}")
+            CozyLogger.info(f"CozyNestSocket: Unknown data: {data}")
             return json.dumps({
                 'what': 'error',
                 'data': 'None',
@@ -103,6 +103,6 @@ async def start_server(images_folders, server_port, stopper):
         while True:
             await asyncio.sleep(1)
             if stopper.is_set():
-                print(f"CozyNestSocket: Stopping socket server on localhost:{server_port}...")
+                CozyLogger.info(f"CozyNestSocket: Stopping socket server on localhost:{server_port}...")
                 stop.set_result(True)
                 break

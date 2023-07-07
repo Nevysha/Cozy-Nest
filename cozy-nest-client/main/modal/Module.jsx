@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import {ChakraProvider} from "@chakra-ui/react";
 import {theme} from "../../chakra/chakra-theme.ts";
-import {CozyModalRich, CozyModalSimple, CozyToast} from "./Modal.jsx";
+import {CozyToast} from "./Modal.jsx";
 import EventEmitter from 'eventemitter3';
 
 class EventBusClass extends EventEmitter{
@@ -18,51 +18,44 @@ export const EventBus = new EventBusClass();
 
 let _ready = false;
 
-function prepareReactHost() {
+async function prepareReactHost() {
+    return new Promise((resolve, reject) => {
+        _prepareReactHost(resolve);
+    })
+}
+
+function _prepareReactHost(resolve) {
     // insert a div at the end of the body
-    const _hostCozyModalSimple =
-        `<div id="CozyModalSimple"/>`;
-    const _hostCozyModalRich =
-        `<div id="CozyModalRich"/>`;
     const _hostCozyToast =
         `<div id="CozyToast"/>`;
 
-    document.body.insertAdjacentHTML("beforeend", _hostCozyModalSimple);
-    document.body.insertAdjacentHTML("beforeend", _hostCozyModalRich);
     document.body.insertAdjacentHTML("beforeend", _hostCozyToast);
 
-    ReactDOM.createRoot(document.getElementById(`CozyModalSimple`)).render(
-        <React.StrictMode>
-            <ChakraProvider theme={theme} >
-                <CozyModalSimple />
-            </ChakraProvider>
-        </React.StrictMode>,
-    )
-
-    ReactDOM.createRoot(document.getElementById(`CozyModalRich`)).render(
-        <React.StrictMode>
-            <ChakraProvider theme={theme} >
-                <CozyModalRich />
-            </ChakraProvider>
-        </React.StrictMode>,
-    )
+    let _isReady = 0;
+    let _readyNeed = 0;
+    const registerReady = () => {
+        _readyNeed++;
+        return () => {
+            _isReady++;
+            if (_isReady === _readyNeed) {
+                _ready = true;
+                resolve();
+            }
+        }
+    }
 
     ReactDOM.createRoot(document.getElementById(`CozyToast`)).render(
         <React.StrictMode>
             <ChakraProvider theme={theme} >
-                <CozyToast />
+                <CozyToast registerReady={registerReady()}/>
             </ChakraProvider>
         </React.StrictMode>,
     )
-
-    _ready = true;
 }
 
 let CozyModal  = {
     prepareReactHost,
-    showModalSimple: (msg) => EventBus.emit('CozyModalSimple', {msg}),
-    showModalRich: () => EventBus.emit('CozyModalRich'),
-    showToast: (status, title, msg) => EventBus.emit('CozyToast', {status, title, msg}),
+    showToast: (status, title, msg, duration) => EventBus.emit('CozyToast', {status, title, msg, duration}),
 };
 //hook on modal event
 window.ModalEventBus = EventBus;

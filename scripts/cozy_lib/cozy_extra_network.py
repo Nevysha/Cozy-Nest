@@ -8,6 +8,7 @@ from fastapi import Response, Request
 
 from modules import sd_hijack, shared, sd_models
 from scripts.cozy_lib.CozyLogger import CozyLoggerExtNe
+from scripts.cozy_lib.CozyNestConfig import CozyNestConfig
 
 
 def format_path_array(paths, _type, validator):
@@ -36,6 +37,11 @@ def format_path_array(paths, _type, validator):
 # credit to https://github.com/DominikDoom/a1111-sd-webui-tagcomplete
 class CozyExtraNetworksClass:
     def __init__(self):
+        self.MODEL_PATH = None
+        self.LYCO_PATH = None
+        self.LORA_PATH = None
+        self.HYP_PATH = None
+        self.EMB_PATH = None
         try:
             from modules.paths import extensions_dir, script_path
         except ImportError:
@@ -54,24 +60,11 @@ class CozyExtraNetworksClass:
             # The extension base path
             self.EXT_PATH = self.FILE_DIR.joinpath('extensions')
 
-        self.EMB_PATH = Path(shared.cmd_opts.embeddings_dir)
-        self.HYP_PATH = Path(shared.cmd_opts.hypernetwork_dir)
-
-        try:
-            self.LORA_PATH = Path(shared.cmd_opts.lora_dir)
-        except AttributeError:
-            self.LORA_PATH = None
-
-        try:
-            self.LYCO_PATH = Path(shared.cmd_opts.lyco_dir)
-        except AttributeError:
-            self.LYCO_PATH = None
-
-        try:
-            ckpt_dir = shared.cmd_opts.ckpt_dir or sd_models.model_path
-            self.MODEL_PATH = Path(ckpt_dir)
-        except AttributeError or TypeError:
-            self.MODEL_PATH = None
+        config = CozyNestConfig.instance()
+        if config.is_auto1111():
+            self.init_for_a1111()
+        else:
+            self.init_for_sdnext()
 
         # print all paths
         CozyLoggerExtNe.debug(f"FILE_DIR: {self.FILE_DIR}")
@@ -81,6 +74,27 @@ class CozyExtraNetworksClass:
         CozyLoggerExtNe.debug(f"LORA_PATH: {self.LORA_PATH}")
         CozyLoggerExtNe.debug(f"LYCO_PATH: {self.LYCO_PATH}")
         CozyLoggerExtNe.debug(f"MODEL_PATH: {self.MODEL_PATH}")
+
+    def init_for_a1111(self):
+        self.EMB_PATH = Path(shared.cmd_opts.embeddings_dir)
+        self.HYP_PATH = Path(shared.cmd_opts.hypernetwork_dir)
+        try:
+            self.LORA_PATH = Path(shared.cmd_opts.lora_dir)
+        except AttributeError:
+            self.LORA_PATH = None
+        try:
+            self.LYCO_PATH = Path(shared.cmd_opts.lyco_dir)
+        except AttributeError:
+            self.LYCO_PATH = None
+        try:
+            ckpt_dir = shared.cmd_opts.ckpt_dir or sd_models.model_path
+            self.MODEL_PATH = Path(ckpt_dir)
+        except AttributeError or TypeError:
+            self.MODEL_PATH = None
+
+    def init_for_sdnext(self):
+        # TODO NEVYSHA implement sd next compliant
+        self.init_for_a1111()
 
     def get_hypernetworks(self):
         """Write a list of all hypernetworks"""
@@ -171,7 +185,7 @@ class CozyExtraNetworksClass:
 
             results = sorted(results, key=lambda x: x["name"].lower())
         except AttributeError:
-            print(
+            CozyLoggerExtNe.warning(
                 "tag_autocomplete_helper: Old webui version or unrecognized model shape, using fallback for embedding completion.")
             # Get a list of all embeddings in the folder
             all_embeds = [str(e.relative_to(self.EMB_PATH)) for e in self.EMB_PATH.rglob("*") if

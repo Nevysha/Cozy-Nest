@@ -30,17 +30,29 @@
     });
   }
 
-  // Create a new link element and set its attributes
-  const cozyNestCss = document.createElement('link');
-  cozyNestCss.rel = 'stylesheet';
-  cozyNestCss.type = 'text/css';
-  cozyNestCss.href = `/cozy-nest-client/assets/index.css?t=${Date.now()}`;
-
-// Append the link element to the document head
-  document.head.appendChild(cozyNestCss);
-
   document.addEventListener("DOMContentLoaded", async function() {
     try {
+
+      //check if the param CozyNest=No is present in the url
+      const urlParams = new URLSearchParams(window.location.search);
+      const cozyNestParam = urlParams.get('CozyNest');
+      //if the param is present and set to No,
+      // or if url contains #CozyNest=No
+      // disable Cozy Nest
+      if (cozyNestParam === "No" || window.location.hash.includes("CozyNest=No")) {
+        console.log("CozyNest: disabled by url param")
+        return;
+      }
+
+      // Create a new link element and set its attributes
+      const cozyNestCss = document.createElement('link');
+      cozyNestCss.rel = 'stylesheet';
+      cozyNestCss.type = 'text/css';
+      cozyNestCss.href = `/cozy-nest-client/assets/index.css?t=${Date.now()}`;
+
+      // Append the link element to the document head
+      document.head.appendChild(cozyNestCss);
+
       await jsDynamicLoad(`/cozy-nest-client/assets/index.js?t=${Date.now()}`);
       cozyNestLoader();
     }

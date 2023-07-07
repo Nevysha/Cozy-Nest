@@ -3,27 +3,31 @@ import os
 
 from modules import shared
 from scripts.cozy_lib import Static
-from scripts.cozy_lib.tools import output_folder_array
-from scripts.cozy_lib.CozyLogger import CozyLoggerConfig
 
 
 class CozyNestConfig:
+
+    WEBUI_AUTO = 'auto1111'
+    WEBUI_SD_NEXT = 'sd.next'
+    WEBUI_UNKNOWN = 'unknown'
+    _instance = None
+
     def __init__(self):
         config = self.get_dict_from_config()
         self.config = {**CozyNestConfig.get_default_settings(), **config}
 
     def init(self):
-        if self.config['webui'] == 'unknown' and hasattr(shared, 'get_version'):
+        if self.config['webui'] == CozyNestConfig.WEBUI_UNKNOWN and hasattr(shared, 'get_version'):
             version = shared.get_version()
             # check if the 'app' is 'sd.next'
-            if version['app'] == 'sd.next':
-                self.config['webui'] = 'sd.next'
+            if version['app'] == CozyNestConfig.WEBUI_SD_NEXT:
+                self.config['webui'] = CozyNestConfig.WEBUI_SD_NEXT
                 self.config['fetch_output_folder_from_a1111_settings'] = False
             else:
-                self.config['webui'] = 'auto1111'
+                self.config['webui'] = CozyNestConfig.WEBUI_AUTO
             self.save_settings(self.config)
 
-        if self.config['webui'] == 'sd.next':
+        if self.config['webui'] == CozyNestConfig.WEBUI_SD_NEXT:
             self.config['fetch_output_folder_from_a1111_settings'] = False
 
         # check if cnib_output_folder is empty and/or need to be fetched from a1111 settings
@@ -34,12 +38,19 @@ class CozyNestConfig:
 
         if self.config.get('fetch_output_folder_from_a1111_settings'):
             # merge cnib_output_folder output_folder_array()
+            from scripts.cozy_lib.Static import output_folder_array
             cnib_output_folder = cnib_output_folder + list(set(output_folder_array()) - set(cnib_output_folder))
 
         self.config['cnib_output_folder'] = cnib_output_folder
 
         # save the merged settings
         self.save_settings(self.config)
+
+    def is_sdnext(self):
+        return self.config['webui'] == CozyNestConfig.WEBUI_SD_NEXT
+
+    def is_auto1111(self):
+        return self.config['webui'] == CozyNestConfig.WEBUI_AUTO
 
     def migrate(self):
         current_version = CozyNestConfig.get_version()
@@ -51,8 +62,6 @@ class CozyNestConfig:
         local_version_code = CozyNestConfig.normalize_version(local_version)
 
         if local_version_code < current_version_code:
-            CozyLoggerConfig.debug(f"current_version: {current_version} current_version_code: {current_version_code}")
-            CozyLoggerConfig.debug(f"local_version: {local_version} local_version_code: {local_version_code}")
             if local_version_code < CozyNestConfig.normalize_version('2.4.0'):
                 self.config['enable_extra_network_tweaks'] = False
                 self.config['enable_cozy_extra_networks'] = True
@@ -60,6 +69,14 @@ class CozyNestConfig:
             self.config['version'] = current_version
 
             self.simple_save_settings()
+
+    @staticmethod
+    def instance():
+        if CozyNestConfig._instance is None:
+            CozyNestConfig._instance = CozyNestConfig()
+            CozyNestConfig._instance.init()
+            CozyNestConfig._instance.migrate()
+        return CozyNestConfig._instance
 
     @staticmethod
     def get_version():
