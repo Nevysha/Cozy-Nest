@@ -1,7 +1,12 @@
 ## Compatibility
 
 - Automatic1111's webui 1.3.2 release.
-- SD Next (Vlad's fork) Version: 4867dafa Fri Jun 23. (Not compatible with latest!)
+- SD Next (Vlad's fork) Version: 3bcca6f9 06/07/2023
+
+## Minor changes & fixes in 2.4.3
+- [x]  Fix for SD Next compatibility Version: 3bcca6f9 3bcca6f9 06/07/2023.
+- [x]  Fix CozyNest=No which was not properly disabling Cozy Nest.
+- [x]  Various fix and optimizations.
 
 ## Minor changes & fixes in 2.4.2
 - [x]  Sort folder tree by name
