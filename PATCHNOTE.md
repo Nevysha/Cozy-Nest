@@ -5,6 +5,7 @@
 
 ## Minor changes & fixes in 2.4.3
 - [x]  Fix for SD Next compatibility Version: 3bcca6f9 3bcca6f9 06/07/2023.
+- [x]  Add proper warning to SD Next users if they are using incompatible style parameters.
 - [x]  Fix CozyNest=No which was not properly disabling Cozy Nest.
 - [x]  Various fix and optimizations.
 
