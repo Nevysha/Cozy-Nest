@@ -38,7 +38,7 @@ class CozyNestConfig:
 
         if self.config.get('fetch_output_folder_from_a1111_settings'):
             # merge cnib_output_folder output_folder_array()
-            from scripts.cozy_lib.tools import output_folder_array
+            from scripts.cozy_lib.Static import output_folder_array
             cnib_output_folder = cnib_output_folder + list(set(output_folder_array()) - set(cnib_output_folder))
 
         self.config['cnib_output_folder'] = cnib_output_folder

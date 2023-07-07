@@ -21,7 +21,7 @@ from scripts.cozy_lib import tools
 from scripts.cozy_lib.CozyLogger import CozyLogger
 from scripts.cozy_lib.CozyNestConfig import CozyNestConfig
 from scripts.cozy_lib.cozynest_image_browser import start_server
-from scripts.cozy_lib.tools import output_folder_array
+from scripts.cozy_lib.Static import output_folder_array
 
 
 def request_restart():
