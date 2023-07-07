@@ -82,10 +82,13 @@ export const applyAccentForGenerate = (checked, hexColorForAccent) => {
   COZY_NEST_CONFIG.accent_generate_button = checked;
   document.querySelectorAll('button[id$="_generate"]').forEach((btn) => {
     if (checked) {
-      btn.classList.add("accent")
+      let txtColorAppending = "";
+      if (getLuminance(hexColorForAccent)  > 0.5) {
+        txtColorAppending = "color: black !important";
+      }
+      btn.setAttribute("style", `background: var(--ae-primary-color) !important; ${txtColorAppending}`);
     } else {
       btn.setAttribute("style", '');
-      btn.classList.remove("accent")
     }
   })
 }

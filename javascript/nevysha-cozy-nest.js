@@ -1,6 +1,6 @@
 /**
  * This file is not part of the Vite build process.
- * It MUST NOT use any ES6+ features requiring building.
+ * It MUST NOT use any ES6+ features.
  */
 
 (() => {
@@ -30,14 +30,14 @@
     });
   }
 
-  // // Create a new link element and set its attributes
-  // const cozyNestCss = document.createElement('link');
-  // cozyNestCss.rel = 'stylesheet';
-  // cozyNestCss.type = 'text/css';
-  // cozyNestCss.href = `/cozy-nest-client/assets/index.css?t=${Date.now()}`;
-  //
-  // // Append the link element to the document head
-  // document.head.appendChild(cozyNestCss);
+  // Create a new link element and set its attributes
+  const cozyNestCss = document.createElement('link');
+  cozyNestCss.rel = 'stylesheet';
+  cozyNestCss.type = 'text/css';
+  cozyNestCss.href = `/cozy-nest-client/assets/index.css?t=${Date.now()}`;
+
+// Append the link element to the document head
+  document.head.appendChild(cozyNestCss);
 
   document.addEventListener("DOMContentLoaded", async function() {
     try {

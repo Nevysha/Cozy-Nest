@@ -508,7 +508,7 @@ input[type=range]::-webkit-slider-thumb {
     border-radius: 0;
     overflow-y: auto;
     height: var(--main-container-height);
-    padding: 0 10px !important;
+    padding: 0 10px;
 }
 #tabs > .nevysha.tabitem::-webkit-scrollbar {
     width: 5px;
@@ -1985,9 +1985,4 @@ button#interrogate {
 
 #script_list {
     padding: 5px !important;
-}
-
-.nevysha.generate-button.accent {
-    background: var(--ae-primary-color) !important;
-    color: var(--nevysha-color-from-luminance) !important;
 }
