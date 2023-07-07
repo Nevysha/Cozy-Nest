@@ -1,6 +1,7 @@
 import 'animate.css';
 import '@fontsource-variable/caveat';
-import sheet from './main/cozy-nest-style.css?inline' assert { type: 'css' };
+import cozyNestSheet from './main/cozy-nest-style.css?inline' assert { type: 'css' };
+import sdNextCozyNestSheet from './main/cozy-nest-style-sdnext.css?inline' assert { type: 'css' };
 import cozyNestModuleLoader, {fetchCozyNestConfig} from './main/nevysha-cozy-nest.js'
 import SimpleTimer from "./main/SimpleTimer.js";
 import {COZY_NEST_GRADIO_LOAD_DURATION, WEBUI_SDNEXT} from "./main/Constants.js";
@@ -25,7 +26,21 @@ window.CozyTools = {
 export default async function cozyNestLoader()  {
 
   await fetchCozyNestConfig();
+
+  const styleSheetCn = new CSSStyleSheet();
+  styleSheetCn.replaceSync(cozyNestSheet);
+
+  if (COZY_NEST_CONFIG.webui === WEBUI_SDNEXT) {
+    const styleSheetCnSDNext = new CSSStyleSheet();
+    styleSheetCnSDNext.replaceSync(sdNextCozyNestSheet);
+    document.adoptedStyleSheets = [styleSheetCn, styleSheetCnSDNext]
+  }
+  else {
+    document.adoptedStyleSheets = [styleSheetCn]
+  }
+
   await cozyNestModuleLoader(async () => {
+
     startCozyNestSettings();
 
     if (COZY_NEST_CONFIG.enable_cozy_prompt === true) {
@@ -59,11 +74,6 @@ window.cozyNestLoader = cozyNestLoader;
   if (hasCozyNestNo()) {
     return
   }
-
-  const styleSheet = new CSSStyleSheet();
-  styleSheet.replaceSync(sheet);
-  document.adoptedStyleSheets = [styleSheet];
-
 
   SimpleTimer.time(COZY_NEST_GRADIO_LOAD_DURATION);
 
