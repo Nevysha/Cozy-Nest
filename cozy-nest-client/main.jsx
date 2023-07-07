@@ -25,6 +25,17 @@ window.CozyTools = {
 export default async function cozyNestLoader()  {
 
   await fetchCozyNestConfig();
+
+  if (COZY_NEST_CONFIG.webui === WEBUI_SDNEXT) {
+    //add sdnext css
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = import.meta.env.VITE_CONTEXT === 'DEV' ?
+      '/cozy-nest-client/main/cozy-nest-style-sdnext.css'
+      :'/cozy-nest-client/assets/cozy-nest-style-sdnext.css';
+    document.head.appendChild(link);
+  }
+
   await cozyNestModuleLoader(async () => {
     startCozyNestSettings();
 

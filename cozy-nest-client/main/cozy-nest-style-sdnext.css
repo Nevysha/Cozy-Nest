@@ -1,0 +1,11 @@
+body {
+    overflow: hidden !important;
+}
+
+.nevysha.skip-interrupt-wrapper {
+    justify-content: space-between;
+}
+
+.nevysha.skip-interrupt-wrapper button {
+    width: 50%;
+}

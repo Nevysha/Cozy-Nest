@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node cozy.build.js",
+    "build": "vite build",
+    "build-cozy": "vite build && node cozy.build.js",
     "preview": "vite preview"
   },
   "dependencies": {
