@@ -1,5 +1,6 @@
 import {CozyLogger} from "./CozyLogger.js";
 import DOM_IDS from "./dom_ids.js";
+import CozyModal from "./modal/Module.jsx";
 
 export const getTheme = (modeFromConfig) => {
   modeFromConfig = modeFromConfig || COZY_NEST_CONFIG.color_mode
@@ -104,34 +105,25 @@ export function hideNativeUiExtraNetworkElement(prefix) {
   tabs.style.display = 'none';
 }
 
-//dummy method
-export const dummyLoraCard = () => {
-  const container = document.querySelector("#txt2img_lora_cards");
-
-  // Get the first child element of the container
-  const firstChild = container.firstChild;
-
-  // Duplicate the first child element 100 times and append them to the fragment
-  for (let i = 0; i < 100; i++) {
-    const clone = container.querySelector('.card').cloneNode(true);
-    container.insertBefore(clone, firstChild);
+export function checkClientEnv() {
+  //legacy : check if url contains __theme which is deprecated
+  if (window.location.href.includes('__theme')) {
+    CozyModal.showToast(
+      'warning',
+      "Warning",
+      "The __theme parameter is deprecated for CozyNest. Please remove it from URL and use Cozy Nest settings instead.",
+    )
   }
-};
-
-export const dummyControlNetBloc = () => {
-  const container = document.querySelector("#txt2img_controlnet");
-
-  // Get the parent element of the container
-  const parent = container.parentElement;
-
-  // Duplicate the first child element 100 times and append them to the fragment
-  for (let i = 0; i < 100; i++) {
-    const clone = parent.cloneNode(true);
-    parent.parentElement.insertBefore(clone, parent);
+  // check for gradio theme (vlad's fork)
+  if (document.querySelector('#setting_gradio_theme input')) {
+    const gradioTheme = document.querySelector('#setting_gradio_theme input').value
+    if (gradioTheme !== 'gradio/default' && gradioTheme !== '' && gradioTheme !== 'Default') {
+      CozyModal.showToast(
+        'error',
+        'Incompatible theme',
+        'Cozy Nest may not be compatible with this theme. Please switch to the default theme. You can do this by going to the settings tab and selecting "gradio/default" or "Default" from the dropdown menu under "User interface > UI theme".',
+        90000
+      )
+    }
   }
-}
-
-export const dummySubdirs = () => {
-  const $subdirs = $('#txt2img_lora_subdirs');
-  $subdirs.append($subdirs.html());
 }

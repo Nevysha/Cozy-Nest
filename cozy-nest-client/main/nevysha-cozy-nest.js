@@ -30,7 +30,6 @@ import clearGeneratedImage from './tweaks/clear-generated-image.js'
 import {createAlertDiv, showAlert} from "./tweaks/cozy-alert.js";
 import DOM_IDS from "./dom_ids.js";
 import CozyNestEventBus from "../CozyNestEventBus.js";
-import Modal from './modal/Module.jsx'
 
 
 const addDraggable = ({prefix}) => {
@@ -1007,17 +1006,6 @@ const onLoad = (done, error) => {
   // log time for onLoad execution after gradio has loaded
   SimpleTimer.time(COZY_NEST_DOM_TWEAK_LOAD_DURATION);
 
-  // load modal module
-  Modal.prepareReactHost();
-
-  // check for gradio theme (vlad's fork)
-  if (document.querySelector('#setting_gradio_theme input')) {
-    const gradioTheme = document.querySelector('#setting_gradio_theme input').value
-    if (gradioTheme !== 'gradio/default' && gradioTheme !== '' && gradioTheme !== 'Default') {
-      showAlert('Warning','Cozy Nest may not be compatible with this theme. Please switch to the default theme. You can do this by going to the settings tab and selecting "gradio/default" or "Default" from the dropdown menu under "User interface > UI theme".')
-    }
-  }
-
   //add quicksettings_gap after checkpoint reload button
   // Select the target element
   const refresh_sd_model_checkpoint = document.querySelector('#refresh_sd_model_checkpoint');
@@ -1147,14 +1135,6 @@ const onLoad = (done, error) => {
 
   //add observer for .options resize
   addOptionsObserver();
-
-  //legacy : check if url contains __theme which is deprecated
-  if (window.location.href.includes('__theme')) {
-    showAlert(
-      "Warning",
-      "The __theme parameter is deprecated for CozyNest. Please remove it from URL and use Cozy Nest settings instead.",
-    )
-  }
 
   /* --------------- TWEAK SOME EXTENSION --------------- */
   //if AWQ-container is present in COZY_NEST_CONFIG.extensions array from localStorage, tweak AWQ

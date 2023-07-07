@@ -8,17 +8,15 @@ import {CozyLogger} from "./main/CozyLogger.js";
 import {startCozyNestImageBrowser} from "@image-browser/main.jsx";
 import startCozyNestSettings from "@settings/main.jsx";
 import {
-  dummyLoraCard, dummyControlNetBloc, dummySubdirs, getTheme, hasCozyNestNo
+  hasCozyNestNo, checkClientEnv
 } from './main/cozy-utils.js';
 import startCozyPrompt from "./cozy-prompt/main.jsx";
 import {startExtraNetwork} from "./extra-network/main.jsx";
 import {OverrideUiJs} from "./main/override_ui.js";
 import CozyNestEventBus from "./CozyNestEventBus.js";
 import {startCozyExtraNetwork} from "./cozy_extra_network/main.jsx";
+import CozyModal from './main/modal/Module.jsx';
 window.CozyTools = {
-  dummyLoraCard,
-  dummyControlNetBloc,
-  dummySubdirs,
   stop:() => setTimeout(function(){debugger;}, 5000),
 }
 
@@ -46,9 +44,13 @@ export default async function cozyNestLoader()  {
 
     startCozyNestImageBrowser();
 
-    CozyNestEventBus.emit('cozy-nest-loaded');
+    // load modal module
+    await CozyModal.prepareReactHost();
 
+    CozyNestEventBus.emit('cozy-nest-loaded');
   });
+
+  setTimeout(checkClientEnv, 1000); // small timer just for UX purposes
 }
 
 window.cozyNestLoader = cozyNestLoader;
