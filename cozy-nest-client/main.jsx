@@ -73,9 +73,6 @@ window.cozyNestLoader = cozyNestLoader;
       cozyNestLoader();
     })
   }
-  else {
-    CozyLogger.init(false);
-  }
 })();
 
 
