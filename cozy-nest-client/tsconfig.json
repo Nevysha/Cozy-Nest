@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "esnext",
     "lib": ["DOM", "DOM.Iterable", "ESNext", "ES6"],
-    "module": "ESNext",
+    "module": "esnext",
+    "baseUrl": ".",
     "skipLibCheck": true,
 
     /* Bundler mode */
@@ -20,6 +21,6 @@
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["main", "image-browser"],
+  "include": ["main", "image-browser", "vite.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

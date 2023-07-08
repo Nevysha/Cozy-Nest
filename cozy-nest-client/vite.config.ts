@@ -1,18 +1,24 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { resolve } from 'node:path';
+import * as process from "node:process";
+
+const __dirname = process.cwd()
 
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
     alias: {
-      '@image-browser': './image-browser/',
-      '@settings': './settings/',
-      '@main': './main/'
+      '@image-browser': resolve(__dirname, 'image-browser/'),
+      '@settings':  resolve(__dirname, 'settings/'),
+      '@main': resolve(__dirname, 'main/'),
+      '@cozy-prompt': resolve(__dirname, 'cozy-prompt/'),
+      '@extra-network': resolve(__dirname, 'extra-network/'),
+      '@cozy_extra_network': resolve(__dirname, 'cozy_extra_network/'),
     }
   },
   plugins: [
     react({
-      // exclude: ['main/cozy-nest-style.css', 'main/*.js'],
       babel: {
         plugins: ['@babel/plugin-syntax-import-assertions'],
       },
@@ -92,30 +98,7 @@ export default defineConfig({
       //route everything except /cozy-nest-client/ to localhost:7860
       '^(?!.*cozy-nest-client).*$': 'http://127.0.0.1:7860',
       'http://127.0.0.1:5173/cozy-nest-client/assets/worker-json.js': 'http://127.0.0.1:7860/cozy-nest-client/assets/worker-json.js',
-
-      // ...generateProxyConfig([
-      //   'get_version',
-      //   'get_remote_versions',
-      //   'get_config',
-      //   'install_package',
-      // ]),
-
-
-
     }
   },
   base: '/cozy-nest-client'
 })
-
-function generateProxyConfig(urls) {
-  const proxyConfig = {};
-
-  urls.forEach((url) => {
-    proxyConfig[`/${url}`] = {
-      target: `http://127.0.0.1:7860/${url}`,
-      changeOrigin: true,
-    };
-  });
-
-  return proxyConfig;
-}

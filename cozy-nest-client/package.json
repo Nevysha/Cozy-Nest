@@ -1,12 +1,25 @@
 {
   "name": "cozy-nest-dev",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "2.4.3",
+  "description": "Cozy Nest is a rework of Automatic's popular Stable Diffusion webui interface, working as a non intrusive extension.",
+  "keywords": [
+    "stable-diffusion-webui",
+    "cozy-nest",
+    "extensions"
+  ],
+  "homepage": "https://github.com/Nevysha/Cozy-Nest",
+  "bugs": {
+    "url": "https://github.com/Nevysha/Cozy-Nest/issues/new/choose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nevysha/Cozy-Nest.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build-cozy": "vite build && rollup --config && node cozy.build.js",
+    "build-cozy": "vite build && rollup --config && node cozy.build.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
