@@ -24,6 +24,25 @@ export const isDevMode = () => {
   return false;
 }
 
+export function jsDynamicLoad(src) {
+  return new Promise(function(resolve, reject) {
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.crossorigin = 'crossorigin';
+    script.src = src;
+
+    script.onload = function() {
+      resolve();
+    };
+
+    script.onerror = function() {
+      reject(new Error('Failed to load Cozy Nest'));
+    };
+
+    document.head.appendChild(script);
+  });
+}
+
 window.CozyUtils = {
   hasCozyNestNo,
   isDevMode

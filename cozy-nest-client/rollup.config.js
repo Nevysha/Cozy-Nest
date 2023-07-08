@@ -35,7 +35,7 @@ const plugins = [
 
 export default {
   input: {
-    'cozy-utils': './main/cozy-utils-standalone.js',
+    // 'cozy-utils': './main/cozy-utils-standalone.js',
     'cozy-nest.loader': './loader/cozy-nest.loader.js',
   },
   output: [
@@ -43,6 +43,7 @@ export default {
       dir: '../client/assets',
       entryFileNames: '[name].min.js',
       format: 'module',
+      interop: 'auto',
       plugins: [...plugins]
     }
   ],

@@ -1,26 +1,12 @@
 /**
  * This file is not part of the Vite build process.
- * It MUST NOT use any ES6+ features.
+ * It's bundled separately using rollup.
+ * It MUST NOT import global js file and only small standalone.
+ * This way we can partially load Cozy Nest without impacting the main app.
+ *  to check from some environments before starting CozyNest.
  */
 
-function jsDynamicLoad(src) {
-  return new Promise(function(resolve, reject) {
-    const script = document.createElement('script');
-    script.type = 'module';
-    script.crossorigin = 'crossorigin';
-    script.src = src;
-
-    script.onload = function() {
-      resolve();
-    };
-
-    script.onerror = function() {
-      reject(new Error('Failed to load Cozy Nest'));
-    };
-
-    document.head.appendChild(script);
-  });
-}
+import { jsDynamicLoad } from "../main/cozy-utils-standalone.js";
 
 (() => {
 
