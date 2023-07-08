@@ -5,6 +5,14 @@ import {copyFile } from 'fs/promises';
 import {join} from 'path';
 import { fileURLToPath } from 'url';
 import * as path from "path";
+import chalk from 'chalk';
+
+const logBold = (...args) => console.log(chalk.green.bold(...args))
+const log = (...args) => console.log(chalk.blue(...args))
+const relPath = (to) => path.relative(path.join(process.cwd(), '../'), to)
+
+log("")
+log("Cozy Nest post build script")
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,7 +25,10 @@ const cozyNestStyleSdnextCssDest = join(__dirname, '../client/assets/cozy-nest-s
 
 async function copyCss() {
     await copyFile(cozyNestStyleCss, cozyNestStyleCssDest);
+    // print `copied ${cozyNestStyleCss} => ${cozyNestStyleCssDest}` in bold green
+    logBold("copied ", `${relPath(cozyNestStyleCss)} → ${relPath(cozyNestStyleCssDest)}`);
     await copyFile(cozyNestStyleSdnextCss, cozyNestStyleSdnextCssDest);
+    logBold("copied ", `${relPath(cozyNestStyleSdnextCss)} → ${relPath(cozyNestStyleSdnextCssDest)}`);
 }
 (async () => {
     await copyCss();
