@@ -1,14 +1,11 @@
 //post build script run by Nodejs
 
-//copy cozy-nest-style.css and cozy-nest-style-sdnext.css to cozy-nest-client/assets
 import {copyFile, cp, readdir } from 'fs/promises';
 import {join} from 'path';
 import { fileURLToPath } from 'url';
 import * as path from "path";
 import chalk from 'chalk';
 
-// const logBold = (...args) => console.log(chalk.green.bold(...args))
-// const log = (...args) => console.log(chalk.blue(...args))
 const log = console.log
 const relPath = (to) => path.relative(join(process.cwd(), '../'), to)
 
