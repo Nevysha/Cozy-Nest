@@ -14,12 +14,10 @@ import {
 } from "./Constants.js";
 import Loading from "./Loading.js";
 
-import {waves, svg_magic_wand, svg_update_info} from "./svg.js";
+import {waves, svg_update_info} from "./svg.js";
 import {
-  applyAccentColor, applyBgGradiantColor, applyWavesColor
-  , wrapDataGenerationInfo, wrapSettings, createVerticalLineComp, applyFontColor, recalcOffsetFromMenuHeight
+  wrapDataGenerationInfo, wrapSettings, createVerticalLineComp, recalcOffsetFromMenuHeight
 } from "./tweaks/various-tweaks.js";
-import kofiCup from './kofi-cup-border.png'
 import {
   setupPopupInstanceInfo,
   populateInstanceInfoDialog,
