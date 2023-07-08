@@ -7,9 +7,8 @@ import {COZY_NEST_GRADIO_LOAD_DURATION, WEBUI_SDNEXT} from "./main/Constants.js"
 import {CozyLogger} from "./main/CozyLogger.js";
 import {startCozyNestImageBrowser} from "@image-browser/main.jsx";
 import startCozyNestSettings from "@settings/main.jsx";
-import {
-  hasCozyNestNo, checkClientEnv
-} from './main/cozy-utils.js';
+import {checkClientEnv} from './main/cozy-utils.js';
+import {hasCozyNestNo} from "./main/cozy-utils-standalone.js";
 import startCozyPrompt from "./cozy-prompt/main.jsx";
 import {startExtraNetwork} from "./extra-network/main.jsx";
 import {OverrideUiJs} from "./main/override_ui.js";

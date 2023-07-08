@@ -6,31 +6,23 @@
  *  to check from some environments before starting CozyNest.
  */
 
-import { jsDynamicLoad } from "../main/cozy-utils-standalone.js";
+import { jsDynamicLoad, isDevMode, hasCozyNestNo } from "../main/cozy-utils-standalone.js";
 
 (() => {
 
   //check if url contains cozy-nest-client. If yes, stop here cause we are in dev mode
-  if (window.location.href.includes("cozy-nest-client")) {
+  if (isDevMode()) {
     console.log("CozyNest: extension loader in dev mode")
     return
   }
 
-
+  if (hasCozyNestNo()) {
+    console.log("CozyNest: disabled by url param")
+    return;
+  }
 
   document.addEventListener("DOMContentLoaded", async function() {
     try {
-
-      //check if the param CozyNest=No is present in the url
-      const urlParams = new URLSearchParams(window.location.search);
-      const cozyNestParam = urlParams.get('CozyNest');
-      //if the param is present and set to No,
-      // or if url contains #CozyNest=No
-      // disable Cozy Nest
-      if (cozyNestParam === "No" || window.location.hash.includes("CozyNest=No")) {
-        console.log("CozyNest: disabled by url param")
-        return;
-      }
 
       // Create a new link element and set its attributes
       const cozyNestCss = document.createElement('link');
@@ -41,8 +33,9 @@ import { jsDynamicLoad } from "../main/cozy-utils-standalone.js";
       // Append the link element to the document head
       document.head.appendChild(cozyNestCss);
 
+      //loading js file outside of the bundle to avoid impacting the main app if Cozy Nest is disabled
       await jsDynamicLoad(`/cozy-nest-client/assets/index.js?t=${Date.now()}`);
-      cozyNestLoader();
+      cozyNestLoader().then(_ => _);
     }
     catch (err) {
       console.error("Failed to load Cozy Nest", err);

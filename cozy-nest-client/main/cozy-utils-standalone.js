@@ -18,7 +18,6 @@ export const hasCozyNestNo = () => {
 
 export const isDevMode = () => {
   if (window.location.href.includes("cozy-nest-client")) {
-    console.log("CozyNest: extension loader in dev mode")
     return true;
   }
   return false;
