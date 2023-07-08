@@ -15,3 +15,16 @@ export const hasCozyNestNo = () => {
   }
   return false;
 }
+
+export const isDevMode = () => {
+  if (window.location.href.includes("cozy-nest-client")) {
+    console.log("CozyNest: extension loader in dev mode")
+    return true;
+  }
+  return false;
+}
+
+window.CozyUtils = {
+  hasCozyNestNo,
+  isDevMode
+}

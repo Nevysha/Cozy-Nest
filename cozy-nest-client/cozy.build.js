@@ -1,6 +1,6 @@
 //post build script run by Nodejs
 
-import {copyFile, cp, readdir } from 'fs/promises';
+import {copyFile, readdir, rename } from 'fs/promises';
 import {join} from 'path';
 import { fileURLToPath } from 'url';
 import * as path from "path";
@@ -29,11 +29,19 @@ const config = {
     {
       from: join(__dirname, 'node_modules/ace-builds/src-noconflict/worker-json.js'),
       to: join(__dirname, '../client/assets/worker-json.js')
-    }
+    },
   ],
+  move: [
+    {
+      from: join(__dirname, '../client/assets/cozy-nest.loader.min.js'),
+      to: join(__dirname, '../javascript/cozy-nest.loader.min.js')
+    }
+  ]
 }
 
 async function build() {
+
+  // copy whole folders
   for (const folderCopy of config.folderCopy) {
 
     log(
@@ -54,6 +62,8 @@ async function build() {
         chalk.green.bold(` ${relPath(path.join(folderCopy.from, file))} → ${relPath(path.join(folderCopy.to, file))}`))
     }
   }
+
+  // copy files
   log(
     chalk.blue(`Copying files`))
   for (const copy of config.copy) {
@@ -61,6 +71,16 @@ async function build() {
     log(
       chalk.green('    COPY'),
       chalk.green.bold(` ${relPath(copy.from)} → ${relPath(copy.to)}`))
+  }
+
+  // move file
+  log(
+    chalk.blue(`Moving files`))
+  for (const move of config.move) {
+    await rename(move.from, move.to);
+    log(
+      chalk.green('    MOVE'),
+      chalk.green.bold(` ${relPath(move.from)} → ${relPath(move.to)}`))
   }
 }
 (async () => {

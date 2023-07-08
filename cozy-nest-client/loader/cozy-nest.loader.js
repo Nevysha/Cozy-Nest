@@ -3,6 +3,25 @@
  * It MUST NOT use any ES6+ features.
  */
 
+function jsDynamicLoad(src) {
+  return new Promise(function(resolve, reject) {
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.crossorigin = 'crossorigin';
+    script.src = src;
+
+    script.onload = function() {
+      resolve();
+    };
+
+    script.onerror = function() {
+      reject(new Error('Failed to load Cozy Nest'));
+    };
+
+    document.head.appendChild(script);
+  });
+}
+
 (() => {
 
   //check if url contains cozy-nest-client. If yes, stop here cause we are in dev mode
@@ -11,24 +30,7 @@
     return
   }
 
-  function jsDynamicLoad(src) {
-    return new Promise(function(resolve, reject) {
-      const script = document.createElement('script');
-      script.type = 'module';
-      script.crossorigin = 'crossorigin';
-      script.src = src;
 
-      script.onload = function() {
-        resolve();
-      };
-
-      script.onerror = function() {
-        reject(new Error('Failed to load Cozy Nest'));
-      };
-
-      document.head.appendChild(script);
-    });
-  }
 
   document.addEventListener("DOMContentLoaded", async function() {
     try {

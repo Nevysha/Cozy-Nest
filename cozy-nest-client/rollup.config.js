@@ -6,36 +6,44 @@
 import json from '@rollup/plugin-json';
 import terser from '@rollup/plugin-terser';
 
+const plugins = [
+  [terser({
+    compress: {
+      arguments: true,
+      drop_console: true,
+      hoist_funs: true,
+      hoist_props: true,
+      hoist_vars: true,
+      inline: true,
+      keep_fargs: false,
+      keep_fnames: false,
+      keep_infinity: false,
+      loops: true,
+      passes: 3,
+      pure_funcs: [],
+      pure_getters: true,
+      reduce_vars: true,
+      sequences: true,
+      unused: true,
+    },
+    format: {
+      comments: false,
+    },
+  })],
+]
+
+
 export default {
-  input: './main/cozy-utils-standalone.js',
+  input: {
+    'cozy-utils': './main/cozy-utils-standalone.js',
+    'cozy-nest.loader': './loader/cozy-nest.loader.js',
+  },
   output: [
     {
-      file: '../client/assets/cozy-utils.min.js',
-      format: 'iife',
-      name: 'version',
-      plugins: [terser({
-        compress: {
-          arguments: true,
-          drop_console: true,
-          hoist_funs: true,
-          hoist_props: true,
-          hoist_vars: true,
-          inline: true,
-          keep_fargs: false,
-          keep_fnames: false,
-          keep_infinity: false,
-          loops: true,
-          passes: 3,
-          pure_funcs: [],
-          pure_getters: true,
-          reduce_vars: true,
-          sequences: true,
-          unused: true,
-        },
-        format: {
-          comments: false,
-        },
-      })]
+      dir: '../client/assets',
+      entryFileNames: '[name].min.js',
+      format: 'module',
+      plugins: [...plugins]
     }
   ],
   plugins: [json()]
