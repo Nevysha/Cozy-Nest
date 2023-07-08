@@ -12,7 +12,7 @@ import {hasCozyNestNo} from "@main/cozy-utils-standalone.js";
 import startCozyPrompt from "@cozy-prompt/main.jsx";
 import {startExtraNetwork} from "@extra-network/main.jsx";
 import {OverrideUiJs} from "./override_ui.js";
-import CozyNestEventBus from "../CozyNestEventBus.js";
+import CozyNestEventBus from "@main/CozyNestEventBus.js";
 import {startCozyExtraNetwork} from "@cozy_extra_network/main.jsx";
 import CozyModal from './modal/Module.jsx';
 window.CozyTools = {

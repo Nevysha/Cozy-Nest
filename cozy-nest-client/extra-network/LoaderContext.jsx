@@ -1,7 +1,7 @@
 import React from 'react';
 import {CozyLogger} from "../main/CozyLogger.js";
 import DOM_IDS from "../main/dom_ids.js";
-import CozyNestEventBus from "../CozyNestEventBus.js";
+import CozyNestEventBus from "@main/CozyNestEventBus.js";
 import {hideNativeUiExtraNetworkElement} from "../main/cozy-utils.js";
 
 export const LoaderContext = React.createContext({

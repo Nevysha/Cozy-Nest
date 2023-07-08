@@ -27,7 +27,7 @@ import {CozyLogger} from "./CozyLogger.js";
 import clearGeneratedImage from './tweaks/clear-generated-image.js'
 import {createAlertDiv, showAlert} from "./tweaks/cozy-alert.js";
 import DOM_IDS from "./dom_ids.js";
-import CozyNestEventBus from "../CozyNestEventBus.js";
+import CozyNestEventBus from "@main/CozyNestEventBus.js";
 
 
 const addDraggable = ({prefix}) => {
@@ -390,7 +390,7 @@ async function loadVersionData() {
 
     //set fill color of .nevysha-btn-menu-wrapper > button > svg to red
     document.querySelector('#nevyui_update_info > svg').style.fill = "red";
-	
+
     //add version info to the bottom-right corner with a notice about an update
     document.getElementsByClassName("versions")[0].innerHTML += '⠀•⠀Cozy Nest:⠀<span style="color: #f9e02d; text-decoration: underline;" title="Nevysha\'s Cozy Nest Update Available! Latest version: v' + remote_version_data.version + '.\nView update info in the top-right corner for more details.">v' + current_version_data.version + '</span>';
   }
