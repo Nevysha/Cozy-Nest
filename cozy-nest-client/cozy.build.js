@@ -1,37 +1,50 @@
 //post build script run by Nodejs
 
 //copy cozy-nest-style.css and cozy-nest-style-sdnext.css to cozy-nest-client/assets
-import {copyFile } from 'fs/promises';
+import {copyFile, cp, readdir } from 'fs/promises';
 import {join} from 'path';
 import { fileURLToPath } from 'url';
 import * as path from "path";
 import chalk from 'chalk';
 
-const logBold = (...args) => console.log(chalk.green.bold(...args))
-const log = (...args) => console.log(chalk.blue(...args))
-const relPath = (to) => path.relative(path.join(process.cwd(), '../'), to)
+// const logBold = (...args) => console.log(chalk.green.bold(...args))
+// const log = (...args) => console.log(chalk.blue(...args))
+const log = console.log
+const relPath = (to) => path.relative(join(process.cwd(), '../'), to)
 
 log("")
-log("Cozy Nest post build script")
+log(chalk.blue("Cozy Nest post build script"))
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const cozyNestStyleCss = join(__dirname, 'main/cozy-nest-style.css');
-const cozyNestStyleSdnextCss = join(__dirname, 'main/cozy-nest-style-sdnext.css');
+const config = {
+    folderCopy: [
+        {
+            from: join(__dirname, 'static'),
+            to: join(__dirname, '../client/assets')
+        }
+    ]
+}
 
-const cozyNestStyleCssDest = join(__dirname, '../client/assets/cozy-nest-style.css');
-const cozyNestStyleSdnextCssDest = join(__dirname, '../client/assets/cozy-nest-style-sdnext.css');
-
-async function copyCss() {
-    await copyFile(cozyNestStyleCss, cozyNestStyleCssDest);
-    // print `copied ${cozyNestStyleCss} => ${cozyNestStyleCssDest}` in bold green
-    logBold("copied ", `${relPath(cozyNestStyleCss)} → ${relPath(cozyNestStyleCssDest)}`);
-    await copyFile(cozyNestStyleSdnextCss, cozyNestStyleSdnextCssDest);
-    logBold("copied ", `${relPath(cozyNestStyleSdnextCss)} → ${relPath(cozyNestStyleSdnextCssDest)}`);
+async function build() {
+    for (const folderCopy of config.folderCopy) {
+        // list each file in the folder
+        const files = await readdir(folderCopy.from);
+        for (const file of files) {
+            // copy each file to the destination
+            await copyFile(
+                path.join(folderCopy.from, file),
+                path.join(folderCopy.to, file)
+            );
+            log(
+              chalk.green('COPY'),
+              chalk.green.bold(` ${relPath(path.join(folderCopy.from, file))} → ${relPath(path.join(folderCopy.to, file))}`))
+        }
+    }
 }
 (async () => {
-    await copyCss();
+    await build();
 })();
 
 

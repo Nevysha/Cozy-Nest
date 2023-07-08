@@ -61,6 +61,7 @@ export default defineConfig({
     }
   ],
   build: {
+    emptyOutDir: true,
     outDir: '../client',
     rollupOptions: {
       output: {

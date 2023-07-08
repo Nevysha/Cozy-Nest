@@ -1,6 +1,6 @@
 import 'animate.css';
 import '@fontsource-variable/caveat';
-import sheet from './main/cozy-nest-style.css?inline' assert { type: 'css' };
+import sheet from './static/cozy-nest-style.css?inline' assert { type: 'css' };
 import cozyNestModuleLoader, {fetchCozyNestConfig} from './main/nevysha-cozy-nest.js'
 import SimpleTimer from "./main/SimpleTimer.js";
 import {COZY_NEST_GRADIO_LOAD_DURATION, WEBUI_SDNEXT} from "./main/Constants.js";
@@ -31,7 +31,7 @@ export default async function cozyNestLoader()  {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = import.meta.env.VITE_CONTEXT === 'DEV' ?
-      '/cozy-nest-client/main/cozy-nest-style-sdnext.css'
+      '/cozy-nest-client/static/cozy-nest-style-sdnext.css'
       :'/cozy-nest-client/assets/cozy-nest-style-sdnext.css';
     document.head.appendChild(link);
   }
