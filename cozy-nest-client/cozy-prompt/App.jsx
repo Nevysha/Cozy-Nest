@@ -132,7 +132,7 @@ export function App({parentId, containerId, tabId, resolve}) {
   }
 
   function clearPrompt() {
-    document.querySelector(`#${tabId}_clear_prompt`).click()
+    document.querySelector(`#${DOM_IDS.get('clear_prompt')(tabId)}`).click()
   }
   function redoLastPrompt() {
     document.querySelector(`#tab_${tabId} button#paste`).click()
