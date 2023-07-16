@@ -15,6 +15,7 @@ import {ButtonWithConfirmDialog} from "../chakra/ButtonWithConfirmDialog.jsx";
 import DOM_IDS from "../main/dom_ids.js";
 import {Range as AceRange} from "ace-builds/src-noconflict/ace";
 import {CozyLoggerPrompt as CozyLogger} from "../main/CozyLogger.js";
+import {ImArrowDownLeft2} from "react-icons/im";
 // ace.config.setModuleUrl(
 //   "ace/mode/json_worker",
 //   'cozy-nest-client/node_modules/ace-builds/src-noconflict/worker-json.js')
@@ -134,7 +135,7 @@ export function App({parentId, containerId, tabId, resolve}) {
   function clearPrompt() {
     document.querySelector(`#${DOM_IDS.get('clear_prompt')(tabId)}`).click()
   }
-  function redoLastPrompt() {
+  function paste() {
     document.querySelector(`#tab_${tabId} button#paste`).click()
   }
 
@@ -430,7 +431,7 @@ export function App({parentId, containerId, tabId, resolve}) {
       <Row>
         <Button onClick={prettify}>Prettify</Button>
         <Button onClick={toggleNative}>{nativeIsVisible ? "Hide" : "Show"} native textarea</Button>
-        <Button onClick={redoLastPrompt}>Redo last prompt</Button>
+        <Button onClick={paste}><ImArrowDownLeft2 /></Button>
         <ButtonWithConfirmDialog
           style={{height: '100%'}}
           message='Delete prompt ?'

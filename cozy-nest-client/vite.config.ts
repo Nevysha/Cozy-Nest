@@ -62,6 +62,7 @@ export default defineConfig({
   ],
   build: {
     outDir: '../client',
+    emptyOutDir: true,
     rollupOptions: {
       output: {
         entryFileNames: `assets/[name].js`,
