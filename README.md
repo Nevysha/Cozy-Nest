@@ -1,3 +1,5 @@
+**![](https://placehold.co/15x15/f03c15/f03c15.png) COZY NEST IS ON STANDBY UNTIL I MANAGE TO GET MORE FREE TIME TO WORK ON IT. FEEL FREE TO REACH ME ON DISCORD FOR MORE INFO IN THE FUTURE.**
+
 # Nevysha's Cozy Nest
 
 _Find your cozy spot on Auto1111's webui_
