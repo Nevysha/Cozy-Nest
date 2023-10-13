@@ -1,5 +1,3 @@
-**![](https://placehold.co/15x15/f03c15/f03c15.png) COZY NEST IS ON STANDBY UNTIL I MANAGE TO GET MORE FREE TIME TO WORK ON IT. FEEL FREE TO REACH ME ON DISCORD FOR MORE INFO IN THE FUTURE.**
-
 # Nevysha's Cozy Nest
 
 _Find your cozy spot on Auto1111's webui_
@@ -12,8 +10,8 @@ Cozy Nest is a UI extension for Automatic's sd-webui.
 
 ## Compatibility
 
-- From Automatic1111's webui 1.4.0 release.
-- SD Next on commit: 3bcca6f9 06/07/2023
+- From Automatic1111's webui 1.6.0 release.
+- Not compatible with SD Next.
 
 - ![](https://placehold.co/15x15/f03c15/f03c15.png) SD Next compatibily is on standby for latest SD.Next version. But I'm in talk with Vlado for a better and deeper integration in SD.Next
 
