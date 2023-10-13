@@ -97,21 +97,22 @@ export function ExtraNetworksCard({item, searchString, selectedFolder, nsfwFilte
         const hasSelectFolder = selectedFolder && selectedFolder !== ''
 
         function normalizePath(path) {
-            return path.replace(/[\/\\:]/g, '')
+            return path.replace(/[\/\\:]/g, '').toLowerCase()
         }
 
         if (searchString !== '' || hasSelectFolder) {
+            const itemPath = normalizePath(item.path)
             //only search string
             if (!hasSelectFolder) {
-                return normalizePath(item.path).includes(searchString)
+                return itemPath.includes(searchString.toLowerCase())
             }
             //only selected folder
             else if (searchString === '') {
-                return normalizePath(item.path).includes(normalizePath(selectedFolder))
+                return itemPath.includes(normalizePath(selectedFolder))
             }
             //both
-            return (normalizePath(item.path).includes(searchString)
-                || normalizePath(item.path).includes(normalizePath(selectedFolder)))
+            return (itemPath.includes(searchString.toLowerCase())
+                || itemPath.includes(normalizePath(selectedFolder)))
         }
         return true
     }
