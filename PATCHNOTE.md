@@ -1,7 +1,10 @@
 ## Compatibility
 
-- Automatic1111's webui 1.4.0 release.
-- SD Next (Vlad's fork) Version: 3bcca6f9 06/07/2023
+- Automatic1111's webui 1.6.0 release WIP.
+- Not compatible with SD Next.
+
+## Minor changes & fixes in 2.4.4
+- [x] wip fixes for Automatic1111's webui 1.6.0 release
 
 ## Minor changes & fixes in 2.4.3
 - [x]  Fix for SD Next compatibility Version: 3bcca6f9 3bcca6f9 06/07/2023.

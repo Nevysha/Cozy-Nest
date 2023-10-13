@@ -36,6 +36,8 @@ const addDraggable = ({prefix}) => {
 
   const settings = document.getElementById(`${prefix}_settings`);
 
+
+
   //change min-width to min(420px, 100%)
   settings.style.minWidth = `min(${SETTINGS_MIN_WIDTH}px, 100%)`
 
@@ -46,6 +48,9 @@ const addDraggable = ({prefix}) => {
   settings.insertAdjacentElement('afterend', lineWrapper);
 
   const container = settings.parentElement;
+  //flex for parent
+  container.style.display = "flex";
+  container.style.flexDirection = "row";
   container.classList.add('nevysha', 'resizable-children-container');
   const results = document.getElementById(`${prefix}_results`);
 
@@ -104,6 +109,8 @@ const addDraggable = ({prefix}) => {
   document.addEventListener('mouseup', () => {
     isDragging = false;
   });
+
+  CozyLogger.debug("addDraggable: done");
 }
 
 const tweakButtonsIcons = () => {
@@ -392,7 +399,7 @@ async function loadVersionData() {
 
     //set fill color of .nevysha-btn-menu-wrapper > button > svg to red
     document.querySelector('#nevyui_update_info > svg').style.fill = "red";
-	
+
     //add version info to the bottom-right corner with a notice about an update
     document.getElementsByClassName("versions")[0].innerHTML += '⠀•⠀Cozy Nest:⠀<span style="color: #f9e02d; text-decoration: underline;" title="Nevysha\'s Cozy Nest Update Available! Latest version: v' + remote_version_data.version + '.\nView update info in the top-right corner for more details.">v' + current_version_data.version + '</span>';
   }
@@ -629,7 +636,10 @@ function buildRightSlidePanelFor(label, buttonLabel, rightPanBtnWrapper, tab, pr
     const width = window.innerWidth;
     cozyImgBrowserPanelWrapper.style.width = `${Math.round(width / 2)}px`;
   }
-  cozyImgBrowserPanelWrapper.appendChild(lineWrapper)
+
+  // cozyImgBrowserPanelWrapper.appendChild(lineWrapper)
+  // add lineWrapper at the begining of the div
+  cozyImgBrowserPanelWrapper.insertBefore(lineWrapper, cozyImgBrowserPanelWrapper.firstChild);
 
   //add a close button inside the line
   const closeCozyImgBrowser = document.createElement('button');
@@ -1046,10 +1056,10 @@ const onLoad = (done, error) => {
   onUiTabChange(() => {
     CozyLogger.debug(`onUiTabChange newTab:${get_uiCurrentTabContent().id}, lastTab:${lastTab}`);
 
-    if (lastTab === "tab_txt2img") {
+    if (lastTab === "tab_txt2img" && rightPanelsHandler['cozy-txt2img-extra-network']) {
       rightPanelsHandler['cozy-txt2img-extra-network'].close();
     }
-    else if (lastTab === "tab_img2img") {
+    else if (lastTab === "tab_img2img" && rightPanelsHandler['cozy-img2img-extra-network']) {
       rightPanelsHandler['cozy-img2img-extra-network'].close();
     }
 

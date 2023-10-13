@@ -32,6 +32,12 @@ class CozyLoggerClass {
     console.log('CozyNest:',...args);
   }
 
+  warn(...args) {
+    if (this.enabled) {
+      console.warn('CozyNest:', ...args);
+    }
+  }
+
   error(...args) {
     console.error('CozyNest:',...args);
   }

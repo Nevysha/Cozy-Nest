@@ -4,8 +4,8 @@ const a1111 = {
     clear_prompt(prefix) {
         return `${prefix}_clear_prompt`
     },
-    extra_networks_btn(prefix) {
-        return `${prefix}_extra_networks`
+    extra_networks(prefix) {
+        return `${prefix}_extra_tabs`
     }
 }
 
@@ -13,8 +13,8 @@ const sdNext = {
     clear_prompt(prefix) {
         return `${prefix}_clear_prompt_btn`
     },
-    extra_networks_btn(prefix) {
-        return `${prefix}_extra_networks_btn`
+    extra_networks(prefix) {
+        return `${prefix}_extra_tabs`
     }
 }
 // txt2img_clear_prompt_btn

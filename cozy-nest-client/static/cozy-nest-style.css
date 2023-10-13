@@ -758,6 +758,7 @@ button.secondary, button.primary {
 
 .nevysha.generate-button, .nevysha.skip-interrupt-wrapper {
     /*margin: 0 0 10px 0;*/
+    width: calc(100% - 10px);
 }
 
 .nevysha.skip-interrupt-wrapper {
@@ -913,21 +914,24 @@ button.secondary, button.primary {
     width: calc(100% - 33px) !important;
     display: flex;
     flex-direction: row;
+    align-items: stretch;
 }
 
 .vertical-line-wrapper {
     width: 10px !important;
     max-width: 10px !important;
     min-width: 10px !important;
-    height: calc(100% - 30px);
+    /*height: calc(100% - 30px);*/
     cursor: ew-resize;
     display: flex;
     justify-content: center;
     margin: 15px -10px 0 -10px;
+
+    z-index: 999;
 }
 
 .slide-right-browser-panel > .vertical-line-wrapper {
-    position: absolute;
+    /*position: absolute;*/
 }
 
 .slide-right-browser-panel > .slide-right-browser-panel-container {
@@ -1834,8 +1838,8 @@ body.nevysha-light .nevysha-button:hover {
 
 [id$="_gallery_clear_button"] {
     position: absolute;
-    top: 3px;
-    right: 10px;
+    top: 7px;
+    right: 55px;
     z-index: 30;
     background-color: var(--block-background-fill);
 }
@@ -1990,4 +1994,8 @@ button#interrogate {
 .nevysha.generate-button.accent {
     background: var(--ae-primary-color) !important;
     color: var(--nevysha-color-from-luminance) !important;
+}
+
+body {
+    overflow-x: hidden;
 }

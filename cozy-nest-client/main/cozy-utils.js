@@ -99,10 +99,16 @@ export const hasCozyNestNo = () => {
 }
 
 export function hideNativeUiExtraNetworkElement(prefix) {
-  const triggerButton = document.querySelector(`button#${DOM_IDS.get('extra_networks_btn')(prefix)}`)
-  triggerButton.style.display = 'none'
-  const tabs = document.querySelector(`div#${prefix}_extra_networks`)
-  tabs.style.display = 'none';
+  const extraNetworks = document.querySelector(`#${DOM_IDS.get('extra_networks')(prefix)} > .tab-nav`)
+
+  if (!extraNetworks) {
+    CozyLogger.warn("hideNativeUiExtraNetworkElement: extraNetworks not found")
+    return;
+  }
+
+  extraNetworks.style.display = 'none'
+  // const tabs = document.querySelector(`div#${prefix}_extra_networks`)
+  // tabs.style.display = 'none';
 }
 
 export function checkClientEnv() {
